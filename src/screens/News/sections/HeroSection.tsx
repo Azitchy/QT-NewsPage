@@ -1,42 +1,47 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { useFetchNewsList } from "@/hooks/useApi"
-import { NewsModal } from "./NewsModal"
+import React, { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { useFetchNewsList } from "@/hooks/useApi";
+import { NewsModal } from "./NewsModal";
 
 export const HeroSection = (): JSX.Element => {
-  const [featuredNews, setFeaturedNews] = useState<any>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const { data: newsList, loading, error, execute: fetchNews } = useFetchNewsList()
+  const [featuredNews, setFeaturedNews] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const {
+    data: newsList,
+    loading,
+    error,
+    execute: fetchNews,
+  } = useFetchNewsList();
 
   useEffect(() => {
-    fetchNews({ pageIndex: 1, pageSize: 1, type: "" })
-  }, [])
+    fetchNews({ pageIndex: 1, pageSize: 1, type: "" });
+  }, []);
 
   useEffect(() => {
     if (newsList?.data?.newsList && newsList.data.newsList.length > 0) {
-      setFeaturedNews(newsList.data.newsList[0])
+      setFeaturedNews(newsList.data.newsList[0]);
     }
-  }, [newsList])
+  }, [newsList]);
 
   const formatDate = (dateString: string) => {
-    if (!dateString) return ""
+    if (!dateString) return "";
     try {
-      const date = new Date(dateString)
-      return date.toLocaleDateString("en-GB")
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-GB");
     } catch {
-      return ""
+      return "";
     }
-  }
+  };
 
   const handleReadNews = () => {
-    setIsModalOpen(true)
-  }
+    setIsModalOpen(true);
+  };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false)
-  }
+    setIsModalOpen(false);
+  };
 
   if (loading) {
     return (
@@ -47,7 +52,7 @@ export const HeroSection = (): JSX.Element => {
           </CardContent>
         </Card>
       </section>
-    )
+    );
   }
 
   if (error || !featuredNews) {
@@ -59,11 +64,13 @@ export const HeroSection = (): JSX.Element => {
           </CardContent>
         </Card>
       </section>
-    )
+    );
   }
 
   const imageUrl =
-    featuredNews.coverImg && featuredNews.coverImg !== "/placeholder.png" ? featuredNews.coverImg : "/news-img-main.png"
+    featuredNews.coverImg && featuredNews.coverImg !== "/placeholder.png"
+      ? featuredNews.coverImg
+      : "/news-img-main.png";
 
   return (
     <>
@@ -71,14 +78,9 @@ export const HeroSection = (): JSX.Element => {
         <Card className="max-w-[1400px] w-full border border-[#eeeeee] rounded-[10px] md:rounded-[20px] overflow-hidden mx-auto">
           <CardContent className="flex flex-col md:flex-row items-center gap-4 md:gap-[20px] lg:gap-[40px] 2xl:gap-[60px] p-[15px] lg:p-[15px]">
             <img
-              className="hidden lg:block w-full lg:max-w-[750px] 2xl:max-w-[858px] lg:h-[300px] lg:rounded-[20px] object-cover flex-shrink-0"
+              className="w-full md:max-w-[427px] lg:max-w-[750px] 2xl:max-w-[858px] h-[178px] md:h-[213px] lg:h-[300px] rounded-[20px] object-cover flex-shrink-0"
               alt="News img main"
               src={imageUrl || "/placeholder.svg"}
-            />
-            <img
-              className="lg:hidden w-full max-w-[331px] md:max-w-[375px] h-[150px] md:h-[190px] rounded-[10px] md:rounded-[20px] object-cover flex-shrink-0"
-              alt="News img main"
-              src="/news-img-md.png"
             />
 
             <div className="flex flex-col gap-4 md:gap-5 flex-1 min-w-0">
@@ -86,26 +88,32 @@ export const HeroSection = (): JSX.Element => {
                 {featuredNews?.title}
               </h1>
 
-              <p className="font-body-body3-400 font-[number:var(--body-body3-400-font-weight)] text-[#1c1c1c] text-[16px] md:text-[14px] tracking-[var(--body-body3-400-letter-spacing)] leading-[24px] md:leading-[19px] lg:leading-[var(--body-body3-400-line-height)] [font-style:var(--body-body3-400-font-style)]">
-                {featuredNews?.content?.split("\n").map((line: string, index: number) => (
-                  <React.Fragment key={index}>
-                    {line}
-                    {index < featuredNews.content.split("\n").length - 1 && <br />}
-                  </React.Fragment>
-                ))}
+              <p className="font-body-body3-400 font-[number:var(--body-body3-400-font-weight)] text-[#1c1c1c] text-[16px] md:text-[14px] tracking-[var(--body-body3-400-letter-spacing)] leading-[24px] md:leading-[19px] lg:leading-[var(--body-body3-400-line-height)] [font-style:var(--body-body3-400-font-style)] line-clamp-2">
+                {featuredNews?.content
+                  ?.replace(/<\/?[^>]+(>|$)/g, "")
+                  .split("\n")
+                  .map((line: string, index: number) => (
+                    <React.Fragment key={index}>
+                      {line}
+                      {index <
+                        featuredNews.content
+                          .replace(/<\/?[^>]+(>|$)/g, "")
+                          .split("\n").length -
+                          1 && <br />}
+                    </React.Fragment>
+                  ))}
               </p>
-
               <div className="flex items-center justify-between">
                 <time className="font-body-body3-400 font-[number:var(--body-body3-400-font-weight)] text-[#4f5555] text-[16px] md:text-[14px] lg:text-[length:var(--body-body3-400-font-size)] tracking-[var(--body-body3-400-letter-spacing)] leading-[var(--body-body3-400-line-height)] [font-style:var(--body-body3-400-font-style)]">
-                  {formatDate(featuredNews?.createdAt)}
+                  {formatDate(featuredNews?.createTime)}
                 </time>
 
                 <a
                   href="#"
                   className="flex items-center gap-2 cursor-pointer text-primary-colour font-light md:text-[12px] lg:text-[16px]"
                   onClick={(e) => {
-                    e.preventDefault()
-                    handleReadNews()
+                    e.preventDefault();
+                    handleReadNews();
                   }}
                 >
                   <span>Read news</span>
@@ -121,7 +129,13 @@ export const HeroSection = (): JSX.Element => {
         </Card>
       </section>
 
-      {isModalOpen && <NewsModal isOpen={isModalOpen} onClose={handleCloseModal} newsItem={featuredNews} />}
+      {isModalOpen && (
+        <NewsModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          newsItem={featuredNews}
+        />
+      )}
     </>
-  )
-}
+  );
+};
