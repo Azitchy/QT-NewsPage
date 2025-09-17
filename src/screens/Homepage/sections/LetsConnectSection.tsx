@@ -47,12 +47,20 @@ export const LetsConnectSection = () => {
       </div>
       <div className="flex flex-col lg:absolute top-64 left-24 z-20">
         <div className="flex gap-20 w-[70px] h-[70px] md:w-[90px] md:h-[90px]">
-          <img alt="X" src="/x.png" className="cursor-pointer" />
-          <img alt="Discord" src="/discord.png" className="cursor-pointer" />
+          <img alt="X" src="/x-logo.png" className="cursor-pointer" />
+          <img
+            alt="Discord"
+            src="/discord-logo.png"
+            className="cursor-pointer"
+          />
         </div>
         <div className="flex gap-20 ml-20 w-[70px] h-[70px] md:w-[90px] md:h-[90px]">
-          <img alt="Telegram" src="/telegram.png" className="cursor-pointer" />
-          <img alt="Reddit" src="/reddit.png" className="cursor-pointer" />
+          <img
+            alt="Telegram"
+            src="/telegram-logo.png"
+            className="cursor-pointer"
+          />
+          <img alt="Reddit" src="/reddit-logo.png" className="cursor-pointer" />
         </div>
       </div>
       <div className="flex flex-col lg:flex-row w-full items-end justify-between px-0 lg:px-[71px] gap-8 lg:gap-10">
@@ -65,13 +73,13 @@ export const LetsConnectSection = () => {
             />
 
             <div className="inline-flex flex-col items-start gap-[15px] relative lg:absolute lg:top-[560px] lg:left-2 mt-8 mb-[30px] md:mb-0">
-              <div className="relative w-full lg:w-[587px] mt-[-1.00px] font-body-body2-400 font-[number:var(--body-body2-400-font-weight)] text-foreground dark:text-foreground text-[16px] lg:text-[length:var(--body-body2-400-font-size)] tracking-[var(--body-body2-400-letter-spacing)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)] [font-style:var(--body-body2-400-font-style)]">
+              <div className="relative w-full lg:w-[587px] mt-[-1.00px] font-body-body2-400 font-[number:var(--body-body2-400-font-weight)] text-[#1c1c1c] dark:text-white text-[16px] lg:text-[length:var(--body-body2-400-font-size)] tracking-[var(--body-body2-400-letter-spacing)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)] [font-style:var(--body-body2-400-font-style)]">
                 Subscribe ATM to receive the latest events and community updates
               </div>
 
               <div className="inline-flex flex-row items-stretch sm:items-center gap-2.5 w-full">
                 <Input
-                  className="w-[200px] sm:flex-1 lg:w-[378.62px] h-[43px] px-[20px] py-2.5 bg-background dark:bg-background rounded-[10px] border border-solid border-border dark:border-primary-foreground overflow-hidden text-ellipsis"
+                  className="w-[200px] sm:flex-1 lg:w-[378.62px] h-[43px] px-[20px] py-2.5 bg-white dark:bg-[#090920] rounded-[10px] border border-solid border-[#eeeeee] overflow-hidden text-ellipsis"
                   placeholder="Please enter your email*"
                   type="email"
                   value={emailSubscription}
@@ -79,7 +87,7 @@ export const LetsConnectSection = () => {
                 />
 
                 <Button
-                  className="bg-[#e0f7fa] text-primary text-[14px] lg:text-[16px] font-medium md:font-light rounded-[30px] px-[15px] py-[12px] lg:px-5 lg:py-5 w-full sm:w-auto"
+                  className="bg-[#e0f7fa] text-[#2ea8af] text-[14px] lg:text-[16px] font-medium md:font-light rounded-[30px] px-[15px] py-[12px] lg:px-5 lg:py-5 w-full sm:w-auto"
                   onClick={handleEmailSubscription}
                 >
                   Subscribe
@@ -90,22 +98,22 @@ export const LetsConnectSection = () => {
         </div>
 
         <div className="w-full lg:w-[780px] h-auto lg:h-[468px] gap-[15px] lg:mb-14 2xl:mr-[300px] flex flex-col items-start order-1 lg:order-2  lg:px-0">
-          <div className="relative self-stretch mt-[-1.00px] font-body-body2-400 font-[number:var(--body-body2-400-font-weight)] text-foreground dark:text-foreground text-[16px] lg:text-[length:var(--body-body2-400-font-size)] tracking-[var(--body-body2-400-letter-spacing)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)] [font-style:var(--body-body2-400-font-style)]">
+          <div className="relative self-stretch mt-[-1.00px] font-body-body2-400 font-[number:var(--body-body2-400-font-weight)] text-[#1c1c1c] dark:text-white text-[16px] lg:text-[length:var(--body-body2-400-font-size)] tracking-[var(--body-body2-400-letter-spacing)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)] [font-style:var(--body-body2-400-font-style)]">
             Got any question? Simply fill-in the contact form. We would like to
             hear from you!
           </div>
 
-          <Card className="h-auto lg:h-[429px] w-full bg-card dark:bg-card rounded-[20px] border border-solid border-border dark:border-primary-foreground">
+          <Card className="h-auto lg:h-[429px] w-full bg-[#fbfbfb] dark:bg-[#2B2F3E] rounded-[20px] border border-solid border-[#eeeeee]">
             <CardContent className="flex flex-col items-start gap-5 px-6 lg:px-[45px] py-6 lg:py-[30px] h-full relative">
               <Input
-                className="w-full lg:w-1/2  h-[43px] px-[15px] py-2.5 bg-white dark:bg-[#090920] rounded-[10px] border border-solid border-border dark:border-primary-foreground"
+                className="w-full lg:w-1/2  h-[43px] px-[15px] py-2.5 bg-white dark:bg-[#090920] rounded-[10px] border border-solid border-[#eeeeee]"
                 placeholder="Name*"
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
               />
 
               <Input
-                className="w-full lg:w-1/2 h-[43px] px-[15px] py-2.5 bg-background dark:bg-background rounded-[10px] border border-solid border-border dark:border-primary-foreground"
+                className="w-full lg:w-1/2 h-[43px] px-[15px] py-2.5 bg-white dark:bg-[#090920] rounded-[10px] border border-solid border-[#eeeeee]"
                 placeholder="Wallet address"
                 value={formData.walletAddress}
                 onChange={(e) =>
@@ -114,7 +122,7 @@ export const LetsConnectSection = () => {
               />
 
               <Input
-                className="w-full lg:w-1/2 h-[43px] px-[15px] py-2.5 bg-background dark:bg-background rounded-[10px] border border-solid border-border dark:border-primary-foreground"
+                className="w-full lg:w-1/2 h-[43px] px-[15px] py-2.5 bg-white dark:bg-[#090920] rounded-[10px] border border-solid border-[#eeeeee]"
                 placeholder="Email address*"
                 type="email"
                 value={formData.email}
@@ -122,14 +130,14 @@ export const LetsConnectSection = () => {
               />
 
               <Textarea
-                className="h-[100px] w-full px-5 pt-[15px] pb-2.5 bg-background dark:bg-background rounded-[10px] border border-solid border-border dark:border-primary-foreground text-[#4f5555]"
+                className="h-[100px] w-full px-5 pt-[15px] pb-2.5 bg-white dark:bg-[#090920] rounded-[10px] border border-solid border-[#eeeeee] text-[#4f5555]"
                 placeholder="Your message*"
                 value={formData.message}
                 onChange={(e) => handleInputChange("message", e.target.value)}
               />
 
               <Button
-                className="self-center bg-primary text-[16px] font-light text-background dark:text-primary-foreground rounded-[30px] px-5 py-6 mt-4"
+                className="self-center bg-[#2ea8af] text-[16px] font-light text-white rounded-[30px] px-5 py-6 mt-4"
                 onClick={handleFormSubmit}
                 disabled={isFormSubmitted}
               >

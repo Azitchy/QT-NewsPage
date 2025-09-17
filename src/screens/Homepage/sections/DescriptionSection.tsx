@@ -8,8 +8,8 @@ export const DescriptionSection = (): JSX.Element => {
         alt="nodesImg"
         className="hidden xl:block mr-[85px]"
       />
-      <div className="max-w-[790px] 2xl:max-w-[948px] mx-auto leading-6 sm:leading-7 lg:text-left">
-        <div className="w-full xl:w-[784px] 2xl:w-[948px] text-foreground dark:text-foreground font-inter text-[18px] md:text-[20px] font-light">
+      <div className="max-w-[790px] mx-auto leading-6 sm:leading-7  lg:text-left">
+        <div className="w-full xl:w-[720px] text-[#1c1c1c] dark:text-[#DCDCDC] [font-family:'Inter',Helvetica] text-[18px] md:text-[20px] font-light">
           Autonomous Trust Momentum (ATM) lets you earn rewards by securely
           locking funds in financial agreements called Consensus Connections.
           Using the advanced ATM-Rank (PR) algorithm, your contributions are

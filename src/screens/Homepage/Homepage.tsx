@@ -5,7 +5,7 @@ import { FooterSection } from "../../components/FooterSection";
 
 export const Homepage = (): JSX.Element => {
   return (
-    <div className="flex flex-col w-full bg-background dark:bg-background">
+    <div className="flex flex-col w-full bg-white dark:bg-[#090920]">
       <FirstScreenSection />
       <ContentSection />
       <FooterSection />
