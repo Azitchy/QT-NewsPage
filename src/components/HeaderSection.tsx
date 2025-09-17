@@ -20,13 +20,13 @@ export const HeaderSection = (): JSX.Element => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { 
-    isAuthenticated, 
-    wallet, 
-    connectWallet, 
-    disconnectWallet, 
+  const {
+    isAuthenticated,
+    wallet,
+    connectWallet,
+    disconnectWallet,
     isConnecting,
-    session 
+    session,
   } = useWeb3Auth();
   const { setTheme, theme } = useTheme();
 
@@ -78,13 +78,13 @@ export const HeaderSection = (): JSX.Element => {
 
   const handleWebAppClick = async () => {
     if (isAuthenticated) {
-      navigate('/webapp');
+      navigate("/webapp");
     } else {
       try {
         await connectWallet();
         // Navigation will happen automatically via useEffect below
       } catch (error) {
-        console.error('Failed to connect wallet:', error);
+        console.error("Failed to connect wallet:", error);
       }
     }
   };
@@ -93,8 +93,8 @@ export const HeaderSection = (): JSX.Element => {
     await disconnectWallet();
     setShowUserMenu(false);
     // Redirect away from protected routes
-    if (location.pathname === '/webapp') {
-      navigate('/');
+    if (location.pathname === "/webapp") {
+      navigate("/");
     }
   };
 
@@ -104,12 +104,12 @@ export const HeaderSection = (): JSX.Element => {
 
   // Auto-navigate to webapp after successful authentication
   useEffect(() => {
-    if (isAuthenticated && !location.pathname.includes('/webapp')) {
+    if (isAuthenticated && !location.pathname.includes("/webapp")) {
       // Only navigate if user just authenticated and isn't already on webapp
-      const wasConnecting = sessionStorage.getItem('wasConnecting');
-      if (wasConnecting === 'true') {
-        navigate('/webapp');
-        sessionStorage.removeItem('wasConnecting');
+      const wasConnecting = sessionStorage.getItem("wasConnecting");
+      if (wasConnecting === "true") {
+        navigate("/webapp");
+        sessionStorage.removeItem("wasConnecting");
       }
     }
   }, [isAuthenticated, navigate, location.pathname]);
@@ -117,23 +117,32 @@ export const HeaderSection = (): JSX.Element => {
   // Track connecting state
   useEffect(() => {
     if (isConnecting) {
-      sessionStorage.setItem('wasConnecting', 'true');
+      sessionStorage.setItem("wasConnecting", "true");
     }
   }, [isConnecting]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (showUserMenu && !(event.target as Element).closest('.user-menu-container')) {
+      if (
+        showUserMenu &&
+        !(event.target as Element).closest(".user-menu-container")
+      ) {
         setShowUserMenu(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showUserMenu]);
 
-  const WalletButton = ({ className, isMobile = false }: { className: string, isMobile?: boolean }) => {
+  const WalletButton = ({
+    className,
+    isMobile = false,
+  }: {
+    className: string;
+    isMobile?: boolean;
+  }) => {
     // Only show the dropdown for the WalletButton that is currently visible (desktop or mobile)
     const isVisible =
       (isMobile && window.innerWidth < 1024) ||
@@ -147,37 +156,44 @@ export const HeaderSection = (): JSX.Element => {
             onClick={() => setShowUserMenu(!showUserMenu)}
           >
             <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-green-500 rounded-full flex items-center justify-center">
-              <User className="w-3 h-3 text-white" />
+              <User className="w-3 h-3 text-background" />
             </div>
-            {isMobile ? formatAddress(wallet.address) : 'Connected'}
+            {isMobile ? formatAddress(wallet.address) : "Connected"}
           </Button>
-          
+
           {/* User dropdown menu */}
           {showUserMenu && isVisible && (
-            <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-gray-200 z-50 p-4">
+            <div className="absolute right-0 mt-2 w-64 bg-background rounded-xl shadow-lg border border-gray-200 z-50 p-4">
               <div className="space-y-3">
                 <div className="flex items-center gap-3 pb-3 border-b border-gray-100">
                   <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-green-500 rounded-full flex items-center justify-center">
-                    <User className="w-5 h-5 text-white" />
+                    <User className="w-5 h-5 text-background" />
                   </div>
                   <div>
-                    <div className="font-medium text-gray-900">Connected Wallet</div>
-                    <div className="text-sm text-gray-500">{formatAddress(wallet.address)}</div>
+                    <div className="font-medium text-gray-900">
+                      Connected Wallet
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {formatAddress(wallet.address)}
+                    </div>
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 px-3 py-2 rounded-lg">
                     <Shield className="w-4 h-4" />
                     <span>Authenticated via SIWE</span>
                   </div>
-                  
+
                   {session && (
                     <div className="text-xs text-gray-500 bg-gray-50 px-3 py-2 rounded-lg">
-                      <div>Session expires: {new Date(session.expiresAt).toLocaleTimeString()}</div>
+                      <div>
+                        Session expires:{" "}
+                        {new Date(session.expiresAt).toLocaleTimeString()}
+                      </div>
                     </div>
                   )}
-                  
+
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(wallet.address);
@@ -188,10 +204,10 @@ export const HeaderSection = (): JSX.Element => {
                     <Wallet className="w-4 h-4" />
                     <span>Copy Address</span>
                   </button>
-                  
+
                   <button
                     onClick={() => {
-                      navigate('/webapp');
+                      navigate("/webapp");
                       setShowUserMenu(false);
                     }}
                     className="w-full flex items-center gap-2 text-sm text-blue-600 hover:text-blue-900 hover:bg-blue-50 px-3 py-2 rounded-lg transition-colors"
@@ -200,7 +216,7 @@ export const HeaderSection = (): JSX.Element => {
                     <span>Go to WebApp</span>
                   </button>
                 </div>
-                
+
                 <div className="border-t border-gray-100 pt-3">
                   <button
                     onClick={handleDisconnect}
@@ -225,13 +241,13 @@ export const HeaderSection = (): JSX.Element => {
       >
         {isConnecting ? (
           <>
-            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-            {isMobile ? 'Connecting...' : 'Connecting...'}
+            <div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin mr-2"></div>
+            {isMobile ? "Connecting..." : "Connecting..."}
           </>
         ) : (
           <>
             <Wallet className="w-4 h-4 mr-2" />
-            {isMobile ? 'Connect Wallet' : 'Connect Wallet'}
+            {isMobile ? "Connect Wallet" : "Connect Wallet"}
           </>
         )}
       </Button>
@@ -239,7 +255,7 @@ export const HeaderSection = (): JSX.Element => {
   };
 
   return (
-    <header className="sticky top-0 w-full h-[90px] bg-white dark:bg-[#090920] shadow-[0px_4px_30px_#0000000f] z-50">
+    <header className="sticky top-0 w-full h-[90px] bg-background dark:bg-background shadow-[0px_4px_30px_#0000000f] z-50">
       <div className="h-full w-full mx-auto px-4 sm:px-6 lg:px-[70px] lg:py-[19px] flex items-center justify-between">
         {/* Logo area */}
         <div className="flex items-center flex-shrink-0">
@@ -260,10 +276,10 @@ export const HeaderSection = (): JSX.Element => {
                 {item.description ? (
                   <>
                     <NavigationMenuTrigger
-                      className={`inline-flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-full font-body-body-4-400 text-[14px] font-normal leading-[19px] cursor-pointer transition-colors hover:bg-slate-100 hover:text-[#2EA8AF] ${
+                      className={`inline-flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-full font-body-body-4-400 text-[14px] font-normal leading-[19px] cursor-pointer transition-colors hover:bg-primary-foreground hover:text-primary dark:hover:text-card  ${
                         location.pathname === item.path
-                          ? "bg-[#FBFBFB] text-[#2ea8af] dark:text-black"
-                          : "text-[#1c1c1c] dark:text-[#dcdcdc]"
+                          ? "bg-background text-primary dark:text-card dark:bg-foreground"
+                          : "text-foreground dark:text-foreground"
                       }`}
                       asChild
                     >
@@ -272,14 +288,14 @@ export const HeaderSection = (): JSX.Element => {
 
                     {/* dropdown card */}
                     <NavigationMenuContent asChild>
-                      <div className="absolute left-0 top-full mt-2  h-[221px] rounded-2xl shadow-lg bg-[#FBFBFB] dark:bg-[#1c1c1c] px-[60px] py-[40px] flex gap-[150px] z-20">
+                      <div className="absolute left-0 top-full mt-2  h-[221px] rounded-2xl shadow-lg bg-background dark:bg-card px-[60px] py-[40px] flex gap-[150px] z-20">
                         <div className="flex w-[225px] flex-col gap-[10px] flex-1">
                           <p className="text-[18px] leading-6 font-normal text-[#4F5555] dark:text-gray-200 [font-family:'Inter',Helvetica]">
                             {item.description}
                           </p>
                           <Link
                             to={item.path}
-                            className="max-w-[115px] inline-flex items-center gap-[8px] px-[15px] py-[8px] rounded-full bg-[#f5f5f5] hover:bg-slate-200 transition-colors text-[14px] font-normal text-[#1C1C1C]"
+                            className="max-w-[115px] inline-flex items-center gap-[8px] px-[15px] py-[8px] rounded-full bg-[#f5f5f5] hover:bg-slate-200 transition-colors text-[14px] font-normal text-foreground"
                           >
                             {item.label}
                             <img src="/arrow.svg" alt="arrow" />
@@ -317,7 +333,7 @@ export const HeaderSection = (): JSX.Element => {
                                             className="w-5 h-5"
                                           />
                                         )}
-                                        <span className="text-sm text-[#1C1C1C] dark:text-white hover:text-[#2ea8af] cursor-pointer">
+                                        <span className="text-sm text-foreground dark:text-primary-foreground hover:text-primary cursor-pointer">
                                           {label}
                                         </span>
                                       </div>
@@ -334,10 +350,10 @@ export const HeaderSection = (): JSX.Element => {
                   <NavigationMenuLink asChild>
                     <Link
                       to={item.path}
-                      className={`inline-flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-full font-body-body-4-400 text-[14px] font-normal leading-[19px] hover:bg-slate-100 hover:text-[#2EA8AF] cursor-pointer transition-colors ${
+                      className={`inline-flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-full font-body-body-4-400 text-[14px] font-normal leading-[19px] hover:bg-primary-foreground hover:text-primary dark:hover:text-card cursor-pointer transition-colors ${
                         location.pathname === item.path
-                          ? "bg-[#FBFBFB] text-[#2ea8af] dark:text-black"
-                          : "text-[#1c1c1c] dark:text-[#dcdcdc]"
+                          ? "bg-background text-primary dark:text-card dark:bg-foreground"
+                          : "text-foreground dark:text-foreground"
                       }`}
                     >
                       {item.label}
@@ -352,12 +368,12 @@ export const HeaderSection = (): JSX.Element => {
         {/* Right side actions */}
         <div className="flex items-center gap-[10px] flex-shrink-0">
           {/* Desktop Web app button */}
-          <WalletButton className="hidden lg:flex h-[38px] px-[15px] py-2.5 rounded-full bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] hover:opacity-90 transition-opacity text-white font-normal text-[14px]" />
-          
+          <WalletButton className="hidden lg:flex h-[38px] px-[15px] py-2.5 rounded-full bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] hover:opacity-90 transition-opacity text-background font-normal text-[14px]" />
+
           {/* Mobile Web app button */}
-          <WalletButton 
-            className="lg:hidden flex h-[39px] w-[86px] px-[15px] py-2.5 rounded-full bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] hover:opacity-90 transition-opacity text-white font-normal text-[14px]" 
-            isMobile={true} 
+          <WalletButton
+            className="lg:hidden flex h-[39px] w-[86px] px-[15px] py-2.5 rounded-full bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] hover:opacity-90 transition-opacity text-background font-normal text-[14px]"
+            isMobile={true}
           />
 
           {/* Language and theme buttons */}
@@ -392,7 +408,7 @@ export const HeaderSection = (): JSX.Element => {
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden w-10 h-10 p-2 rounded-full dark:text-white"
+            className="lg:hidden w-10 h-10 p-2 rounded-full dark:text-primary-foreground"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? (
@@ -406,7 +422,7 @@ export const HeaderSection = (): JSX.Element => {
 
       {/* Mobile menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-white dark:bg-[#090920] border-t shadow-lg">
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-background dark:bg-background border-t shadow-lg">
           <div className="px-4 py-4 space-y-2">
             <Link
               to="/"
@@ -419,10 +435,10 @@ export const HeaderSection = (): JSX.Element => {
               <Link
                 key={index}
                 to={item.path}
-                className={`block px-4 py-3 hover:bg-slate-100 dark:text-white rounded-lg transition-colors font-normal text-[14px] ${
+                className={`block px-4 py-3 hover:bg-slate-100 dark:text-card rounded-lg transition-colors font-normal text-[14px] ${
                   location.pathname === item.path
-                    ? "bg-[#e9f6f7] text-[#2ea8af]"
-                    : "text-[#1c1c1c]"
+                    ? "bg-primary-foreground text-primary"
+                    : "text-foreground"
                 }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
@@ -430,11 +446,11 @@ export const HeaderSection = (): JSX.Element => {
               </Link>
             ))}
             <div className="pt-4 border-t space-y-3">
-              <WalletButton 
-                className="w-full h-[40px] px-6 py-2.5 rounded-full bg-[linear-gradient(136deg,rgba(170,218,93,1)_0%,rgba(13,174,185,1)_100%)] hover:opacity-90 transition-opacity text-white font-normal text-[14px]" 
+              <WalletButton
+                className="w-full h-[40px] px-6 py-2.5 rounded-full bg-[linear-gradient(136deg,rgba(170,218,93,1)_0%,rgba(13,174,185,1)_100%)] hover:opacity-90 transition-opacity text-primary-foreground font-normal text-[14px]"
                 isMobile={true}
               />
-              
+
               {isAuthenticated && (
                 <button
                   onClick={() => {
@@ -447,7 +463,7 @@ export const HeaderSection = (): JSX.Element => {
                   Disconnect Wallet
                 </button>
               )}
-              
+
               <div className="flex items-center justify-center gap-4">
                 <Button
                   variant="ghost"

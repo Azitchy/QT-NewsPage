@@ -95,7 +95,7 @@ export const FeaturesSection = () => {
       </div>
 
       <div className="mt-[35px] ml-0 lg:ml-[70px] relative">
-        <div className="flex items-center gap-[15px] px-[9px] py-[5px] absolute -top-16 right-4 lg:right-[71px] rounded-[40px] overflow-hidden border border-solid border-[#eeeeee] bg-white dark:bg-[#090920] z-10 shadow-sm">
+        <div className="flex items-center gap-[15px] px-[9px] py-[5px] absolute -top-16 right-4 lg:right-[71px] rounded-[40px] overflow-hidden border border-solid border-border dark:border-primary-foreground bg-background dark:bg-background z-10 shadow-sm">
           {/* Prev Button */}
           <Button
             variant="ghost"
@@ -103,7 +103,7 @@ export const FeaturesSection = () => {
             className={`w-[38.53px] h-[38.53px] p-0 rounded-full transition-colors ${
               currentFeatureSlide === 0
                 ? "bg-gray-200 dark:bg-gray-700 opacity-50 cursor-not-allowed"
-                : "bg-white dark:bg-[#1a1a2e] hover:bg-gray-50"
+                : "bg-background dark:bg-[#1a1a2e] hover:bg-gray-50"
             }`}
             onClick={() => handleFeatureNavigation("prev")}
           >
@@ -120,7 +120,7 @@ export const FeaturesSection = () => {
             className={`w-[38.53px] h-[38.53px] p-0 rounded-full transition-colors ${
               currentFeatureSlide === featuresData.length - 1
                 ? "bg-gray-200 dark:bg-gray-700 opacity-50 cursor-not-allowed"
-                : "bg-[#e9f6f7] hover:bg-[#d8eef0]"
+                : "bg-primary-foreground hover:bg-[#d8eef0]"
             }`}
             onClick={() => handleFeatureNavigation("next")}
           >
@@ -143,19 +143,19 @@ export const FeaturesSection = () => {
               <Card
                 ref={index === 0 ? cardRef : null}
                 key={index}
-                className="w-full sm:w-[300px] xl:w-[355px] 2xl:w-[450px] h-[500px] lg:h-[605px] overflow-hidden border border-solid border-[#eeeeee] bg-[#fbfbfb] dark:bg-[#2B2F3E] rounded-[20px] flex-shrink-0"
+                className="w-full sm:w-[300px] xl:w-[355px] 2xl:w-[450px] h-[500px] lg:h-[605px] overflow-hidden border border-solid border-border dark:border-primary-foreground bg-card dark:bg-card rounded-[20px] flex-shrink-0"
               >
                 <CardContent className="flex flex-col h-full items-start gap-[10px] lg:gap-[20px] px-8 lg:px-[60px] py-8 lg:py-[60px] relative">
                   <div
                     className={`absolute w-[300px] lg:w-[482px] h-[300px] lg:h-[482px] top-[240px] lg:top-[281px] left-[115px] lg:left-[159px] rounded-[150px] lg:rounded-[241.22px] rotate-[-30deg] opacity-50 ${feature.gradientClass}`}
                   />
 
-                  <div className="relative self-stretch font-titles-h3-caption-400 font-[number:var(--titles-h3-caption-400-font-weight)] text-[#1c1c1c] dark:text-[#DCDCDC] text-[26px] xl:text-[30px] leading-[32px] lg:leading-[40px] [font-style:var(--titles-h3-caption-400-font-style)] min-h-[80px] flex">
+                  <div className="relative self-stretch font-titles-h3-caption-400 font-[number:var(--titles-h3-caption-400-font-weight)] text-foreground dark:text-foreground text-[26px] xl:text-[30px] leading-[32px] lg:leading-[40px] [font-style:var(--titles-h3-caption-400-font-style)] min-h-[80px] flex">
                     {feature.title}
                   </div>
 
                   <div className="relative self-stretch w-full min-h-[120px]">
-                    <div className="w-full font-body-body2-400 font-normal text-[#4f5555] dark:text-[#999F9F] text-[16px] lg:text-[length:var(--body-body2-400-font-size)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)] [font-style:var(--body-body2-400-font-style)]">
+                    <div className="w-full font-body-body2-400 font-normal text-[#4f5555] dark:text-card-foreground text-[16px] lg:text-[length:var(--body-body2-400-font-size)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)] [font-style:var(--body-body2-400-font-style)]">
                       {feature.description}
                     </div>
                   </div>

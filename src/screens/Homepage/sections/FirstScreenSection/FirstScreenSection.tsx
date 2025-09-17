@@ -55,7 +55,7 @@ export const FirstScreenSection = (): JSX.Element => {
               key={index}
               onClick={() => handleDotClick(index)}
               className={`w-[10px] h-[10px] rounded-full transition-transform duration-300 hover:scale-110 ${
-                currentSlide === index ? "bg-teal-600" : "bg-gray-300"
+                currentSlide === index ? "bg-primary" : "bg-gray-300"
               }`}
             />
           ))}
@@ -83,15 +83,15 @@ export const FirstScreenSection = (): JSX.Element => {
 
           {/* Right text */}
           <div className="flex-1 text-center md:text-left mt-0 md:mt-6 lg:-mt-24 lg:relative lg:right-[200px]">
-            <Card className="inline-flex items-center mb-[15px] md:mb-[30px] px-[8px] md:px-[10px] py-[5px]  rounded-full border border-gray-200 backdrop-blur-md bg-[linear-gradient(180deg,rgba(252,252,252,0.40)_44.56%,rgba(242,242,242,0.40)_100%)] dark:bg-[linear-gradient(180deg,rgba(81,79,79,0.40)_49.59%,rgba(36,36,36,0.40)_100%)] z-30">
+            <Card className="inline-flex items-center mb-[15px] md:mb-[30px] px-[8px] md:px-[10px] py-[5px] rounded-full border border-gray-200 backdrop-blur-md bg-[linear-gradient(180deg,rgba(252,252,252,0.40)_44.56%,rgba(242,242,242,0.40)_100%)] dark:bg-[linear-gradient(180deg,rgba(81,79,79,0.40)_49.59%,rgba(36,36,36,0.40)_100%)] z-30">
               <CardContent className="flex items-center gap-[5px] p-0">
-                <Badge className="px-3 py-1 rounded-full bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] text-[#FFFFFF] text-sm">
+                <Badge className="px-3 py-1 rounded-full bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] text-background dark:text-primary-foreground text-sm">
                   NEW
                 </Badge>
-                <p className="text-[#1C1C1C] dark:text-[#DCDCDC] text-sm truncate  [font-family:'Inter',Helvetica] w-48 xl:w-full overflow-hidden whitespace-nowrap">
+                <p className="text-foreground dark:text-[#DCDCDC] text-sm truncate font-inter w-48 xl:w-full overflow-hidden whitespace-nowrap">
                   ATM.connect now supports multi-chain functionality!
                 </p>
-                <button className="rounded-full bg-[#E9F6F7] hover:bg-cyan-100 transition">
+                <button className="rounded-full bg-primary-foreground hover:bg-cyan-100 transition">
                   <a href="#">
                     <img
                       src="/arrow-right-icon-4.svg"
@@ -102,10 +102,10 @@ export const FirstScreenSection = (): JSX.Element => {
                 </button>
               </CardContent>
             </Card>
-            <h2 className="max-w-[512px] xl:w-[512px] 2xl:w-[784px] 2xl:max-w-[748px] text-[26px] text-start leading-8 lg:leading-10 lg:text-[32px] font-extrabold [font-family:'Space_Grotesk',Helvetica] bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] bg-clip-text text-transparent mb-2">
+            <h2 className="max-w-[512px] xl:w-[512px] large:w-[784px] large:max-w-[748px] text-[26px] text-start font-space-grotesk leading-8 lg:leading-10 lg:text-[32px] font-extrabold  bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] bg-clip-text text-transparent mb-2">
               {currentSlideData.rightTitle}{" "}
               {currentSlideData.rightTitleHighlight}{" "}
-              <span className="text-[#1C1C1C] text-[26px] lg:text-[32px] [font-family:'Space_Grotesk',Helvetica] font-extralight dark:text-[#DCDCDC]">
+              <span className="text-foreground text-[26px] lg:text-[32px] font-extralight dark:text-foreground">
                 {currentSlideData.rightSubtitle}
               </span>
             </h2>
