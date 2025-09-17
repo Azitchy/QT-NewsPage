@@ -90,7 +90,7 @@ export const ThirdPartySection = () => {
       </div>
 
       <div className="w-full  mb-[40px]  md:pl-[135px] 2xl:pl-[260px]">
-        <p className="max-w-[784px] font-inter font-light text-foreground text-[18px] lg:text-[20px] leading-[24px] lg:leading-[27px] text-left">
+        <p className="max-w-[784px] [font-family:'Inter',Helvetica] font-light text-[#1c1c1c] text-[18px] lg:text-[20px] leading-[24px] lg:leading-[27px] text-left">
           In support of development, we've opted to integrate numerous
           third-party applications. Our open-source code is readily accessible
           for all developers.{" "}
@@ -103,15 +103,15 @@ export const ThirdPartySection = () => {
       </div>
 
       {/* Navigation */}
-      <div className="flex justify-end w-full mb-[20px] pr-4 large:hidden">
-        <div className="flex items-center gap-[15px] px-[9px] py-[5px] rounded-[40px] border border-solid border-border dark:border-primary-foreground bg-background dark:bg-background shadow-sm">
+      <div className="flex justify-end w-full mb-[20px] pr-4 2xl:hidden">
+        <div className="flex items-center gap-[15px] px-[9px] py-[5px] rounded-[40px] border border-solid border-[#eeeeee] bg-white dark:bg-[#090920] shadow-sm">
           <Button
             variant="ghost"
             disabled={currentSlide === 0}
             className={`w-[38.53px] h-[38.53px] p-0 rounded-full transition-colors ${
               currentSlide === 0
-                ? "bg-gray-200 opacity-50 cursor-not-allowed"
-                : "bg-background hover:bg-gray-50"
+                ? "bg-gray-200  opacity-50 cursor-not-allowed"
+                : "bg-white  hover:bg-gray-50"
             }`}
             onClick={() => handleNavigation("prev")}
           >
@@ -148,7 +148,7 @@ export const ThirdPartySection = () => {
             {visiblePartners.map((partner, index) => (
               <Card
                 key={index}
-                className="w-full  bg-card rounded-[20px] border border-solid border-border dark:border-primary-foreground"
+                className="w-full  bg-[#fbfbfb] rounded-[20px] border border-solid border-[#eeeeee]"
               >
                 <CardContent className="flex flex-col h-full items-start justify-between gap-[20px] p-[30px]">
                   <img
@@ -157,10 +157,10 @@ export const ThirdPartySection = () => {
                     src={partner.icon}
                   />
                   <div className="flex flex-col gap-5 flex-1">
-                    <h3 className="font-medium text-primary text-[20px] leading-[27px]">
+                    <h3 className="font-medium text-[#2ea8af] text-[20px] leading-[27px]">
                       {partner.name}
                     </h3>
-                    <p className="text-foreground text-[14px] lg:text-[16px] leading-[19px] lg:leading-[24px] flex-1">
+                    <p className="text-[#1c1c1c] text-[14px] lg:text-[16px] leading-[19px] lg:leading-[24px] flex-1">
                       {partner.description}
                     </p>
                   </div>
@@ -180,7 +180,7 @@ export const ThirdPartySection = () => {
               <Card
                 ref={index === 0 ? cardRef : null}
                 key={index}
-                className="w-full 2xl:max-w-[330px] md:max-w-[280px] overflow-hidden border border-solid border-border dark:border-primary-foreground bg-card rounded-[20px] flex-shrink-0"
+                className="w-full 2xl:max-w-[330px] md:max-w-[280px] overflow-hidden border border-solid border-[#eeeeee] bg-[#fbfbfb] rounded-[20px] flex-shrink-0"
               >
                 <CardContent className="flex flex-col h-full items-start justify-between md:gap-[20px] lg:gap-[15px] p-[30px]">
                   <img
@@ -192,7 +192,7 @@ export const ThirdPartySection = () => {
                     <h3 className="font-medium text-[#2ea8af] text-[20px] leading-[27px]">
                       {partner.name}
                     </h3>
-                    <p className="text-foreground text-[14px] lg:text-[16px] leading-[19px] lg:leading-[24px] flex-1">
+                    <p className="text-[#1c1c1c] text-[14px] lg:text-[16px] leading-[19px] lg:leading-[24px] flex-1">
                       {partner.description}
                     </p>
                   </div>

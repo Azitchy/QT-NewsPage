@@ -65,7 +65,7 @@ export const CommunitySection = () => {
                 src="/dots.svg"
               />
             </div>
-            <div className="flex-1 md:max-w-[519px] lg:max-w-[750px] 2xl:max-w-[955px] font-inter text-foreground dark:text-foreground text-[16px] lg:text-xl leading-[24px] lg:leading-[27px] mt-14 lg:ml-20 2xl:ml-[300px] text-left">
+            <div className="flex-1 md:max-w-[519px] lg:max-w-[750px] 2xl:max-w-[955px] [font-family:'Inter',Helvetica] text-[#1c1c1c] text-[16px] lg:text-xl leading-[24px] lg:leading-[27px] mt-14 lg:ml-20 2xl:ml-[300px] text-left">
               <span className="font-light">
                 Token PR is one of ATM's open decentralised community ecosystem.{" "}
               </span>
@@ -85,16 +85,16 @@ export const CommunitySection = () => {
       </div>
 
       <div className="flex flex-col w-full items-start gap-5 max-w-[782px] 2xl:max-w-[955px] lg:mx-60 2xl:mx-96">
-        <h3 className="font-titles-h5-large-text-400 text-foreground dark:text-foreground text-[20px] lg:text-[length:var(--titles-h5-large-text-400-font-size)] tracking-[var(--titles-h5-large-text-400-letter-spacing)] leading-[27px] lg:leading-[var(--titles-h5-large-text-400-line-height)] text-left">
+        <h3 className="font-titles-h5-large-text-400 text-[#1c1c1c] text-[20px] lg:text-[length:var(--titles-h5-large-text-400-font-size)] tracking-[var(--titles-h5-large-text-400-letter-spacing)] leading-[27px] lg:leading-[var(--titles-h5-large-text-400-line-height)] text-left">
           {communityData.howToJoin.title}
         </h3>
-        <p className="font-body-body2-400 text-foreground dark:text-foreground text-[16px] lg:text-[length:var(--body-body2-400-font-size)] tracking-[var(--body-body2-400-letter-spacing)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)] text-left">
+        <p className="font-body-body2-400 text-[#1c1c1c] text-[16px] lg:text-[length:var(--body-body2-400-font-size)] tracking-[var(--body-body2-400-letter-spacing)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)] text-left">
           {communityData.howToJoin.description}
         </p>
       </div>
 
       <div className="flex flex-col items-center gap-[5px] mb-12">
-        <h3 className="font-titles-h5-large-text-400 text-foreground dark:text-foreground text-[20px] lg:text-[length:var(--titles-h5-large-text-400-font-size)] tracking-[var(--titles-h5-large-text-400-letter-spacing)] leading-[27px] lg:leading-[var(--titles-h5-large-text-400-line-height)] text-center">
+        <h3 className="font-titles-h5-large-text-400 text-[#1c1c1c] text-[20px] lg:text-[length:var(--titles-h5-large-text-400-font-size)] tracking-[var(--titles-h5-large-text-400-letter-spacing)] leading-[27px] lg:leading-[var(--titles-h5-large-text-400-line-height)] text-center">
           {communityData.rewardModes.title}
         </h3>
         <p className="font-body-labeltext-400 text-[#4f5555] text-[12px] lg:text-[length:var(--body-labeltext-400-font-size)] tracking-[var(--body-labeltext-400-letter-spacing)] leading-[17px] lg:leading-[var(--body-labeltext-400-line-height)] text-center">
@@ -126,10 +126,10 @@ export const CommunitySection = () => {
                   <span
                     className={`font-bold transition-all duration-700 ease-in-out ${
                       isActive
-                        ? "text-[150px] lg:text-[250px] text-primary"
+                        ? "text-[150px] lg:text-[250px] text-[#2EA8AF]"
                         : isNext
-                        ? "text-[150px] lg:text-[250px] text-[#F2F9FF] dark:text-[#40576A]"
-                        : "text-[150px] lg:text-[250px] text-[#F2F9FF] dark:text-[#40576A]"
+                        ? "text-[150px] lg:text-[250px] text-[#F2F9FF]"
+                        : "text-[150px] lg:text-[250px] text-[#F2F9FF]"
                     }`}
                   >
                     {mode.id}
@@ -138,7 +138,7 @@ export const CommunitySection = () => {
                   {/* Active content */}
                   {isActive && (
                     <div className="ml-4 transition-all duration-700 ease-in-out">
-                      <p className="text-foreground dark:text-foreground text-[14px] lg:text-[16px] max-w-[630px] leading-[19px] lg:leading-[24px]">
+                      <p className="text-black text-[14px] lg:text-[16px] max-w-[630px] leading-[19px] lg:leading-[24px]">
                         {mode.description}
                       </p>
                     </div>
@@ -147,10 +147,10 @@ export const CommunitySection = () => {
                   {/* Next blurred preview */}
                   {isNext && (
                     <div className="ml-4 relative w-[150px] h-[80px] overflow-hidden">
-                      <p className="text-foreground text-[12px] lg:text-[14px] leading-[16px] lg:leading-[20px] opacity-70 blur-[1.5px]">
+                      <p className="text-black text-[12px] lg:text-[14px] leading-[16px] lg:leading-[20px] opacity-70 blur-[1.5px]">
                         {mode.description}
                       </p>
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/70 to-white dark:bg-none"></div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/70 to-white"></div>
                     </div>
                   )}
                 </div>
@@ -168,7 +168,7 @@ export const CommunitySection = () => {
                 <span className="w-[105px] text-[140px] font-bold text-[#F2F9FF]">
                   {mode.number}
                 </span>
-                <p className="text-foreground text-[14px] leading-[19px] w-[240px]">
+                <p className="text-black text-[14px] leading-[19px] w-[240px]">
                   {mode.description}
                 </p>
               </div>
@@ -181,7 +181,7 @@ export const CommunitySection = () => {
             button.primary ? (
               <Button
                 key={index}
-                className="bg-primary text-background dark:text-primary-foreground rounded-[30px] px-[12px] lg:px-[20px] py-3 font-body-body3-400 text-[16px] leading-[24px] hover:bg-primary/90"
+                className="bg-[#2ea8af] text-white rounded-[30px] px-[12px] lg:px-[20px] py-3 font-body-body3-400 text-[16px] leading-[24px] hover:bg-[#2ea8af]/90"
               >
                 <a href={button.href}>{button.text}</a>
               </Button>
@@ -190,13 +190,13 @@ export const CommunitySection = () => {
                 key={index}
                 className="flex items-center gap-[10px] cursor-pointer"
               >
-                <span className="font-body-body-4-400 text-primary text-[14px] lg:text-[16px] tracking-[var(--body-body-4-400-letter-spacing)] leading-[19px] lg:leading-[var(--body-body-4-400-line-height)]">
+                <span className="font-body-body-4-400 text-primary-colour text-[14px] lg:text-[16px] tracking-[var(--body-body-4-400-letter-spacing)] leading-[19px] lg:leading-[var(--body-body-4-400-line-height)]">
                   {button.text}
                 </span>
                 <a href={button.href}>
                   <div className="w-[38px] h-[38px] relative">
                     <img
-                      className="absolute w-[33px] h-[33px] top-[3px] left-0.5 hover:-rotate-12 rounded-full cursor-pointer hover:bg-primary-foreground"
+                      className="absolute w-[33px] h-[33px] top-[3px] left-0.5 hover:-rotate-12 rounded-full cursor-pointer hover:bg-gray-300"
                       alt="Arrow right icon"
                       src="/arrow-right-icon.svg"
                     />
