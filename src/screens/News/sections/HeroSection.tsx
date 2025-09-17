@@ -46,9 +46,9 @@ export const HeroSection = (): JSX.Element => {
   if (loading) {
     return (
       <section className="w-full flex justify-center py-8 md:py-12 px-4 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
-        <Card className="max-w-[1400px] w-full border border-border dark:border-primary-foreground rounded-[10px] md:rounded-[20px] overflow-hidden mx-auto">
+        <Card className="max-w-[1400px] w-full border border-[#eeeeee] rounded-[10px] md:rounded-[20px] overflow-hidden mx-auto">
           <CardContent className="flex items-center justify-center p-[60px]">
-            <div className="text-card-foreground">Loading featured news...</div>
+            <div className="text-gray-500">Loading featured news...</div>
           </CardContent>
         </Card>
       </section>
@@ -58,9 +58,9 @@ export const HeroSection = (): JSX.Element => {
   if (error || !featuredNews) {
     return (
       <section className="w-full flex justify-center py-8 md:py-12 px-4 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
-        <Card className="max-w-[1400px] w-full border border-border dark:border-primary-foreground rounded-[10px] md:rounded-[20px] overflow-hidden mx-auto">
+        <Card className="max-w-[1400px] w-full border border-[#eeeeee] rounded-[10px] md:rounded-[20px] overflow-hidden mx-auto">
           <CardContent className="flex items-center justify-center p-[60px]">
-            <div className="text-destructive">Failed to fetch news data</div>
+            <div className="text-red-500">Failed to fetch news data</div>
           </CardContent>
         </Card>
       </section>
@@ -75,7 +75,7 @@ export const HeroSection = (): JSX.Element => {
   return (
     <>
       <section className="w-full flex justify-center py-8 md:py-12 px-4 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
-        <Card className="max-w-[1400px] w-full border border-border dark:border-primary-foreground dark:bg-background rounded-[10px] md:rounded-[20px] overflow-hidden mx-auto">
+        <Card className="max-w-[1400px] w-full border border-[#eeeeee] rounded-[10px] md:rounded-[20px] overflow-hidden mx-auto">
           <CardContent className="flex flex-col md:flex-row items-center gap-4 md:gap-[20px] lg:gap-[40px] 2xl:gap-[60px] p-[15px] lg:p-[15px]">
             <img
               className="w-full md:max-w-[427px] lg:max-w-[750px] 2xl:max-w-[858px] h-[178px] md:h-[213px] lg:h-[300px] rounded-[20px] object-cover flex-shrink-0"
@@ -84,11 +84,11 @@ export const HeroSection = (): JSX.Element => {
             />
 
             <div className="flex flex-col gap-4 md:gap-5 flex-1 min-w-0">
-              <h1 className="font-titles-h5-large-text-400 font-[number:var(--titles-h5-large-text-400-font-weight)] text-foreground text-[26px] md:text-[16px] lg:text-[24px] 2xl:text-[26px] tracking-[var(--titles-h5-large-text-400-letter-spacing)] leading-[34px] md:leading-[20px] lg:leading-[30px] xl:leading-[var(--titles-h5-large-text-400-line-height)] [font-style:var(--titles-h5-large-text-400-font-style)]">
+              <h1 className="font-titles-h5-large-text-400 font-[number:var(--titles-h5-large-text-400-font-weight)] text-[#1c1c1c] text-[26px] md:text-[16px] lg:text-[24px] 2xl:text-[26px] tracking-[var(--titles-h5-large-text-400-letter-spacing)] leading-[34px] md:leading-[20px] lg:leading-[30px] xl:leading-[var(--titles-h5-large-text-400-line-height)] [font-style:var(--titles-h5-large-text-400-font-style)]">
                 {featuredNews?.title}
               </h1>
 
-              <p className="font-body-body3-400 font-[number:var(--body-body3-400-font-weight)] text-foreground text-[16px] md:text-[14px] tracking-[var(--body-body3-400-letter-spacing)] leading-[24px] md:leading-[19px] lg:leading-[var(--body-body3-400-line-height)] [font-style:var(--body-body3-400-font-style)] line-clamp-2">
+              <p className="font-body-body3-400 font-[number:var(--body-body3-400-font-weight)] text-[#1c1c1c] text-[16px] md:text-[14px] tracking-[var(--body-body3-400-letter-spacing)] leading-[24px] md:leading-[19px] lg:leading-[var(--body-body3-400-line-height)] [font-style:var(--body-body3-400-font-style)] line-clamp-2">
                 {featuredNews?.content
                   ?.replace(/<\/?[^>]+(>|$)/g, "")
                   .split("\n")
@@ -104,13 +104,13 @@ export const HeroSection = (): JSX.Element => {
                   ))}
               </p>
               <div className="flex items-center justify-between">
-                <time className="font-body-body3-400 font-[number:var(--body-body3-400-font-weight)] text-[#4f5555] dark:text-card-foreground text-[16px] md:text-[14px] lg:text-[length:var(--body-body3-400-font-size)] tracking-[var(--body-body3-400-letter-spacing)] leading-[var(--body-body3-400-line-height)] [font-style:var(--body-body3-400-font-style)]">
+                <time className="font-body-body3-400 font-[number:var(--body-body3-400-font-weight)] text-[#4f5555] text-[16px] md:text-[14px] lg:text-[length:var(--body-body3-400-font-size)] tracking-[var(--body-body3-400-letter-spacing)] leading-[var(--body-body3-400-line-height)] [font-style:var(--body-body3-400-font-style)]">
                   {formatDate(featuredNews?.createTime)}
                 </time>
 
                 <a
                   href="#"
-                  className="flex items-center gap-2 cursor-pointer text-primary font-light md:text-[12px] lg:text-[16px]"
+                  className="flex items-center gap-2 cursor-pointer text-primary-colour font-light md:text-[12px] lg:text-[16px]"
                   onClick={(e) => {
                     e.preventDefault();
                     handleReadNews();
@@ -118,7 +118,7 @@ export const HeroSection = (): JSX.Element => {
                 >
                   <span>Read news</span>
                   <img
-                    className="w-[30px] h-[30px] md:w-[20px] md:h-[20px] lg:w-[30px] lg:h-[30px] hover:bg-primary-foreground rounded-full hover:-rotate-12 transition-transform"
+                    className="w-[30px] h-[30px] md:w-[20px] md:h-[20px] lg:w-[30px] lg:h-[30px] hover:bg-gray-100 rounded-full hover:-rotate-12 transition-transform"
                     alt="Arrow right icon"
                     src="/arrow-right-icon.svg"
                   />

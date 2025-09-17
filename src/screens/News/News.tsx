@@ -5,7 +5,7 @@ import { NewsSection } from "./sections/NewsSection";
 
 export const News = (): JSX.Element => {
   return (
-    <div className="relative w-full min-h-screen bg-background dark:bg-background overflow-hidden">
+    <div className="relative w-full min-h-screen bg-white overflow-hidden">
       <HeroSection />
       <NewsSection />
       <FooterSection />
