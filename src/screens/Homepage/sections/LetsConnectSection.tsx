@@ -47,20 +47,20 @@ export const LetsConnectSection = () => {
       </div>
       <div className="flex flex-col lg:absolute top-64 left-24 z-20">
         <div className="flex gap-20 w-[70px] h-[70px] md:w-[90px] md:h-[90px]">
-          <img alt="X" src="/x-logo.png" className="cursor-pointer" />
+          <img alt="X" src="/x.png" className="cursor-pointer" />
           <img
             alt="Discord"
-            src="/discord-logo.png"
+            src="/discord.png"
             className="cursor-pointer"
           />
         </div>
         <div className="flex gap-20 ml-20 w-[70px] h-[70px] md:w-[90px] md:h-[90px]">
           <img
             alt="Telegram"
-            src="/telegram-logo.png"
+            src="/telegram.png"
             className="cursor-pointer"
           />
-          <img alt="Reddit" src="/reddit-logo.png" className="cursor-pointer" />
+          <img alt="Reddit" src="/reddit.png" className="cursor-pointer" />
         </div>
       </div>
       <div className="flex flex-col lg:flex-row w-full items-end justify-between px-0 lg:px-[71px] gap-8 lg:gap-10">
