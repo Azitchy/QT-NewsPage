@@ -39,7 +39,7 @@ export const NewsModal = ({
     // Simple HTML parsing for the content structure
     return (
       <div
-        className="prose prose-lg max-w-none text-gray-800 leading-relaxed"
+        className="prose prose-lg max-w-none text-foreground leading-relaxed"
         dangerouslySetInnerHTML={{ __html: htmlContent }}
       />
     );
@@ -54,11 +54,11 @@ export const NewsModal = ({
       />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-6xl w-full mx-4 max-h-[90vh] overflow-hidden">
+      <div className="relative bg-card rounded-2xl shadow-2xl max-w-6xl w-full mx-4 max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-6">
           <div className="flex items-center gap-3">
-            <span className="px-3 py-1 bg-teal-100 text-teal-600 rounded-full text-sm font-medium">
+            <span className="px-3 py-1 bg-teal-100 text-primary rounded-full text-sm font-medium">
               News
             </span>
           </div>
@@ -66,7 +66,7 @@ export const NewsModal = ({
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="w-5 h-5 text-primary" />
           </button>
         </div>
 
@@ -80,12 +80,12 @@ export const NewsModal = ({
         >
           <div className="p-6 md:max-w-[500px] lg:max-w-[700px]">
             {/* Title */}
-            <h1 className="text-3xl font-bold text-gray-900 mb-4 leading-tight">
+            <h1 className="text-3xl font-bold text-foreground mb-4 leading-tight">
               {newsItem.title}
             </h1>
 
             {/* Meta info */}
-            <div className="flex items-center gap-4 mb-6 text-sm text-gray-600">
+            <div className="flex items-center gap-4 mb-6 text-sm text-foreground">
               <span className="font-medium">NEWS</span>
               <span>{formatDate(newsItem.createTime)}</span>
               <button className="ml-auto p-2 hover:bg-gray-100 rounded-full">
@@ -131,37 +131,37 @@ export const NewsModal = ({
             <div className="space-y-6">
               {/* Notice Section */}
               <div>
-                <h3 className="text-xl font-bold text-teal-600 mb-4">NOTICE</h3>
+                <h3 className="text-xl font-bold text-primary mb-4">NOTICE</h3>
                 <div className="space-y-4">
-                  <div className="bg-white p-4 ">
-                    <h4 className="font-semibold text-gray-900 mb-2">
+                  <div className=" p-4 ">
+                    <h4 className="font-semibold text-foreground mb-2">
                       Connection is live now for the ATM...
                     </h4>
                     <a
                       href="#"
-                      className="text-teal-600 text-sm hover:underline"
+                      className="text-primary text-sm hover:underline"
                     >
                       Read more
                     </a>
                   </div>
-                  <div className="bg-white p-4">
-                    <h4 className="font-semibold text-gray-900 mb-2">
+                  <div className="p-4">
+                    <h4 className="font-semibold text-foreground mb-2">
                       LUCA Travel is Live – Travel wit...
                     </h4>
                     <a
                       href="#"
-                      className="text-teal-600 text-sm hover:underline"
+                      className="text-primary text-sm hover:underline"
                     >
                       Read more
                     </a>
                   </div>
-                  <div className="bg-white p-4">
-                    <h4 className="font-semibold text-gray-900 mb-2">
+                  <div className="p-4">
+                    <h4 className="font-semibold text-foreground mb-2">
                       ATM Network Rings in 2024 wit...
                     </h4>
                     <a
                       href="#"
-                      className="text-teal-600 text-sm hover:underline"
+                      className="text-primary text-sm hover:underline"
                     >
                       Read more
                     </a>
@@ -171,11 +171,11 @@ export const NewsModal = ({
 
               {/* Hot News Section */}
               <div>
-                <h3 className="text-xl font-bold text-teal-600 mb-4">
+                <h3 className="text-xl font-bold text-primary mb-4">
                   HOT NEWS
                 </h3>
-                <div className="bg-white p-4 rounded-lg">
-                  <h4 className="font-semibold text-gray-900 mb-2">
+                <div className="p-4 rounded-lg">
+                  <h4 className="font-semibold text-foreground mb-2">
                     Presale and Launch in this...
                   </h4>
                   <img
@@ -183,7 +183,7 @@ export const NewsModal = ({
                     alt="Hot news banner"
                     className="w-full h-20 object-cover mb-2"
                   />
-                  <a href="#" className="text-teal-600 text-sm hover:underline">
+                  <a href="#" className="text-primary text-sm hover:underline">
                     Read more
                   </a>
                 </div>
