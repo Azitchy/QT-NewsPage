@@ -16,42 +16,41 @@ module.exports = {
         "primary-colour": "var(--primary-colour)",
         stroke: "var(--stroke)",
         "white-colour": "var(--white-colour)",
-        
-        border: "var(--border)",
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "var(--primary)",
-          foreground: "var(--primary-foreground)",
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
-          DEFAULT: "var(--destructive)",
-          foreground: "var(--destructive-foreground)",
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
         },
         card: {
-          DEFAULT: "var(--card)",
-          foreground: "var(--card-foreground)",
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
         },
       },
-
       fontFamily: {
-        "inter": ["Inter", "sans-serif"],
-        "space-grotesk": ["Space Grotesk", "sans-serif"],
-        "bebas-neue": ["Bebas Neue", "sans-serif"],
-        
-        // Default sans font stack
-        sans: [
-          "Inter",
-          "ui-sans-serif",
-          "system-ui",
-          "sans-serif",
-          '"Apple Color Emoji"',
-          '"Segoe UI Emoji"',
-          '"Segoe UI Symbol"',
-          '"Noto Color Emoji"',
-        ],
-        
-        // Legacy CSS variable support
         "body-body-4-400": "var(--body-body-4-400-font-family)",
         "body-body1-300": "var(--body-body1-300-font-family)",
         "body-body1-500": "var(--body-body1-500-font-family)",
@@ -61,10 +60,20 @@ module.exports = {
         "body-body3-500": "var(--body-body3-500-font-family)",
         "body-body3-mob-400": "var(--body-body3-mob-400-font-family)",
         "body-labeltext-400": "var(--body-labeltext-400-font-family)",
-        "titles-h2-sectionheading-400": "var(--titles-h2-sectionheading-400-font-family)",
+        "titles-h2-sectionheading-400":
+          "var(--titles-h2-sectionheading-400-font-family)",
         "titles-h3-caption-400": "var(--titles-h3-caption-400-font-family)",
-        "titles-h5-large-text-400": "var(--titles-h5-large-text-400-font-family)",
-      
+        "titles-h5-large-text-400":
+          "var(--titles-h5-large-text-400-font-family)",
+        sans: [
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+          '"Apple Color Emoji"',
+          '"Segoe UI Emoji"',
+          '"Segoe UI Symbol"',
+          '"Noto Color Emoji"',
+        ],
       },
       boxShadow: {
         "chat-shadow": "var(--chat-shadow)",
@@ -91,11 +100,7 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
-    container: { 
-      center: true, 
-      padding: "2rem", 
-      screens: { "2xl": "1400px" } 
-    },
+    container: { center: true, padding: "2rem", screens: { "2xl": "1400px" } },
   },
   plugins: [],
   darkMode: ["class"],

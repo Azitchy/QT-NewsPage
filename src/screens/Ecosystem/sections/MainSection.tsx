@@ -27,7 +27,7 @@ export const MainSection = () => {
         {
           text: "Learn about funding",
           primary: false,
-          href: "/games",
+          href: "#",
         },
       ],
       mediaUrl: "https://www.w3schools.com/html/mov_bbb.mp4",

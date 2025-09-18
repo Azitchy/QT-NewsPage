@@ -1,10 +1,3 @@
-/* Import Google Fonts */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
-
-/* Import Tailwind CSS */
-@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -15,124 +8,155 @@
 }
 
 :root {
-  /* Body Typography Variables */
   --body-body-4-400-font-family: "Inter", Helvetica;
   --body-body-4-400-font-size: 14px;
   --body-body-4-400-font-style: normal;
   --body-body-4-400-font-weight: 400;
   --body-body-4-400-letter-spacing: 0px;
   --body-body-4-400-line-height: 19px;
-
   --body-body1-300-font-family: "Inter", Helvetica;
   --body-body1-300-font-size: 20px;
   --body-body1-300-font-style: normal;
   --body-body1-300-font-weight: 300;
   --body-body1-300-letter-spacing: 0px;
   --body-body1-300-line-height: 27px;
-
   --body-body1-500-font-family: "Inter", Helvetica;
   --body-body1-500-font-size: 20px;
   --body-body1-500-font-style: normal;
   --body-body1-500-font-weight: 500;
   --body-body1-500-letter-spacing: 0px;
   --body-body1-500-line-height: 27px;
-
   --body-body1-mob-300-font-family: "Inter", Helvetica;
   --body-body1-mob-300-font-size: 18px;
   --body-body1-mob-300-font-style: normal;
   --body-body1-mob-300-font-weight: 300;
   --body-body1-mob-300-letter-spacing: 0px;
   --body-body1-mob-300-line-height: 24px;
-
   --body-body2-400-font-family: "Inter", Helvetica;
   --body-body2-400-font-size: 18px;
   --body-body2-400-font-style: normal;
   --body-body2-400-font-weight: 400;
   --body-body2-400-letter-spacing: 0px;
   --body-body2-400-line-height: 24px;
-
   --body-body3-400-font-family: "Inter", Helvetica;
   --body-body3-400-font-size: 16px;
   --body-body3-400-font-style: normal;
   --body-body3-400-font-weight: 400;
   --body-body3-400-letter-spacing: 0px;
   --body-body3-400-line-height: 24px;
-
   --body-body3-500-font-family: "Inter", Helvetica;
   --body-body3-500-font-size: 16px;
   --body-body3-500-font-style: normal;
   --body-body3-500-font-weight: 500;
   --body-body3-500-letter-spacing: 0px;
   --body-body3-500-line-height: 24px;
-
   --body-body3-mob-400-font-family: "Inter", Helvetica;
   --body-body3-mob-400-font-size: 14px;
   --body-body3-mob-400-font-style: normal;
   --body-body3-mob-400-font-weight: 400;
   --body-body3-mob-400-letter-spacing: 0px;
   --body-body3-mob-400-line-height: 19px;
-
   --body-labeltext-400-font-family: "Inter", Helvetica;
   --body-labeltext-400-font-size: 12px;
   --body-labeltext-400-font-style: normal;
   --body-labeltext-400-font-weight: 400;
   --body-labeltext-400-letter-spacing: 0px;
   --body-labeltext-400-line-height: 17px;
-
-  /* Title Typography Variables */
+  --chat-shadow: 0px 4px 7.199999809265137px 3px rgba(0, 0, 0, 0.05);
+  --primary-colour: rgba(46, 168, 175, 1);
+  --shadow-card: 0px 0px 15px 0px rgba(0, 0, 0, 0.3);
+  --soft-shadow: 0px 0px 17.200000762939453px 5px rgba(0, 0, 0, 0.05);
+  --stroke: rgba(235, 235, 235, 1);
   --titles-h2-sectionheading-400-font-family: "Bebas Neue", Helvetica;
   --titles-h2-sectionheading-400-font-size: 38px;
   --titles-h2-sectionheading-400-font-style: normal;
   --titles-h2-sectionheading-400-font-weight: 400;
   --titles-h2-sectionheading-400-letter-spacing: 0px;
   --titles-h2-sectionheading-400-line-height: 42px;
-
   --titles-h3-caption-400-font-family: "Space Grotesk", Helvetica;
   --titles-h3-caption-400-font-size: 38px;
   --titles-h3-caption-400-font-style: normal;
   --titles-h3-caption-400-font-weight: 300;
   --titles-h3-caption-400-letter-spacing: 0px;
   --titles-h3-caption-400-line-height: 48px;
-
   --titles-h5-large-text-400-font-family: "Inter", Helvetica;
   --titles-h5-large-text-400-font-size: 26px;
   --titles-h5-large-text-400-font-style: normal;
   --titles-h5-large-text-400-font-weight: 400;
   --titles-h5-large-text-400-letter-spacing: 0px;
   --titles-h5-large-text-400-line-height: 34px;
-
-  /* Color Variables */
-  --primary-colour: rgba(46, 168, 175, 1);
   --white-colour: rgba(255, 255, 255, 1);
-  --stroke: rgba(235, 235, 235, 1);
-
-  /* Shadow Variables */
-  --chat-shadow: 0px 4px 7.199999809265137px 3px rgba(0, 0, 0, 0.05);
-  --shadow-card: 0px 0px 15px 0px rgba(0, 0, 0, 0.3);
-  --soft-shadow: 0px 0px 17.200000762939453px 5px rgba(0, 0, 0, 0.05);
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
   :root {
-    --background: #ffffff;
-    --foreground: #1c1c1c;
-    --card: #fbfbfb;
-    --card-foreground: #858585;
-    --primary: #2ea8af;
-    --primary-foreground: #e9f6f7;
-    --destructive: #e7000b;
-    --border: #eeeeee;
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+
+    --card: transparent;
+    --card-foreground: 222.2 47.4% 11.2%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 215 20.2% 65.1%;
+
+    --radius: 0.5rem;
   }
 
   .dark {
-    --background: #090920;
-    --foreground: #dcdcdc;
-    --card: #2b2f3e;
-    --card-foreground: #999f9f;
-    --primary: #2ea8af;
-    --primary-foreground: #e9f6f7;
-    --destructive: #ff6467;
-    --border: #33343d;
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+
+    --muted: 223 47% 11%;
+    --muted-foreground: 215.4 16.3% 56.9%;
+
+    --accent: 216 34% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --popover: 224 71% 4%;
+    --popover-foreground: 215 20.2% 65.1%;
+
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+
+    --card: transparent;
+    --card-foreground: 213 31% 91%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 1.2%;
+
+    --secondary: 222.2 47.4% 11.2%;
+    --secondary-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 216 34% 17%;
+
+    --radius: 0.5rem;
   }
 }
 
@@ -144,115 +168,5 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-  }
-}
-
-/* Typography Utility Classes */
-@layer utilities {
-  /* Heading Classes */
-  .font-h1-xl-heading-mob {
-    @apply font-inter text-5xl font-bold leading-none uppercase;
-  }
-  
-  .font-h1-xl-heading {
-    @apply font-inter text-9xl font-bold leading-none uppercase;
-  }
-
-  /* Title Classes */
-  .font-titlesh4-mainheading-400 {
-    @apply font-space-grotesk text-3xl font-light leading-10;
-  }
-  
-  .font-titlesh4-mainheading-700 {
-    @apply font-space-grotesk text-3xl font-bold leading-10;
-  }
-  
-  .font-titlesh2-sectionheading-400 {
-    @apply font-bebas-neue text-4xl font-normal leading-10;
-  }
-  
-  .font-titlesh4-mainmob-400 {
-    @apply font-inter text-2xl font-light leading-8;
-  }
-  
-  .font-titlesh4-mainmob-700 {
-    @apply font-inter text-2xl font-bold leading-8;
-  }
-  
-  .font-titlesh2-sectionheading-mob {
-    @apply font-bebas-neue text-4xl font-normal leading-10;
-  }
-  
-  .font-titlesh3-caption-400 {
-    @apply font-space-grotesk text-4xl font-light leading-tight;
-  }
-  
-  .font-titlesh3-caption-700 {
-    @apply font-space-grotesk text-4xl font-bold leading-tight;
-  }
-  
-  .font-titlesh3-captionmob-400 {
-    @apply font-inter text-3xl font-light leading-8;
-  }
-  
-  .font-titlesh3-captionmob-700 {
-    @apply font-inter text-3xl font-bold leading-8;
-  }
-  
-  .font-titlesh5-large-text-400 {
-    @apply font-inter text-2xl font-normal leading-8;
-  }
-  
-  .font-titlesh5-mob-large-text-400 {
-    @apply font-inter text-xl font-normal leading-7;
-  }
-
-  /* Body Text Classes */
-  .font-bodylabeltext-400 {
-    @apply font-inter text-xs font-normal leading-4;
-  }
-  
-  .font-bodybody3-mob-500 {
-    @apply font-inter text-sm font-medium leading-5;
-  }
-  
-  .font-bodybody-4---400 {
-    @apply font-inter text-sm font-normal leading-5;
-  }
-  
-  .font-bodybody3-400 {
-    @apply font-inter text-base font-normal leading-6;
-  }
-  
-  .font-bodybody3-500 {
-    @apply font-inter text-base font-medium leading-6;
-  }
-  
-  .font-bodybody3-mob-400 {
-    @apply font-inter text-sm font-normal leading-5;
-  }
-  
-  .font-bodybody1-mob-300 {
-    @apply font-inter text-lg font-light leading-6;
-  }
-  
-  .font-bodybody1-mob-500 {
-    @apply font-inter text-lg font-medium leading-6;
-  }
-  
-  .font-bodybody1-300 {
-    @apply font-inter text-xl font-light leading-7;
-  }
-  
-  .font-bodybody1-500 {
-    @apply font-inter text-xl font-medium leading-7;
-  }
-  
-  .font-bodybody2-mob-400 {
-    @apply font-inter text-base font-light leading-5;
-  }
-  
-  .font-bodybody2-400 {
-    @apply font-inter text-lg font-normal leading-6;
   }
 }

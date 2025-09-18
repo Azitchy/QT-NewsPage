@@ -14,38 +14,37 @@ import { News } from "./screens/News/News";
 import { Help } from "./screens/Help/Help";
 import { WebApp } from "./screens/WebApp";
 import { ApiDemo } from "./components/ApiDemo";
-import { ThemeProvider } from "./components/theme-provider";
-import { Games } from "./screens/Games/Games";
+import { BlockchainProvider } from "./contexts/BlockchainContext";
 
 export const App = (): JSX.Element => {
   return (
     <ApiProvider>
       <Web3AuthProvider>
-        <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-          <div className="flex flex-col w-full min-h-screen">
-            <HeaderSection />
-            <main className="flex-1">
-              <Routes>
-                <Route path="/" element={<Homepage />} />
-                <Route path="/technology" element={<Technology />} />
-                <Route path="/ecosystem" element={<Ecosystem />} />
-                <Route path="/community" element={<Community />} />
-                <Route path="/explorer" element={<Explorer />} />
-                <Route path="/news" element={<News />} />
-                <Route path="/help" element={<Help />} />
-                <Route path="/games" element={<Games />} />
-                <Route
-                  path="/webapp"
-                  element={
-                    <ProtectedRoute>
-                      <WebApp />
-                    </ProtectedRoute>
-                  }
-                />
-              </Routes>
-            </main>
-          </div>
-        </ThemeProvider>
+        <BlockchainProvider>
+        <div className="flex flex-col w-full min-h-screen bg-white">
+          <HeaderSection />
+          <main className="flex-1">
+            <Routes>
+              <Route path="/" element={<Homepage />} />
+              <Route path="/technology" element={<Technology />} />
+              <Route path="/ecosystem" element={<Ecosystem />} />
+              <Route path="/community" element={<Community />} />
+              <Route path="/explorer" element={<Explorer />} />
+              <Route path="/news" element={<News />} />
+              <Route path="/help" element={<Help />} />
+              <Route path="/api-demo" element={<ApiDemo />} />
+              <Route 
+                path="/webapp" 
+                element={
+                  <ProtectedRoute>
+                    <WebApp />
+                  </ProtectedRoute>
+                } 
+              />
+            </Routes>
+          </main>
+        </div>
+        </BlockchainProvider>
       </Web3AuthProvider>
     </ApiProvider>
   );

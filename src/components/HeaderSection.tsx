@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Wallet, LogOut, User, Shield, Sun, Moon } from "lucide-react";
+import { Menu, X, Wallet, LogOut, User, Shield } from "lucide-react";
 
 import { Button } from "./ui/button";
 import {
@@ -13,7 +13,6 @@ import {
 } from "@radix-ui/react-navigation-menu";
 
 import { useWeb3Auth } from "../contexts/Web3AuthContext";
-import { useTheme } from "@/components/theme-provider";
 
 export const HeaderSection = (): JSX.Element => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -28,7 +27,6 @@ export const HeaderSection = (): JSX.Element => {
     isConnecting,
     session 
   } = useWeb3Auth();
-  const { setTheme, theme } = useTheme();
 
   // Navigation menu items data
   const navItems = [
@@ -96,10 +94,6 @@ export const HeaderSection = (): JSX.Element => {
     if (location.pathname === '/webapp') {
       navigate('/');
     }
-  };
-
-  const handleThemeToggle = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   // Auto-navigate to webapp after successful authentication
@@ -377,14 +371,13 @@ export const HeaderSection = (): JSX.Element => {
             <Button
               variant="ghost"
               size="icon"
-              className="w-10 h-10 m-2 rounded-full hover:bg-card-foreground cursor-pointer"
-              onClick={handleThemeToggle}
+              className="w-10 h-10 p-2 rounded-full hover:bg-slate-100 cursor-pointer"
             >
-              {theme === "dark" ? (
-                <Sun className="w-5 h-5 text-foreground" />
-              ) : (
-                <Moon className="w-5 h-5 -scale-x-100" />
-              )}
+              <img
+                className="w-5 h-5"
+                alt="Dark mode toggle"
+                src="/moon-dark.svg"
+              />
             </Button>
           </div>
 
@@ -392,7 +385,7 @@ export const HeaderSection = (): JSX.Element => {
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden w-10 h-10 p-2 rounded-full dark:text-white"
+            className="lg:hidden w-10 h-10 p-2 rounded-full dark:text-white "
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? (
@@ -463,14 +456,13 @@ export const HeaderSection = (): JSX.Element => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="w-10 h-10 m-2 rounded-full hover:bg-card-foreground "
-                  onClick={handleThemeToggle}
+                  className="w-10 h-10 p-2 rounded-full hover:bg-slate-100"
                 >
-                  {theme === "dark" ? (
-                    <Sun className="w-5 h-5 text-foreground" />
-                  ) : (
-                    <Moon className="w-5 h-5 -scale-x-100" />
-                  )}
+                  <img
+                    className="w-5 h-5"
+                    alt="Dark mode toggle"
+                    src="/moon-dark.svg"
+                  />
                 </Button>
               </div>
             </div>
