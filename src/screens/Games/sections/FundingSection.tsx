@@ -21,7 +21,7 @@ export const FundingSection = () => {
           className="hidden lg:block relative lg:bottom-[145px] lg:w-auto"
         />
         <div className="flex flex-col text-center w-full lg:w-auto">
-          <span className="text-[12px] leading-[17px] text-[#4F5555]">
+          <span className="text-[12px] leading-[17px] text-[#4F5555] dark:text-card-foreground">
             Watch our explainer video by clicking the button below
           </span>
           <img src="/funding-image.png" className="mx-auto max-w-full" />

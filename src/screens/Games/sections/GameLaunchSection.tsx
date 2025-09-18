@@ -15,7 +15,7 @@ export const GameLaunchSection = () => {
               src="/dots.svg"
             />
           </div>
-          <div className="flex flex-col mx-4 md:max-w-[519px] lg:max-w-[784px] 2xl:max-w-[947px] [font-family:'Inter',Helvetica] text-[#1c1c1c] text-[16px] lg:text-[18px] leading-[22px] lg:leading-[27px] mt-14 lg:ml-20 2xl:ml-[300px] text-left">
+          <div className="flex flex-col mx-4 md:max-w-[519px] lg:max-w-[784px] large:max-w-[947px] font-inter text-foreground text-[16px] lg:text-[18px] leading-[22px] lg:leading-[27px] mt-14 lg:ml-20 large:ml-[300px] text-left">
             <span className="font-normal">
               As gamers connect with the game, their PR soars to new heights.
               Meanwhile, the game wallet accumulates daily PR income from user
@@ -35,7 +35,7 @@ export const GameLaunchSection = () => {
         </div>
         <div className="relative md:top-12 w-[260px] h-[280px] lg:w-[322px] lg:h-[338px] bg-[url(/game-launch.svg)] bg-cover bg-center rounded-lg"></div>
       </div>
-      <div className="text-[26px] leading-[34px] lg:text-[38px] lg:leading-[48px] mx-auto px-[10px] md:px-[0px] max-w-[1316px] 2xl:max-w-[1532px] text-center my-[70px] md:my-[140px] [font-family:'Space_Grotesk',Helvetica] font-light">
+      <div className="text-[26px] leading-[34px] lg:text-[38px] lg:leading-[48px] mx-auto px-[10px] md:px-[0px] max-w-[1316px] large:max-w-[1532px] text-center my-[70px] md:my-[140px] font-space-grotesk font-light">
         When the funds are fully refunded,
         <span className="bg-gradient-to-tr from-[#AADA5D] to-[#0DAEB9] bg-clip-text text-transparent font-bold">
           70% will go to the users (players), and 30% will go to the ATM

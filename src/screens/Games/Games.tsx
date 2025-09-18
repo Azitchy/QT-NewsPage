@@ -10,7 +10,7 @@ import { FooterSection } from "@/components/FooterSection";
 
 export const Games = () => {
   return (
-    <div className="flex flex-col w-full bg-white">
+    <div className="flex flex-col w-full bg-background">
       <HeroSection />
       <AboutSection />
       <FundingSection />

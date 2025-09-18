@@ -68,7 +68,7 @@ export const RewardsSection = () => {
     <div className="relative w-full px-4 lg:px-0">
       {/* Section Title */}
       <div className="relative h-[99px] ml-0 lg:ml-[71px]">
-        <div className="left-10 absolute w-auto lg:w-[148px] h-11 top-[27px] lg:left-[51px] font-titles-h2-sectionheading-400 font-[number:var(--titles-h2-sectionheading-400-font-weight)] text-primary-colour text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] [font-style:var(--titles-h2-sectionheading-400-font-style)]">
+        <div className="left-10 absolute w-auto lg:w-[148px] h-11 top-[27px] lg:left-[51px] font-titles-h2-sectionheading-400 font-[number:var(--titles-h2-sectionheading-400-font-weight)] text-primary text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] [font-style:var(--titles-h2-sectionheading-400-font-style)]">
           Rewards
         </div>
         <img
@@ -79,20 +79,20 @@ export const RewardsSection = () => {
       </div>
 
       {/* Subtitle */}
-      <div className="text-center text-[#4F5555] text-[16px] leading-[22px] lg:text-[18px] lg:leading-[24px] mt-10 md:mt-0">
+      <div className="text-center text-[#4F5555] dark:text-card-foreground text-[16px] leading-[22px] lg:text-[18px] lg:leading-[24px] mt-10 md:mt-0">
         ATM users will get rewards by:
       </div>
 
       <div className="mt-[35px] ml-0 lg:ml-[70px] relative">
         {!is4K && (
-          <div className="flex items-center gap-[15px] px-[9px] py-[5px] absolute -top-16 right-4 lg:right-[71px] rounded-[40px] overflow-hidden border border-solid border-[#eeeeee] bg-white dark:bg-[#090920] z-10 shadow-sm">
+          <div className="flex items-center gap-[15px] px-[9px] py-[5px] absolute -top-16 right-4 lg:right-[71px] rounded-[40px] overflow-hidden border border-solid border-[#eeeeee] bg-background z-10 shadow-sm">
             <Button
               variant="ghost"
               disabled={currentFeatureSlide === 0}
               className={`w-[38.53px] h-[38.53px] p-0 rounded-full transition-colors ${
                 currentFeatureSlide === 0
                   ? "bg-gray-200 dark:bg-gray-700 opacity-50 cursor-not-allowed"
-                  : "bg-white dark:bg-[#1a1a2e] hover:bg-gray-50"
+                  : "bg-background hover:bg-gray-50"
               }`}
               onClick={() => handleFeatureNavigation("prev")}
             >
@@ -137,19 +137,19 @@ export const RewardsSection = () => {
               <Card
                 ref={index === 0 ? cardRef : null}
                 key={index}
-                className="w-full sm:w-[300px] xl:w-[355px] 2xl:w-[450px] h-[500px] lg:h-[605px] overflow-hidden border border-solid border-[#eeeeee] bg-[#fbfbfb] dark:bg-[#2B2F3E] rounded-[20px] flex-shrink-0"
+                className="w-full sm:w-[300px] xl:w-[355px] 2xl:w-[450px] h-[500px] lg:h-[605px] overflow-hidden border border-solid border-border dark:border-primary-foreground bg-card rounded-[20px] flex-shrink-0"
               >
                 <CardContent className="flex flex-col h-full items-start gap-[10px] lg:gap-[20px] px-8 lg:px-[60px] py-8 lg:py-[60px] relative">
                   <div
                     className={`absolute w-[300px] lg:w-[482px] h-[300px] lg:h-[482px] top-[240px] lg:top-[281px] left-[115px] lg:left-[159px] rounded-[150px] lg:rounded-[241.22px] rotate-[-30deg] opacity-50 ${reward.gradientClass}`}
                   />
 
-                  <div className="relative self-stretch font-titles-h3-caption-400 text-[#1c1c1c] dark:text-[#DCDCDC] text-[26px] xl:text-[30px] leading-[32px] lg:leading-[40px] min-h-[80px] flex">
+                  <div className="relative self-stretch font-titles-h3-caption-400 text-foreground dark:text-foreground text-[26px] xl:text-[30px] leading-[32px] lg:leading-[40px] min-h-[80px] flex">
                     {reward.title}
                   </div>
 
                   <div className="relative self-stretch w-full min-h-[120px]">
-                    <div className="w-full font-body-body2-400 text-[#4f5555] dark:text-[#999F9F] text-[16px] lg:text-[length:var(--body-body2-400-font-size)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)]">
+                    <div className="w-full font-body-body2-400 text-[#4f5555] dark:text-card-foreground text-[16px] lg:text-[length:var(--body-body2-400-font-size)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)]">
                       {reward.description}
                     </div>
                   </div>
