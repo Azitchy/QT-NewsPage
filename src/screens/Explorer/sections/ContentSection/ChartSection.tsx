@@ -266,7 +266,7 @@ export const ChartSection = () => {
       {cryptoData.map((crypto) => (
         <Card
           key={crypto.name}
-          className="bg-white rounded-2xl border-[0px]  md:border border-gray-200 mb-4 shadow-none md:shadow-sm h-[800px] md:h-[650px] lg:h-[570px]"
+          className="bg-card rounded-2xl border-[0px] mb-4 shadow-none md:shadow-sm h-[800px] md:h-[650px] lg:h-[570px]"
         >
           <CardContent className="p-0 ">
             <div className="flex items-center gap-1 p-6 pb-4">
@@ -275,18 +275,18 @@ export const ChartSection = () => {
                 alt={`${crypto.name} icon`}
                 src={crypto.icon}
               />
-              <span className="text-[14px] leading-[19px] font-normal text-[#1C1C1C]">
+              <span className="text-[14px] leading-[19px] font-normal text-foreground">
                 {crypto.name}
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-6 mx-6 pb-6 md:border-b border-gray-200">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-6 mx-6 pb-6 md:border-b border-border dark:border-primary-foreground">
               <div className="flex flex-col gap-2">
-                <span className="hidden md:block text-[12px] leading-[17px] text-[#858585] font-normal">
+                <span className="hidden md:block text-[12px] leading-[17px] text-card-foreground font-normal">
                   {crypto.name} Price
                 </span>
                 <div className="relative -top-9 md:-top-0 flex justify-end md:justify-start md:items-center gap-2">
-                  <span className="text-sm font-normal text-gray-900">
+                  <span className="text-sm font-normal text-foreground">
                     {crypto.price}
                   </span>
                   <img
@@ -297,7 +297,7 @@ export const ChartSection = () => {
                   <span
                     className={`text-sm font-medium ${
                       crypto.changeType === "positive"
-                        ? "text-[#2ea8af]"
+                        ? "text-primary"
                         : "text-[#f14349]"
                     }`}
                   >
@@ -306,30 +306,30 @@ export const ChartSection = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2 border-b pb-[15px] md:border-b-0 lg:border-l lg:border-gray-200 lg:pl-6">
-                <span className="text-[12px] leading-[17px] text-[#858585] font-normal">
+              <div className="flex flex-col gap-2 border-b pb-[15px] md:border-b-0 lg:border-l lg:border-border dark:lg:border-primary-foreground lg:pl-6">
+                <span className="text-[12px] leading-[17px] text-card-foreground font-normal">
                   {crypto.name} staked in Consensus Connections
                 </span>
-                <span className="text-sm font-normal text-gray-900">
+                <span className="text-sm font-normal text-foreground">
                   {crypto.staked}
                 </span>
               </div>
 
-              <div className="flex md:flex-col justify-between gap-2 border-b pb-[15px] md:border-b-0 lg:border-l lg:border-gray-200 lg:pl-6">
-                <span className="text-[12px] leading-[17px] text-[#858585] font-normal">
+              <div className="flex md:flex-col justify-between gap-2 border-b pb-[15px] md:border-b-0 lg:border-l lg:border-border dark:lg:border-primary-foreground lg:pl-6">
+                <span className="text-[12px] leading-[17px] text-card-foreground font-normal">
                   Number of {crypto.name} Connections
                 </span>
-                <span className="text-sm font-normal text-gray-900">
+                <span className="text-sm font-normal text-foreground">
                   {crypto.connections}
                 </span>
               </div>
 
-              <div className="flex flex-col gap-2 lg:border-l lg:border-gray-200 lg:pl-6">
-                <span className="text-[12px] leading-[17px] text-[#858585] font-normal">
+              <div className="flex flex-col gap-2 lg:border-l lg:border-border dark:lg:border-primary-foreground lg:pl-6">
+                <span className="text-[12px] leading-[17px] text-card-foreground font-normal">
                   {crypto.name} contract address
                 </span>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-[#858585] font-mono truncate">
+                  <span className="text-xs text-card-foreground font-mono truncate">
                     {crypto.contractAddress}
                   </span>
                   <Button
@@ -338,7 +338,7 @@ export const ChartSection = () => {
                     className="p-1 w-6 h-6 hover:bg-gray-100 rounded"
                     onClick={() => copyToClipboard(crypto.contractAddress)}
                   >
-                    <CopyIcon className="w-4 h-4 text-[#2EA8AF]" />
+                    <CopyIcon className="w-4 h-4 text-primary" />
                   </Button>
                 </div>
               </div>

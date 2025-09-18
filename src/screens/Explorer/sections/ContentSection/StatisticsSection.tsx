@@ -43,15 +43,15 @@ export const StatisticsSection = () => {
     return null;
   };
   return (
-    <Card className="bg-white rounded-2xl  border-[0px] md:border border-gray-200 shadow-none md:shadow-sm">
+    <Card className="bg-card rounded-2xl  border-[0px] shadow-none md:shadow-sm">
       <CardContent className="p-0">
-        <div className="p-0 md:p-4">
-          <div className="flex justify-between items-center mb-4 border-b pb-4">
-            <h3 className="text-[16px] leading-[24px] font-normal text-[#1C1C1C]">
+        <div className="p-2 md:p-4">
+          <div className="flex justify-between items-center mb-4 border-b border-border dark:border-primary-foreground pb-4">
+            <h3 className="text-[16px] leading-[24px] font-normal text-foreground">
               Statistics
             </h3>
             <button
-              className="text-[#2EA8AF] font-normal text-[14px] leading-[19px] hover:underline"
+              className="text-primary font-normal text-[14px] leading-[19px] hover:underline"
               onClick={() => setShowMore(!showMore)}
             >
               {showMore ? "Less >" : "More >"}
@@ -59,7 +59,7 @@ export const StatisticsSection = () => {
           </div>
 
           <div className="hidden md:flex flex-col items-end">
-            <div className="flex flex-col mb-2 text-sm font-medium text-gray-600 px-2">
+            <div className="flex flex-col mb-2 text-sm font-medium text-card-foreground px-2">
               <div className="flex items-center gap-1">
                 <span className="w-[20px] h-3 bg-[#FBC02D] rounded-sm inline-block"></span>
                 User

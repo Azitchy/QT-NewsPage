@@ -98,7 +98,7 @@ const TableComponent = ({
   // Detail View
   if (selectedRow) {
     return (
-      <div className="bg-white p-1 md:p-5 w-full">
+      <div className="dark:bg-card p-4 md:p-5 w-full">
         <div className="flex items-center gap-2 text-sm mb-10">
           <img
             src="/arrow-left-icon.svg"
@@ -109,36 +109,42 @@ const TableComponent = ({
             PR node details
           </h2>
         </div>
-        <div className="grid md:grid-cols-[180px_1fr] gap-y-1 md:gap-y-4 text-[14px] leading-[19px] text-gray-700">
-          <div className="text-[#858585] md:text-[#1C1C1C]">PR node</div>
+        <div className="grid md:grid-cols-[180px_1fr] gap-y-1 md:gap-y-4 text-[14px] leading-[19px] text-foreground">
+          <div className="text-card-foreground md:text-foreground">PR node</div>
           <div className="truncate max-w-full">{selectedRow.prNode}</div>
 
-          <hr className="md:hidden my-1" />
+          <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-          <div className="text-[#858585] md:text-[#1C1C1C]">
+          <div className="text-card-foreground md:text-foreground">
             Server domain name
           </div>
           <div>{selectedRow.serverDomainName}</div>
 
-          <hr className="md:hidden my-1" />
+          <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-          <div className="text-[#858585] md:text-[#1C1C1C]">Server IP</div>
+          <div className="text-card-foreground md:text-foreground">
+            Server IP
+          </div>
           <div>{selectedRow.serverIP}</div>
 
-          <hr className="md:hidden my-1" />
+          <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-          <div className="text-[#858585] md:text-[#1C1C1C]">
+          <div className="text-card-foreground md:text-foreground">
             Server nickname
           </div>
           <div>{selectedRow.serverNickname}</div>
 
-          <hr className="md:hidden my-1" />
+          <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-          <div className="text-[#858585] md:text-[#1C1C1C]">Node ranking</div>
+          <div className="text-card-foreground md:text-foreground">
+            Node ranking
+          </div>
           <div>{selectedRow.nodeRanking}</div>
-          <hr className="md:hidden my-1" />
+          <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-          <div className="text-[#858585] md:text-[#1C1C1C]">Stake amount</div>
+          <div className="text-card-foreground md:text-foreground">
+            Stake amount
+          </div>
           <div>{selectedRow.stakeAmount}</div>
         </div>
       </div>
@@ -149,8 +155,8 @@ const TableComponent = ({
     <>
       {/* Desktop Table */}
       <div className="hidden md:block overflow-x-auto">
-        <table className="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-          <thead className="bg-[#F6F6F6]">
+        <table className="min-w-full dark:bg-card rounded-lg overflow-hidden">
+          <thead className="bg-[#F6F6F6] dark:bg-[#434352]">
             <tr>
               {columns.map((col, idx) => (
                 <th
@@ -165,21 +171,21 @@ const TableComponent = ({
           <tbody>
             {currentData.map((row, idx) => (
               <tr key={idx}>
-                <td className="px-4 py-2 text-sm truncate max-w-[180px]">
+                <td className="px-4 py-3 text-sm truncate max-w-[180px]">
                   {row.prNode}
                 </td>
-                <td className="px-4 py-2 text-sm truncate max-w-[180px]">
+                <td className="px-4 py-3 text-sm truncate max-w-[180px]">
                   {row.serverDomainName}
                 </td>
-                <td className="px-4 py-2 text-sm truncate max-w-[180px]">
+                <td className="px-4 py-3 text-sm truncate max-w-[180px]">
                   {row.serverIP}
                 </td>
-                <td className="px-4 py-2 text-sm">{row.serverNickname}</td>
-                <td className="px-4 py-2 text-sm">{row.stakeAmount}</td>
+                <td className="px-4 py-3 text-sm">{row.serverNickname}</td>
+                <td className="px-4 py-3 text-sm">{row.stakeAmount}</td>
                 {showAction && (
-                  <td className="px-4 py-2 text-sm">
+                  <td className="px-4 py-3 text-sm">
                     <button
-                      className="text-[#2EA8AF] hover:underline"
+                      className="text-primary hover:underline"
                       onClick={() => onRowSelect(row)}
                     >
                       More
@@ -195,9 +201,9 @@ const TableComponent = ({
       {/* Mobile View */}
       <div className="md:hidden space-y-3">
         {currentData.map((row, idx) => (
-          <div key={idx} className="border-b p-3">
+          <div key={idx} className="border-b dark:border-[#454545] p-3">
             <div className="flex justify-between text-sm font-normal">
-              <span className="truncate max-w-[220px] text-[#858585]">
+              <span className="truncate max-w-[220px] text-card-foreground">
                 {row.serverNickname}
               </span>
               <span>IP {row.serverIP}</span>
@@ -206,7 +212,7 @@ const TableComponent = ({
               <span className="truncate max-w-[100px]">{row.prNode}</span>
               <span
                 onClick={() => onRowSelect(row)}
-                className="truncate max-w-full text-[#2EA8AF]"
+                className="truncate max-w-full text-primary"
               >
                 {row.stakeAmount}
               </span>
@@ -216,9 +222,9 @@ const TableComponent = ({
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center mt-10">
+      <div className="flex justify-center bg-card md:bg-background py-10">
         <Pagination>
-          <PaginationContent className="inline-flex items-center gap-[10px] md:gap-[35px] px-[9px] py-[10px] rounded-[40px] border border-solid border-[#eeeeee]">
+          <PaginationContent className="inline-flex items-center gap-[10px] md:gap-[35px] px-[9px] py-[10px] rounded-[40px] border border-solid border-border dark:border-primary-foreground">
             <img
               src="/arrow-left-icon.svg"
               onClick={() => handlePageChange(currentPage - 1)}
@@ -229,7 +235,7 @@ const TableComponent = ({
                 <div
                   onClick={() => handlePageChange(page)}
                   className={`flex w-[30px] items-center justify-center cursor-pointer ${
-                    page === currentPage ? "text-[#2ea8af]" : "text-[#1c1c1c]"
+                    page === currentPage ? "text-primary" : "text-foreground"
                   }`}
                 >
                   {page}
@@ -252,10 +258,10 @@ const PRNodeTable = () => {
   const [selectedRow, setSelectedRow] = useState<any>(null);
 
   return (
-    <div>
+    <div className="dark:bg-card rounded-t-[10px] pt-4">
       {!selectedRow && (
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-5">
-          <div className="px-0 py-4 md:px-4 md:py-0 text-[14px] leading-[19px] font-normal text-[#1C1C1C]">
+          <div className="px-2 py-4 md:px-4 md:py-0 text-[14px] leading-[19px] font-normal text-foreground">
             PR node information
           </div>
         </div>

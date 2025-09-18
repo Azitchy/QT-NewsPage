@@ -147,8 +147,8 @@ const TableComponent = ({
     <>
       {/* Desktop View */}
       <div className="hidden md:block overflow-x-auto">
-        <table className="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-          <thead className="bg-[#F6F6F6]">
+        <table className="min-w-full dark:bg-card rounded-lg overflow-hidden">
+          <thead className="bg-[#F6F6F6] dark:bg-[#434352]">
             <tr>
               {columns.map((col, idx) => (
                 <th
@@ -163,15 +163,15 @@ const TableComponent = ({
           <tbody>
             {currentData.map((row, idx) => (
               <tr key={idx}>
-                <td className="px-4 py-2 text-sm max-w-[180px]">{row.rank}</td>
-                <td className="px-4 py-2 text-sm truncate max-w-[180px]">
+                <td className="px-4 py-3 text-sm max-w-[180px]">{row.rank}</td>
+                <td className="px-4 py-3 text-sm truncate max-w-[180px]">
                   {row.address}
                 </td>
-                <td className="px-4 py-2 text-sm truncate max-w-[180px]">
+                <td className="px-4 py-3 text-sm truncate max-w-[180px]">
                   {row.pr}
                 </td>
                 {showAction && (
-                  <td className="px-4 py-2 text-sm">
+                  <td className="px-4 py-3 text-sm">
                     <button
                       className="text-[#2EA8AF] hover:underline"
                       onClick={() => openModal(row)}
@@ -189,7 +189,7 @@ const TableComponent = ({
       {/* Mobile View */}
       <div className="md:hidden space-y-3">
         {currentData.map((row, idx) => (
-          <div key={idx} className="border-b p-3 ">
+          <div key={idx} className="border-b dark:border-[#454545]  p-3 ">
             <div className="flex justify-between text-sm font-normal">
               <span>Rank {row.rank}</span>
               <span>
@@ -197,13 +197,13 @@ const TableComponent = ({
               </span>
             </div>
             <div className="flex gap-2 items-center justify-between">
-              <div className="mt-2 text-sm text-[#858585] truncate text-right max-w-full overflow-hidden whitespace-nowrap">
+              <div className="mt-2 text-sm text-card-foreground truncate text-right max-w-full overflow-hidden whitespace-nowrap">
                 {row.address}
               </div>
               {showAction && (
                 <div className="mt-2 text-right">
                   <button
-                    className="text-[#2EA8AF] hover:underline text-sm"
+                    className="text-primary hover:underline text-sm"
                     onClick={() => openModal(row)}
                   >
                     Detail
@@ -216,9 +216,9 @@ const TableComponent = ({
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center mt-10">
+      <div className="flex justify-center bg-card md:bg-background py-10">
         <Pagination>
-          <PaginationContent className="inline-flex items-center gap-[10px] md:gap-[35px] px-[9px] py-[10px] rounded-[40px] border border-solid border-[#eeeeee]">
+          <PaginationContent className="inline-flex items-center gap-[10px] md:gap-[35px] px-[9px] py-[10px] rounded-[40px] border border-solid border-border dark:border-primary-foreground">
             <img
               src="/arrow-left-icon.svg"
               onClick={() => handlePageChange(currentPage - 1)}
@@ -237,7 +237,7 @@ const TableComponent = ({
                   <div
                     onClick={() => handlePageChange(Number(page))}
                     className={`flex w-[30px] md:w-[35px] items-center justify-center text-[12px] md:text-[14px] cursor-pointer ${
-                      page === currentPage ? "text-[#2ea8af]" : "text-[#1c1c1c]"
+                      page === currentPage ? "text-primary" : "text-foreground"
                     }`}
                   >
                     {page}
@@ -258,14 +258,14 @@ const TableComponent = ({
       {/* Modal */}
       {isModalOpen && selectedRow && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg mx-2 md:mx-0 w-[580px] max-w-full p-6 relative">
+          <div className="bg-card rounded-[10px] shadow-lg mx-2 md:mx-0 w-[580px] max-w-full p-6 relative">
             <button
               className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
               onClick={closeModal}
             >
               ✕
             </button>
-            <h2 className="text-[18px] leading-[24px] font-normal text-[#1C1C1C] mb-[30px]">
+            <h2 className="text-[18px] leading-[24px] font-normal text-foreground mb-[30px]">
               Income details
             </h2>
 
@@ -274,7 +274,7 @@ const TableComponent = ({
                 <span className="text-[#858585] text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] font-normal">
                   Income ranking
                 </span>
-                <span className="font-normal text-[#1C1C1C] text-[14px] leading-[19px] md:text-[16px] md:leading-[24px]">
+                <span className="font-normal text-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px]">
                   {selectedRow.rank}
                 </span>
               </div>
@@ -282,7 +282,7 @@ const TableComponent = ({
                 <span className="text-[#858585] text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] font-normal">
                   Wallet address
                 </span>
-                <span className="font-normal text-[#1C1C1C] text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] truncate text-right max-w-[180px] md:max-w-full overflow-hidden whitespace-nowrap">
+                <span className="font-normal text-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] truncate text-right max-w-[180px] md:max-w-full overflow-hidden whitespace-nowrap">
                   {selectedRow.address}
                 </span>
               </div>
@@ -290,7 +290,7 @@ const TableComponent = ({
                 <span className="text-[#858585]  text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] font-normal ">
                   Total income
                 </span>
-                <span className="font-normal text-[#1C1C1C] text-[14px] leading-[19px] md:text-[16px] md:leading-[24px]">
+                <span className="font-normal text-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px]">
                   {selectedRow.pr}
                 </span>
               </div>
@@ -298,40 +298,43 @@ const TableComponent = ({
 
             <hr className="my-3" />
 
-            <p className="font-normal text-[#1C1C1C] text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] mb-3">
+            <p className="font-normal text-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] mb-3">
               The total income consists of the following four parts
             </p>
 
             <div className="grid grid-cols-2 gap-y-2 text-sm text-gray-700">
               <div className="flex flex-col justify-between">
-                <span className="text-[#858585] text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] font-normal">
+                <span className="text-card-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] font-normal">
                   Income ranking
                 </span>
-                <span className="font-normal text-[#1C1C1C] text-[14px] leading-[19px] md:text-[16px] md:leading-[24px]">
+                <span className="font-normal text-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px]">
                   {selectedRow.pr}
                 </span>
               </div>
               <div className="flex flex-col justify-between">
-                <span className="text-[#858585] text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] font-normal">
+                <span className="text-card-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] font-normal">
                   Server operation income
                 </span>
-                <span className="font-normal text-[#1C1C1C] text-[14px] leading-[19px] md:text-[16px] md:leading-[24px]">
+                <span className="font-normal text-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px]">
                   {selectedRow.operationIncome}
                 </span>
               </div>
               <div className="flex flex-col justify-between">
-                <span className="text-[#858585] text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] font-normal">
+                <span className="text-card-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] font-normal">
                   Server stake income
                 </span>
-                <span className="font-normal text-[#1C1C1C] text-[14px] leading-[19px] md:text-[16px] md:leading-[24px]">
+                <span className="font-normal text-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px]">
                   {selectedRow.stakeIncome}
                 </span>
               </div>
               <div className="flex flex-col justify-between">
-                <span className="text-[#858585] text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] font-normal">
+                <span
+                  className="text-card-foreground
+                 text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] font-normal"
+                >
                   Liquidity income
                 </span>
-                <span className="font-normal text-[#1C1C1C] text-[14px] leading-[19px] md:text-[16px] md:leading-[24px]">
+                <span className="font-normal text-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px]">
                   {selectedRow.liquidityIncome}
                 </span>
               </div>
@@ -345,25 +348,28 @@ const TableComponent = ({
 
 const OverallRankingTable = () => {
   return (
-    <Tabs defaultValue="overall" className="w-full mt-12 md:mt-6">
+    <Tabs
+      defaultValue="overall"
+      className="w-full dark:bg-card rounded-[20px] mt-12 md:mt-6 "
+    >
       <TabsList className="flex items-start flex-col-reverse gap-2 md:gap-0 md:flex-row justify-between mb-4 bg-transparent">
         <div>
           <TabsTrigger
             value="overall"
-            className="px-0 md:px-4 py-2 text-[14px] leading-[19px] font-normal text-[#858585] bg-transparent border-0 shadow-none data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap"
+            className="px-0 md:px-4 py-2 text-[14px] leading-[19px] font-normal text-card-foreground bg-transparent border-0 shadow-none data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap"
           >
             Overall PR Ranking
           </TabsTrigger>
           <TabsTrigger
             value="reward"
-            className="md:px-4 py-2 text-[14px] leading-[19px] font-normal text-[#858585] bg-transparent border-0 shadow-none data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap"
+            className="md:px-4 py-2 text-[14px] leading-[19px] font-normal text-card-foreground bg-transparent border-0 shadow-none data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap"
           >
             Total Reward
           </TabsTrigger>
         </div>
-        <div className="text-[12px] leading-[17px] md:text-[14px] md:leading-[19px] text-[#858585] font-normal">
+        <div className="text-[12px] leading-[17px] md:text-[14px] md:leading-[19px] text-card-foreground dark:px-2 dark:pt-2 font-normal">
           Ranking data is updated daily. The latest update:{" "}
-          <span className="text-[#2EA8AF]">17/03/2024 23:00</span>
+          <span className="text-primary">17/03/2024 23:00</span>
         </div>
       </TabsList>
 

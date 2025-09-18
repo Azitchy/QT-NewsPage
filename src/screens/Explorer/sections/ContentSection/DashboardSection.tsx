@@ -65,7 +65,7 @@ export const DashboardSection = () => {
               className="w-2 h-2 rounded-full"
               style={{ backgroundColor: entry.color }}
             ></span>
-            <span className="text-[#858585] font-normal text-[12px] leading-[17px]">
+            <span className="text-card-foreground font-normal text-[12px] leading-[17px]">
               {entry.name}
             </span>
           </div>
@@ -76,8 +76,8 @@ export const DashboardSection = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full">
-      <Card className="bg-white rounded-2xl border-[0px]  md:border border-gray-200 shadow-none md:shadow-sm">
-        <CardHeader className="border-b border-gray-200 px-6 py-4">
+      <Card className="bg-card rounded-2xl border-[0px] shadow-none md:shadow-sm">
+        <CardHeader className="border-b border-border dark:border-primary-foreground px-6 py-4">
           <div className="flex items-center gap-3">
             <img src="/dots.png" alt="dots" className="w-[3px] h-[14px]" />
             <h3 className="text-[14px] max-w-[50px] md:max-w-full leading-[19px] font-normal text-[#999F9F]">
@@ -89,13 +89,13 @@ export const DashboardSection = () => {
           {overviewData.map((item, index) => (
             <div
               key={index}
-              className="flex justify-between items-center px-6 py-4 hover:bg-gray-50 transition-colors"
+              className="flex justify-between items-center px-6 py-4 transition-colors"
             >
-              <div className="text-[14px] leading-[19px] font-normal text-[#1C1C1C]">
+              <div className="text-[14px] leading-[19px] font-normal text-foreground">
                 {item.label}
               </div>
               <div className="flex items-center gap-2">
-                <div className="text-[16px] leading-[24px] font-medium text-[#1C1C1C]">
+                <div className="text-[16px] leading-[24px] font-medium text-foreground">
                   {item.value}
                 </div>
                 {item.hasPercentage && (
@@ -115,8 +115,8 @@ export const DashboardSection = () => {
       </Card>
 
       <div className="flex flex-col gap-5 w-full">
-        <Card className="bg-white rounded-2xl border-[0px]   md:border border-gray-200 shadow-none md:shadow-sm flex-1">
-          <CardHeader className="border-b border-gray-200 px-6 py-4">
+        <Card className="bg-card rounded-2xl border-[0px] shadow-none md:shadow-sm flex-1">
+          <CardHeader className="border-b border-border dark:border-primary-foreground px-6 py-4">
             <div className="flex items-center gap-3">
               <img src="/dots.png" alt="dots" className="w-[3px] h-[14px]" />
               <h3 className="text-[14px] leading-[19px] font-normal text-[#999F9F]">
@@ -170,7 +170,7 @@ export const DashboardSection = () => {
 
             <div className="flex flex-col items-center justify-center gap-[5px] mt-6">
               <div className="flex items-center gap-2">
-                <div className="text-sm text-[#858585] text-[14px] leading-[19px]">
+                <div className="text-sm text-card-foreground text-[14px] leading-[19px]">
                   Amount of Travel LUCA burnt
                 </div>
                 <img
@@ -182,18 +182,18 @@ export const DashboardSection = () => {
 
               <div className="flex items-center justify-center gap-2">
                 <img className="w-10 h-10" alt="Luca" src="/luca-burnt.png" />
-                <div className="text-[38px] leading-[48px] font-light [font-family:'Space_Grotesk',Helvetica] text-[#1C1C1C]">
+                <div className="text-[38px] leading-[48px] font-light font-space-grotesk text-foreground">
                   300k+
                 </div>
               </div>
 
               <div className="flex items-center gap-8">
                 <div className="flex flex-col items-center gap-2">
-                  <div className="text-[12px] leading-[17px] text-[#4F5555] font-normal">
+                  <div className="text-[12px] leading-[17px] text-[#4F5555] dark:text-card-foreground font-normal">
                     Wallet address
                   </div>
                   <div className="flex items-center gap-1">
-                    <span className="text-[14px] leading-[19px] text-[#1C1C1C] font-normal">
+                    <span className="text-[14px] leading-[19px] text-foreground font-normal">
                       0xb6c8...0031B9
                     </span>
                     <img
@@ -206,11 +206,11 @@ export const DashboardSection = () => {
 
                 <div className="w-px h-10 bg-gray-300" />
                 <div className="flex flex-col items-center gap-2">
-                  <div className="text-[12px] leading-[17px] text-[#4F5555] font-normal">
+                  <div className="text-[12px] leading-[17px] text-[#4F5555] dark:text-card-foreground font-normal">
                     Smart contract
                   </div>
                   <div className="flex items-center gap-1">
-                    <span className="text-[14px] leading-[19px] text-[#1C1C1C] font-normal">
+                    <span className="text-[14px] leading-[19px] text-foreground font-normal">
                       0xa3c6...1431A7
                     </span>
                     <img

@@ -110,7 +110,7 @@ const TableComponent = ({
   // Detail View
   if (selectedRow) {
     return (
-      <div className="bg-white p-1 md:p-5 w-full">
+      <div className="dark:bg-card rounded-[10px] p-4 md:p-5 w-full">
         <div className="flex items-center gap-2 text-sm mb-10">
           <img
             src="/arrow-left-icon.svg"
@@ -121,59 +121,73 @@ const TableComponent = ({
             Connection contract information
           </h2>
         </div>
-        <div className="grid md:grid-cols-[180px_1fr] gap-y-1 md:gap-y-4 text-[14px] leading-[19px] text-gray-700">
-          <div className="text-[#858585] md:text-[#1C1C1C]">Hash</div>
-          <div className="truncate max-w-full">{selectedRow.hash}</div>
+        <div className="grid md:grid-cols-[180px_1fr] gap-y-1 md:gap-y-4 text-[14px] leading-[19px] text-foreground">
+          <div className="text-card-foreground md:text-foreground">Hash</div>
+          <div className="truncate max-w-[300px] md:max-w-full">
+            {selectedRow.hash}
+          </div>
 
-          <hr className="md:hidden my-1" />
+          <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-          <div className="text-[#858585] md:text-[#1C1C1C]">Network</div>
+          <div className="text-card-foreground md:text-foreground">Network</div>
           <div>{selectedRow.network}</div>
 
-          <hr className="md:hidden my-1" />
+          <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-          <div className="text-[#858585] md:text-[#1C1C1C]">Status</div>
+          <div className="text-card-foreground md:text-foreground">Status</div>
           <div>{selectedRow.status}</div>
 
-          <hr className="md:hidden my-1" />
+          <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-          <div className="text-[#858585] md:text-[#1C1C1C]">Creation Time</div>
+          <div className="text-card-foreground] md:text-foreground">
+            Creation Time
+          </div>
           <div>{selectedRow.creationTime}</div>
 
-          <hr className="md:hidden my-1" />
+          <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-          <div className="text-[#858585] md:text-[#1C1C1C]">
+          <div className="text-card-foreground md:text-foreground">
             Connection Quantity
           </div>
           <div>{selectedRow.connectionQuality}</div>
-          <hr className="md:hidden my-1" />
+          <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-          <div className="text-[#858585] md:text-[#1C1C1C]">Initiator</div>
+          <div className="text-card-foreground md:text-foreground">
+            Initiator
+          </div>
           <div className="flex gap-2 items-center">
-            <span className="truncate max-w-full">{selectedRow.initiator}</span>
+            <span className="truncate  max-w-[300px] md:max-w-full">
+              {selectedRow.initiator}
+            </span>
             <img src="/copy.svg" />
           </div>
-          <hr className="md:hidden my-1" />
+          <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-          <div className="text-[#858585] md:text-[#1C1C1C]">Receiver</div>
+          <div className="text-card-foreground md:text-foreground">
+            Receiver
+          </div>
           <div className="flex gap-2 items-center">
-            <span className="truncate max-w-full">{selectedRow.receiver}</span>{" "}
+            <span className="truncate  max-w-[300px] md:max-w-full">
+              {selectedRow.receiver}
+            </span>{" "}
             <img src="/copy.svg" />
           </div>
-          <hr className="md:hidden my-1" />
+          <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-          <div className="text-[#858585] md:text-[#1C1C1C]">
+          <div className="text-card-foreground md:text-foreground">
             Connection Contract
           </div>
           <div className="flex gap-2 items-center">
-            <span className="truncate max-w-full">
+            <span className="truncate  max-w-[300px] md:max-w-full">
               {selectedRow.connectionContract}{" "}
             </span>
             <img src="/copy.svg" />
           </div>
-          <hr className="md:hidden my-1" />
+          <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-          <div className="text-[#858585] md:text-[#1C1C1C]">Lock Time</div>
+          <div className="text-card-foreground md:text-foreground">
+            Lock Time
+          </div>
           <div>{selectedRow.lockTime}</div>
         </div>
       </div>
@@ -184,8 +198,8 @@ const TableComponent = ({
     <>
       {/* Desktop Table */}
       <div className="hidden md:block overflow-x-auto">
-        <table className="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-          <thead className="bg-[#F6F6F6]">
+        <table className="min-w-full dark:bg-card rounded-lg overflow-hidden">
+          <thead className="bg-[#F6F6F6] dark:bg-[#434352]">
             <tr>
               {columns.map((col, idx) => (
                 <th
@@ -200,10 +214,10 @@ const TableComponent = ({
           <tbody>
             {currentData.map((row, idx) => (
               <tr key={idx}>
-                <td className="px-4 py-2 text-sm truncate max-w-[180px]">
+                <td className="px-4 py-3 text-sm truncate max-w-[180px]">
                   {row.hash}
                 </td>
-                <td className="px-4 py-2 text-sm truncate max-w-[180px]">
+                <td className="px-4 py-3 text-sm truncate max-w-[180px]">
                   <div className="flex gap-[15px]">
                     <div className="truncate max-w-[180px]">
                       {row.initiator}
@@ -213,15 +227,15 @@ const TableComponent = ({
                     </div>
                   </div>
                 </td>
-                <td className="px-4 py-2 text-sm truncate max-w-[180px]">
+                <td className="px-4 py-3 text-sm truncate max-w-[180px]">
                   {row.receiver}
                 </td>
-                <td className="px-4 py-2 text-sm">{row.connectionQuality}</td>
-                <td className="px-4 py-2 text-sm">{row.creationTime}</td>
+                <td className="px-4 py-3 text-sm">{row.connectionQuality}</td>
+                <td className="px-4 py-3 text-sm">{row.creationTime}</td>
                 {showAction && (
-                  <td className="px-4 py-2 text-sm">
+                  <td className="px-4 py-3 text-sm">
                     <button
-                      className="text-[#2EA8AF] hover:underline"
+                      className="text-primary hover:underline"
                       onClick={() => onRowSelect(row)}
                     >
                       More
@@ -235,23 +249,23 @@ const TableComponent = ({
       </div>
 
       {/* Mobile View */}
-      <div className="md:hidden space-y-3">
+      <div className="md:hidden space-y-3 dark:bg-card ">
         {currentData.map((row, idx) => (
-          <div key={idx} className="border-b p-3">
+          <div key={idx} className="border-b dark:border-[#454545] p-3">
             <div className="flex justify-between text-sm font-normal">
-              <span className="truncate max-w-[220px] text-[#858585]">
+              <span className="truncate max-w-[220px] text-card-foreground">
                 {row.hash}
               </span>
-              <span onClick={() => onRowSelect(row)} className="text-[#2EA8AF]">
+              <span onClick={() => onRowSelect(row)} className="text-primary">
                 {row.connectionQuality}
               </span>
             </div>
             <div className="flex justify-between text-sm font-normal mt-2">
-              <span className="text-[#858585]">Initiator:</span>
+              <span className="text-card-foreground">Initiator:</span>
               <span className="truncate max-w-[250px]">{row.initiator}</span>
             </div>
             <div className="flex justify-between text-sm font-normal mt-2">
-              <span className="text-[#858585]">Receiver:</span>
+              <span className="text-card-foreground">Receiver:</span>
               <span className="truncate max-w-[250px]">{row.receiver}</span>
             </div>
           </div>
@@ -259,9 +273,9 @@ const TableComponent = ({
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center mt-10">
+      <div className="flex justify-center bg-card md:bg-background  py-10">
         <Pagination>
-          <PaginationContent className="inline-flex items-center gap-[10px] md:gap-[35px] px-[9px] py-[10px] rounded-[40px] border border-solid border-[#eeeeee]">
+          <PaginationContent className="inline-flex items-center gap-[10px] md:gap-[35px] px-[9px] py-[10px] rounded-[40px] border border-solid border-border dark:border-primary-foreground">
             <img
               src="/arrow-left-icon.svg"
               onClick={() => handlePageChange(currentPage - 1)}
@@ -272,7 +286,7 @@ const TableComponent = ({
                 <div
                   onClick={() => handlePageChange(page)}
                   className={`flex w-[30px] items-center justify-center cursor-pointer ${
-                    page === currentPage ? "text-[#2ea8af]" : "text-[#1c1c1c]"
+                    page === currentPage ? "text-primary" : "text-foreground"
                   }`}
                 >
                   {page}
@@ -297,15 +311,15 @@ const ConsensusConnectionTable = () => {
   return (
     <div>
       {!selectedRow && (
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-5">
-          <div className="px-0 py-4 md:px-4 md:py-0 text-[14px] leading-[19px] font-normal text-[#1C1C1C]">
+        <div className="flex flex-col md:flex-row md:items-center dark:bg-card rounded-t-[10px] justify-between pb-5 p-2">
+          <div className="px-0 py-4 md:px-4 md:py-0 text-[14px] leading-[19px] font-normal text-foreground">
             Connection contract information
           </div>
           <div className="flex gap-2">
             {["Token", "All network", "LUCA"].map((label) => (
               <div key={label} className="relative inline-block">
                 <select
-                  className="h-10 px-2 py-2 pr-10 rounded-lg border border-[#eeeeee] bg-transparent hover:bg-gray-50 flex items-center gap-3 appearance-none text-sm text-[#858585] focus:outline-none focus:ring-0"
+                  className="h-10 px-2 py-2 pr-7 md:pr-10 rounded-[10px] border border-border dark:border-[#454545] bg-transparent hover:bg-gray-50 flex items-center gap-3 appearance-none text-sm text-card-foreground focus:outline-none focus:ring-0"
                   defaultValue={label}
                 >
                   <option value={label}>{label}</option>

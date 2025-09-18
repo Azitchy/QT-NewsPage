@@ -79,8 +79,8 @@ const TableComponent = ({
     <>
       {/* Desktop Table */}
       <div className="hidden md:block overflow-x-auto">
-        <table className="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-          <thead className="bg-[#F6F6F6]">
+        <table className="min-w-full dark:bg-card rounded-lg overflow-hidden">
+          <thead className="bg-[#F6F6F6] dark:bg-[#434352]">
             <tr>
               {columns.map((col, idx) => (
                 <th
@@ -112,31 +112,31 @@ const TableComponent = ({
       </div>
 
       {/* Mobile View */}
-      <div className="md:hidden space-y-3">
+      <div className="md:hidden space-y-3 dark:bg-card">
         {currentData.map((row, idx) => (
-          <div key={idx} className="border-b p-3">
+          <div key={idx} className="border-b dark:border-[#454545] p-3">
             <div className="flex justify-between text-sm font-normal">
-              <span className="truncate max-w-[220px] text-[#858585]">
+              <span className="truncate max-w-[220px] text-card-foreground">
                 User address:
               </span>
               <span className="truncate max-w-[200px]">{row.userAddress}</span>
             </div>
             <div className="flex gap-16 text-sm font-normal mt-2">
-              <span className="text-[#858585]">PR Value :</span>
+              <span className="text-card-foreground">PR Value :</span>
               <span>{row.prValue}</span>
             </div>
             <div className="flex gap-2 text-sm font-normal mt-2">
-              <span className="text-[#858585]">Connection Quality:</span>
-              <span className="">{row.connectionQuality}</span>
+              <span className="text-card-foreground">Connection Quality:</span>
+              <span>{row.connectionQuality}</span>
             </div>
           </div>
         ))}
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center mt-10">
+      <div className="flex justify-center bg-card md:bg-background py-10">
         <Pagination>
-          <PaginationContent className="inline-flex items-center gap-[10px] md:gap-[35px] px-[9px] py-[10px] rounded-[40px] border border-solid border-[#eeeeee]">
+          <PaginationContent className="inline-flex items-center gap-[10px] md:gap-[35px] px-[9px] py-[10px] rounded-[40px] border border-solid border-border dark:border-primary-foreground">
             <img
               src="/arrow-left-icon.svg"
               onClick={() => handlePageChange(currentPage - 1)}
@@ -147,7 +147,7 @@ const TableComponent = ({
                 <div
                   onClick={() => handlePageChange(page)}
                   className={`flex w-[30px] items-center justify-center cursor-pointer ${
-                    page === currentPage ? "text-[#2ea8af]" : "text-[#1c1c1c]"
+                    page === currentPage ? "text-primary" : "text-foreground"
                   }`}
                 >
                   {page}
@@ -169,8 +169,8 @@ const TableComponent = ({
 const UserInformationTable = () => {
   return (
     <div>
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-5">
-        <div className="px-0 py-4 md:px-4 md:py-0 text-[14px] leading-[19px] font-normal text-[#1C1C1C]">
+      <div className="dark:bg-card flex flex-col md:flex-row md:items-center rounded-t-[10px] justify-between p-4 pb-5">
+        <div className="px-0 py-4 md:px-4 md:py-0 text-[14px] leading-[19px] font-normal text-foreground">
           User information
         </div>
       </div>

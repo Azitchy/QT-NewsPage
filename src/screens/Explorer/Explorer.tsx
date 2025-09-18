@@ -53,7 +53,7 @@ export const Explorer = () => {
       <HeroSection />
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        <nav className="md:bg-[#fbfbfb] rounded-2xl shadow-none md:shadow-sm px-[20px] py-[15px] mt-8">
+        <nav className="dark:bg-card rounded-2xl shadow-none md:shadow-sm px-[20px] py-[15px] mt-8 mb-4">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             {/* Tabs Section */}
             <div className="order-2 lg:order-1 flex-1 min-w-0">
@@ -73,8 +73,8 @@ export const Explorer = () => {
                         onClick={() => setActiveTab(tab.id)}
                         className={`px-3 py-2 h-auto bg-transparent border-0 shadow-none data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap ${
                           activeTab === tab.id
-                            ? "!text-[#FFFFFF] md:!text-[#1C1C1C] font-normal !bg-[#2EA8AF] md:!bg-transparent rounded-[20px]"
-                            : "text-[#858585] font-normal"
+                            ? "!text-background dark:!text-primary-foreground md:!text-foreground font-normal !bg-primary md:!bg-transparent rounded-[20px]"
+                            : "text-card-foreground font-normal"
                         } text-sm`}
                       >
                         {tab.label}
@@ -89,7 +89,7 @@ export const Explorer = () => {
             <div className="flex flex-row sm:flex-row w-full lg:w-auto  order-1 lg:order-2 flex-shrink-0">
               <div className="relative inline-block">
                 <select
-                  className="h-10 px-2 py-2 pr-10 rounded-lg border border-[#eeeeee] bg-transparent hover:bg-gray-50 flex items-center gap-3 appearance-none text-sm text-[#858585] focus:outline-none focus:ring-0"
+                  className="h-10 px-2 py-2 pr-10 rounded-lg border border-border dark:border-[#454545] bg-transparent hover:bg-gray-50 flex items-center gap-3 appearance-none text-sm text-[#858585] focus:outline-none focus:ring-0"
                   defaultValue="Address"
                 >
                   <option value="Address">Address</option>
@@ -107,7 +107,7 @@ export const Explorer = () => {
               <div className="relative w-full sm:w-[200px]">
                 <Input
                   placeholder="Search..."
-                  className="h-10 pl-4 pr-12 py-2 rounded-lg border border-[#eeeeee] bg-transparent text-sm text-[#858585] placeholder:text-[#858585] focus:ring-2 focus:ring-[#2ea8af] focus:border-transparent"
+                  className="h-10 pl-4 pr-12 py-2 rounded-lg border border-border dark:border-[#454545] bg-transparent text-sm text-[#858585] placeholder:text-[#858585] focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
                 <img
                   src="/search-icon.svg"

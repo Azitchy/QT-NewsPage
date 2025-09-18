@@ -58,23 +58,23 @@ const CryptoChart: React.FC<CryptoChartProps> = ({
   };
 
   return (
-    <div className="w-full rounded-xl bg-white">
+    <div className="w-full rounded-xl bg-card">
       <div className="flex mb-3">
         <div className="flex flex-col-reverse gap-4 md:gap-0 md:flex-row md:items-center justify-between w-full py-4">
-          <div className="text-[14px] leading-[19px] max-w-[100px] md:max-w-full font-normal text-[#1C1C1C]">
+          <div className="text-[14px] leading-[19px] max-w-[100px] md:max-w-full font-normal text-foreground">
             {name} price trend
           </div>
-          <div className="flex rounded-lg border border-[#2ea8af] overflow-hidden">
+          <div className="flex rounded-[5px] border border-primary overflow-hidden">
             {timeFrameOptions.map((option, index) => (
               <Button
                 key={option.value}
                 variant="ghost"
                 className={`h-8 px-8 md:px-4 rounded-none border-0 text-sm font-medium transition-colors ${
-                  index > 0 ? "border-l border-[#2ea8af]" : ""
+                  index > 0 ? "border-l border-primary" : ""
                 } ${
                   timeFrame === option.value
-                    ? "bg-[#2ea8af] text-white hover:bg-[#2ea8af] hover:text-white"
-                    : "bg-transparent text-[#2ea8af] hover:bg-[#2ea8af]/10"
+                    ? "bg-primary text-card dark:text-primary-foreground hover:bg-primary hover:text-card"
+                    : "bg-transparent text-primary hover:bg-[#2ea8af]/10"
                 }`}
                 onClick={() => onTimeFrameChange(option.value)}
               >

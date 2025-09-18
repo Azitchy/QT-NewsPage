@@ -15,8 +15,8 @@ export const HeroSection = () => {
           src="/explorer-hero-small.png"
         />
       </div>
-      <div className="md:max-w-[370px] lg:max-w-[512px]  md:absolute md:top-52 lg:top-56 md:right-[10px] lg:-right-[46px] xl:right-32 2xl:right-[416px] ">
-        <h1 className="text-[26px] md:text-[24px] lg:text-[32px] leading-[32px] lg:leading-10 font-light text-start text-gray-700 mb-2 [font-family:'Space_Grotesk',Helvetica]">
+      <div className="md:max-w-[370px] lg:max-w-[512px]  md:absolute md:top-52 lg:top-56 md:right-[10px] lg:-right-[46px] xl:right-32 large:right-[416px] ">
+        <h1 className="text-[26px] md:text-[24px] lg:text-[32px] leading-[32px] lg:leading-10 font-light text-start text-foreground mb-2 font-space-grotesk">
           Discover the Power of <br /> LUCA{" "}
           <span className="bg-gradient-to-tr from-[#AADA5D] to-[#0DAEB9] bg-clip-text text-transparent font-bold">
             Building Stability Through Consensus
