@@ -58,13 +58,13 @@ export const EcosystemSection = () => {
 
       <div className="mt-[20px] md:px-10 lg:px-28 2xl:px-0 lg:mt-[80px] mx-auto max-w-[1414px]">
         <div className="relative">
-          <div className="flex items-center justify-center gap-[10px] w-fit mx-auto lg:absolute right-0 top-[-72px] border border-solid border-[#eeeeee] rounded-[40px] p-[5px]">
+          <div className="flex items-center justify-center gap-[10px] w-fit mx-auto lg:absolute right-0 top-[-72px] border border-solid border-border dark:border-primary-foreground rounded-[40px] p-[5px]">
             <button
               onClick={() => setActiveEcosystemTab("gaming")}
               className={`rounded-[100px] px-[15px] py-2.5 text-sm transition-colors ${
                 activeEcosystemTab === "gaming"
-                  ? "bg-[#e9f6f7] text-[#2ea8af]"
-                  : "text-[#2ea8af] hover:bg-gray-50"
+                  ? "bg-primary-foreground text-primary"
+                  : "text-primary hover:bg-primary-foreground"
               }`}
             >
               Gaming
@@ -73,8 +73,8 @@ export const EcosystemSection = () => {
               onClick={() => setActiveEcosystemTab("ecology")}
               className={`rounded-[100px] px-[15px] py-2.5 text-sm transition-colors ${
                 activeEcosystemTab === "ecology"
-                  ? "bg-[#e9f6f7] text-[#2ea8af]"
-                  : "text-[#2ea8af] hover:bg-gray-50"
+                  ? "bg-primary-foreground text-primary"
+                  : "text-primary hover:bg-primary-foreground"
               }`}
             >
               Ecology
@@ -83,8 +83,8 @@ export const EcosystemSection = () => {
               onClick={() => setActiveEcosystemTab("travel")}
               className={`rounded-[100px] px-[15px] py-2.5 text-sm transition-colors ${
                 activeEcosystemTab === "travel"
-                  ? "bg-[#e9f6f7] text-[#2ea8af]"
-                  : "text-[#2ea8af] hover:bg-gray-50"
+                  ? "bg-primary-foreground text-primary"
+                  : "text-primary hover:bg-primary-foreground"
               }`}
             >
               Travel
@@ -99,21 +99,21 @@ export const EcosystemSection = () => {
             />
 
             <div className="flex flex-col h-auto lg:h-[300px] items-start gap-5 flex-1">
-              <div className="self-stretch text-[#1c1c1c] dark:text-[#DCDCDC] text-[22px] lg:text-[length:var(--titles-h5-large-text-400-font-size)] leading-[30px] lg:leading-[var(--titles-h5-large-text-400-line-height)] relative mt-[-1.00px] font-titles-h5-large-text-400 font-[number:var(--titles-h5-large-text-400-font-weight)] tracking-[var(--titles-h5-large-text-400-letter-spacing)] [font-style:var(--titles-h5-large-text-400-font-style)]">
+              <div className="self-stretch text-foreground dark:text-foreground text-[22px] lg:text-[length:var(--titles-h5-large-text-400-font-size)] leading-[30px] lg:leading-[var(--titles-h5-large-text-400-line-height)] relative mt-[-1.00px] font-titles-h5-large-text-400 font-[number:var(--titles-h5-large-text-400-font-weight)] tracking-[var(--titles-h5-large-text-400-letter-spacing)] [font-style:var(--titles-h5-large-text-400-font-style)]">
                 {currentEcosystemData.title}
               </div>
 
-              <div className="relative self-stretch font-body-body2-400 font-[number:var(--body-body2-400-font-weight)] text-[#1c1c1c] dark:text-[#DCDCDC] text-[16px] lg:text-[length:var(--body-body2-400-font-size)] tracking-[var(--body-body2-400-letter-spacing)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)] [font-style:var(--body-body2-400-font-style)]">
+              <div className="relative self-stretch font-body-body2-400 font-[number:var(--body-body2-400-font-weight)] text-foreground dark:text-foreground text-[16px] lg:text-[length:var(--body-body2-400-font-size)] tracking-[var(--body-body2-400-letter-spacing)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)] [font-style:var(--body-body2-400-font-style)]">
                 {currentEcosystemData.description1}
               </div>
 
-              <div className="relative self-stretch font-body-body2-400 font-[number:var(--body-body2-400-font-weight)] text-[#1c1c1c] dark:text-[#DCDCDC] text-[16px] lg:text-[length:var(--body-body2-400-font-size)] tracking-[var(--body-body2-400-letter-spacing)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)] [font-style:var(--body-body2-400-font-style)]">
+              <div className="relative self-stretch font-body-body2-400 font-[number:var(--body-body2-400-font-weight)] text-foreground dark:text-foreground text-[16px] lg:text-[length:var(--body-body2-400-font-size)] tracking-[var(--body-body2-400-letter-spacing)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)] [font-style:var(--body-body2-400-font-style)]">
                 {currentEcosystemData.description2}
               </div>
 
               <div className="inline-flex items-center gap-2.5 relative rounded-[30px]">
                 <div className="relative w-[72px] h-[19px]">
-                  <div className="absolute h-[19px] -top-px left-0 font-body-body-4-400 font-[number:var(--body-body-4-400-font-weight)] text-primary-colour text-[length:var(--body-body-4-400-font-size)] tracking-[var(--body-body-4-400-letter-spacing)] leading-[var(--body-body-4-400-line-height)] whitespace-nowrap [font-style:var(--body-body-4-400-font-style)]">
+                  <div className="absolute h-[19px] -top-px left-0 font-body-body-4-400 font-[number:var(--body-body-4-400-font-weight)] text-primary text-[length:var(--body-body-4-400-font-size)] tracking-[var(--body-body-4-400-letter-spacing)] leading-[var(--body-body-4-400-line-height)] whitespace-nowrap [font-style:var(--body-body-4-400-font-style)]">
                     Learn more
                   </div>
                 </div>

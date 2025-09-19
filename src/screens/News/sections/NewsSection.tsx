@@ -125,16 +125,16 @@ export const NewsSection = (): JSX.Element => {
       <section className="w-full px-4 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
         {/* Tabs */}
         <div className="flex justify-center mb-[35px] px-4 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
-          <div className="inline-flex items-center gap-2.5 p-[5px] rounded-[40px] border border-solid border-[#eeeeee] max-w-fit">
+          <div className="inline-flex items-center gap-2.5 p-[5px] rounded-[40px] border border-solid border-border dark:border-primary-foreground max-w-fit">
             {filterTabs.map((tab) => (
               <div
                 key={tab}
                 onClick={() => handleTabClick(tab)}
                 className={`inline-flex items-center justify-center gap-2.5 px-[12px] md:px-[15px] py-2.5 cursor-pointer relative flex-[0_0_auto] rounded-[100px] overflow-hidden transition-colors duration-200 ${
-                  activeTab === tab ? "bg-[#e9f6f7]" : "hover:bg-gray-100"
+                  activeTab === tab ? "bg-primary-foreground" : "hover:bg-card"
                 }`}
               >
-                <div className="text-[#2ea8af] text-[12px] md:text-[14px] whitespace-nowrap">
+                <div className="text-primary text-[12px] md:text-[14px] whitespace-nowrap">
                   {tab}
                 </div>
               </div>
@@ -152,7 +152,7 @@ export const NewsSection = (): JSX.Element => {
         {/* Error State */}
         {error && !loading && (
           <div className="flex justify-center items-center py-10">
-            <div className="text-red-500">Failed to fetch news data</div>
+            <div className="text-destructive">Failed to fetch news data</div>
           </div>
         )}
 
@@ -162,7 +162,7 @@ export const NewsSection = (): JSX.Element => {
             {paginatedNews.map((news, index) => (
               <Card
                 key={`card-${index}`}
-                className="h-auto md:h-[300px] lg:h-[380px] xl:h-[380px] rounded-[20px] border border-solid border-[#eeeeee] flex flex-col bg-[#fbfbfb] hover:shadow-lg transition-shadow duration-300"
+                className="h-auto md:h-[300px] lg:h-[380px] xl:h-[380px] rounded-[20px] border border-solid border-border dark:border-primary-foreground flex flex-col bg-card hover:shadow-lg transition-shadow duration-300"
               >
                 <CardContent className="p-0 flex flex-col h-full">
                   <div className="flex flex-col items-start gap-2.5 p-[15px] flex-1">
@@ -178,19 +178,19 @@ export const NewsSection = (): JSX.Element => {
                   </div>
 
                   <div className="flex flex-col items-start gap-2.5 pt-0 pb-2.5 px-[20px] md:px-[30px] flex-1">
-                    <h3 className="font-titles-h5-large-text-400 text-[#1c1c1c] text-[26px] md:text-[20px] lg:text-[20px] xl:text-[26px] line-clamp-3 leading-[34px] md:leading-[27px] lg:leading-[34px]">
+                    <h3 className="font-titles-h5-large-text-400 text-foreground text-[26px] md:text-[20px] lg:text-[20px] xl:text-[26px] line-clamp-3 leading-[34px] md:leading-[27px] lg:leading-[34px]">
                       {news.title}
                     </h3>
                   </div>
 
                   <div className="flex flex-col items-start px-[20px] md:px-[30px] py-[15px] mt-auto">
                     <div className="flex items-center justify-between w-full gap-4">
-                      <time className="text-[#4f5555] text-[14px]">
+                      <time className="text-[#4f5555] dark:text-card-foreground text-[14px]">
                         {formatDate(news.createTime)}
                       </time>
                       <a
                         href="#"
-                        className="flex items-center gap-2 cursor-pointer text-primary-colour font-light md:text-[12px] lg:text-[14px]"
+                        className="flex items-center gap-2 cursor-pointer text-primary font-light md:text-[12px] lg:text-[14px]"
                         onClick={(e) => {
                           e.preventDefault();
                           handleReadNews(news);
@@ -198,7 +198,7 @@ export const NewsSection = (): JSX.Element => {
                       >
                         <span>Read news</span>
                         <img
-                          className="w-[30px] h-[30px] md:w-[20px] md:h-[20px] lg:w-[30px] lg:h-[30px] hover:bg-gray-100 rounded-full hover:-rotate-12 transition-transform"
+                          className="w-[30px] h-[30px] md:w-[20px] md:h-[20px] lg:w-[30px] lg:h-[30px]  hover:bg-primary-foreground rounded-full hover:-rotate-12 transition-transform"
                           alt="Arrow right icon"
                           src="/arrow-right-icon.svg"
                         />
@@ -222,7 +222,7 @@ export const NewsSection = (): JSX.Element => {
         {totalPages > 1 && !loading && !error && (
           <div className="flex justify-center mt-10">
             <Pagination>
-              <PaginationContent className="inline-flex items-center gap-[10px] md:gap-[35px] px-[9px] py-[10px] rounded-[40px] border border-solid border-[#eeeeee]">
+              <PaginationContent className="inline-flex items-center gap-[10px] md:gap-[35px] px-[9px] py-[10px] rounded-[40px] border border-solid border-border dark:border-primary-foreground">
                 <PaginationLink
                   onClick={() => handlePageChange(currentPage - 1)}
                   className={
@@ -242,8 +242,8 @@ export const NewsSection = (): JSX.Element => {
                         onClick={() => handlePageChange(page)}
                         className={`flex w-[30px] md:w-[35px] items-center justify-center text-[12px] md:text-[14px] cursor-pointer ${
                           page === currentPage
-                            ? "text-[#2ea8af]"
-                            : "text-[#1c1c1c]"
+                            ? "text-primary"
+                            : "text-foreground"
                         }`}
                       >
                         {page}
@@ -262,7 +262,7 @@ export const NewsSection = (): JSX.Element => {
                 >
                   <img
                     src="/arrow-right-icon-3.svg"
-                    className="w-7 h-7 bg-[#e9f6f7] rounded-full cursor-pointer p-1"
+                    className="w-7 h-7 bg-primary-foreground rounded-full cursor-pointer p-1"
                   />
                 </PaginationLink>
               </PaginationContent>

@@ -41,10 +41,10 @@ export const CommunitySection = (): JSX.Element => {
         <div className="flex flex-col max-w-[784px] gap-5 flex-1">
           <HeadingWithDots text="community" />
 
-          <h2 className="text-[20px] leading-[27px] font-normal text-[#1C1C1C] desktop:text-[26px] desktop:leading-[34px]">
+          <h2 className="text-[20px] leading-[27px] font-normal desktop:text-[26px] desktop:leading-[34px]">
             What on earth is a consensus connection?
           </h2>
-          <p className="text-[16px] leading-[22px] font-light text-[#1C1C1C] desktop:text-[18px] desktop:leading-[24px] desktop:font-normal">
+          <p className="text-[16px] leading-[22px] font-light desktop:text-[18px] desktop:leading-[24px] desktop:font-normal">
             ATM provides a smart contract known as a Consensus Contract, which
             allows users to connect with each other on the multiple public
             blockchains that support smart contracts
@@ -63,22 +63,22 @@ export const CommunitySection = (): JSX.Element => {
       {/* How to create consensus connection */}
       <div className="max-w-[874px] mx-auto">
         <div className="flex flex-col gap-5 mb-8">
-          <h2 className="text-[20px] leading-[27px] font-normal text-[#1C1C1C] desktop:text-[26px] desktop:leading-[34px]">
+          <h2 className="text-[20px] leading-[27px] font-normal desktop:text-[26px] desktop:leading-[34px]">
             How to create consensus connection
           </h2>
-          <p className="text-[16px] leading-[22px] font-light text-[#1C1C1C] desktop:text-[18px] desktop:leading-[24px] desktop:font-normal">
+          <p className="text-[16px] leading-[22px] font-light desktop:text-[18px] desktop:leading-[24px] desktop:font-normal">
             User A sets up a consensus contract which initiates a request to
             establish a connection to user B. If B agrees, the contract will be
             executed, and the consensus connection will be successful.
           </p>
         </div>
 
-        <Card className="flex flex-col items-start gap-[25px] border-none shadow-none bg-transparent">
+        <Card className="flex flex-col items-start gap-[25px] border-none shadow-none bg-transparent text-foreground">
           <CardContent className="p-0 w-full">
             {consensusItems.map((item, index) => (
               <React.Fragment key={index}>
                 <div
-                  className="w-full py-4 cursor-pointer transition-all duration-500 hover:bg-gray-50/50 rounded-lg"
+                  className="w-full py-4 cursor-pointer transition-all duration-500  rounded-lg"
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
@@ -95,7 +95,7 @@ export const CommunitySection = (): JSX.Element => {
                           : "gap-0"
                       }`}
                     >
-                      <h3 className="text-[20px] leading-[27px] font-normal text-[#1C1C1C] desktop:text-[26px] desktop:leading-[34px] text-left">
+                      <h3 className="text-[20px] leading-[27px] font-normal desktop:text-[26px] desktop:leading-[34px] text-left">
                         {item.title}
                       </h3>
                       <div
@@ -110,7 +110,7 @@ export const CommunitySection = (): JSX.Element => {
                         }`}
                       >
                         {item.description && (
-                          <p className="text-[16px] leading-[22px] font-light text-[#1C1C1C] desktop:text-[18px] desktop:leading-[24px] desktop:font-normal mb-[15px] text-left">
+                          <p className="text-[16px] leading-[22px] font-light desktop:text-[18px] desktop:leading-[24px] desktop:font-normal mb-[15px] text-left">
                             {item.description}
                           </p>
                         )}
@@ -142,7 +142,7 @@ export const CommunitySection = (): JSX.Element => {
                   </div>
                 </div>
                 {index < consensusItems.length - 1 && (
-                  <Separator className="w-full h-px" />
+                  <Separator className="w-full h-px bg-card-foreground" />
                 )}
               </React.Fragment>
             ))}
@@ -150,7 +150,7 @@ export const CommunitySection = (): JSX.Element => {
         </Card>
 
         <Button variant="ghost" className="gap-2.5 p-0 rounded-[30px]">
-          <span className="text-primary-colour text-[14px] leading-[20px] font-normal whitespace-nowrap">
+          <span className="text-primary text-[14px] leading-[20px] font-normal whitespace-nowrap">
             View my connections
           </span>
           <div className="w-[38.53px] h-[38.53px]">
@@ -167,15 +167,15 @@ export const CommunitySection = (): JSX.Element => {
       <div className="flex flex-col md:flex-row md:justify-center gap-8 items-center">
         {/* Text first on mobile, image second */}
         <div className="flex flex-col max-w-[783px] gap-5 order-1 md:order-2 flex-1">
-          <h2 className="text-[20px] leading-[27px] font-normal text-[#1C1C1C] desktop:text-[26px] desktop:leading-[34px]">
+          <h2 className="text-[20px] leading-[27px] font-normal desktop:text-[26px] desktop:leading-[34px]">
             Consensus connection income
           </h2>
-          <p className="text-[16px] leading-[22px] font-light text-[#1C1C1C] desktop:text-[18px] desktop:leading-[24px] desktop:font-normal">
+          <p className="text-[16px] leading-[22px] font-light desktop:text-[18px] desktop:leading-[24px] desktop:font-normal">
             Through consensus connection, users can receive rewards according to
             their PR value. The LUCA held on each public chain will be sent to a
             public deposit smart contract where users can withdraw at any time.
           </p>
-          <p className="text-[16px] leading-[22px] font-light text-[#1C1C1C] desktop:text-[18px] desktop:leading-[24px] desktop:font-normal">
+          <p className="text-[16px] leading-[22px] font-light desktop:text-[18px] desktop:leading-[24px] desktop:font-normal">
             To do so the user initiates an application, the contract initiates a
             request to the ATMRank computing group interface, and the PR server
             cluster calculates the value of rewards to be received and writes it
@@ -189,7 +189,7 @@ export const CommunitySection = (): JSX.Element => {
             variant="ghost"
             className="inline-flex items-center gap-2.5 p-0 rounded-[30px] self-start"
           >
-            <span className="text-primary-colour text-[14px] leading-[20px] font-normal whitespace-nowrap">
+            <span className="text-primary text-[14px] leading-[20px] font-normal whitespace-nowrap">
               View my income
             </span>
             <div className="w-[38.53px] h-[38.53px]">

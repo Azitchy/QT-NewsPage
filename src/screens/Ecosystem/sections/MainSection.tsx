@@ -27,7 +27,7 @@ export const MainSection = () => {
         {
           text: "Learn about funding",
           primary: false,
-          href: "#",
+          href: "/games",
         },
       ],
       mediaUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
@@ -114,7 +114,7 @@ export const MainSection = () => {
                 {section.paragraphs?.map((paragraph, index) => (
                   <p
                     key={index}
-                    className="font-normal text-[#1c1c1c] text-[16px] lg:text-[17px]  [font-family:'Inter',Helvetica] leading-[22px] lg:leading-6 text-left"
+                    className="font-normal text-foreground text-[16px] lg:text-[17px] font-inter leading-[22px] lg:leading-6 text-left"
                   >
                     {paragraph}
                   </p>
@@ -125,7 +125,7 @@ export const MainSection = () => {
                     button.primary ? (
                       <Button
                         key={index}
-                        className="bg-[#2ea8af] text-[#FFFFFF] rounded-[30px] px-5 py-3 font-normal text-[14px] lg:text-[16px] leading-6 hover:bg-[#2ea8af]/90"
+                        className="bg-primary text-background dark:text-foreground rounded-[30px] px-5 py-3 font-normal text-[14px] lg:text-[16px] leading-6 hover:bg-primary/90"
                       >
                         <a href={button.href}>{button.text}</a>
                       </Button>
@@ -140,7 +140,7 @@ export const MainSection = () => {
                         <a href={button.href}>
                           <div className="w-[38px] h-[38px] relative">
                             <img
-                              className="absolute w-[33px] h-[33px] top-[3px] left-0.5 hover:bg-gray-100 rounded-full hover:-rotate-12 transition-transform"
+                              className="absolute w-[33px] h-[33px] top-[3px] left-0.5 hover:bg-primary-foreground rounded-full hover:-rotate-12 transition-transform"
                               alt="Arrow right icon"
                               src="/arrow-right-icon.svg"
                             />
@@ -179,16 +179,16 @@ export const MainSection = () => {
                 </div>
 
                 <div
-                  className="font-normal text-[#1c1c1c] [font-family:'Inter',Helvetica] text-[14px] lg:text-[16px] tracking-[var(--body-body2-400-letter-spacing)] leading-[22px] lg:leading-6 text-left"
+                  className="font-normal text-foreground dark:text-foreground font-inter text-[14px] lg:text-[16px] tracking-[var(--body-body2-400-letter-spacing)] leading-[22px] lg:leading-6 text-left"
                   dangerouslySetInnerHTML={{ __html: section.content ?? "" }}
                 />
 
                 <div className="flex items-center gap-2">
-                  <div className="[font-family:'Inter',Helvetica] text-[#1c1c1c]  text-[14px] lg:text-[16px]">
+                  <div className="font-inter text-foreground dark:text-foreground text-[14px] lg:text-[16px]">
                     <span className="font-medium leading-[22px] lg:leading-6">
                       {section.walletInfo?.label}{" "}
                     </span>
-                    <span className="font-normal  text-[14px] lg:text-[16px] tracking-[var(--body-body3-400-letter-spacing)] leading-[22px] lg:leading-6">
+                    <span className="font-normal text-[14px] lg:text-[16px] tracking-[var(--body-body3-400-letter-spacing)] leading-[22px] lg:leading-6">
                       {section.walletInfo?.address}
                     </span>
                   </div>

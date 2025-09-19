@@ -4,7 +4,7 @@ import { ContentSection } from "./sections/ContentSection/ContentSection";
 
 export const Ecosystem = (): JSX.Element => {
   return (
-    <div className="flex flex-col w-full bg-white">
+    <div className="flex flex-col w-full bg-background dark:bg-background">
       <ContentSection />
       <FooterSection />
     </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -70,25 +70,61 @@ export const contractCards = [
 
 export const ContractsCarousel = (): JSX.Element => {
   const [api, setApi] = useState<CarouselApi>();
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
+
+  useEffect(() => {
+    if (!api) return;
+
+    const updateState = () => {
+      setCanPrev(api?.canScrollPrev());
+      setCanNext(api?.canScrollNext());
+    };
+
+    updateState();
+    api.on("reInit", updateState);
+    api.on("select", updateState);
+
+    return () => {
+      api.off("reInit", updateState);
+      api.off("select", updateState);
+    };
+  }, [api]);
+
+  // Split cards into chunks of 2 for mobile/tablet
+  const chunkedCards = [];
+  for (let i = 0; i < contractCards.length; i += 2) {
+    chunkedCards.push(contractCards.slice(i, i + 2));
+  }
 
   return (
     <div className="w-full pt-[20px]">
       {/* Carousel Navigation */}
       <div className="flex justify-end mb-8 px-[16px] tablet:px-[60px]">
-        <div className="flex items-center gap-[15px] px-[9px] py-[5px] rounded-[40px] border border-[#eeeeee]">
+        <div className="flex items-center gap-[15px] px-[9px] py-[5px] rounded-[40px] border border-border">
           <Button
             variant="ghost"
-            className="w-[38.53px] h-[38.53px] p-0 hover:bg-gray-100"
+            className={`w-[38.53px] h-[38.53px] p-0 rounded-[19.26px] hover:bg-gray-100 ${
+              canPrev ? "bg-primary-foreground" : "bg-transparent"
+            }`}
             onClick={() => api?.scrollPrev()}
+            disabled={!canPrev}
           >
-            <ArrowLeftIcon className="w-5 h-5" />
+            <ArrowLeftIcon
+              className={`w-5 h-5 ${canPrev ? "text-primary" : "text-gray-400"}`}
+            />
           </Button>
           <Button
             variant="ghost"
-            className="w-[38.53px] h-[38.53px] p-0 bg-[#e9f6f7] rounded-[19.26px] hover:bg-[#d6f0f2]"
+            className={`w-[38.53px] h-[38.53px] p-0 rounded-[19.26px] hover:bg-[#d6f0f2] ${
+              canNext ? "bg-[#e9f6f7]" : "bg-transparent"
+            }`}
             onClick={() => api?.scrollNext()}
+            disabled={!canNext}
           >
-            <ArrowRightIcon className="w-6 h-6" />
+            <ArrowRightIcon
+              className={`w-6 h-6 ${canNext ? "text-primary" : "text-gray-400"}`}
+            />
           </Button>
         </div>
       </div>
@@ -100,30 +136,36 @@ export const ContractsCarousel = (): JSX.Element => {
           setApi={setApi}
           opts={{ align: "start", loop: false }}
         >
-          {/* -mx ensures even spacing */}
           <CarouselContent className="-mx-[7.5px] desktop:-mx-[10px]">
-            {contractCards.map((card) => (
+            {chunkedCards.map((row, idx) => (
               <CarouselItem
-                key={card.id}
+                key={idx}
                 className="px-[7.5px] desktop:px-[10px] basis-auto flex-shrink-0"
               >
-                <Card className="w-[330px] h-[300px] desktop:w-[360px] desktop:h-[330px] p-[30px] bg-[#fbfbfb] rounded-[20px] border border-[#eeeeee] hover:shadow-lg transition-shadow">
-                  <CardContent className="p-0 h-full">
-                    <div className="flex flex-col gap-[15px] h-full">
-                      <img
-                        className="w-[81px] h-[81px] flex-shrink-0"
-                        alt={card.title}
-                        src={card.image}
-                      />
-                      <h3 className="text-[#2ea8af] font-[family:var(--typography-family-body,Inter)] text-lg font-medium leading-tight">
-                        {card.title}
-                      </h3>
-                      <p className="text-[color:var(--main-text,#1C1C1C)] font-[family:var(--typography-family-body,Inter)] text-sm leading-relaxed flex-1">
-                        {card.description}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
+                <div className="flex flex-col gap-[15px] desktop:flex-row desktop:gap-[10px]">
+                  {row.map((card) => (
+                    <Card
+                      key={card.id}
+                      className="w-[330px] h-[300px] desktop:w-[360px] desktop:h-[330px] p-[30px] rounded-[20px] border border-border hover:shadow-lg transition-shadow text-foreground"
+                    >
+                      <CardContent className="p-0 h-full">
+                        <div className="flex flex-col gap-[15px] h-full">
+                          <img
+                            className="w-[81px] h-[81px] flex-shrink-0"
+                            alt={card.title}
+                            src={card.image}
+                          />
+                          <h3 className="text-primary font-[family:var(--typography-family-body,Inter)] text-lg font-medium leading-tight">
+                            {card.title}
+                          </h3>
+                          <p className="font-[family:var(--typography-family-body,Inter)] text-sm leading-relaxed flex-1">
+                            {card.description}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               </CarouselItem>
             ))}
           </CarouselContent>
@@ -135,7 +177,7 @@ export const ContractsCarousel = (): JSX.Element => {
             variant="ghost"
             className="inline-flex items-center gap-2.5 p-0 rounded-[30px] hover:bg-transparent"
           >
-            <span className="text-[color:var(--primary-colour)] font-[family:var(--typography-family-body,Inter)]">
+            <span className="text-primary font-[family:var(--typography-family-body,Inter)]">
               Learn more
             </span>
             <div className="w-[38.53px] h-[38.53px] flex items-center justify-center">
@@ -146,7 +188,7 @@ export const ContractsCarousel = (): JSX.Element => {
               />
             </div>
           </Button>
-      </div>
+        </div>
       </div>
     </div>
   );

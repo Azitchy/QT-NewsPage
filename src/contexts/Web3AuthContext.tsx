@@ -33,14 +33,9 @@ const Web3AuthContext = createContext<Web3AuthContextType | undefined>(undefined
 const SESSION_STORAGE_KEY = 'web3_auth_session';
 const WALLET_CACHE_KEY = 'WEB3_CONNECT_CACHED_PROVIDER';
 const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+const LUCA_TOKEN_CONTRACT = '0x51E6D27FA57737D2985eJSONARSE...bfa0'; // LUCA token contract
 const BSC_CHAIN_ID = '0x38'; // BSC Mainnet
 const BSC_TESTNET_CHAIN_ID = '0x61'; // BSC Testnet
-
-// LUCA token contract addresses
-const LUCA_CONTRACTS = {
-  [BSC_CHAIN_ID]: '0x51E6Ac1533032E72e92094867fD5921e3ea1bfa0', // BSC Mainnet
-  [BSC_TESTNET_CHAIN_ID]: '0xD7a1cA21D73ff98Cc64A81153eD8eF89C2a1EfEF' // BSC Testnet
-};
 
 export const Web3AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -75,21 +70,6 @@ export const Web3AuthProvider: React.FC<{ children: ReactNode }> = ({ children }
     }
   }, [session]);
 
-  // Listen for account changes
-  useEffect(() => {
-    if (window.ethereum) {
-      window.ethereum.on('accountsChanged', handleAccountsChanged);
-      window.ethereum.on('chainChanged', handleChainChanged);
-      window.ethereum.on('disconnect', handleDisconnect);
-
-      return () => {
-        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
-        window.ethereum.removeListener('chainChanged', handleChainChanged);
-        window.ethereum.removeListener('disconnect', handleDisconnect);
-      };
-    }
-  }, []);
-
   const loadStoredSession = () => {
     try {
       const stored = sessionStorage.getItem(SESSION_STORAGE_KEY);
@@ -99,15 +79,14 @@ export const Web3AuthProvider: React.FC<{ children: ReactNode }> = ({ children }
         
         if (now < parsedSession.expiresAt) {
           setSession(parsedSession);
-          // Restore wallet info if available
-          if (window.ethereum && parsedSession.walletAddress) {
-            setWallet({
-              address: parsedSession.walletAddress,
-              provider: window.ethereum,
-              chainId: undefined
-            });
-          }
+          // Restore wallet info
+          setWallet({
+            address: parsedSession.walletAddress,
+            provider: window.ethereum,
+            chainId: undefined
+          });
         } else {
+          // Session expired, clear it
           clearStoredData();
         }
       }
@@ -162,6 +141,7 @@ export const Web3AuthProvider: React.FC<{ children: ReactNode }> = ({ children }
       });
       return true;
     } catch (switchError: any) {
+      // If chain doesn't exist, add it
       if (switchError.code === 4902) {
         try {
           await provider.request({
@@ -191,11 +171,13 @@ export const Web3AuthProvider: React.FC<{ children: ReactNode }> = ({ children }
 
   const performSIWEAuth = async (address: string, provider: any): Promise<any> => {
     try {
+      // Step 1: Get sign message from API
       const signMessageResponse = await getSignMessage(address);
       if (signMessageResponse.isError || !signMessageResponse.data) {
         throw new Error(signMessageResponse.message || 'Failed to get sign message');
       }
 
+      // Step 2: Sign the message with wallet
       const signature = await provider.request({
         method: 'personal_sign',
         params: [signMessageResponse.data, address],
@@ -205,6 +187,7 @@ export const Web3AuthProvider: React.FC<{ children: ReactNode }> = ({ children }
         throw new Error('Failed to sign message');
       }
 
+      // Step 3: Get login token from API
       const loginResponse = await getLoginToken(address, signature);
       if (loginResponse.isError || !loginResponse.data) {
         throw new Error(loginResponse.message || 'Failed to authenticate');
@@ -224,10 +207,12 @@ export const Web3AuthProvider: React.FC<{ children: ReactNode }> = ({ children }
     setError(null);
 
     try {
+      // Check if MetaMask is installed
       if (!window.ethereum) {
         throw new Error('MetaMask is not installed. Please install MetaMask to continue.');
       }
 
+      // Request account access
       const accounts = await window.ethereum.request({
         method: 'eth_requestAccounts',
       });
@@ -239,23 +224,29 @@ export const Web3AuthProvider: React.FC<{ children: ReactNode }> = ({ children }
       const address = accounts[0];
       const provider = window.ethereum;
 
+      // Check network compatibility
       const isCompatible = await checkNetworkCompatibility(provider);
       if (!isCompatible) {
         const switched = await switchToBSC(provider);
         if (!switched) {
-          throw new Error('Please switch to Binance Smart Chain to access LUCA tokens.');
+          throw new Error('Please switch to Binance Smart Chain to use LUCA tokens.');
         }
       }
 
+      // Get current chain ID
       const chainId = await provider.request({ method: 'eth_chainId' });
+
+      // Perform SIWE authentication
       const userData = await performSIWEAuth(address, provider);
 
+      // Create wallet instance
       const walletInstance: Wallet = {
         address,
         provider,
         chainId
       };
 
+      // Create session data
       const sessionData: AuthSession = {
         token: userData.loginToken,
         expiresAt: Date.now() + SESSION_DURATION,
@@ -263,9 +254,15 @@ export const Web3AuthProvider: React.FC<{ children: ReactNode }> = ({ children }
         userData
       };
 
+      // Store session and update state
       storeSession(sessionData);
       setWallet(walletInstance);
       setIsAuthenticated(true);
+
+      // Listen for account and network changes
+      window.ethereum.on('accountsChanged', handleAccountsChanged);
+      window.ethereum.on('chainChanged', handleChainChanged);
+      window.ethereum.on('disconnect', handleDisconnect);
 
     } catch (err: any) {
       console.error('Wallet connection failed:', err);
@@ -291,6 +288,14 @@ export const Web3AuthProvider: React.FC<{ children: ReactNode }> = ({ children }
   };
 
   const disconnectWallet = (): void => {
+    // Clean up event listeners
+    if (window.ethereum) {
+      window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+      window.ethereum.removeListener('chainChanged', handleChainChanged);
+      window.ethereum.removeListener('disconnect', handleDisconnect);
+    }
+
+    // Clear state and storage
     setIsAuthenticated(false);
     setWallet(null);
     setSession(null);
@@ -302,6 +307,7 @@ export const Web3AuthProvider: React.FC<{ children: ReactNode }> = ({ children }
     if (!wallet || !session) return;
 
     try {
+      // Verify wallet is still connected
       const accounts = await window.ethereum.request({
         method: 'eth_accounts',
       });
@@ -310,8 +316,10 @@ export const Web3AuthProvider: React.FC<{ children: ReactNode }> = ({ children }
         throw new Error('Wallet disconnected');
       }
 
+      // Perform new SIWE authentication
       const userData = await performSIWEAuth(wallet.address, wallet.provider);
 
+      // Create new session data
       const newSessionData: AuthSession = {
         token: userData.loginToken,
         expiresAt: Date.now() + SESSION_DURATION,
@@ -329,61 +337,30 @@ export const Web3AuthProvider: React.FC<{ children: ReactNode }> = ({ children }
   };
 
   const getUserBalance = async (): Promise<string> => {
-    if (!wallet?.provider || !wallet?.chainId) {
+    if (!wallet?.provider) {
       throw new Error('Wallet not connected');
     }
 
-    const contractAddress = LUCA_CONTRACTS[wallet.chainId as keyof typeof LUCA_CONTRACTS];
-    if (!contractAddress) {
-      throw new Error('LUCA contract not available on this network');
-    }
-
     try {
-      // ERC20 balanceOf function signature with properly formatted address
-      const paddedAddress = wallet.address.slice(2).toLowerCase().padStart(64, '0');
-      const data = '0x70a08231' + paddedAddress;
+      // Get LUCA token balance (ERC-20)
+      const data = '0x70a08231' + wallet.address.slice(2).padStart(64, '0');
       
       const balance = await wallet.provider.request({
         method: 'eth_call',
         params: [{
-          to: contractAddress,
+          to: LUCA_TOKEN_CONTRACT,
           data: data
         }, 'latest']
       });
 
-      // Handle null or empty response
-      if (!balance || balance === '0x' || balance === '0x0') {
-        return '0.0000';
-      }
-
-      try {
-        // Convert from hex and adjust for 18 decimals
-        const balanceInWei = BigInt(balance);
-        const balanceInTokens = Number(balanceInWei) / Math.pow(10, 18);
-        
-        // Ensure we return a valid number
-        if (isNaN(balanceInTokens) || !isFinite(balanceInTokens)) {
-          return '0.0000';
-        }
-        
-        return balanceInTokens.toFixed(4);
-      } catch (conversionError) {
-        console.error('Error converting balance:', conversionError, 'Raw balance:', balance);
-        return '0.0000';
-      }
-    } catch (error: any) {
-      console.error('Failed to get LUCA balance:', error);
+      // Convert from hex and adjust for 18 decimals
+      const balanceInWei = parseInt(balance, 16);
+      const balanceInTokens = balanceInWei / Math.pow(10, 18);
       
-      // More specific error messages
-      if (error.code === 4001) {
-        throw new Error('User rejected the request');
-      } else if (error.code === -32603) {
-        throw new Error('Network connection failed');
-      } else if (error.message?.includes('execution reverted')) {
-        throw new Error('Contract call failed - invalid contract or network');
-      }
-      
-      throw new Error('Failed to fetch LUCA balance');
+      return balanceInTokens.toFixed(4);
+    } catch (error) {
+      console.error('Failed to get token balance:', error);
+      return '0';
     }
   };
 
@@ -396,6 +373,7 @@ export const Web3AuthProvider: React.FC<{ children: ReactNode }> = ({ children }
     if (!accounts || accounts.length === 0) {
       disconnectWallet();
     } else if (wallet && accounts[0] !== wallet.address) {
+      // Account changed, need to re-authenticate
       disconnectWallet();
       setError('Account changed. Please reconnect your wallet.');
     }
@@ -405,6 +383,7 @@ export const Web3AuthProvider: React.FC<{ children: ReactNode }> = ({ children }
     if (wallet) {
       setWallet({ ...wallet, chainId });
       
+      // Check if still on supported network
       if (chainId !== BSC_CHAIN_ID && chainId !== BSC_TESTNET_CHAIN_ID) {
         setError('Unsupported network. Please switch to Binance Smart Chain for LUCA tokens.');
       } else {

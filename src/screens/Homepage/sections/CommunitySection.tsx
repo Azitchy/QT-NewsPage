@@ -15,11 +15,11 @@ export const CommunitySection = () => {
       </div>
 
       <div className="flex flex-col w-full max-w-[1316px] h-auto lg:h-[287px] items-center gap-5 mx-auto mt-6 md:px-4">
-        <div className="relative self-stretch mt-[-1.00px] font-titles-h5-large-text-400 font-[number:var(--titles-h5-large-text-400-font-weight)] text-[#1c1c1c] dark:text-[#DCDCDC] text-[20px] lg:text-[length:var(--titles-h5-large-text-400-font-size)] text-center tracking-[var(--titles-h5-large-text-400-letter-spacing)] leading-[30px] lg:leading-[var(--titles-h5-large-text-400-line-height)] [font-style:var(--titles-h5-large-text-400-font-style)]">
+        <div className="relative self-stretch mt-[-1.00px] font-titles-h5-large-text-400 font-[number:var(--titles-h5-large-text-400-font-weight)] text-foreground dark:text-foreground text-[20px] lg:text-[length:var(--titles-h5-large-text-400-font-size)] text-center tracking-[var(--titles-h5-large-text-400-letter-spacing)] leading-[30px] lg:leading-[var(--titles-h5-large-text-400-line-height)] [font-style:var(--titles-h5-large-text-400-font-style)]">
           Unleash your influence
         </div>
 
-        <div className="relative w-full [font-family:'Space_Grotesk',Helvetica] font-[number:var(--body-body1-300-font-weight)] text-[#1c1c1c] dark:text-gray-400 text-[26px] lg:text-[38px] text-center tracking-[var(--body-body1-300-letter-spacing)] leading-[34px] lg:leading-[48px] [font-style:var(--body-body1-300-font-style)]">
+        <div className="relative w-full font-space-grotesk font-[number:var(--body-body1-300-font-weight)] text-foreground dark:text-foreground text-[26px] lg:text-[38px] text-center tracking-[var(--body-body1-300-letter-spacing)] leading-[34px] lg:leading-[48px] [font-style:var(--body-body1-300-font-style)]">
           Your voice holds power –{" "}
           <span className="bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] font-extrabold bg-clip-text text-transparent">
             become a part of our vibrant community
@@ -31,14 +31,14 @@ export const CommunitySection = () => {
           , and lead the way to a groundbreaking tomorrow.
         </div>
 
-        <div className="text-[18px] text-center lg:text-[20px] max-w-[750px] font-light text-[#4f5555] [font-family:'Inter',Helvetica] dark:text-[#DCDCDC] leading-6">
+        <div className="text-[18px] text-center lg:text-[20px] max-w-[750px] font-light text-[#4f5555] font-inter dark:text-foreground leading-6">
           Step into a world where your influence matters. Be a Key Opinion
           Leader (KOL) who shapes the future of ATM Innovation
         </div>
 
-        <Button className="bg-[#2EA8AF] rounded-[30px] px-[15px] py-[12px] md:px-5 md:py-6 z-20">
+        <Button className="bg-primary rounded-[30px] px-[15px] py-[12px] md:px-5 md:py-6 z-20">
           <a href="#">
-            <span className="font-body-body3-400 font-[number:var(--body-body3-400-font-weight)] text-white text-[14px] md:text-[length:var(--body-body3-400-font-size)] tracking-[var(--body-body3-400-letter-spacing)] leading-[var(--body-body3-400-line-height)] whitespace-nowrap [font-style:var(--body-body3-400-font-style)]">
+            <span className="font-body-body3-400 font-[number:var(--body-body3-400-font-weight)] text-background dark:text-primary-foreground text-[14px] md:text-[length:var(--body-body3-400-font-size)] tracking-[var(--body-body3-400-letter-spacing)] leading-[var(--body-body3-400-line-height)] whitespace-nowrap [font-style:var(--body-body3-400-font-style)]">
               Become KOL today
             </span>
           </a>

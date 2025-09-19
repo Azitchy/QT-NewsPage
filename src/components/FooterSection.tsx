@@ -89,11 +89,16 @@ export const FooterSection = (): JSX.Element => {
             </div>
 
             {/* Main Footer Section */}
-            <div className="w-full min-h-[286px] bg-neutral-50 relative py-8 px-4 desktop:py-0 desktop:px-0">
+            <div className="w-full min-h-[286px] bg-[#FAFAFA] dark:bg-[#2B2F3E] relative py-8 px-4 desktop:py-0 desktop:px-0">
                 <img
-                    className="absolute w-[550px] h-[202px] bottom-0 left-0 right-0 mx-auto m-auto"
+                    className="absolute w-[550px] h-[202px] bottom-0 left-0 right-0 mx-auto m-auto block dark:hidden"
                     alt="Logo img"
                     src="/footer-img.svg"
+                />
+                <img
+                    className="absolute w-[550px] h-[202px] bottom-0 left-0 right-0 mx-auto m-auto hidden dark:block"
+                    alt="Logo img"
+                    src="/footer-img-dark.svg"
                 />
 
                 {/* Mobile/Tablet Layout (below desktop breakpoint) */}
@@ -105,7 +110,7 @@ export const FooterSection = (): JSX.Element => {
                         {downloadButtons.map((button, index) => (
                             <Button
                                 key={`download-button-${index}`}
-                                className="gap-[5px] px-5 py-3 bg-[#e9f6f7] rounded-[20.8px] inline-flex items-center justify-center hover:bg-[#d8eef0] w-full sm:w-auto"
+                                className="gap-[5px] px-5 py-3 bg-primary-foreground rounded-[20.8px] inline-flex items-center justify-center hover:bg-[#d8eef0] w-full sm:w-auto"
                                 variant="ghost"
                             >
                                 <img
@@ -113,7 +118,7 @@ export const FooterSection = (): JSX.Element => {
                                     alt="Icon"
                                     src={button.icon}
                                 />
-                                <span className="font-semibold text-[#2ea8af] text-[12.5px] leading-[20.5px]">
+                                <span className="font-semibold text-primary text-[12.5px] leading-[20.5px]">
                                     {button.text}
                                 </span>
                             </Button>
@@ -121,12 +126,12 @@ export const FooterSection = (): JSX.Element => {
                     </div>
 
                     {/* Email */}
-                    <p className="font-body-body3-mob-400 font-[number:var(--body-body3-mob-400-font-weight)] text-[#1c1c1c] text-[length:var(--body-body3-mob-400-font-size)] text-center tracking-[var(--body-body3-mob-400-letter-spacing)] leading-[var(--body-body3-mob-400-line-height)] [font-style:var(--body-body3-mob-400-font-style)]">
+                    <p className="font-body-body3-mob-400 font-[number:var(--body-body3-mob-400-font-weight)] text-[length:var(--body-body3-mob-400-font-size)] text-center tracking-[var(--body-body3-mob-400-letter-spacing)] leading-[var(--body-body3-mob-400-line-height)] [font-style:var(--body-body3-mob-400-font-style)]">
                         Email: autonomoustrustmomentum@gmail.com
                     </p>
 
                     {/* Copyright */}
-                    <p className="font-body-labeltext-400 font-[number:var(--body-labeltext-400-font-weight)] text-[#4f5555] text-[length:var(--body-labeltext-400-font-size)] text-center tracking-[var(--body-labeltext-400-letter-spacing)] leading-[var(--body-labeltext-400-line-height)] [font-style:var(--body-labeltext-400-font-style)]">
+                    <p className="font-body-labeltext-400 font-[number:var(--body-labeltext-400-font-weight)] text-card-primary text-[length:var(--body-labeltext-400-font-size)] text-center tracking-[var(--body-labeltext-400-letter-spacing)] leading-[var(--body-labeltext-400-line-height)] [font-style:var(--body-labeltext-400-font-style)]">
                         © 2020 - 2024 Autonomous Trust Momentum All Rights Reserved
                     </p>
 
@@ -150,7 +155,7 @@ export const FooterSection = (): JSX.Element => {
 
                     {/* Discover us on Row */}
                     <div className="flex items-center gap-[15px]">
-                        <p className="font-body-body3-mob-400 font-[number:var(--body-body3-mob-400-font-weight)] text-[#1c1c1c] text-[length:var(--body-body3-mob-400-font-size)] text-center tracking-[var(--body-body3-mob-400-letter-spacing)] leading-[var(--body-body3-mob-400-line-height)] [font-style:var(--body-body3-mob-400-font-style)]">
+                        <p className="font-body-body3-mob-400 font-[number:var(--body-body3-mob-400-font-weight)] text-[length:var(--body-body3-mob-400-font-size)] text-center tracking-[var(--body-body3-mob-400-letter-spacing)] leading-[var(--body-body3-mob-400-line-height)] [font-style:var(--body-body3-mob-400-font-style)]">
                             Discover us on:
                         </p>
 
@@ -202,7 +207,7 @@ export const FooterSection = (): JSX.Element => {
                         </div>                
 
                         <div className="flex items-start gap-[15px] self-stretch w-full">
-                            <p className="w-fit mt-[-1.00px] font-body-body3-mob-400 font-[number:var(--body-body3-mob-400-font-weight)] text-[#1c1c1c] text-[length:var(--body-body3-mob-400-font-size)] text-right tracking-[var(--body-body3-mob-400-letter-spacing)] leading-[var(--body-body3-mob-400-line-height)] whitespace-nowrap [font-style:var(--body-body3-mob-400-font-style)]">
+                            <p className="w-fit mt-[-1.00px] font-body-body3-mob-400 font-[number:var(--body-body3-mob-400-font-weight)] text-[length:var(--body-body3-mob-400-font-size)] text-right tracking-[var(--body-body3-mob-400-letter-spacing)] leading-[var(--body-body3-mob-400-line-height)] whitespace-nowrap [font-style:var(--body-body3-mob-400-font-style)]">
                                 Discover us on:
                             </p>
 
@@ -227,7 +232,7 @@ export const FooterSection = (): JSX.Element => {
                             {downloadButtons.map((button, index) => (
                                 <Button
                                     key={`download-button-${index}`}
-                                    className="gap-[5px] px-5 py-3 bg-[#e9f6f7] rounded-[20.8px] inline-flex items-center justify-center hover:bg-[#d8eef0] w-auto"
+                                    className="gap-[5px] px-5 py-3 bg-primary-foreground rounded-[20.8px] inline-flex items-center justify-center hover:bg-[#d8eef0] w-auto"
                                     variant="ghost"
                                 >
                                     <img
@@ -235,24 +240,24 @@ export const FooterSection = (): JSX.Element => {
                                         alt="Icon"
                                         src={button.icon}
                                     />
-                                    <span className="font-semibold text-[#2ea8af] text-[12.5px] text-right leading-[20.5px]">
+                                    <span className="font-semibold text-primary text-[12.5px] text-right leading-[20.5px]">
                                         {button.text}
                                     </span>
                                 </Button>
                             ))}
                         </div>
 
-                        <p className="self-stretch font-body-body3-mob-400 font-[number:var(--body-body3-mob-400-font-weight)] text-[#1c1c1c] text-[length:var(--body-body3-mob-400-font-size)] text-right tracking-[var(--body-body3-mob-400-letter-spacing)] leading-[var(--body-body3-mob-400-line-height)] [font-style:var(--body-body3-mob-400-font-style)]">
+                        <p className="self-stretch font-body-body3-mob-400 font-[number:var(--body-body3-mob-400-font-weight)] text-[length:var(--body-body3-mob-400-font-size)] text-right tracking-[var(--body-body3-mob-400-letter-spacing)] leading-[var(--body-body3-mob-400-line-height)] [font-style:var(--body-body3-mob-400-font-style)]">
                             Email: autonomoustrustmomentum@gmail.com
                         </p>
 
-                        <p className="self-stretch font-body-labeltext-400 font-[number:var(--body-labeltext-400-font-weight)] text-[#4f5555] text-[length:var(--body-labeltext-400-font-size)] text-right tracking-[var(--body-labeltext-400-letter-spacing)] leading-[var(--body-labeltext-400-line-height)] [font-style:var(--body-labeltext-400-font-style)]">
+                        <p className="self-stretch font-body-labeltext-400 font-[number:var(--body-labeltext-400-font-weight)] text-card-foreground text-[length:var(--body-labeltext-400-font-size)] text-right tracking-[var(--body-labeltext-400-letter-spacing)] leading-[var(--body-labeltext-400-line-height)] [font-style:var(--body-labeltext-400-font-style)]">
                             © 2020 - 2024 Autonomous Trust Momentum All Rights Reserved
                         </p>
                     </div>
 
                     {/* Version Number - Desktop */}
-                    <p className="absolute h-[17px] top-[244px] left-[70px] font-body-labeltext-400 font-[number:var(--body-labeltext-400-font-weight)] text-[#858585] text-[length:var(--body-labeltext-400-font-size)] tracking-[var(--body-labeltext-400-letter-spacing)] leading-[var(--body-labeltext-400-line-height)] whitespace-nowrap [font-style:var(--body-labeltext-400-font-style)]">
+                    <p className="absolute h-[17px] top-[244px] left-[70px] font-body-labeltext-400 font-[number:var(--body-labeltext-400-font-weight)] text-card-foreground text-[length:var(--body-labeltext-400-font-size)] tracking-[var(--body-labeltext-400-letter-spacing)] leading-[var(--body-labeltext-400-line-height)] whitespace-nowrap [font-style:var(--body-labeltext-400-font-style)]">
                         Version 2.0.0
                     </p>
                 </div>

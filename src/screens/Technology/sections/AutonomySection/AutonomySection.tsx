@@ -18,11 +18,11 @@ export const AutonomySection = (): JSX.Element => {
 
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center gap-5 text-center">
-            <h2 className="font-titles-h5-large-text-400 text-[#1c1c1c] tracking-[var(--titles-h5-large-text-400-letter-spacing)] leading-[var(--titles-h5-large-text-400-line-height)]">
+            <h2 className="font-titles-h5-large-text-400 tracking-[var(--titles-h5-large-text-400-letter-spacing)] leading-[var(--titles-h5-large-text-400-line-height)]">
             Unlock a new era of communication
             </h2>
 
-            <h1 className="text-[#1C1C1C] font-light text-[26px] leading-[32px] tablet:text-[32px] tablet:leading-[40px] font-['Space_Grotesk']">
+            <h1 className="font-light text-[26px] leading-[32px] tablet:text-[32px] tablet:leading-[40px] font-['Space_Grotesk']">
             Say goodbye to centralised control and hello to security.{" "}
             <span className="bg-gradient-to-tr from-[#AADA5D] to-[#0DAEB9] bg-clip-text text-transparent font-bold">
                 Experience true ownership of your data and the power to communicate
@@ -30,7 +30,7 @@ export const AutonomySection = (): JSX.Element => {
             without fear of censorship or surveillance.
             </h1>
 
-            <p className="font-body-body1-300 text-[#1c1c1c] tracking-[var(--body-body1-300-letter-spacing)] leading-[var(--body-body1-300-line-height)] md:pb-[60px]">
+            <p className="font-body-body1-300 tracking-[var(--body-body1-300-letter-spacing)] leading-[var(--body-body1-300-line-height)] md:pb-[60px]">
             Try our platform today and embrace the future of messaging!
             </p>
         </div>
