@@ -43,7 +43,7 @@ export const CommunitySection = () => {
         {
           text: "Learn more about rewards",
           primary: false,
-          href: "#",
+          href: "/community",
         },
       ],
     },

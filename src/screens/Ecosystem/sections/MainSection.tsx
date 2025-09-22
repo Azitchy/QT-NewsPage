@@ -68,12 +68,19 @@ export const MainSection = () => {
         {
           text: "Learn about travel",
           primary: false,
-          href: "#",
+          href: "/ecosystem/travel",
         },
       ],
       mediaUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
     },
   ];
+
+   const copyToClipboard = (text?: string) => {
+    if (text) {
+      navigator.clipboard.writeText(text);
+    }
+  };
+
   return (
     <div className="flex flex-col  gap-[60px] lg:gap-[80px]">
       {sections.map((section) => (
@@ -193,9 +200,10 @@ export const MainSection = () => {
                     </span>
                   </div>
                   <img
-                    className="w-4 h-4"
+                    className="w-4 h-4 cursor-pointer"
                     alt="Copy icon"
                     src="/copy-icon.png"
+                     onClick={() => copyToClipboard(section.walletInfo?.address)}
                   />
                 </div>
               </div>

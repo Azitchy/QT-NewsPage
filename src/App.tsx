@@ -1,6 +1,6 @@
 // App.tsx
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { Web3AuthProvider } from "./contexts/Web3AuthContext";
 import { ApiProvider } from "./contexts/ApiContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -18,11 +18,20 @@ import { ThemeProvider } from "./components/theme-provider";
 import { Travel } from "./screens/Travel";
 import { Roadmap } from "./screens/Roadmap/Roadmap";
 import { Games } from "./screens/Games/Games";
+import { BlockchainProvider } from "./contexts/BlockchainContext";
 
 export const App = (): JSX.Element => {
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0); 
+  }, [pathname]);
+
   return (
     <ApiProvider>
       <Web3AuthProvider>
+        <BlockchainProvider>
         <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
           <div className="flex flex-col w-full min-h-screen">
             <HeaderSection />
@@ -51,6 +60,7 @@ export const App = (): JSX.Element => {
             </main>
           </div>
         </ThemeProvider>
+        </BlockchainProvider>
       </Web3AuthProvider>
     </ApiProvider>
   );

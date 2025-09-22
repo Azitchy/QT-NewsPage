@@ -7,13 +7,13 @@ export const HeroSection = (): JSX.Element => {
 
     return (
       <section className="w-full flex justify-center">
-        {/* Desktop / Tablet Hero */}
+        {/* xl / Tablet Hero */}
         <div
           className="hidden md:flex relative w-full max-w-[1728px] h-[450px] items-center justify-end bg-no-repeat bg-contain bg-right"
           style={{ backgroundImage: "url('../community-heroimg.png')" }}
         >
           <div className="w-1/2 flex justify-center pr-6">
-            <h1 className="relative z-10 text-left font-[300] text-[26px] leading-[32px] tablet:text-[32px] tablet:leading-[40px] font-['Space_Grotesk'] max-w-[512px] max-w-[758px]">
+            <h1 className="relative z-10 text-left font-[300] text-[26px] leading-[32px] tablet:text-[32px] tablet:leading-[40px] font-['Space_Grotesk'] xl:max-w-[512px] max-w-[758px]">
               <span className="bg-gradient-to-tr from-[#AADA5D] to-[#0DAEB9] bg-clip-text text-transparent font-bold">
                 {heroSection.highlightedtext}{" "}
               </span>

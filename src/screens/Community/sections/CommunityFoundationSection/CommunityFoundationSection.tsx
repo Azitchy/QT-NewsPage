@@ -2,12 +2,12 @@ import { HeadingWithDots } from "@/components/HeadingWithDots";
 
 export const CommunityFoundationSection = (): JSX.Element => {
   return (
-    <section className="pt-[60px] desktop:pt-[100px]">
+    <section className="pt-[60px] xl:pt-[100px]">
         <HeadingWithDots text="community foundation" />
-        <div className="px-0 tablet:px-[77px] desktop:px-[134px] large:px-[203px] flex flex-col desktop:flex-row desktop:gap-[50px]">
+        <div className="px-0 tablet:px-[77px] xl:px-[134px] large:px-[203px] flex flex-col xl:flex-row xl:gap-[50px]">
           <div
-            className="pt-[20px] flex flex-col gap-[20px] font-light text-[18px] leading-[24px] desktop:text-[20px] desktop:leading-[27px] max-w-[516px] 
-              desktop:max-w-[782px]"
+            className="pt-[20px] flex flex-col gap-[20px] font-light text-[18px] leading-[24px] xl:text-[20px] xl:leading-[27px] max-w-[516px] 
+              xl:max-w-[782px]"
           >
             <p>
                 The community foundation belongs to all users. Its {" "}
@@ -34,7 +34,7 @@ export const CommunityFoundationSection = (): JSX.Element => {
           </div>
           <div className="flex justify-end">
             <img
-                className="w-full max-w-[370px] desktop:max-w-[514px] h-auto object-contain"
+                className="w-full max-w-[370px] xl:w-[514px] h-auto object-contain"
                 alt="LUCA Rewards Illustration"
                 src="/comm-foundation-img.svg"
             />

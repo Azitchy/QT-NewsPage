@@ -107,6 +107,12 @@ const TableComponent = ({
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentData = data.slice(startIndex, startIndex + itemsPerPage);
 
+  const copyToClipboard = (text?: string) => {
+    if (text) {
+      navigator.clipboard.writeText(text);
+    }
+  };
+
   // Detail View
   if (selectedRow) {
     return (
@@ -159,7 +165,11 @@ const TableComponent = ({
             <span className="truncate  max-w-[300px] md:max-w-full">
               {selectedRow.initiator}
             </span>
-            <img src="/copy.svg" />
+            <img
+              src="/copy.svg"
+              onClick={() => copyToClipboard(selectedRow.initiator)}
+              className="cursor-pointer"
+            />
           </div>
           <hr className="md:hidden my-2 dark:border-[#454545]" />
 
@@ -170,7 +180,11 @@ const TableComponent = ({
             <span className="truncate  max-w-[300px] md:max-w-full">
               {selectedRow.receiver}
             </span>{" "}
-            <img src="/copy.svg" />
+            <img
+              src="/copy.svg"
+              onClick={() => copyToClipboard(selectedRow.receiver)}
+              className="cursor-pointer"
+            />
           </div>
           <hr className="md:hidden my-2 dark:border-[#454545]" />
 
@@ -181,7 +195,11 @@ const TableComponent = ({
             <span className="truncate  max-w-[300px] md:max-w-full">
               {selectedRow.connectionContract}{" "}
             </span>
-            <img src="/copy.svg" />
+            <img
+              src="/copy.svg"
+              onClick={() => copyToClipboard(selectedRow.connectionContract)}
+              className="cursor-pointer"
+            />
           </div>
           <hr className="md:hidden my-2 dark:border-[#454545]" />
 
@@ -223,7 +241,7 @@ const TableComponent = ({
                       {row.initiator}
                     </div>
                     <div>
-                      <img src="/table-arrow.svg" />
+                      <img src="/table-arrow.svg" onClick={() => onRowSelect(row)} className="cursor-pointer" />
                     </div>
                   </div>
                 </td>

@@ -39,28 +39,56 @@ export interface GameInvestment {
   userId: string;
 }
 
+export interface BattleData {
+  gameId: number;
+  userGameInfoList: Array<{
+    agfUserId: number;
+    gameLevel: number;
+    star: number;
+  }>;
+  details?: string;
+}
+
+export interface UpdateBattleData {
+  battleId: number;
+  gameId: number;
+  userGameInfoList: Array<{
+    agfUserId: number;
+    gameLevel: number;
+    star: number;
+  }>;
+}
+
+export interface UserStarsData {
+  agfUserId: number;
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   data?: T;
   message: string;
   isSuccess?: boolean;
+  errorcode?: string;
+  failed?: boolean;
+  mapData?: any;
+  msg?: string;
+  state?: string;
+  status?: string;
+  total?: number;
 }
+
+const gameBaseUrl = API_CONFIG.GAME_API_BASE_URL;
 
 // Game Proposal APIs
 export const createProposal = async (data: Partial<GameProposal>): Promise<ApiResponse<any>> => {
   try {
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `${API_CONFIG.GAME_API_BASE_URL}/game/createProposal`,
+    const response = await axios.post(`${gameBaseUrl}/game/createProposal`, data, {
       headers: getCommonHeaders(),
-      data,
-    };
-
-    const response = await axios(config);
+      withCredentials: true,
+    });
     
     return {
-      message: response.data.data || '',
+      message: response.data.message || 'Success',
       isSuccess: response.data.success || false,
       success: response.data.success || false,
       data: response.data.data,
@@ -77,18 +105,13 @@ export const createProposal = async (data: Partial<GameProposal>): Promise<ApiRe
 
 export const updateProposal = async (data: Partial<GameProposal>): Promise<ApiResponse<any>> => {
   try {
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `${API_CONFIG.GAME_API_BASE_URL}/game/updateProposal`,
+    const response = await axios.post(`${gameBaseUrl}/game/updateProposal`, data, {
       headers: getCommonHeaders(),
-      data,
-    };
-
-    const response = await axios(config);
+      withCredentials: true,
+    });
     
     return {
-      message: response.data.data || '',
+      message: response.data.message || 'Success',
       isSuccess: response.data.success || false,
       success: response.data.success || false,
       data: response.data.data,
@@ -111,15 +134,10 @@ export const getProposalByUserId = async (): Promise<ApiResponse<GameProposal[]>
     }
 
     const userId = userData.user.id;
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `${API_CONFIG.GAME_API_BASE_URL}/game/getProposalByUserId`,
+    const response = await axios.post(`${gameBaseUrl}/game/getProposalByUserId`, { userId }, {
       headers: getCommonHeaders(),
-      data: JSON.stringify({ userId }),
-    };
-
-    const response = await axios(config);
+      withCredentials: true,
+    });
     
     return {
       data: response.data.data || [],
@@ -139,16 +157,10 @@ export const getProposalByUserId = async (): Promise<ApiResponse<GameProposal[]>
 
 export const getAdminProposal = async (): Promise<ApiResponse<GameProposal[]>> => {
   try {
-    const config = {
+    const response = await axios.post(`${gameBaseUrl}/game/getAllProposal`, { blank: 'blank' }, {
       withCredentials: true,
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `${API_CONFIG.GAME_API_BASE_URL}/game/getAllProposal`,
       headers: getAuthHeaders(),
-      data: JSON.stringify({ blank: 'blank' }),
-    };
-
-    const response = await axios(config);
+    });
     
     return {
       data: response.data.data || [],
@@ -168,16 +180,10 @@ export const getAdminProposal = async (): Promise<ApiResponse<GameProposal[]>> =
 
 export const updateProposalByAdmin = async (dataObject: any): Promise<ApiResponse<any>> => {
   try {
-    const config = {
+    const response = await axios.post(`${gameBaseUrl}/game/updateGameStatus`, dataObject, {
       withCredentials: true,
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `${API_CONFIG.GAME_API_BASE_URL}/game/updateGameStatus`,
       headers: getAuthHeaders(),
-      data: JSON.stringify(dataObject),
-    };
-
-    const response = await axios(config);
+    });
     
     return {
       data: response.data.data || '',
@@ -198,15 +204,10 @@ export const updateProposalByAdmin = async (dataObject: any): Promise<ApiRespons
 // Game APIs
 export const getAllGame = async (): Promise<ApiResponse<Game[]>> => {
   try {
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `${API_CONFIG.GAME_API_BASE_URL}/game/getAllGame`,
+    const response = await axios.post(`${gameBaseUrl}/game/getAllGame`, {}, {
       headers: getCommonHeaders(),
-      data: JSON.stringify({}),
-    };
-
-    const response = await axios(config);
+      withCredentials: true,
+    });
     
     return {
       data: response.data.data || [],
@@ -226,15 +227,10 @@ export const getAllGame = async (): Promise<ApiResponse<Game[]>> => {
 
 export const getGameById = async (gameId: string): Promise<ApiResponse<Game>> => {
   try {
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `${API_CONFIG.GAME_API_BASE_URL}/game/getGameById`,
+    const response = await axios.post(`${gameBaseUrl}/game/getGameById`, { id: gameId }, {
       headers: getCommonHeaders(),
-      data: JSON.stringify({ id: gameId }),
-    };
-
-    const response = await axios(config);
+      withCredentials: true,
+    });
     
     return {
       data: response.data.data,
@@ -256,19 +252,13 @@ export const gameRating = async (dataObject: GameRating): Promise<ApiResponse<an
   try {
     const token = localStorage.getItem('token');
     const apiUrl = token 
-      ? `${API_CONFIG.GAME_API_BASE_URL}/game/knownRating`
-      : `${API_CONFIG.GAME_API_BASE_URL}/game/anonymousRating`;
+      ? `${gameBaseUrl}/game/knownRating`
+      : `${gameBaseUrl}/game/anonymousRating`;
 
-    const config = {
+    const response = await axios.post(apiUrl, dataObject, {
       ...(token && { withCredentials: true }),
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: apiUrl,
       headers: token ? getAuthHeaders() : getCommonHeaders(),
-      data: JSON.stringify(dataObject),
-    };
-
-    const response = await axios(config);
+    });
     
     return {
       data: response.data.data || '',
@@ -288,16 +278,10 @@ export const gameRating = async (dataObject: GameRating): Promise<ApiResponse<an
 
 export const gameContributed = async (dataObject: GameInvestment): Promise<ApiResponse<any>> => {
   try {
-    const config = {
+    const response = await axios.post(`${gameBaseUrl}/game/invest`, dataObject, {
       withCredentials: true,
-      method: 'post',
-      url: `${API_CONFIG.GAME_API_BASE_URL}/game/invest`,
-      maxBodyLength: Infinity,
       headers: getAuthHeaders(),
-      data: JSON.stringify(dataObject),
-    };
-
-    const response = await axios(config);
+    });
     
     return {
       data: response.data.data || '',
@@ -307,6 +291,94 @@ export const gameContributed = async (dataObject: GameInvestment): Promise<ApiRe
     };
   } catch (error: any) {
     console.error('Game investment error:', error);
+    return {
+      message: error.response?.data?.message || 'Something went wrong',
+      isSuccess: false,
+      success: false,
+    };
+  }
+};
+
+// New Game Developer APIs
+export const createBattle = async (data: BattleData): Promise<ApiResponse<any>> => {
+  try {
+    const response = await axios.post(`${gameBaseUrl}/game/createBattle`, data, {
+      headers: getCommonHeaders(),
+      withCredentials: true,
+    });
+    
+    return {
+      data: response.data.data || null,
+      isSuccess: response.data.success || false,
+      success: response.data.success || false,
+      message: response.data.msg || 'Success',
+      errorcode: response.data.errorcode,
+      failed: response.data.failed,
+      mapData: response.data.mapData,
+      state: response.data.state,
+      status: response.data.status,
+      total: response.data.total
+    };
+  } catch (error: any) {
+    console.error('Create battle error:', error);
+    return {
+      message: error.response?.data?.message || 'Something went wrong',
+      isSuccess: false,
+      success: false,
+    };
+  }
+};
+
+export const updateBattle = async (data: UpdateBattleData): Promise<ApiResponse<any>> => {
+  try {
+    const response = await axios.post(`${gameBaseUrl}/game/updateBattle`, data, {
+      headers: getCommonHeaders(),
+      withCredentials: true,
+    });
+    
+    return {
+      data: response.data.data || null,
+      isSuccess: response.data.success || false,
+      success: response.data.success || false,
+      message: response.data.msg || 'Success',
+      errorcode: response.data.errorcode,
+      failed: response.data.failed,
+      mapData: response.data.mapData,
+      state: response.data.state,
+      status: response.data.status,
+      total: response.data.total
+    };
+  } catch (error: any) {
+    console.error('Update battle error:', error);
+    return {
+      message: error.response?.data?.message || 'Something went wrong',
+      isSuccess: false,
+      success: false,
+    };
+  }
+};
+
+export const getStars = async (data: UserStarsData): Promise<ApiResponse<any>> => {
+  try {
+    const response = await axios.post(`${gameBaseUrl}/game/getStars`, data, {
+      headers: getCommonHeaders(),
+      withCredentials: true,
+    });
+    
+    return {
+      data: response.data.data || null,
+      isSuccess: response.data.success || false,
+      success: response.data.success || false,
+      message: response.data.msg || 'Success',
+      errorcode: response.data.errorcode,
+      failed: response.data.failed,
+      mapData: response.data.mapData,
+      state: response.data.state,
+      status: response.data.status,
+      total: response.data.total
+    };
+  } catch (error: any) {
+    console.error('Get stars error:', error);
     return {
       message: error.response?.data?.message || 'Something went wrong',
       isSuccess: false,

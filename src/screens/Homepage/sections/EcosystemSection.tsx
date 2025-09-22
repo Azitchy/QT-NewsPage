@@ -13,6 +13,7 @@ export const EcosystemSection = () => {
       description1: string;
       description2: string;
       image: string;
+      href?: string;
     }
   > = {
     gaming: {
@@ -22,6 +23,7 @@ export const EcosystemSection = () => {
       description2:
         "The gaming future transcends entertainment, blending technology, creativity, and community to craft an immersive digital landscape.",
       image: "/ecosystem-gaming.png",
+      href: "/games",
     },
     ecology: {
       title: "Ecology",
@@ -38,6 +40,7 @@ export const EcosystemSection = () => {
       description2:
         "Now, users can seamlessly use LUCA to explore the globe, unlocking a new era of convenience and flexibility in travel.",
       image: "/ecosystem-travel.png",
+      href: "/ecosystem/travel"
     },
   };
 
@@ -117,7 +120,7 @@ export const EcosystemSection = () => {
                     Learn more
                   </div>
                 </div>
-                <a href="#">
+                <a href={currentEcosystemData.href}>
                   <div className="relative w-[38.53px] h-[38.53px]">
                     <img
                       className="absolute w-[33px] h-[33px] top-[3px] left-0.5 hover:bg-gray-100 rounded-full hover:-rotate-12"

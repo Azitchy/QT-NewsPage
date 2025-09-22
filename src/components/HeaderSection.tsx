@@ -41,7 +41,7 @@ export const HeaderSection = (): JSX.Element => {
           image: "/roadmap.png",
           subLabel: ["Roadmap"],
           subLabelImage: ["/route.svg"],
-          href: "/roadmap"
+          href: ["/roadmap"]
         },
       ],
     },
@@ -54,17 +54,19 @@ export const HeaderSection = (): JSX.Element => {
           image: "/agf.png",
           subLabel: ["AFG", "Games"],
           subLabelImage: ["/game-launcher.svg", "/game-launcher.svg"],
-          href: "#"
+          href: ["#","/games"]
         },
         {
           image: "/travel.png",
           subLabel: ["Travel"],
           subLabelImage: ["travel-holidays.svg"],
+          href: ["/ecosystem/travel"]
         },
         {
           image: "/ecology.png",
           subLabel: ["Ecology"],
           subLabelImage: ["/plant.svg"],
+          href: ["#"]
         },
       ],
     },
@@ -138,6 +140,18 @@ export const HeaderSection = (): JSX.Element => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showUserMenu]);
 
+  // Close mobile menu when screen size changes to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024 && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isMobileMenuOpen]);
+
   const WalletButton = ({
     className,
     isMobile = false,
@@ -145,50 +159,47 @@ export const HeaderSection = (): JSX.Element => {
     className: string;
     isMobile?: boolean;
   }) => {
-    // Only show the dropdown for the WalletButton that is currently visible (desktop or mobile)
-    const isVisible =
-      (isMobile && window.innerWidth < 1024) ||
-      (!isMobile && window.innerWidth >= 1024);
-
     if (isAuthenticated && wallet) {
       return (
         <div className="relative user-menu-container">
           <Button
-            className={`${className} flex items-center gap-2`}
+            className={`${className} flex items-center gap-1.5 sm:gap-2`}
             onClick={() => setShowUserMenu(!showUserMenu)}
           >
-            <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-green-500 rounded-full flex items-center justify-center">
-              <User className="w-3 h-3 text-background" />
+            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-r from-blue-500 to-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+              <User className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-background" />
             </div>
-            {isMobile ? formatAddress(wallet.address) : "Connected"}
+            <span className="truncate min-w-0">
+              {formatAddress(wallet.address)}
+            </span>
           </Button>
 
           {/* User dropdown menu */}
-          {showUserMenu && isVisible && (
-            <div className="absolute right-0 mt-2 w-64 bg-background rounded-xl shadow-lg border border-gray-200 z-50 p-4">
+          {showUserMenu && (
+            <div className={`absolute ${isMobile ? 'right-0' : 'right-0'} mt-2 w-64 bg-background dark:bg-card rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50 p-4`}>
               <div className="space-y-3">
-                <div className="flex items-center gap-3 pb-3 border-b border-gray-100">
+                <div className="flex items-center gap-3 pb-3 border-b border-gray-100 dark:border-gray-700">
                   <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-green-500 rounded-full flex items-center justify-center">
                     <User className="w-5 h-5 text-background" />
                   </div>
-                  <div>
-                    <div className="font-medium text-gray-900">
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium text-gray-900 dark:text-gray-100">
                       Connected Wallet
                     </div>
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
                       {formatAddress(wallet.address)}
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 px-3 py-2 rounded-lg">
-                    <Shield className="w-4 h-4" />
+                  <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-3 py-2 rounded-lg">
+                    <Shield className="w-4 h-4 flex-shrink-0" />
                     <span>Authenticated via SIWE</span>
                   </div>
 
                   {session && (
-                    <div className="text-xs text-gray-500 bg-gray-50 px-3 py-2 rounded-lg">
+                    <div className="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 px-3 py-2 rounded-lg">
                       <div>
                         Session expires:{" "}
                         {new Date(session.expiresAt).toLocaleTimeString()}
@@ -201,7 +212,7 @@ export const HeaderSection = (): JSX.Element => {
                       navigator.clipboard.writeText(wallet.address);
                       setShowUserMenu(false);
                     }}
-                    className="w-full flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors"
+                    className="w-full flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 px-3 py-2 rounded-lg transition-colors"
                   >
                     <Wallet className="w-4 h-4" />
                     <span>Copy Address</span>
@@ -212,17 +223,17 @@ export const HeaderSection = (): JSX.Element => {
                       navigate("/webapp");
                       setShowUserMenu(false);
                     }}
-                    className="w-full flex items-center gap-2 text-sm text-blue-600 hover:text-blue-900 hover:bg-blue-50 px-3 py-2 rounded-lg transition-colors"
+                    className="w-full flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 px-3 py-2 rounded-lg transition-colors"
                   >
                     <Shield className="w-4 h-4" />
                     <span>Go to WebApp</span>
                   </button>
                 </div>
 
-                <div className="border-t border-gray-100 pt-3">
+                <div className="border-t border-gray-100 dark:border-gray-700 pt-3">
                   <button
                     onClick={handleDisconnect}
-                    className="w-full flex items-center gap-2 text-sm text-red-600 hover:text-red-900 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors"
+                    className="w-full flex items-center gap-2 text-sm text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2 rounded-lg transition-colors"
                   >
                     <LogOut className="w-4 h-4" />
                     <span>Disconnect Wallet</span>
@@ -243,13 +254,13 @@ export const HeaderSection = (): JSX.Element => {
       >
         {isConnecting ? (
           <>
-            <div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin mr-2"></div>
-            {isMobile ? "Connecting..." : "Connecting..."}
+            <div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin mr-2 flex-shrink-0"></div>
+            <span className="truncate">Connecting...</span>
           </>
         ) : (
           <>
-            <Wallet className="w-4 h-4 mr-2" />
-            {isMobile ? "Connect Wallet" : "Connect Wallet"}
+            <Wallet className="w-4 h-4 mr-2 flex-shrink-0" />
+            <span className="truncate">Connect Wallet</span>
           </>
         )}
       </Button>
@@ -257,15 +268,15 @@ export const HeaderSection = (): JSX.Element => {
   };
 
   return (
-    <header className="sticky top-0 w-full h-[90px] bg-background dark:bg-background shadow-[0px_4px_30px_#0000000f] z-50">
-      <div className="h-full w-full mx-auto px-4 sm:px-6 lg:px-[70px] lg:py-[19px] flex items-center justify-between">
+    <header className="sticky top-0 w-full h-[70px] sm:h-[90px] bg-background dark:bg-background shadow-[0px_4px_30px_#0000000f] z-50">
+      <div className="h-full w-full mx-auto px-3 sm:px-4 lg:px-[70px] lg:py-[19px] flex items-center justify-between">
         {/* Logo area */}
         <div className="flex items-center flex-shrink-0">
           <Link to="/">
             <img
               src="/atm-logo.png"
               alt="ATM Logo"
-              className="h-[52px] w-[160px] object-contain"
+              className="h-8 w-24 sm:h-[52px] sm:w-[160px] object-contain"
             />
           </Link>
         </div>
@@ -290,14 +301,14 @@ export const HeaderSection = (): JSX.Element => {
 
                     {/* dropdown card */}
                     <NavigationMenuContent asChild>
-                      <div className="absolute left-0 top-full mt-2  h-[221px] rounded-2xl shadow-lg bg-background dark:bg-card px-[60px] py-[40px] flex gap-[150px] z-20">
+                      <div className="absolute left-0 top-full mt-2 h-[221px] rounded-2xl shadow-lg bg-background dark:bg-card px-[60px] py-[40px] flex gap-[150px] z-20">
                         <div className="flex w-[225px] flex-col gap-[10px] flex-1">
-                          <p className="text-[18px] leading-6 font-normal text-[#4F5555] dark:text-gray-200 [font-family:'Inter',Helvetica]">
+                          <p className="text-[18px] leading-6 font-normal text-[#4F5555] dark:text-gray-200 font-inter">
                             {item.description}
                           </p>
                           <Link
                             to={item.path}
-                            className="max-w-[115px] inline-flex items-center gap-[8px] px-[15px] py-[8px] rounded-full bg-[#f5f5f5] hover:bg-slate-200 transition-colors text-[14px] font-normal text-foreground dark:text-background"
+                            className="max-w-[115px] inline-flex items-center gap-[8px] px-[15px] py-[8px] rounded-full bg-[#f5f5f5] dark:bg-foreground hover:bg-slate-200 dark:hover:bg-gray-600 transition-colors text-[14px] font-normal text-foreground dark:text-background"
                           >
                             {item.label}
                             <img src="/arrow.svg" alt="arrow" />
@@ -322,26 +333,35 @@ export const HeaderSection = (): JSX.Element => {
                                 )}
 
                                 <div className="flex flex-col gap-[6px] items-start">
-                                  {sub.subLabel &&
-                                    sub.subLabel.map((label, labelIndex) => (
-                                      <div
-                                        key={labelIndex}
-                                        className="flex gap-[12px] items-start"
+                                  {sub.subLabel.map((label, labelIndex) => (
+                                    <div
+                                      key={labelIndex}
+                                      className="flex gap-[12px] items-start"
+                                    >
+                                      {sub.subLabelImage?.[labelIndex] && (
+                                        <img
+                                          src={sub.subLabelImage[labelIndex]}
+                                          alt="label icon"
+                                          className="w-5 h-5"
+                                        />
+                                      )}
+                                      <a
+                                        href={sub.href?.[labelIndex] || "#"}
+                                        target={
+                                          sub.href?.[labelIndex]?.startsWith(
+                                            "http"
+                                          )
+                                            ? "_blank"
+                                            : "_self"
+                                        }
+                                        rel="noopener noreferrer"
                                       >
-                                        {sub.subLabelImage?.[labelIndex] && (
-                                          <img
-                                            src={sub.subLabelImage[labelIndex]}
-                                            alt="label icon"
-                                            className="w-5 h-5"
-                                          />
-                                        )}
-                                        <a href={sub.href}>
                                         <span className="text-sm text-foreground dark:text-primary-foreground hover:text-primary cursor-pointer">
                                           {label}
                                         </span>
-                                        </a>
-                                      </div>
-                                    ))}
+                                      </a>
+                                    </div>
+                                  ))}
                                 </div>
                               </div>
                             ))}
@@ -370,14 +390,11 @@ export const HeaderSection = (): JSX.Element => {
         </NavigationMenu>
 
         {/* Right side actions */}
-        <div className="flex items-center gap-[10px] flex-shrink-0">
-          {/* Desktop Web app button */}
-          <WalletButton className="hidden lg:flex h-[38px] px-[15px] py-2.5 rounded-full bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] hover:opacity-90 transition-opacity text-background font-normal text-[14px]" />
-
-          {/* Mobile Web app button */}
-          <WalletButton
-            className="lg:hidden flex h-[39px] w-[86px] px-[15px] py-2.5 rounded-full bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] hover:opacity-90 transition-opacity text-background font-normal text-[14px]"
-            isMobile={true}
+        <div className="flex items-center gap-1 sm:gap-2 lg:gap-[10px] flex-shrink-0 min-w-0">
+          {/* Single responsive Wallet button */}
+          <WalletButton 
+            className="flex h-[32px] sm:h-[36px] lg:h-[38px] px-2 sm:px-3 lg:px-[15px] py-1.5 sm:py-2 lg:py-2.5 rounded-full bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] hover:opacity-90 transition-opacity text-background font-normal text-[11px] sm:text-[13px] lg:text-[14px] min-w-0 max-w-[120px] sm:max-w-[140px] lg:max-w-none"
+            isMobile={false}
           />
 
           {/* Language and theme buttons */}
@@ -385,7 +402,7 @@ export const HeaderSection = (): JSX.Element => {
             <Button
               variant="ghost"
               size="icon"
-              className="w-5 h-5 rounded-full hover:bg-slate-100"
+              className="w-5 h-5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700"
             >
               <img
                 className="w-5 h-5 object-cover rounded-sm"
@@ -397,7 +414,7 @@ export const HeaderSection = (): JSX.Element => {
             <Button
               variant="ghost"
               size="icon"
-              className="w-10 h-10 m-2 rounded-full hover:bg-card-foreground cursor-pointer"
+              className="w-10 h-10 m-2 rounded-full hover:bg-card-foreground dark:hover:bg-slate-700 cursor-pointer"
               onClick={handleThemeToggle}
             >
               {theme === "dark" ? (
@@ -408,17 +425,31 @@ export const HeaderSection = (): JSX.Element => {
             </Button>
           </div>
 
+          {/* Mobile theme toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden w-8 h-8 sm:w-9 sm:h-9 p-1.5 sm:p-2 rounded-full hover:bg-card-foreground dark:hover:bg-slate-700 cursor-pointer flex-shrink-0"
+            onClick={handleThemeToggle}
+          >
+            {theme === "dark" ? (
+              <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-foreground" />
+            ) : (
+              <Moon className="w-4 h-4 sm:w-5 sm:h-5 -scale-x-100" />
+            )}
+          </Button>
+
           {/* Mobile menu button */}
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden w-10 h-10 p-2 rounded-full dark:text-primary-foreground"
+            className="lg:hidden w-8 h-8 sm:w-10 sm:h-10 p-1.5 sm:p-2 rounded-full dark:text-primary-foreground flex-shrink-0"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? (
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4 sm:w-5 sm:h-5" />
             ) : (
-              <Menu className="w-5 h-5" />
+              <Menu className="w-4 h-4 sm:w-5 sm:h-5" />
             )}
           </Button>
         </div>
@@ -426,11 +457,11 @@ export const HeaderSection = (): JSX.Element => {
 
       {/* Mobile menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-background dark:bg-background border-t shadow-lg">
-          <div className="px-4 py-4 space-y-2">
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-background dark:bg-background border-t dark:border-gray-700 shadow-lg">
+          <div className="px-4 py-4 space-y-2 max-h-[calc(100vh-70px)] sm:max-h-[calc(100vh-90px)] overflow-y-auto">
             <Link
               to="/"
-              className="block px-4 py-3 hover:bg-slate-100 rounded-lg transition-colors font-normal text-[14px]"
+              className="block px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors font-normal text-[14px] text-foreground dark:text-foreground"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Homepage
@@ -439,29 +470,25 @@ export const HeaderSection = (): JSX.Element => {
               <Link
                 key={index}
                 to={item.path}
-                className={`block px-4 py-3 hover:bg-slate-100 dark:text-card rounded-lg transition-colors font-normal text-[14px] ${
+                className={`block px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors font-normal text-[14px] ${
                   location.pathname === item.path
-                    ? "bg-primary-foreground text-primary"
-                    : "text-foreground"
+                    ? "bg-primary-foreground text-primary dark:bg-slate-700 dark:text-primary"
+                    : "text-foreground dark:text-foreground"
                 }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {item.label}
               </Link>
             ))}
-            <div className="pt-4 border-t space-y-3">
-              <WalletButton
-                className="w-full h-[40px] px-6 py-2.5 rounded-full bg-[linear-gradient(136deg,rgba(170,218,93,1)_0%,rgba(13,174,185,1)_100%)] hover:opacity-90 transition-opacity text-primary-foreground font-normal text-[14px]"
-                isMobile={true}
-              />
-
+            
+            <div className="pt-4 border-t dark:border-gray-700 space-y-3">
               {isAuthenticated && (
                 <button
                   onClick={() => {
                     handleDisconnect();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
                   Disconnect Wallet
@@ -472,25 +499,13 @@ export const HeaderSection = (): JSX.Element => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="w-10 h-10 p-2 rounded-full hover:bg-slate-100"
+                  className="w-10 h-10 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700"
                 >
                   <img
                     className="w-5 h-5 object-cover rounded-sm"
                     alt="Language"
                     src="/language.png"
                   />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="w-10 h-10 m-2 rounded-full hover:bg-card-foreground "
-                  onClick={handleThemeToggle}
-                >
-                  {theme === "dark" ? (
-                    <Sun className="w-5 h-5 text-foreground" />
-                  ) : (
-                    <Moon className="w-5 h-5 -scale-x-100" />
-                  )}
                 </Button>
               </div>
             </div>

@@ -92,7 +92,7 @@ export const FirstScreenSection = (): JSX.Element => {
                   ATM.connect now supports multi-chain functionality!
                 </p>
                 <button className="rounded-full bg-primary-foreground hover:bg-cyan-100 transition">
-                  <a href="#">
+                  <a href="/webapp">
                     <img
                       src="/arrow-right-icon-4.svg"
                       alt="Go"

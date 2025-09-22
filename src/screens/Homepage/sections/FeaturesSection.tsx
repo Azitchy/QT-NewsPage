@@ -1,35 +1,18 @@
-import { useEffect, useRef, useState } from "react";
-import { Button } from "../../../components/ui/button";
-import { Card, CardContent } from "../../../components/ui/card";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 
 export const FeaturesSection = () => {
-  const [currentFeatureSlide, setCurrentFeatureSlide] = useState(0);
-  const [cardWidth, setCardWidth] = useState(0);
-  const cardRef = useRef<HTMLDivElement | null>(null);
+  const [api, setApi] = useState<CarouselApi>();
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
 
-  useEffect(() => {
-    if (cardRef.current) {
-      setCardWidth(cardRef.current.offsetWidth + 21);
-    }
-    const handleResize = () => {
-      if (cardRef.current) {
-        setCardWidth(cardRef.current.offsetWidth + 21);
-      }
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleFeatureNavigation = (direction: "prev" | "next") => {
-    if (direction === "prev" && currentFeatureSlide > 0) {
-      setCurrentFeatureSlide((prev) => prev - 1);
-    }
-    if (direction === "next" && currentFeatureSlide < featuresData.length - 1) {
-      setCurrentFeatureSlide((prev) => prev + 1);
-    }
-  };
-
-  // Features data
   const featuresData = [
     {
       title: "Create your digital-self",
@@ -81,8 +64,24 @@ export const FeaturesSection = () => {
     },
   ];
 
+  useEffect(() => {
+    if (!api) return;
+    const updateState = () => {
+      setCanPrev(api.canScrollPrev());
+      setCanNext(api.canScrollNext());
+    };
+    updateState();
+    api.on("reInit", updateState);
+    api.on("select", updateState);
+    return () => {
+      api.off("reInit", updateState);
+      api.off("select", updateState);
+    };
+  }, [api]);
+
   return (
     <div className="relative w-full px-4 lg:px-0">
+      {/* Title Section */}
       <div className="relative h-[99px] ml-0 lg:ml-[71px]">
         <div className="left-10 absolute w-auto lg:w-[148px] h-11 top-[27px] lg:left-[51px] font-titles-h2-sectionheading-400 font-[number:var(--titles-h2-sectionheading-400-font-weight)] text-primary-colour text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] [font-style:var(--titles-h2-sectionheading-400-font-style)]">
           FEATURES
@@ -94,86 +93,75 @@ export const FeaturesSection = () => {
         />
       </div>
 
+      {/* Navigation */}
       <div className="mt-[35px] ml-0 lg:ml-[70px] relative">
         <div className="flex items-center gap-[15px] px-[9px] py-[5px] absolute -top-16 right-4 lg:right-[71px] rounded-[40px] overflow-hidden border border-solid border-border dark:border-primary-foreground bg-background dark:bg-background z-10 shadow-sm">
-          {/* Prev Button */}
           <Button
             variant="ghost"
-            disabled={currentFeatureSlide === 0}
-            className={`w-[38.53px] h-[38.53px] p-0 rounded-full transition-colors ${
-              currentFeatureSlide === 0
-                ? "bg-gray-200 dark:bg-gray-700 opacity-50 cursor-not-allowed"
-                : "bg-background dark:bg-[#1a1a2e] hover:bg-gray-50"
+            disabled={!canPrev}
+            className={`w-[38.53px] h-[38.53px] p-0 rounded-[19.26px] hover:bg-gray-100 ${
+              canPrev ? "bg-primary-foreground" : "bg-transparent"
             }`}
-            onClick={() => handleFeatureNavigation("prev")}
+            onClick={() => api?.scrollPrev()}
           >
-            <img
-              className="w-5 h-5"
-              alt="Arrow left icon"
-              src="/arrow-left-icon.svg"
+            <ArrowLeftIcon
+              className={`w-5 h-5 ${
+                canPrev ? "text-primary" : "text-gray-400"
+              }`}
             />
           </Button>
-
-          {/* Next Button */}
           <Button
-            disabled={currentFeatureSlide === featuresData.length - 1}
-            className={`w-[38.53px] h-[38.53px] p-0 rounded-full transition-colors ${
-              currentFeatureSlide === featuresData.length - 1
-                ? "bg-gray-200 dark:bg-gray-700 opacity-50 cursor-not-allowed"
-                : "bg-primary-foreground hover:bg-[#d8eef0]"
+            variant="ghost"
+            disabled={!canNext}
+            className={`w-[38.53px] h-[38.53px] p-0 rounded-[19.26px] hover:bg-[#d6f0f2] ${
+              canNext ? "bg-[#e9f6f7]" : "bg-transparent"
             }`}
-            onClick={() => handleFeatureNavigation("next")}
+            onClick={() => api?.scrollNext()}
           >
-            <img
-              className="w-6 h-6"
-              alt="Arrow right icon"
-              src="/arrow-right-icon-3.svg"
+            <ArrowRightIcon
+              className={`w-6 h-6 ${
+                canNext ? "text-primary" : "text-gray-400"
+              }`}
             />
           </Button>
         </div>
 
-        <div className="w-full overflow-hidden mt-[69px]">
-          <div
-            className="flex gap-[21px] transition-transform duration-500 ease-in-out"
-            style={{
-              transform: `translateX(-${currentFeatureSlide * cardWidth}px)`,
-            }}
-          >
+        {/* Carousel */}
+        <Carousel
+          className="w-full"
+          setApi={setApi}
+          opts={{ align: "start", loop: false }}
+        >
+          <CarouselContent className="flex gap-[21px] mt-[69px]">
             {featuresData.map((feature, index) => (
-              <Card
-                ref={index === 0 ? cardRef : null}
-                key={index}
-                className="w-full sm:w-[300px] xl:w-[355px] 2xl:w-[450px] h-[500px] lg:h-[605px] overflow-hidden border border-solid border-border dark:border-primary-foreground bg-card dark:bg-card rounded-[20px] flex-shrink-0"
-              >
-                <CardContent className="flex flex-col h-full items-start gap-[10px] lg:gap-[20px] px-8 lg:px-[60px] py-8 lg:py-[60px] relative">
-                  <div
-                    className={`absolute w-[300px] lg:w-[482px] h-[300px] lg:h-[482px] top-[240px] lg:top-[281px] left-[115px] lg:left-[159px] rounded-[150px] lg:rounded-[241.22px] rotate-[-30deg] opacity-50 ${feature.gradientClass}`}
-                  />
-
-                  <div className="relative self-stretch font-titles-h3-caption-400 font-[number:var(--titles-h3-caption-400-font-weight)] text-foreground dark:text-foreground text-[26px] xl:text-[30px] leading-[32px] lg:leading-[40px] [font-style:var(--titles-h3-caption-400-font-style)] min-h-[80px] flex">
-                    {feature.title}
-                  </div>
-
-                  <div className="relative self-stretch w-full min-h-[120px]">
-                    <div className="w-full font-body-body2-400 font-normal text-[#4f5555] dark:text-card-foreground text-[16px] lg:text-[length:var(--body-body2-400-font-size)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)] [font-style:var(--body-body2-400-font-style)]">
-                      {feature.description}
+              <CarouselItem key={index} className="basis-auto flex-shrink-0">
+                <div className="w-[330px] sm:w-[300px] xl:w-[355px] 2xl:w-[450px] h-[500px] lg:h-[605px] overflow-hidden border border-solid border-border dark:border-primary-foreground bg-card dark:bg-card rounded-[20px] flex-shrink-0">
+                  <div className="flex flex-col h-full items-start gap-[10px] lg:gap-[20px] px-8 lg:px-[60px] py-8 lg:py-[60px] relative">
+                    <div
+                      className={`absolute w-[300px] lg:w-[482px] h-[300px] lg:h-[482px] top-[240px] lg:top-[281px] left-[115px] lg:left-[159px] rounded-[150px] lg:rounded-[241.22px] rotate-[-30deg] opacity-50 ${feature.gradientClass}`}
+                    />
+                    <div className="relative self-stretch font-titles-h3-caption-400 text-foreground text-[26px] xl:text-[30px] leading-[32px] lg:leading-[40px] min-h-[80px] flex">
+                      {feature.title}
+                    </div>
+                    <div className="relative self-stretch w-full min-h-[120px]">
+                      <div className="w-full text-[#4f5555] dark:text-card-foreground text-[16px] lg:text-[16px] leading-[22px] lg:leading-[22px]">
+                        {feature.description}
+                      </div>
+                    </div>
+                    <div className="flex-1" />
+                    <div className="relative w-full h-[200px] lg:h-[250px] ">
+                      <img
+                        className="w-full h-full object-contain"
+                        alt={feature.title}
+                        src={feature.image}
+                      />
                     </div>
                   </div>
-
-                  <div className="flex-1" />
-
-                  <div className="relative w-full h-[200px] lg:h-[250px] ">
-                    <img
-                      className="w-full h-full object-contain"
-                      alt={feature.title}
-                      src={feature.image}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
+                </div>
+              </CarouselItem>
             ))}
-          </div>
-        </div>
+          </CarouselContent>
+        </Carousel>
       </div>
     </div>
   );

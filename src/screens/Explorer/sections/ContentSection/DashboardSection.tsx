@@ -55,6 +55,12 @@ export const DashboardSection = () => {
     { name: "LUCA staked in PR servers", value: 0, color: "#1B5E20" },
   ];
 
+  const copyToClipboard = (text?: string) => {
+    if (text) {
+      navigator.clipboard.writeText(text);
+    }
+  };
+
   const CustomLegend = ({ dataOuter, dataInner }: any) => {
     const combinedData = [...dataOuter, ...dataInner];
     return (
@@ -197,9 +203,10 @@ export const DashboardSection = () => {
                       0xb6c8...0031B9
                     </span>
                     <img
-                      className="w-4 h-4"
+                      className="w-4 h-4 cursor-pointer"
                       alt="Copy icon"
                       src="/copy-icon.png"
+                      onClick={() => copyToClipboard("0xb6c8...0031B9")}
                     />
                   </div>
                 </div>
@@ -214,9 +221,10 @@ export const DashboardSection = () => {
                       0xa3c6...1431A7
                     </span>
                     <img
-                      className="w-4 h-4"
+                      className="w-4 h-4 cursor-pointer"
                       alt="Copy icon"
                       src="/copy-icon.png"
+                       onClick={() => copyToClipboard("0xa3c6...1431A7")}
                     />
                   </div>
                 </div>

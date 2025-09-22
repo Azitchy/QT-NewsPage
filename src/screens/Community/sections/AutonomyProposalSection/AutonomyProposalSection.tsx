@@ -5,11 +5,11 @@ import ProposalsDisplay from "./ProposalsDisplay";
 export const AutonomyProposalSection = (): JSX.Element => {
 
     return (
-      <section className="pt-[60px] desktop:pt-[100px]">
+      <section className="pt-[60px] xl:pt-[100px]">
         <HeadingWithDots text="autonomy proposal" />
-        <div className="px-0 tablet:px-[77px] desktop:px-[134px] large:px-[203px]">
-            <p className="pt-[20px] pb-[40px] font-light text-[18px] leading-[24px] desktop:text-[20px] desktop:leading-[27px] tablet:max-w-[500px] 
-                desktop:max-w-[740px] large:max-w-[1160px]">
+        <div className="px-0 tablet:px-[77px] xl:px-[134px] large:px-[203px]">
+            <p className="pt-[20px] pb-[40px] font-light text-[18px] leading-[24px] xl:text-[20px] xl:leading-[27px] tablet:max-w-[500px] 
+                xl:max-w-[740px] large:max-w-[1160px]">
                 ATM is a decentralised distribution mechanism. 
                 This means that users need to manage it as a community to allow it to continuously evolve and stay relevant.{" "}
                 <span className="font-medium">
@@ -20,7 +20,7 @@ export const AutonomyProposalSection = (): JSX.Element => {
 
             {/* Proposal Section */}
             <div className="mt-[40px] deskttop:mt-[90px] flex flex-col items-center">
-                <h5 className="text-center font-normal text-[20px] leading-[27px] desktop:text-[26px] desktop:leading-[34px]">
+                <h5 className="text-center font-normal text-[20px] leading-[27px] xl:text-[26px] xl:leading-[34px]">
                     Different proposals are passed under diffferent conditions 
                 </h5>
                 <p className="text-card-foreground text-[12px] font-normal leading-[17px]">

@@ -45,14 +45,58 @@ export const LetsConnectSection = () => {
         </div>
         <img className="block w-px ml-28" alt="Line" src="/line.svg" />
       </div>
-      <div className="flex flex-col lg:absolute top-64 left-24 z-20">
-        <div className="flex gap-20 w-[70px] h-[70px] md:w-[90px] md:h-[90px]">
-          <img alt="X" src="/x.png" className="cursor-pointer" />
-          <img alt="Discord" src="/discord.png" className="cursor-pointer" />
+       <div className="flex flex-col lg:absolute top-64 left-24 z-20">
+        <div className="flex gap-20 ">
+          <a
+            href="https://x.com/ATMrank"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Visit X"
+          >
+            <img
+              alt="X"
+              src="/x.png"
+              className="cursor-pointer w-[70px] h-[70px] md:w-[90px] md:h-[90px]"
+            />
+          </a>
+          <a
+            href="https://discord.com/invite/bwAtDM7Mp2"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Visit discord"
+          >
+            <img
+              alt="Discord"
+              src="/discord.png"
+              className="cursor-pointer  w-[70px] h-[70px] md:w-[90px] md:h-[90px]"
+            />
+          </a>
         </div>
-        <div className="flex gap-20 ml-20 w-[70px] h-[70px] md:w-[90px] md:h-[90px]">
-          <img alt="Telegram" src="/telegram.png" className="cursor-pointer" />
-          <img alt="Reddit" src="/reddit.png" className="cursor-pointer" />
+        <div className="flex gap-20 ml-20">
+          <a
+            href="https://t.me/atm_luca"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Visit telegram"
+          >
+            <img
+              alt="Telegram"
+              src="/telegram.png"
+              className="cursor-pointer  w-[70px] h-[70px] md:w-[90px] md:h-[90px]"
+            />
+          </a>
+          <a
+            href="https://www.reddit.com/r/atmrank/"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Visit reddit"
+          >
+            <img
+              alt="Reddit"
+              src="/reddit.png"
+              className="cursor-pointer  w-[70px] h-[70px] md:w-[90px] md:h-[90px]"
+            />
+          </a>
         </div>
       </div>
       <div className="flex flex-col lg:flex-row w-full items-end justify-between px-0 lg:px-[71px] gap-8 lg:gap-10">

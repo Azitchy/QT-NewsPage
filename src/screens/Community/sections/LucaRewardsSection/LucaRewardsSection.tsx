@@ -2,20 +2,20 @@ import { HeadingWithDots } from "@/components/HeadingWithDots";
 
 export const LucaRewardsSection = (): JSX.Element => {
   return (
-    <section className="relative pt-[60px] desktop:pt-[100px]">
+    <section className="relative pt-[60px] xl:pt-[100px]">
       {/* Background image*/}
       <img
         src="/luca-bg.svg"
         alt="Decorative background"
-        className="hidden desktop:block absolute right-1/4 translate-x-1/4 h-[365px] opacity-15 z-0 pointer-events-none"
+        className="hidden xl:block absolute right-1/4 translate-x-1/4 h-[365px] opacity-15 z-0 pointer-events-none"
       />
 
       <div className="relative z-10">
         <HeadingWithDots text="luca rewards" />
-        <div className="px-0 tablet:px-[77px] desktop:px-[134px] large:px-[203px] flex flex-col md:flex-row items-center tablet:gap-[50px]">
+        <div className="px-0 tablet:px-[77px] xl:px-[134px] large:px-[203px] flex flex-col md:flex-row items-center tablet:gap-[50px]">
           <p
-            className="pt-[20px] pb-[40px] font-light text-[18px] leading-[24px] desktop:text-[20px] desktop:leading-[27px] tablet:max-w-[516px] 
-              desktop:max-w-[782px]"
+            className="pt-[20px] pb-[40px] font-light text-[18px] leading-[24px] xl:text-[20px] xl:leading-[27px] tablet:max-w-[516px] 
+              xl:max-w-[782px]"
           >
             Earn LUCA rewards through consensus connections and staking with
             LUCA, the native cryptocurrency of ATM.{" "}
@@ -27,7 +27,7 @@ export const LucaRewardsSection = (): JSX.Element => {
             </span>
           </p>
           <img
-            className="w-[285px] desktop:w-[406px] h-[178px] desktop:h-[254px] object-contain mx-auto tablet:mx-0"
+            className="w-[285px] xl:w-[406px] h-[178px] xl:h-[254px] object-contain mx-auto tablet:mx-0"
             alt="LUCA Rewards Illustration"
             src="/luca-rewards.png"
           />

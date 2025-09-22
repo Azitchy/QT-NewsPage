@@ -71,7 +71,7 @@ export const Explorer = () => {
                         key={tab.id}
                         value={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`px-3 py-2 h-auto bg-transparent border-0 shadow-none data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap ${
+                        className={`px-3 py-2 h-auto bg-transparent border-0 shadow-none data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-lg hover:bg-gray-100 dark:hover:bg-card-foreground dark:hover:text-black transition-colors whitespace-nowrap ${
                           activeTab === tab.id
                             ? "!text-background dark:!text-primary-foreground md:!text-foreground font-normal !bg-primary md:!bg-transparent rounded-[20px]"
                             : "text-card-foreground font-normal"

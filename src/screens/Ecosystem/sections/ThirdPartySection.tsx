@@ -1,12 +1,19 @@
-import { useEffect, useRef, useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "../../../components/ui/card";
 import { Button } from "../../../components/ui/button";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 
 export const ThirdPartySection = () => {
+  const [api, setApi] = useState<CarouselApi>();
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [cardWidth, setCardWidth] = useState(0);
-  const cardRef = useRef<HTMLDivElement | null>(null);
 
   const thirdPartyData = {
     title: "third-party ecosystem",
@@ -45,39 +52,40 @@ export const ThirdPartySection = () => {
   };
 
   useEffect(() => {
+    if (!api) return;
+    const updateState = () => {
+      setCanPrev(api.canScrollPrev());
+      setCanNext(api.canScrollNext());
+    };
+    updateState();
+    api.on("reInit", updateState);
+    api.on("select", updateState);
+    return () => {
+      api.off("reInit", updateState);
+      api.off("select", updateState);
+    };
+  }, [api]);
+
+  useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
-      if (cardRef.current) {
-        setCardWidth(cardRef.current.offsetWidth + 21);
-      }
     };
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const itemsPerPage = isMobile ? 2 : 1;
-  const totalPages = Math.ceil(thirdPartyData.partners.length / itemsPerPage);
-
-  const handleNavigation = (direction: "prev" | "next") => {
-    if (direction === "prev" && currentSlide > 0) {
-      setCurrentSlide((prev) => prev - 1);
-    }
-    if (direction === "next" && currentSlide < totalPages - 1) {
-      setCurrentSlide((prev) => prev + 1);
-    }
-  };
-
-  const startIndex = currentSlide * itemsPerPage;
-  const visiblePartners = isMobile
-    ? thirdPartyData.partners.slice(startIndex, startIndex + itemsPerPage)
-    : thirdPartyData.partners;
+  // for mobile view
+  const groupedPartners = [];
+  for (let i = 0; i < thirdPartyData.partners.length; i += 2) {
+    groupedPartners.push(thirdPartyData.partners.slice(i, i + 2));
+  }
 
   return (
     <div className="w-full mx-auto">
       {/* Header */}
       <div className="flex items-start mb-12">
-        <div className="relative  ml-0 lg:ml-[30px]">
+        <div className="relative ml-0 lg:ml-[30px]">
           <div className="font-titles-h2-sectionheading-400 text-primary-colour text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] ml-12 mt-7 uppercase">
             {thirdPartyData.title}
           </div>
@@ -89,7 +97,7 @@ export const ThirdPartySection = () => {
         </div>
       </div>
 
-      <div className="w-full  mb-[40px]  md:pl-[135px] 2xl:pl-[260px]">
+      <div className="w-full mb-[40px] md:pl-[135px] 2xl:pl-[260px]">
         <p className="max-w-[784px] font-inter font-light text-foreground text-[18px] lg:text-[20px] leading-[24px] lg:leading-[27px] text-left">
           In support of development, we've opted to integrate numerous
           third-party applications. Our open-source code is readily accessible
@@ -107,101 +115,96 @@ export const ThirdPartySection = () => {
         <div className="flex items-center gap-[15px] px-[9px] py-[5px] rounded-[40px] border border-solid border-border dark:border-primary-foreground bg-background dark:bg-background shadow-sm">
           <Button
             variant="ghost"
-            disabled={currentSlide === 0}
-            className={`w-[38.53px] h-[38.53px] p-0 rounded-full transition-colors ${
-              currentSlide === 0
-                ? "bg-gray-200 opacity-50 cursor-not-allowed"
-                : "bg-background hover:bg-gray-50"
+            disabled={!canPrev}
+            className={`w-[38.53px] h-[38.53px] p-0 rounded-[19.26px] hover:bg-gray-100 ${
+              canPrev ? "bg-primary-foreground" : "bg-transparent"
             }`}
-            onClick={() => handleNavigation("prev")}
+            onClick={() => api?.scrollPrev()}
           >
-            <img
-              className="w-5 h-5"
-              alt="Arrow left"
-              src="/arrow-left-icon.svg"
+            <ArrowLeftIcon
+              className={`w-5 h-5 ${
+                canPrev ? "text-primary" : "text-gray-400"
+              }`}
             />
           </Button>
-
           <Button
-            disabled={currentSlide >= totalPages - 1}
-            className={`w-[38.53px] h-[38.53px] p-0 rounded-full transition-colors ${
-              currentSlide >= totalPages - 1
-                ? "bg-gray-200  opacity-50 cursor-not-allowed"
-                : "bg-[#e9f6f7] hover:bg-[#d8eef0]"
+            variant="ghost"
+            disabled={!canNext}
+            className={`w-[38.53px] h-[38.53px] p-0 rounded-[19.26px] hover:bg-[#d6f0f2] ${
+              canNext ? "bg-[#e9f6f7]" : "bg-transparent"
             }`}
-            onClick={() => handleNavigation("next")}
+            onClick={() => api?.scrollNext()}
           >
-            <img
-              className="w-6 h-6"
-              alt="Arrow right"
-              src="/arrow-right-icon-3.svg"
+            <ArrowRightIcon
+              className={`w-6 h-6 ${
+                canNext ? "text-primary" : "text-gray-400"
+              }`}
             />
           </Button>
         </div>
       </div>
 
-      {/* Cards Section */}
-      <div className="overflow-hidden w-full  2xl:max-w-[1926px] mx-auto">
-        {isMobile ? (
-          // Mobile
-          <div className="flex flex-col gap-[10px]">
-            {visiblePartners.map((partner, index) => (
-              <Card
-                key={index}
-                className="w-full  bg-card rounded-[20px] border border-solid border-border dark:border-primary-foreground"
-              >
-                <CardContent className="flex flex-col h-full items-start justify-between gap-[20px] p-[30px]">
-                  <img
-                    className="w-[50px] h-[50px]"
-                    alt={partner.name}
-                    src={partner.icon}
-                  />
-                  <div className="flex flex-col gap-5 flex-1">
-                    <h3 className="font-medium text-primary text-[20px] leading-[27px]">
-                      {partner.name}
-                    </h3>
-                    <p className="text-foreground text-[14px] lg:text-[16px] leading-[19px] lg:leading-[24px] flex-1">
-                      {partner.description}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          // Desktop
-          <div
-            className="flex gap-[15px] lg:gap-[19px] transition-transform duration-500 ease-in-out"
-            style={{
-              transform: `translateX(-${currentSlide * cardWidth}px)`,
-            }}
-          >
-            {visiblePartners.map((partner, index) => (
-              <Card
-                ref={index === 0 ? cardRef : null}
-                key={index}
-                className="w-full 2xl:max-w-[330px] md:max-w-[280px] overflow-hidden border border-solid border-border dark:border-primary-foreground bg-card rounded-[20px] flex-shrink-0"
-              >
-                <CardContent className="flex flex-col h-full items-start justify-between md:gap-[20px] lg:gap-[15px] p-[30px]">
-                  <img
-                    className="w-[50px] h-[50px]"
-                    alt={partner.name}
-                    src={partner.icon}
-                  />
-                  <div className="flex flex-col md:gap-[20px] lg:gap-[15px] flex-1">
-                    <h3 className="font-medium text-[#2ea8af] text-[20px] leading-[27px]">
-                      {partner.name}
-                    </h3>
-                    <p className="text-foreground text-[14px] lg:text-[16px] leading-[19px] lg:leading-[24px] flex-1">
-                      {partner.description}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
-      </div>
+      {/* Carousel */}
+      <Carousel className="w-full" setApi={setApi} opts={{ align: "start" }}>
+        <CarouselContent className="flex gap-[15px] lg:gap-[19px] mt-[20px]">
+          {/* For Mobile */}
+          {isMobile
+            ? groupedPartners.map((pair, idx) => (
+                <CarouselItem
+                  key={idx}
+                  className="basis-full flex-shrink-0 flex flex-col gap-[10px]"
+                >
+                  {pair.map((partner, i) => (
+                    <Card
+                      key={i}
+                      className="w-full h-[320px] bg-card rounded-[20px] border border-solid border-border dark:border-primary-foreground"
+                    >
+                      <CardContent className="flex flex-col h-full items-start justify-between gap-[20px] p-[30px]">
+                        <img
+                          className="w-[50px] h-[50px]"
+                          alt={partner.name}
+                          src={partner.icon}
+                        />
+                        <div className="flex flex-col gap-5 flex-1">
+                          <h3 className="font-medium text-primary text-[20px] leading-[27px]">
+                            {partner.name}
+                          </h3>
+                          <p className="text-foreground text-[14px] lg:text-[16px] leading-[19px] lg:leading-[24px] flex-1">
+                            {partner.description}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </CarouselItem>
+              ))
+            : thirdPartyData.partners.map((partner, idx) => (
+                //  For Desktop
+                <CarouselItem
+                  key={idx}
+                  className="basis-auto flex-shrink-0 w-[330px] md:w-[280px] 2xl:w-[330px]"
+                >
+                  <Card className="w-full h-full bg-card rounded-[20px] border border-solid border-border dark:border-primary-foreground">
+                    <CardContent className="flex flex-col h-full items-start justify-between gap-[20px] p-[30px]">
+                      <img
+                        className="w-[50px] h-[50px]"
+                        alt={partner.name}
+                        src={partner.icon}
+                      />
+                      <div className="flex flex-col gap-5 flex-1">
+                        <h3 className="font-medium text-[#2ea8af] text-[20px] leading-[27px]">
+                          {partner.name}
+                        </h3>
+                        <p className="text-foreground text-[14px] lg:text-[16px] leading-[19px] lg:leading-[24px] flex-1">
+                          {partner.description}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+        </CarouselContent>
+      </Carousel>
     </div>
   );
 };

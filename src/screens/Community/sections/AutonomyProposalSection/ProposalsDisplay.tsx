@@ -27,7 +27,7 @@ const ProposalsDisplay: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center relative w-full py-[20px]">
-      {/* Desktop version with animation */}
+      {/* xl version with animation */}
       <div className="hidden md:flex flex-row items-center transition-all duration-700 ease-in-out space-x-8">
         {proposalsData.map((proposal) => {
           const isActive = proposal.id === active;
@@ -44,8 +44,8 @@ const ProposalsDisplay: React.FC = () => {
               <span
                 className={`font-bold transition-all duration-700 ease-in-out ${
                   isActive
-                    ? "text-[150px] desktop:text-[250px] text-primary"
-                    : "text-[150px] desktop:text-[250px] text-[#F2F9FF] dark:text-[#40576A]"
+                    ? "text-[150px] xl:text-[250px] text-primary"
+                    : "text-[150px] xl:text-[250px] text-[#F2F9FF] dark:text-[#40576A]"
                 }`}
               >
                 {proposal.number}
@@ -54,7 +54,7 @@ const ProposalsDisplay: React.FC = () => {
               {/* Active Content */}
               {isActive && (
                 <div className="ml-4 transition-all duration-700 ease-in-out">
-                  <p className="font-normal font-[Inter] text-[14px] leading-[19px] desktop:text-[16px] desktop:leading-[24px]">
+                  <p className="font-normal font-[Inter] text-[14px] leading-[19px] xl:text-[16px] xl:leading-[24px]">
                     {proposal.description}
                   </p>
                 </div>
@@ -63,7 +63,7 @@ const ProposalsDisplay: React.FC = () => {
               {/* Next blurred preview */}
               {isNext && (
                 <div className="ml-4 relative w-[150px] h-[80px] overflow-hidden">
-                  <p className="font-normal font-[Inter] text-[14px] leading-[19px] desktop:text-[16px] desktop:leading-[24px] opacity-70 blur-[1.5px]">
+                  <p className="font-normal font-[Inter] text-[14px] leading-[19px] xl:text-[16px] xl:leading-[24px] opacity-70 blur-[1.5px]">
                     {proposal.description}
                   </p>
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-background/70 to-background"></div>

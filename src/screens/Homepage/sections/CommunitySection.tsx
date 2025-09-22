@@ -37,7 +37,7 @@ export const CommunitySection = () => {
         </div>
 
         <Button className="bg-primary rounded-[30px] px-[15px] py-[12px] md:px-5 md:py-6 z-20">
-          <a href="#">
+          <a href="/community">
             <span className="font-body-body3-400 font-[number:var(--body-body3-400-font-weight)] text-background dark:text-primary-foreground text-[14px] md:text-[length:var(--body-body3-400-font-size)] tracking-[var(--body-body3-400-letter-spacing)] leading-[var(--body-body3-400-line-height)] whitespace-nowrap [font-style:var(--body-body3-400-font-style)]">
               Become KOL today
             </span>
