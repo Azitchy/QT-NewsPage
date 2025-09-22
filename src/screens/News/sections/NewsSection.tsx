@@ -198,7 +198,7 @@ export const NewsSection = (): JSX.Element => {
                       >
                         <span>Read news</span>
                         <img
-                          className="w-[30px] h-[30px] md:w-[20px] md:h-[20px] lg:w-[30px] lg:h-[30px]  hover:bg-primary-foreground rounded-full hover:-rotate-12 transition-transform"
+                          className="w-[30px] h-[30px] md:w-[20px] md:h-[20px] lg:w-[30px] lg:h-[30px]  hover:bg-primary-foreground rounded-full transition-all duration-700 ease-in-out hover:scale-110 hover:rotate-[-12deg]"
                           alt="Arrow right icon"
                           src="/arrow-right-icon.svg"
                         />

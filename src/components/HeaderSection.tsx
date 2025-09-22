@@ -41,7 +41,7 @@ export const HeaderSection = (): JSX.Element => {
           image: "/roadmap.png",
           subLabel: ["Roadmap"],
           subLabelImage: ["/route.svg"],
-          href: ["/roadmap"]
+          href: ["/roadmap"],
         },
       ],
     },
@@ -54,19 +54,19 @@ export const HeaderSection = (): JSX.Element => {
           image: "/agf.png",
           subLabel: ["AFG", "Games"],
           subLabelImage: ["/game-launcher.svg", "/game-launcher.svg"],
-          href: ["#","/games"]
+          href: ["#", "/games"],
         },
         {
           image: "/travel.png",
           subLabel: ["Travel"],
           subLabelImage: ["travel-holidays.svg"],
-          href: ["/ecosystem/travel"]
+          href: ["/ecosystem/travel"],
         },
         {
           image: "/ecology.png",
           subLabel: ["Ecology"],
           subLabelImage: ["/plant.svg"],
-          href: ["#"]
+          href: ["#"],
         },
       ],
     },
@@ -148,8 +148,8 @@ export const HeaderSection = (): JSX.Element => {
       }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [isMobileMenuOpen]);
 
   const WalletButton = ({
@@ -176,7 +176,11 @@ export const HeaderSection = (): JSX.Element => {
 
           {/* User dropdown menu */}
           {showUserMenu && (
-            <div className={`absolute ${isMobile ? 'right-0' : 'right-0'} mt-2 w-64 bg-background dark:bg-card rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50 p-4`}>
+            <div
+              className={`absolute ${
+                isMobile ? "right-0" : "right-0"
+              } mt-2 w-64 bg-background dark:bg-card rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50 p-4`}
+            >
               <div className="space-y-3">
                 <div className="flex items-center gap-3 pb-3 border-b border-gray-100 dark:border-gray-700">
                   <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-green-500 rounded-full flex items-center justify-center">
@@ -289,7 +293,7 @@ export const HeaderSection = (): JSX.Element => {
                 {item.description ? (
                   <>
                     <NavigationMenuTrigger
-                      className={`inline-flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-full font-body-body-4-400 text-[14px] font-normal leading-[19px] cursor-pointer transition-colors hover:bg-primary-foreground hover:text-primary dark:hover:text-card  ${
+                      className={`inline-flex items-center hover:shadow-sm justify-center gap-2.5 px-4 py-2.5 rounded-full font-body-body-4-400 text-[14px] font-normal leading-[19px] cursor-pointer transition-colors dark:hover:bg-card hover:bg-card hover:text-primary dark:hover:text-primary  ${
                         location.pathname === item.path
                           ? "bg-background text-primary dark:text-card dark:bg-foreground"
                           : "text-foreground dark:text-foreground"
@@ -374,7 +378,7 @@ export const HeaderSection = (): JSX.Element => {
                   <NavigationMenuLink asChild>
                     <Link
                       to={item.path}
-                      className={`inline-flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-full font-body-body-4-400 text-[14px] font-normal leading-[19px] hover:bg-primary-foreground hover:text-primary dark:hover:text-card cursor-pointer transition-colors ${
+                      className={`inline-flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-full font-body-body-4-400 text-[14px] font-normal leading-[19px] hover:bg-card hover:text-primary dark:hover:text-primary cursor-pointer transition-colors ${
                         location.pathname === item.path
                           ? "bg-background text-primary dark:text-card dark:bg-foreground"
                           : "text-foreground dark:text-foreground"
@@ -392,7 +396,7 @@ export const HeaderSection = (): JSX.Element => {
         {/* Right side actions */}
         <div className="flex items-center gap-1 sm:gap-2 lg:gap-[10px] flex-shrink-0 min-w-0">
           {/* Single responsive Wallet button */}
-          <WalletButton 
+          <WalletButton
             className="flex h-[32px] sm:h-[36px] lg:h-[38px] px-2 sm:px-3 lg:px-[15px] py-1.5 sm:py-2 lg:py-2.5 rounded-full bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] hover:opacity-90 transition-opacity text-background font-normal text-[11px] sm:text-[13px] lg:text-[14px] min-w-0 max-w-[120px] sm:max-w-[140px] lg:max-w-none"
             isMobile={false}
           />
@@ -459,13 +463,6 @@ export const HeaderSection = (): JSX.Element => {
       {isMobileMenuOpen && (
         <div className="lg:hidden absolute top-full left-0 right-0 bg-background dark:bg-background border-t dark:border-gray-700 shadow-lg">
           <div className="px-4 py-4 space-y-2 max-h-[calc(100vh-70px)] sm:max-h-[calc(100vh-90px)] overflow-y-auto">
-            <Link
-              to="/"
-              className="block px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors font-normal text-[14px] text-foreground dark:text-foreground"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Homepage
-            </Link>
             {navItems.map((item, index) => (
               <Link
                 key={index}
@@ -480,7 +477,7 @@ export const HeaderSection = (): JSX.Element => {
                 {item.label}
               </Link>
             ))}
-            
+
             <div className="pt-4 border-t dark:border-gray-700 space-y-3">
               {isAuthenticated && (
                 <button

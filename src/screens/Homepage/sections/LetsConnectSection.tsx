@@ -45,7 +45,7 @@ export const LetsConnectSection = () => {
         </div>
         <img className="block w-px ml-28" alt="Line" src="/line.svg" />
       </div>
-       <div className="flex flex-col lg:absolute top-64 left-24 z-20">
+      <div className="flex flex-col lg:absolute top-64 left-24 z-20">
         <div className="flex gap-20 ">
           <a
             href="https://x.com/ATMrank"
@@ -133,7 +133,7 @@ export const LetsConnectSection = () => {
           </div>
         </div>
 
-        <div className="w-full lg:w-[780px] h-auto lg:h-[468px] gap-[15px] lg:mb-14 2xl:mr-[300px] flex flex-col items-start order-1 lg:order-2  lg:px-0">
+        <div className="w-full lg:w-[780px] h-auto lg:h-[468px] gap-[15px] lg:mb-14 large:mr-[300px] flex flex-col items-start order-1 lg:order-2  lg:px-0">
           <div className="relative self-stretch mt-[-1.00px] font-body-body2-400 font-[number:var(--body-body2-400-font-weight)] text-foreground dark:text-foreground text-[16px] lg:text-[length:var(--body-body2-400-font-size)] tracking-[var(--body-body2-400-letter-spacing)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)] [font-style:var(--body-body2-400-font-style)]">
             Got any question? Simply fill-in the contact form. We would like to
             hear from you!

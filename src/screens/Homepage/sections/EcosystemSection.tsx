@@ -40,7 +40,7 @@ export const EcosystemSection = () => {
       description2:
         "Now, users can seamlessly use LUCA to explore the globe, unlocking a new era of convenience and flexibility in travel.",
       image: "/ecosystem-travel.png",
-      href: "/ecosystem/travel"
+      href: "/ecosystem/travel",
     },
   };
 
@@ -123,7 +123,7 @@ export const EcosystemSection = () => {
                 <a href={currentEcosystemData.href}>
                   <div className="relative w-[38.53px] h-[38.53px]">
                     <img
-                      className="absolute w-[33px] h-[33px] top-[3px] left-0.5 hover:bg-gray-100 rounded-full hover:-rotate-12"
+                      className="absolute w-[33px] h-[33px] top-[3px] left-0.5 hover:bg-gray-100 rounded-full cursor-pointer transition-all duration-700 ease-in-out hover:bg-primary-foreground hover:scale-110 hover:rotate-[-12deg]"
                       alt="Arrow right icon"
                       src="/arrow-right-icon.svg"
                     />

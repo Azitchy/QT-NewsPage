@@ -75,7 +75,7 @@ export const MainSection = () => {
     },
   ];
 
-   const copyToClipboard = (text?: string) => {
+  const copyToClipboard = (text?: string) => {
     if (text) {
       navigator.clipboard.writeText(text);
     }
@@ -147,7 +147,7 @@ export const MainSection = () => {
                         <a href={button.href}>
                           <div className="w-[38px] h-[38px] relative">
                             <img
-                              className="absolute w-[33px] h-[33px] top-[3px] left-0.5 hover:bg-primary-foreground rounded-full hover:-rotate-12 transition-transform"
+                              className="absolute w-[33px] h-[33px] top-[3px] left-0.5 hover:bg-primary-foreground rounded-full transition-all duration-700 ease-in-out hover:scale-110 hover:rotate-[-12deg]"
                               alt="Arrow right icon"
                               src="/arrow-right-icon.svg"
                             />
@@ -203,7 +203,7 @@ export const MainSection = () => {
                     className="w-4 h-4 cursor-pointer"
                     alt="Copy icon"
                     src="/copy-icon.png"
-                     onClick={() => copyToClipboard(section.walletInfo?.address)}
+                    onClick={() => copyToClipboard(section.walletInfo?.address)}
                   />
                 </div>
               </div>

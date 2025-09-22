@@ -78,7 +78,7 @@ export const HeroSection = (): JSX.Element => {
         <Card className="max-w-[1400px] w-full border border-border dark:border-primary-foreground dark:bg-background rounded-[10px] md:rounded-[20px] overflow-hidden mx-auto">
           <CardContent className="flex flex-col md:flex-row items-center gap-4 md:gap-[20px] lg:gap-[40px] 2xl:gap-[60px] p-[15px] lg:p-[15px]">
             <img
-              className="w-full md:max-w-[427px] lg:max-w-[750px] 2xl:max-w-[858px] h-[178px] md:h-[213px] lg:h-[300px] rounded-[20px] object-cover flex-shrink-0"
+              className="w-full md:max-w-[427px] xl:max-w-[750px] large:max-w-[858px] h-[178px] md:h-[213px] lg:h-[300px] rounded-[20px] object-cover flex-shrink-0"
               alt="News img main"
               src={imageUrl || "/placeholder.svg"}
             />
@@ -118,7 +118,7 @@ export const HeroSection = (): JSX.Element => {
                 >
                   <span>Read news</span>
                   <img
-                    className="w-[30px] h-[30px] md:w-[20px] md:h-[20px] lg:w-[30px] lg:h-[30px] hover:bg-primary-foreground rounded-full hover:-rotate-12 transition-transform"
+                    className="w-[30px] h-[30px] md:w-[20px] md:h-[20px] lg:w-[30px] lg:h-[30px] rounded-full transition-all duration-700 ease-in-out hover:bg-primary-foreground hover:scale-110 hover:rotate-[-12deg]"
                     alt="Arrow right icon"
                     src="/arrow-right-icon.svg"
                   />

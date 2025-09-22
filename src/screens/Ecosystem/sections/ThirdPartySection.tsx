@@ -146,7 +146,7 @@ export const ThirdPartySection = () => {
 
       {/* Carousel */}
       <Carousel className="w-full" setApi={setApi} opts={{ align: "start" }}>
-        <CarouselContent className="flex gap-[15px] lg:gap-[19px] mt-[20px]">
+        <CarouselContent className="flex mt-[20px]">
           {/* For Mobile */}
           {isMobile
             ? groupedPartners.map((pair, idx) => (
@@ -182,20 +182,20 @@ export const ThirdPartySection = () => {
                 //  For Desktop
                 <CarouselItem
                   key={idx}
-                  className="basis-auto flex-shrink-0 w-[330px] md:w-[280px] 2xl:w-[330px]"
+                  className="basis-auto flex-shrink-0 w-[330px] md:w-[280px] 2xl:w-[330px] py-2 ml-2"
                 >
-                  <Card className="w-full h-full bg-card rounded-[20px] border border-solid border-border dark:border-primary-foreground">
-                    <CardContent className="flex flex-col h-full items-start justify-between gap-[20px] p-[30px]">
+                  <Card className="w-full h-full lg:h-[350px] bg-card rounded-[20px] border border-solid border-border dark:border-primary-foreground transform transition-all duration-700 ease-in-out delay-150 hover:scale-105 hover:shadow-lg">
+                    <CardContent className="flex flex-col h-full items-start justify-between p-[30px] transition-all duration-500 ease-in-out delay-150 gap-[20px] hover:p-[25px]">
                       <img
-                        className="w-[50px] h-[50px]"
+                        className="w-[50px] h-[50px] transition-all duration-500 ease-in-out delay-150 hover:mt-[5px]"
                         alt={partner.name}
                         src={partner.icon}
                       />
-                      <div className="flex flex-col gap-5 flex-1">
-                        <h3 className="font-medium text-[#2ea8af] text-[20px] leading-[27px]">
+                      <div className="flex flex-col flex-1 transition-all duration-500 ease-in-out delay-150 gap-5 hover:space-y-1">
+                        <h3 className="font-medium text-primary text-[20px] leading-[27px] transition-all duration-500 ease-in-out">
                           {partner.name}
                         </h3>
-                        <p className="text-foreground text-[14px] lg:text-[16px] leading-[19px] lg:leading-[24px] flex-1">
+                        <p className="text-foreground text-[14px] lg:text-[16px] leading-[19px] lg:leading-[24px] flex-1 transition-all duration-500 ease-in-out">
                           {partner.description}
                         </p>
                       </div>
