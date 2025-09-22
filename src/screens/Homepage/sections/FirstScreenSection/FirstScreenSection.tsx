@@ -83,7 +83,7 @@ export const FirstScreenSection = (): JSX.Element => {
 
           {/* Right text */}
           <div className="flex-1 text-center md:text-left mt-0 md:mt-6 lg:-mt-24 lg:relative lg:right-[200px]">
-            <Card className="inline-flex items-center mb-[15px] md:mb-[30px] px-[8px] md:px-[10px] py-[5px] rounded-full border border-border dark:border-primary-foreground backdrop-blur-md bg-[linear-gradient(180deg,rgba(252,252,252,0.40)_44.56%,rgba(242,242,242,0.40)_100%)] dark:bg-[linear-gradient(180deg,rgba(81,79,79,0.40)_49.59%,rgba(36,36,36,0.40)_100%)] z-30">
+            <Card className="inline-flex items-center mb-[15px] md:mb-[30px] px-[8px] md:px-[10px] py-[5px] rounded-full border border-border backdrop-blur-md bg-[linear-gradient(180deg,rgba(252,252,252,0.40)_44.56%,rgba(242,242,242,0.40)_100%)] dark:bg-[linear-gradient(180deg,rgba(81,79,79,0.40)_49.59%,rgba(36,36,36,0.40)_100%)] z-30">
               <CardContent className="flex items-center gap-[5px] p-0">
                 <Badge className="px-3 py-1 rounded-full bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] text-background dark:text-primary-foreground text-sm">
                   NEW

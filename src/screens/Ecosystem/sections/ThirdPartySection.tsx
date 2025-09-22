@@ -112,35 +112,44 @@ export const ThirdPartySection = () => {
 
       {/* Navigation */}
       <div className="flex justify-end w-full mb-[20px] pr-4 large:hidden">
-        <div className="flex items-center gap-[15px] px-[9px] py-[5px] rounded-[40px] border border-solid border-border dark:border-primary-foreground bg-background dark:bg-background shadow-sm">
-          <Button
-            variant="ghost"
-            disabled={!canPrev}
-            className={`w-[38.53px] h-[38.53px] p-0 rounded-[19.26px] hover:bg-gray-100 ${
-              canPrev ? "bg-primary-foreground" : "bg-transparent"
-            }`}
-            onClick={() => api?.scrollPrev()}
-          >
-            <ArrowLeftIcon
-              className={`w-5 h-5 ${
-                canPrev ? "text-primary" : "text-gray-400"
+        {/* Gradient border wrapper */}
+        <div className="relative flex items-center gap-[15px] px-[9px] py-[5px] rounded-[40px] shadow-sm">
+          {/* Outer gradient border */}
+          <div className="absolute inset-0 rounded-[40px] p-[1px] bg-border dark:bg-[linear-gradient(96deg,#C6C6C6_69.03%,#2B2B2B_102.49%)]">
+            <div className="w-full h-full rounded-[40px] bg-background dark:bg-background" />
+          </div>
+
+          {/* Actual content */}
+          <div className="relative flex items-center gap-[15px]">
+            <Button
+              variant="ghost"
+              disabled={!canPrev}
+              className={`w-[38.53px] h-[38.53px] p-0 rounded-[19.26px] hover:bg-gray-100 ${
+                canPrev ? "bg-primary-foreground" : "bg-transparent"
               }`}
-            />
-          </Button>
-          <Button
-            variant="ghost"
-            disabled={!canNext}
-            className={`w-[38.53px] h-[38.53px] p-0 rounded-[19.26px] hover:bg-[#d6f0f2] ${
-              canNext ? "bg-[#e9f6f7]" : "bg-transparent"
-            }`}
-            onClick={() => api?.scrollNext()}
-          >
-            <ArrowRightIcon
-              className={`w-6 h-6 ${
-                canNext ? "text-primary" : "text-gray-400"
+              onClick={() => api?.scrollPrev()}
+            >
+              <ArrowLeftIcon
+                className={`w-5 h-5 ${
+                  canPrev ? "text-primary" : "text-gray-400"
+                }`}
+              />
+            </Button>
+            <Button
+              variant="ghost"
+              disabled={!canNext}
+              className={`w-[38.53px] h-[38.53px] p-0 rounded-[19.26px] hover:bg-[#d6f0f2] ${
+                canNext ? "bg-[#e9f6f7]" : "bg-transparent"
               }`}
-            />
-          </Button>
+              onClick={() => api?.scrollNext()}
+            >
+              <ArrowRightIcon
+                className={`w-6 h-6 ${
+                  canNext ? "text-primary" : "text-gray-400"
+                }`}
+              />
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -155,26 +164,33 @@ export const ThirdPartySection = () => {
                   className="basis-full flex-shrink-0 flex flex-col gap-[10px]"
                 >
                   {pair.map((partner, i) => (
-                    <Card
-                      key={i}
-                      className="w-full h-[320px] bg-card rounded-[20px] border border-solid border-border dark:border-primary-foreground"
-                    >
-                      <CardContent className="flex flex-col h-full items-start justify-between gap-[20px] p-[30px]">
-                        <img
-                          className="w-[50px] h-[50px]"
-                          alt={partner.name}
-                          src={partner.icon}
-                        />
-                        <div className="flex flex-col gap-5 flex-1">
-                          <h3 className="font-medium text-primary text-[20px] leading-[27px]">
-                            {partner.name}
-                          </h3>
-                          <p className="text-foreground text-[14px] lg:text-[16px] leading-[19px] lg:leading-[24px] flex-1">
-                            {partner.description}
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
+                    <div className="relative w-full h-[320px] rounded-[20px]">
+                      <div className="absolute inset-0 rounded-[20px] p-[1px] bg-border dark:bg-[linear-gradient(96deg,#C6C6C6_69.03%,#2B2B2B_102.49%)]">
+                        <div className="w-full h-full rounded-[20px] bg-card dark:bg-card" />
+                      </div>
+
+                      {/* Actual Card Content */}
+                      <Card
+                        key={i}
+                        className="relative w-full h-full rounded-[20px] border-none bg-transparent"
+                      >
+                        <CardContent className="flex flex-col h-full items-start justify-between gap-[20px] p-[30px]">
+                          <img
+                            className="w-[50px] h-[50px]"
+                            alt={partner.name}
+                            src={partner.icon}
+                          />
+                          <div className="flex flex-col gap-5 flex-1">
+                            <h3 className="font-medium text-primary text-[20px] leading-[27px]">
+                              {partner.name}
+                            </h3>
+                            <p className="text-foreground text-[14px] lg:text-[16px] leading-[19px] lg:leading-[24px] flex-1">
+                              {partner.description}
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
                   ))}
                 </CarouselItem>
               ))
@@ -184,23 +200,31 @@ export const ThirdPartySection = () => {
                   key={idx}
                   className="basis-auto flex-shrink-0 w-[330px] md:w-[280px] 2xl:w-[330px] py-2 ml-2"
                 >
-                  <Card className="w-full h-full lg:h-[350px] bg-card rounded-[20px] border border-solid border-border dark:border-primary-foreground transform transition-all duration-700 ease-in-out delay-150 hover:scale-105 hover:shadow-lg">
-                    <CardContent className="flex flex-col h-full items-start justify-between p-[30px] transition-all duration-500 ease-in-out delay-150 gap-[20px] hover:p-[25px]">
-                      <img
-                        className="w-[50px] h-[50px] transition-all duration-500 ease-in-out delay-150 hover:mt-[5px]"
-                        alt={partner.name}
-                        src={partner.icon}
-                      />
-                      <div className="flex flex-col flex-1 transition-all duration-500 ease-in-out delay-150 gap-5 hover:space-y-1">
-                        <h3 className="font-medium text-primary text-[20px] leading-[27px] transition-all duration-500 ease-in-out">
-                          {partner.name}
-                        </h3>
-                        <p className="text-foreground text-[14px] lg:text-[16px] leading-[19px] lg:leading-[24px] flex-1 transition-all duration-500 ease-in-out">
-                          {partner.description}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <div className="relative rounded-[20px] w-full h-full lg:h-[350px] transform transition-all duration-700 ease-in-out delay-150 hover:scale-105 hover:shadow-lg">
+                    {/* Gradient border layer */}
+                    <div className="absolute inset-0 rounded-[20px] p-[1px] bg-border dark:bg-[linear-gradient(96deg,#C6C6C6_69.03%,#2B2B2B_102.49%)]">
+                      <div className="w-full h-full rounded-[20px] bg-card dark:bg-card" />
+                    </div>
+
+                    {/* Card content wrapper */}
+                    <Card className="relative w-full h-full rounded-[20px] border-none bg-transparent">
+                      <CardContent className="flex flex-col h-full items-start justify-between p-[30px] transition-all duration-500 ease-in-out delay-150 gap-[20px] hover:p-[25px]">
+                        <img
+                          className="w-[50px] h-[50px] transition-all duration-500 ease-in-out delay-150 hover:mt-[5px]"
+                          alt={partner.name}
+                          src={partner.icon}
+                        />
+                        <div className="flex flex-col flex-1 transition-all duration-500 ease-in-out delay-150 gap-5 hover:space-y-1">
+                          <h3 className="font-medium text-primary text-[20px] leading-[27px] transition-all duration-500 ease-in-out">
+                            {partner.name}
+                          </h3>
+                          <p className="text-foreground text-[14px] lg:text-[16px] leading-[19px] lg:leading-[24px] flex-1 transition-all duration-500 ease-in-out">
+                            {partner.description}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </CarouselItem>
               ))}
         </CarouselContent>

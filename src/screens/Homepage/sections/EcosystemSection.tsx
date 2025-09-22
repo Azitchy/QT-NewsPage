@@ -61,42 +61,45 @@ export const EcosystemSection = () => {
 
       <div className="mt-[20px] md:px-10 lg:px-28 2xl:px-0 lg:mt-[80px] mx-auto max-w-[1414px]">
         <div className="relative">
-          <div className="flex items-center justify-center gap-[10px] w-fit mx-auto lg:absolute right-0 top-[-72px] border border-solid border-border dark:border-primary-foreground rounded-[40px] p-[5px]">
-            <button
-              onClick={() => setActiveEcosystemTab("gaming")}
-              className={`rounded-[100px] px-[15px] py-2.5 text-sm transition-colors ${
-                activeEcosystemTab === "gaming"
-                  ? "bg-primary-foreground text-primary"
-                  : "text-primary hover:bg-primary-foreground"
-              }`}
-            >
-              Gaming
-            </button>
-            <button
-              onClick={() => setActiveEcosystemTab("ecology")}
-              className={`rounded-[100px] px-[15px] py-2.5 text-sm transition-colors ${
-                activeEcosystemTab === "ecology"
-                  ? "bg-primary-foreground text-primary"
-                  : "text-primary hover:bg-primary-foreground"
-              }`}
-            >
-              Ecology
-            </button>
-            <button
-              onClick={() => setActiveEcosystemTab("travel")}
-              className={`rounded-[100px] px-[15px] py-2.5 text-sm transition-colors ${
-                activeEcosystemTab === "travel"
-                  ? "bg-primary-foreground text-primary"
-                  : "text-primary hover:bg-primary-foreground"
-              }`}
-            >
-              Travel
-            </button>
+          {/* Gradient border wrapper */}
+          <div className="relative w-fit mx-auto lg:absolute right-0 top-[-72px] rounded-[40px] p-[1px] bg-border dark:bg-[linear-gradient(96deg,#C6C6C6_69.03%,#2B2B2B_102.49%)]">
+            <div className="flex items-center justify-center gap-[10px] rounded-[40px] bg-background p-[5px]">
+              <button
+                onClick={() => setActiveEcosystemTab("gaming")}
+                className={`rounded-[100px] px-[15px] py-2.5 text-sm transition-colors ${
+                  activeEcosystemTab === "gaming"
+                    ? "bg-primary-foreground text-primary"
+                    : "text-primary hover:bg-primary-foreground"
+                }`}
+              >
+                Gaming
+              </button>
+              <button
+                onClick={() => setActiveEcosystemTab("ecology")}
+                className={`rounded-[100px] px-[15px] py-2.5 text-sm transition-colors ${
+                  activeEcosystemTab === "ecology"
+                    ? "bg-primary-foreground text-primary"
+                    : "text-primary hover:bg-primary-foreground"
+                }`}
+              >
+                Ecology
+              </button>
+              <button
+                onClick={() => setActiveEcosystemTab("travel")}
+                className={`rounded-[100px] px-[15px] py-2.5 text-sm transition-colors ${
+                  activeEcosystemTab === "travel"
+                    ? "bg-primary-foreground text-primary"
+                    : "text-primary hover:bg-primary-foreground"
+                }`}
+              >
+                Travel
+              </button>
+            </div>
           </div>
 
           <div className="flex flex-col xl:flex-row w-full h-auto lg:h-[370px] xl:items-center gap-8 lg:gap-[50px] mt-[20px] rounded-[20px]">
             <img
-              className="w-full lg:max-w-[682px] lg:flex-1 h-[230px] md:h-[300px] lg:h-[370px] object-cover rounded-[20px] "
+              className="w-full lg:max-w-[682px] lg:flex-1 h-[230px] md:h-[300px] lg:h-[370px] object-cover rounded-[20px]"
               alt={`${currentEcosystemData.title} ecosystem`}
               src={currentEcosystemData.image}
             />

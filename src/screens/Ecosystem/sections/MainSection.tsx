@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "../../../components/ui/button";
 import { VideoPlayer } from "./VideoPlayer";
+import { motion } from "framer-motion";
 
 export const MainSection = () => {
   const sections = [
@@ -81,6 +82,11 @@ export const MainSection = () => {
     }
   };
 
+  const slideInVariants = {
+    hidden: { opacity: 0, y: 200 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   return (
     <div className="flex flex-col  gap-[60px] lg:gap-[80px]">
       {sections.map((section) => (
@@ -98,123 +104,134 @@ export const MainSection = () => {
             </div>
           </div>
 
-          <div
-            className={`flex ${
-              section.id === "ecology" ? "flex-col" : "flex-col-reverse"
-            } lg:flex-row items-stretch gap-12 w-full px-2 max-w-[1400px] mx-auto lg:pl-20`}
+          <motion.section
+            className="pt-[60px] xl:pt-[100px]"
+            variants={slideInVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            {section.id !== "ecology" && (
-              <div className="flex flex-col items-start gap-[20px] flex-1 lg:max-w-[700px] ">
-                <div
-                  className={`${section.badge.bgColor} ${section.badge.textColor} border ${section.badge.borderColor} shadow rounded-[30px] px-[10px] py-[5px] flex items-center gap-2`}
-                >
-                  <img
-                    className="w-[18px] h-[18px]"
-                    alt={section.badge.text}
-                    src={section.badge.icon}
-                  />
-                  <span className="font-normal text-[12px] tracking-[var(--body-labeltext-400-letter-spacing)] [font-family:'Inter',Helvetica] leading-[var(--body-labeltext-400-line-height)]">
-                    {section.badge.text}
-                  </span>
-                </div>
-
-                {section.paragraphs?.map((paragraph, index) => (
-                  <p
-                    key={index}
-                    className="font-normal text-foreground text-[16px] lg:text-[17px] font-inter leading-[22px] lg:leading-6 text-left"
+            <div
+              className={`flex ${
+                section.id === "ecology" ? "flex-col" : "flex-col-reverse"
+              } lg:flex-row items-stretch gap-12 w-full px-2 max-w-[1400px] mx-auto lg:pl-20`}
+            >
+              {section.id !== "ecology" && (
+                <div className="flex flex-col items-start gap-[20px] flex-1 lg:max-w-[700px] ">
+                  <div
+                    className={`${section.badge.bgColor} ${section.badge.textColor} border ${section.badge.borderColor} shadow rounded-[30px] px-[10px] py-[5px] flex items-center gap-2`}
                   >
-                    {paragraph}
-                  </p>
-                ))}
-
-                <div className="flex items-start gap-5">
-                  {section.buttons?.map((button, index) =>
-                    button.primary ? (
-                      <Button
-                        key={index}
-                        className="bg-primary text-background dark:text-foreground rounded-[30px] px-5 py-3 font-normal text-[14px] lg:text-[16px] leading-6 hover:bg-primary/90"
-                      >
-                        <a href={button.href}>{button.text}</a>
-                      </Button>
-                    ) : (
-                      <div
-                        key={index}
-                        className="flex items-center gap-2 cursor-pointer"
-                      >
-                        <span className="font-body-body-4-400 text-primary-colour text-[12px] md:text-[14px] tracking-[var(--body-body-4-400-letter-spacing)] leading-[var(--body-body-4-400-line-height)]">
-                          {button.text}
-                        </span>
-                        <a href={button.href}>
-                          <div className="w-[38px] h-[38px] relative">
-                            <img
-                              className="absolute w-[33px] h-[33px] top-[3px] left-0.5 hover:bg-primary-foreground rounded-full transition-all duration-700 ease-in-out hover:scale-110 hover:rotate-[-12deg]"
-                              alt="Arrow right icon"
-                              src="/arrow-right-icon.svg"
-                            />
-                          </div>
-                        </a>
-                      </div>
-                    )
-                  )}
-                </div>
-              </div>
-            )}
-
-            {section.id === "ecology" && (
-              <div className="flex-1 overflow-hidden">
-                <img
-                  src={section.mediaUrl}
-                  alt="ecology"
-                  className="w-full h-[300px] lg:h-[350px] 2xl:h-full rounded-[20px] object-cover"
-                />
-              </div>
-            )}
-
-            {section.id === "ecology" && (
-              <div className="flex flex-col items-start gap-[20px] flex-1 lg:max-w-[700px]">
-                <div
-                  className={`${section.badge.bgColor} ${section.badge.textColor} border ${section.badge.borderColor} rounded-[30px] px-3 py-2 shadow flex items-center gap-2`}
-                >
-                  <img
-                    className="w-[18px] h-[18px]"
-                    alt={section.badge.text}
-                    src={section.badge.icon}
-                  />
-                  <span className="font-body-labeltext-400 text-[length:var(--body-labeltext-400-font-size)] tracking-[var(--body-labeltext-400-letter-spacing)] leading-[var(--body-labeltext-400-line-height)]">
-                    {section.badge.text}
-                  </span>
-                </div>
-
-                <div
-                  className="font-normal text-foreground dark:text-foreground font-inter text-[14px] lg:text-[16px] tracking-[var(--body-body2-400-letter-spacing)] leading-[22px] lg:leading-6 text-left"
-                  dangerouslySetInnerHTML={{ __html: section.content ?? "" }}
-                />
-
-                <div className="flex items-center gap-2">
-                  <div className="font-inter text-foreground dark:text-foreground text-[14px] lg:text-[16px]">
-                    <span className="font-medium leading-[22px] lg:leading-6">
-                      {section.walletInfo?.label}{" "}
-                    </span>
-                    <span className="font-normal text-[14px] lg:text-[16px] tracking-[var(--body-body3-400-letter-spacing)] leading-[22px] lg:leading-6">
-                      {section.walletInfo?.address}
+                    <img
+                      className="w-[18px] h-[18px]"
+                      alt={section.badge.text}
+                      src={section.badge.icon}
+                    />
+                    <span className="font-normal text-[12px] tracking-[var(--body-labeltext-400-letter-spacing)] [font-family:'Inter',Helvetica] leading-[var(--body-labeltext-400-line-height)]">
+                      {section.badge.text}
                     </span>
                   </div>
+
+                  {section.paragraphs?.map((paragraph, index) => (
+                    <p
+                      key={index}
+                      className="font-normal text-foreground text-[16px] lg:text-[17px] font-inter leading-[22px] lg:leading-6 text-left"
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
+
+                  <div className="flex items-start gap-5">
+                    {section.buttons?.map((button, index) =>
+                      button.primary ? (
+                        <Button
+                          key={index}
+                          className="bg-primary text-background dark:text-foreground rounded-[30px] px-5 py-3 font-normal text-[14px] lg:text-[16px] leading-6 hover:bg-primary/90"
+                        >
+                          <a href={button.href}>{button.text}</a>
+                        </Button>
+                      ) : (
+                        <div
+                          key={index}
+                          className="flex items-center gap-2 cursor-pointer"
+                        >
+                          <span className="font-body-body-4-400 text-primary-colour text-[12px] md:text-[14px] tracking-[var(--body-body-4-400-letter-spacing)] leading-[var(--body-body-4-400-line-height)]">
+                            {button.text}
+                          </span>
+                          <a href={button.href}>
+                            <div className="w-[38px] h-[38px] relative">
+                              <img
+                                className="absolute w-[33px] h-[33px] top-[3px] left-0.5 hover:bg-primary-foreground rounded-full transition-all duration-700 ease-in-out hover:scale-110 hover:rotate-[-12deg]"
+                                alt="Arrow right icon"
+                                src="/arrow-right-icon.svg"
+                              />
+                            </div>
+                          </a>
+                        </div>
+                      )
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {section.id === "ecology" && (
+                <div className="flex-1 overflow-hidden">
                   <img
-                    className="w-4 h-4 cursor-pointer"
-                    alt="Copy icon"
-                    src="/copy-icon.png"
-                    onClick={() => copyToClipboard(section.walletInfo?.address)}
+                    src={section.mediaUrl}
+                    alt="ecology"
+                    className="w-full h-[300px] lg:h-[350px] 2xl:h-full rounded-[20px] object-cover"
                   />
                 </div>
-              </div>
-            )}
+              )}
 
-            {section.id !== "ecology" && (
-              <div className="flex-1 w-full">
-                <VideoPlayer src={section.mediaUrl} />
-              </div>
-            )}
-          </div>
+              {section.id === "ecology" && (
+                <div className="flex flex-col items-start gap-[20px] flex-1 lg:max-w-[700px]">
+                  <div
+                    className={`${section.badge.bgColor} ${section.badge.textColor} border ${section.badge.borderColor} rounded-[30px] px-3 py-2 shadow flex items-center gap-2`}
+                  >
+                    <img
+                      className="w-[18px] h-[18px]"
+                      alt={section.badge.text}
+                      src={section.badge.icon}
+                    />
+                    <span className="font-body-labeltext-400 text-[length:var(--body-labeltext-400-font-size)] tracking-[var(--body-labeltext-400-letter-spacing)] leading-[var(--body-labeltext-400-line-height)]">
+                      {section.badge.text}
+                    </span>
+                  </div>
+
+                  <div
+                    className="font-normal text-foreground dark:text-foreground font-inter text-[14px] lg:text-[16px] tracking-[var(--body-body2-400-letter-spacing)] leading-[22px] lg:leading-6 text-left"
+                    dangerouslySetInnerHTML={{ __html: section.content ?? "" }}
+                  />
+
+                  <div className="flex items-center gap-2">
+                    <div className="font-inter text-foreground dark:text-foreground text-[14px] lg:text-[16px]">
+                      <span className="font-medium leading-[22px] lg:leading-6">
+                        {section.walletInfo?.label}{" "}
+                      </span>
+                      <span className="font-normal text-[14px] lg:text-[16px] tracking-[var(--body-body3-400-letter-spacing)] leading-[22px] lg:leading-6">
+                        {section.walletInfo?.address}
+                      </span>
+                    </div>
+                    <img
+                      className="w-4 h-4 cursor-pointer"
+                      alt="Copy icon"
+                      src="/copy-icon.png"
+                      onClick={() =>
+                        copyToClipboard(section.walletInfo?.address)
+                      }
+                    />
+                  </div>
+                </div>
+              )}
+
+              {section.id !== "ecology" && (
+                <div className="flex-1 w-full">
+                  <VideoPlayer src={section.mediaUrl} />
+                </div>
+              )}
+            </div>
+          </motion.section>
         </div>
       ))}
     </div>

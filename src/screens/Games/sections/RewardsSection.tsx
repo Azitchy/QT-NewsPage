@@ -85,35 +85,44 @@ export const RewardsSection = () => {
 
       {/* Navigation */}
       <div className="mt-[35px] ml-0 lg:ml-[70px] relative">
-        <div className="large:hidden flex items-center gap-[15px] px-[9px] py-[5px] absolute top-0  right-4 lg:right-[71px] rounded-[40px] overflow-hidden border border-solid border-[#eeeeee] bg-background z-10 shadow-sm">
-          <Button
-            variant="ghost"
-            disabled={!canPrev}
-            className={`w-[38.53px] h-[38.53px] p-0 rounded-[19.26px] hover:bg-gray-100 ${
-              canPrev ? "bg-primary-foreground" : "bg-transparent"
-            }`}
-            onClick={() => api?.scrollPrev()}
-          >
-            <ArrowLeftIcon
-              className={`w-5 h-5 ${
-                canPrev ? "text-primary" : "text-gray-400"
+        {/* Gradient border wrapper */}
+        <div className="large:hidden flex items-center gap-[15px] px-[9px] py-[5px] absolute top-0 right-4 lg:right-[71px] rounded-[40px] overflow-hidden z-10 shadow-sm">
+          {/* Outer gradient border */}
+          <div className="absolute inset-0 rounded-[40px] p-[1px] bg-[#eeeeee] dark:bg-[linear-gradient(96deg,#C6C6C6_69.03%,#2B2B2B_102.49%)]">
+            <div className="w-full h-full rounded-[40px] bg-background dark:bg-background" />
+          </div>
+
+          {/* Actual content */}
+          <div className="relative flex items-center gap-[15px]">
+            <Button
+              variant="ghost"
+              disabled={!canPrev}
+              className={`w-[38.53px] h-[38.53px] p-0 rounded-[19.26px] hover:bg-gray-100 ${
+                canPrev ? "bg-primary-foreground" : "bg-transparent"
               }`}
-            />
-          </Button>
-          <Button
-            variant="ghost"
-            disabled={!canNext}
-            className={`w-[38.53px] h-[38.53px] p-0 rounded-[19.26px] hover:bg-[#d6f0f2] ${
-              canNext ? "bg-[#e9f6f7]" : "bg-transparent"
-            }`}
-            onClick={() => api?.scrollNext()}
-          >
-            <ArrowRightIcon
-              className={`w-6 h-6 ${
-                canNext ? "text-primary" : "text-gray-400"
+              onClick={() => api?.scrollPrev()}
+            >
+              <ArrowLeftIcon
+                className={`w-5 h-5 ${
+                  canPrev ? "text-primary" : "text-gray-400"
+                }`}
+              />
+            </Button>
+            <Button
+              variant="ghost"
+              disabled={!canNext}
+              className={`w-[38.53px] h-[38.53px] p-0 rounded-[19.26px] hover:bg-[#d6f0f2] ${
+                canNext ? "bg-[#e9f6f7]" : "bg-transparent"
               }`}
-            />
-          </Button>
+              onClick={() => api?.scrollNext()}
+            >
+              <ArrowRightIcon
+                className={`w-6 h-6 ${
+                  canNext ? "text-primary" : "text-gray-400"
+                }`}
+              />
+            </Button>
+          </div>
         </div>
 
         {/* Carousel */}
@@ -125,29 +134,44 @@ export const RewardsSection = () => {
           <CarouselContent className="flex gap-[21px] mt-[69px]">
             {rewardsData.map((reward, index) => (
               <CarouselItem key={index} className="basis-auto flex-shrink-0">
-                <Card className="w-[330px] sm:w-[300px] xl:w-[355px] 2xl:w-[450px] h-[500px] lg:h-[605px] overflow-hidden border border-solid border-border dark:border-primary-foreground bg-card rounded-[20px] flex-shrink-0">
-                  <CardContent className="flex flex-col h-full items-start gap-[10px] lg:gap-[20px] px-8 lg:px-[60px] py-8 lg:py-[60px] relative">
-                    <div
-                      className={`absolute w-[300px] lg:w-[482px] h-[300px] lg:h-[482px] top-[240px] lg:top-[281px] left-[115px] lg:left-[159px] rounded-[150px] lg:rounded-[241.22px] rotate-[-30deg] opacity-50 ${reward.gradientClass}`}
-                    />
-                    <div className="relative self-stretch font-titles-h3-caption-400 text-foreground dark:text-foreground text-[26px] xl:text-[30px] leading-[32px] lg:leading-[40px] min-h-[80px] flex">
-                      {reward.title}
-                    </div>
-                    <div className="relative self-stretch w-full min-h-[120px]">
-                      <div className="w-full text-[#4f5555] dark:text-card-foreground text-[16px] lg:text-[16px] leading-[22px] lg:leading-[22px]">
-                        {reward.description}
-                      </div>
-                    </div>
-                    <div className="flex-1" />
-                    <div className="relative w-full h-[200px] lg:h-[250px] ">
-                      <img
-                        className="w-full h-full object-contain"
-                        alt={reward.title}
-                        src={reward.image}
+                <div className="relative w-[330px] sm:w-[300px] xl:w-[355px] 2xl:w-[450px] h-[500px] lg:h-[605px] rounded-[20px] flex-shrink-0">
+                  <div className="absolute inset-0 rounded-[20px] p-[1px] bg-border dark:bg-[linear-gradient(96deg,#C6C6C6_69.03%,#2B2B2B_102.49%)]">
+                    <div className="w-full h-full rounded-[20px] bg-card dark:bg-card" />
+                  </div>
+
+                  {/* Actual Card Content */}
+                  <Card className="relative w-full h-full overflow-hidden border-none bg-transparent rounded-[20px]">
+                    <CardContent className="flex flex-col h-full items-start gap-[10px] lg:gap-[20px] px-8 lg:px-[60px] py-8 lg:py-[60px] relative">
+                      <div
+                        className={`absolute w-[300px] lg:w-[482px] h-[300px] lg:h-[482px] top-[240px] lg:top-[281px] left-[115px] lg:left-[159px] rounded-[150px] lg:rounded-[241.22px] rotate-[-30deg] opacity-50 ${reward.gradientClass}`}
                       />
-                    </div>
-                  </CardContent>
-                </Card>
+
+                      {/* Title */}
+                      <div className="relative self-stretch font-titles-h3-caption-400 text-foreground dark:text-foreground text-[26px] xl:text-[30px] leading-[32px] lg:leading-[40px] min-h-[80px] flex">
+                        {reward.title}
+                      </div>
+
+                      {/* Description */}
+                      <div className="relative self-stretch w-full min-h-[120px]">
+                        <div className="w-full text-[#4f5555] dark:text-card-foreground text-[16px] lg:text-[16px] leading-[22px] lg:leading-[22px]">
+                          {reward.description}
+                        </div>
+                      </div>
+
+                      {/* Spacer */}
+                      <div className="flex-1" />
+
+                      {/* Image */}
+                      <div className="relative w-full h-[200px] lg:h-[250px]">
+                        <img
+                          className="w-full h-full object-contain"
+                          alt={reward.title}
+                          src={reward.image}
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               </CarouselItem>
             ))}
           </CarouselContent>
