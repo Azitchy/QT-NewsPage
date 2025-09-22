@@ -47,56 +47,88 @@ export const LetsConnectSection = () => {
       </div>
       <div className="flex flex-col lg:absolute top-64 left-24 z-20">
         <div className="flex gap-20 ">
-          <a
-            href="https://x.com/ATMrank"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Visit X"
-          >
-            <img
-              alt="X"
-              src="/x.png"
-              className="cursor-pointer w-[70px] h-[70px] md:w-[90px] md:h-[90px]"
-            />
-          </a>
-          <a
-            href="https://discord.com/invite/bwAtDM7Mp2"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Visit discord"
-          >
-            <img
-              alt="Discord"
-              src="/discord.png"
-              className="cursor-pointer  w-[70px] h-[70px] md:w-[90px] md:h-[90px]"
-            />
-          </a>
+          <div className="relative group">
+            <a
+              href="https://x.com/ATMrank"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                alt="X"
+                src="/x.png"
+                className="cursor-pointer w-[70px] h-[70px] md:w-[90px] md:h-[90px]"
+              />
+            </a>
+            {/* Tooltip */}
+            <div className="hidden absolute top-20 left-1/2 w-full -translate-x-1/2 lg:flex flex-col items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="w-2 h-2 bg-card-foreground rotate-45 -mb-1"></div>
+              <div className="bg-card-foreground text-background dark:text-primary-foreground text-xs px-2 py-1 text-[12px] leading-[17px] rounded-[5px]">
+                Visit X
+              </div>
+            </div>
+          </div>
+          <div className="relative group">
+            <a
+              href="https://discord.com/invite/bwAtDM7Mp2"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                alt="Discord"
+                src="/discord.png"
+                className="cursor-pointer w-[70px] h-[70px] md:w-[90px] md:h-[90px]"
+              />
+            </a>
+            {/* Tooltip */}
+            <div className="hidden absolute top-20 left-1/2 w-full -translate-x-1/2 lg:flex flex-col items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="w-2 h-2 bg-card-foreground rotate-45 -mb-1"></div>
+              <div className="bg-card-foreground text-background dark:text-primary-foreground text-xs px-2 py-1 text-[12px] leading-[17px] rounded-[5px]">
+                Visit Discord
+              </div>
+            </div>
+          </div>
         </div>
         <div className="flex gap-20 ml-20">
-          <a
-            href="https://t.me/atm_luca"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Visit telegram"
-          >
-            <img
-              alt="Telegram"
-              src="/telegram.png"
-              className="cursor-pointer  w-[70px] h-[70px] md:w-[90px] md:h-[90px]"
-            />
-          </a>
-          <a
-            href="https://www.reddit.com/r/atmrank/"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Visit reddit"
-          >
-            <img
-              alt="Reddit"
-              src="/reddit.png"
-              className="cursor-pointer  w-[70px] h-[70px] md:w-[90px] md:h-[90px]"
-            />
-          </a>
+          <div className="relative group">
+            <a
+              href="https://t.me/atm_luca"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                alt="Telegram"
+                src="/telegram.png"
+                className="cursor-pointer w-[70px] h-[70px] md:w-[90px] md:h-[90px]"
+              />
+            </a>
+            {/* Tooltip */}
+            <div className="hidden absolute top-20 left-1/2 w-[100px] -translate-x-1/2 lg:flex flex-col items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="w-2 h-2 bg-card-foreground rotate-45 -mb-1"></div>
+              <div className="bg-card-foreground w-full text-background dark:text-primary-foreground text-xs px-2 py-1 text-[12px] leading-[17px] rounded-[5px]">
+                Visit Telegram
+              </div>
+            </div>
+          </div>
+          <div className="relative group">
+            <a
+              href="https://www.reddit.com/r/atmrank/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                alt="Reddit"
+                src="/reddit.png"
+                className="cursor-pointer  w-[70px] h-[70px] md:w-[90px] md:h-[90px]"
+              />
+            </a>
+            {/* Tooltip */}
+            <div className="hidden absolute top-20 left-1/2 w-full -translate-x-1/2 lg:flex flex-col items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="w-2 h-2 bg-card-foreground rotate-45 -mb-1"></div>
+              <div className="bg-card-foreground text-background dark:text-primary-foreground text-xs px-2 py-1 text-[12px] leading-[17px] rounded-[5px]">
+                Visit Reddit
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div className="flex flex-col lg:flex-row w-full items-end justify-between px-0 lg:px-[71px] gap-8 lg:gap-10">
