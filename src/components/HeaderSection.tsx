@@ -17,6 +17,8 @@ import { useTheme } from "@/components/theme-provider";
 
 export const HeaderSection = (): JSX.Element => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [currentMenu, setCurrentMenu] = useState<"main" | "submenu">("main");
+  const [activeSubMenu, setActiveSubMenu] = useState<any>(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -458,54 +460,117 @@ export const HeaderSection = (): JSX.Element => {
           </Button>
         </div>
       </div>
-
       {/* Mobile menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-background dark:bg-background border-t dark:border-gray-700 shadow-lg">
-          <div className="px-4 py-4 space-y-2 max-h-[calc(100vh-70px)] sm:max-h-[calc(100vh-90px)] overflow-y-auto">
-            {navItems.map((item, index) => (
-              <Link
-                key={index}
-                to={item.path}
-                className={`block px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors font-normal text-[14px] ${
-                  location.pathname === item.path
-                    ? "bg-primary-foreground text-primary dark:bg-slate-700 dark:text-primary"
-                    : "text-foreground dark:text-foreground"
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-background dark:bg-background rounded-b-[20px] border-t dark:border-gray-700 shadow-lg">
+          <div className="px-4 py-4 max-h-[calc(100vh-70px)] sm:max-h-[calc(100vh-90px)] overflow-y-auto transition-all duration-300 ease-in-out">
+            {/* MAIN MENU SCREEN */}
+            {currentMenu === "main" && (
+              <div className="space-y-2">
+                {navItems.map((item, index) => (
+                  <div key={index}>
+                    {item.subItems ? (
+                      // Items with submenu
+                      <button
+                        onClick={() => {
+                          setActiveSubMenu(item);
+                          setCurrentMenu("submenu");
+                        }}
+                        className="w-full flex items-center justify-between px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors text-left text-[14px] text-foreground dark:text-foreground"
+                      >
+                        {item.label}
+                        <span className="text-primary">→</span>
+                      </button>
+                    ) : (
+                      // Items without submenu
+                      <Link
+                        to={item.path}
+                        className={`block px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors font-normal text-[14px] ${
+                          location.pathname === item.path
+                            ? "bg-primary-foreground text-primary dark:bg-slate-700 dark:text-primary"
+                            : "text-foreground dark:text-foreground"
+                        }`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    )}
+                  </div>
+                ))}
 
-            <div className="pt-4 border-t dark:border-gray-700 space-y-3">
-              {isAuthenticated && (
-                <button
-                  onClick={() => {
-                    handleDisconnect();
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                >
-                  <LogOut className="w-4 h-4" />
-                  Disconnect Wallet
-                </button>
-              )}
+                {/* Wallet & Language Section */}
+                <div className="pt-4 border-t dark:border-gray-700 space-y-3">
+                  {isAuthenticated && (
+                    <button
+                      onClick={() => {
+                        handleDisconnect();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Disconnect Wallet
+                    </button>
+                  )}
 
-              <div className="flex items-center justify-center gap-4">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="w-10 h-10 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700"
-                >
-                  <img
-                    className="w-5 h-5 object-cover rounded-sm"
-                    alt="Language"
-                    src="/language.png"
-                  />
-                </Button>
+                  <div className="flex items-center justify-center gap-4">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="w-10 h-10 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700"
+                    >
+                      <img
+                        className="w-5 h-5 object-cover rounded-sm"
+                        alt="Language"
+                        src="/language.png"
+                      />
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
+
+            {/* SUBMENU SCREEN */}
+            {currentMenu === "submenu" && activeSubMenu && (
+              <div className="space-y-3 min-h-[520px] ">
+                {/* Back button */}
+                <button
+                  onClick={() => setCurrentMenu("main")}
+                  className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
+                >
+                  <span className="text-primary">← </span> Back
+                </button>
+
+                <hr />
+
+                {/* Section title */}
+                <h3 className="text-[14px] text-foreground dark:text-foreground">
+                  {activeSubMenu.label}
+                </h3>
+
+                {/* Submenu items */}
+                {activeSubMenu.subItems.map((sub: any, idx: number) => (
+                  <div key={idx} className="mt-2">
+                    {sub.subLabel.map((label: string, labelIdx: number) => (
+                      <a
+                        key={labelIdx}
+                        href={sub.href?.[labelIdx] || "#"}
+                        target={
+                          sub.href?.[labelIdx]?.startsWith("http")
+                            ? "_blank"
+                            : "_self"
+                        }
+                        rel="noopener noreferrer"
+                        className="block px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors text-[14px] text-foreground dark:text-foreground"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {label}
+                      </a>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
