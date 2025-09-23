@@ -2,7 +2,7 @@ import { HeadingWithDots } from "@/components/HeadingWithDots"
 
 export const AutonomySection = (): JSX.Element => {
     return (
-        <div className="relative pt-[60px] desktop:pt-[100px]">
+        <div className="relative pt-[60px] xl:pt-[100px]">
 
         {/* Background image */}
         <img
@@ -11,14 +11,13 @@ export const AutonomySection = (): JSX.Element => {
             src="/bg-decentralisedmsgsg-1.svg"
         />
 
-        {/* Heading (ensure above bg) */}
         <div className="relative z-10">
             <HeadingWithDots text="autonomy" />
         </div>
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col items-center gap-5 text-center">
-            <h2 className="font-titles-h5-large-text-400 tracking-[var(--titles-h5-large-text-400-letter-spacing)] leading-[var(--titles-h5-large-text-400-line-height)]">
+        <div className="pt-[20px] max-w-[1300px] mx-auto relative z-10 flex flex-col items-center gap-5 text-center">
+            <h2 className="font-titlesh5-mob-large-text-400 xl:font-titlesh5-large-text-400">
             Unlock a new era of communication
             </h2>
 
@@ -30,7 +29,7 @@ export const AutonomySection = (): JSX.Element => {
             without fear of censorship or surveillance.
             </h1>
 
-            <p className="font-body-body1-300 tracking-[var(--body-body1-300-letter-spacing)] leading-[var(--body-body1-300-line-height)] md:pb-[60px]">
+            <p className="font-bodybody1-mob-300  xl:font-bodybody1-300 md:pb-[60px]">
             Try our platform today and embrace the future of messaging!
             </p>
         </div>

@@ -35,22 +35,22 @@ const prTabs = {
 
 // Reusable Image Component
 const TabImage = ({ src, alt }: { src: string; alt: string }) => (
-  <div className="mb-[20px] desktop:mb-0 desktop:flex-shrink-0 w-full desktop:w-fit">
+  <div className="mb-[20px] xl:mb-0 xl:flex-shrink-0 w-full xl:w-fit">
     <img
       src={src}
       alt={alt}
-      className="w-full h-[300px] desktop:h-[370px] object-cover rounded-3xl"
+      className="w-full h-[300px] xl:h-[370px] object-cover rounded-3xl"
     />
   </div>
 );
 
 export const PrAlgorithmSection = (): JSX.Element => {
   return (
-    <div className="pt-[60px] desktop:pt-[100px]">
+    <div className="pt-[60px] xl:pt-[100px]">
       <HeadingWithDots text="Pr Algorithm" />
-      <Tabs defaultValue="pr" className="mx-auto flex flex-col">
+      <Tabs defaultValue="pr" className="pt-[20px] max-w-[1600px] mx-auto flex flex-col">
         {/* Tabs Header */}
-        <div className="flex justify-center desktop:justify-end">
+        <div className="flex justify-center xl:justify-end">
           <TabsList className="flex bg-transparent rounded-[40px] border border-border p-[5px] h-auto gap-[10px] my-[20px]">
             {Object.values(prTabs).map((tab) => (
               <TabsTrigger
@@ -68,13 +68,13 @@ export const PrAlgorithmSection = (): JSX.Element => {
 
         {/* PR Tab */}
         <TabsContent value={prTabs.pr.id} className="w-full">
-          <div className="flex flex-col desktop:flex-row items-start desktop:gap-[50px]">
+          <div className="flex flex-col xl:flex-row items-start xl:gap-[50px]">
             <TabImage src={prTabs.pr.image} alt={prTabs.pr.alt} />
-            <div className="text-center desktop:text-left desktop:flex-1">
-              <h3 className="self-stretch  text-left font-normal font-inter text-[20px] leading-[27px] desktop:text-[26px] desktop:leading-[34px] mb-[20px]">
+            <div className="text-center xl:text-left xl:flex-1">
+              <h3 className="self-stretch  text-left font-normal font-inter text-[20px] leading-[27px] xl:text-[26px] xl:leading-[34px] mb-[20px]">
                 {prTabs.pr.heading}
               </h3>
-              <div className="text-left font-normal font-inter text-[14px] leading-[19px] desktop:text-[16px] desktop:leading-[24px]">
+              <div className="text-left font-normal font-inter text-[14px] leading-[19px] xl:text-[16px] xl:leading-[24px]">
                 <p className="self-stretch ">
                   PageRank refers to the core algorithm of Google’s search engine, and it is an algorithm for ranking the importance of webpages on the Internet. The reason why it is called “PageRank” is that such algorithm is used to rank webpages and was first proposed by Larry Page, the Google co-founder. Equivalently, we use the consensus connection between users to replace the link between web pages in the original PageRank algorithm, and calculate the PR value of each user node in the ATM network to represent the user's influence in the community.
                 </p>
@@ -85,13 +85,13 @@ export const PrAlgorithmSection = (): JSX.Element => {
 
         {/* Strengths Tab */}
         <TabsContent value={prTabs.strengths.id} className="w-full">
-          <div className="flex flex-col desktop:flex-row items-start desktop:gap-[50px]">
+          <div className="flex flex-col xl:flex-row items-start xl:gap-[50px]">
             <TabImage src={prTabs.strengths.image} alt={prTabs.strengths.alt} />
-            <div className="text-center desktop:text-left desktop:flex-1">
-              <h3 className="self-stretch  text-left font-normal font-inter text-[20px] leading-[27px] desktop:text-[26px] desktop:leading-[34px] mb-[20px]">
+            <div className="text-center xl:text-left xl:flex-1">
+              <h3 className="self-stretch  text-left font-normal font-inter text-[20px] leading-[27px] xl:text-[26px] xl:leading-[34px] mb-[20px]">
                 {prTabs.strengths.heading}
               </h3>
-              <div className="text-left font-normal font-inter text-[14px] leading-[19px] desktop:text-[16px] desktop:leading-[24px]">
+              <div className="text-left font-normal font-inter text-[14px] leading-[19px] xl:text-[16px] xl:leading-[24px]">
                 <p className="self-stretch  mb-[20px]">
                   When Google was first established websites were ranked by traffic, not by an intelligent algorithm. This method was unstable and was open to exploitation - which meant that important websites often got lost.
                 </p>
@@ -105,28 +105,31 @@ export const PrAlgorithmSection = (): JSX.Element => {
 
         {/* Create Tab */}
         <TabsContent value={prTabs.create.id} className="w-full">
-          <div className="flex flex-col desktop:flex-row items-start desktop:gap-[50px]">
+          <div className="flex flex-col xl:flex-row items-start xl:gap-[50px]">
             <TabImage src={prTabs.create.image} alt={prTabs.create.alt} />
-            <div className="text-center desktop:text-left desktop:flex-1">
-              <h3 className="self-stretch  text-left font-normal font-inter text-[20px] leading-[27px] desktop:text-[26px] desktop:leading-[34px] mb-[20px]">
+            <div className="text-center xl:text-left xl:flex-1">
+              <h3 className="self-stretch  text-left font-normal font-inter text-[20px] leading-[27px] xl:text-[26px] xl:leading-[34px] mb-[20px]">
                 {prTabs.create.heading}
               </h3>
-              <div className="text-left font-normal font-inter text-[14px] leading-[19px] desktop:text-[16px] desktop:leading-[24px]">
+              <div className="text-left font-normal font-inter text-[14px] leading-[19px] xl:text-[16px] xl:leading-[24px]">
                 <p className="self-stretch  mb-[20px]">
                   Any user can build ATM&apos;s PageRank computing server, and elect the top 11 servers with the highest stake by pledging ATM&apos;s native currency (LUCA). These servers work together for executing the PageRank algorithm, calculate and synchronise the daily PR value of all users on the ATM network.
                 </p>
                 <Button
+                  asChild
                   variant="ghost"
                   className="w-fit inline-flex items-center gap-[10px] p-0 rounded-[30px]"
                 >
-                  <span className="text-primary-colour font-inter text-[14px] font-normal leading-[19px]">
-                    Create node
-                  </span>
-                  <img
-                    className="w-[33px] h-[33px]"
-                    alt="Arrow right icon"
-                    src="/arrow-right-icon.svg"
-                  />
+                  <a href="/webapp">
+                    <span className="text-primary-colour font-inter text-[14px] font-normal leading-[19px]">
+                      Create node
+                    </span>
+                    <img
+                      className="w-[33px] h-[33px]"
+                      alt="Arrow right icon"
+                      src="/arrow-right-icon.svg"
+                    />
+                  </a>
                 </Button>
               </div>
             </div>
@@ -135,13 +138,13 @@ export const PrAlgorithmSection = (): JSX.Element => {
 
         {/* Income Tab */}
         <TabsContent value={prTabs.income.id} className="w-full">
-          <div className="flex flex-col desktop:flex-row items-start desktop:gap-[50px]">
+          <div className="flex flex-col xl:flex-row items-start xl:gap-[50px]">
             <TabImage src={prTabs.income.image} alt={prTabs.income.alt} />
-            <div className="text-center desktop:text-left desktop:flex-1">
-              <h3 className="self-stretch  text-left font-normal font-inter text-[20px] leading-[27px] desktop:text-[26px] desktop:leading-[34px] mb-[20px]">
+            <div className="text-center xl:text-left xl:flex-1">
+              <h3 className="self-stretch  text-left font-normal font-inter text-[20px] leading-[27px] xl:text-[26px] xl:leading-[34px] mb-[20px]">
                 {prTabs.income.heading}
               </h3>
-              <div className="text-left font-normal font-inter text-[14px] leading-[19px] desktop:text-[16px] desktop:leading-[24px]">
+              <div className="text-left font-normal font-inter text-[14px] leading-[19px] xl:text-[16px] xl:leading-[24px]">
                 <p className="self-stretch  mb-[20px]">
                   <span className="text-primary-colour">Operation rewards</span> <br />
                   Users and server operators involving in the PageRank computing server stake will receive the corresponding node operation rewards.

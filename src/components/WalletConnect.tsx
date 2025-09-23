@@ -205,7 +205,7 @@ export const WalletConnect: React.FC = () => {
         <div className="flex justify-center gap-4">
           <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 rounded-xl">
             <img 
-              src="https://cdn.jsdelivr.net/gh/MetaMask/brand-resources@master/SVG/metamask-fox.svg" 
+              src="\webapp\MetaMask-icon-fox.svg" 
               alt="MetaMask" 
               className="w-6 h-6"
             />

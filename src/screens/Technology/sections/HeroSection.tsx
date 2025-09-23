@@ -6,7 +6,7 @@ export const HeroSection = (): JSX.Element => {
 
     return (
       <section className="w-full flex justify-center">
-        {/* Desktop / Tablet Hero */}
+        {/* xl / Tablet Hero */}
         <div
           className="hidden md:flex relative w-full max-w-[1728px] h-[450px] items-center justify-end bg-no-repeat bg-contain bg-right"
           style={{ backgroundImage: "url('../technology-heroimage.png')" }}

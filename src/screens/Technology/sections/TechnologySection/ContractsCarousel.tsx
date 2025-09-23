@@ -136,17 +136,17 @@ export const ContractsCarousel = (): JSX.Element => {
           setApi={setApi}
           opts={{ align: "start", loop: false }}
         >
-          <CarouselContent className="-mx-[7.5px] desktop:-mx-[10px]">
+          <CarouselContent className="-mx-[7.5px] xl:-mx-[10px]">
             {chunkedCards.map((row, idx) => (
               <CarouselItem
                 key={idx}
-                className="px-[7.5px] desktop:px-[10px] basis-auto flex-shrink-0"
+                className="px-[7.5px] xl:px-[10px] basis-auto flex-shrink-0"
               >
-                <div className="flex flex-col gap-[15px] desktop:flex-row desktop:gap-[10px]">
+                <div className="flex flex-col gap-[15px] xl:flex-row xl:gap-[10px]">
                   {row.map((card) => (
                     <Card
                       key={card.id}
-                      className="w-[330px] h-[300px] desktop:w-[360px] desktop:h-[330px] p-[30px] rounded-[20px] border border-border hover:shadow-lg transition-shadow text-foreground"
+                      className="w-[330px] h-[300px] xl:w-[360px] xl:h-[330px] p-[30px] rounded-[20px] border border-border hover:shadow-lg transition-shadow text-foreground"
                     >
                       <CardContent className="p-0 h-full">
                         <div className="flex flex-col gap-[15px] h-full">
@@ -174,19 +174,26 @@ export const ContractsCarousel = (): JSX.Element => {
         {/* Learn More Button */}
         <div className="mt-[20px]">
           <Button
+            asChild
             variant="ghost"
             className="inline-flex items-center gap-2.5 p-0 rounded-[30px] hover:bg-transparent"
           >
-            <span className="text-primary font-[family:var(--typography-family-body,Inter)]">
-              Learn more
-            </span>
-            <div className="w-[38.53px] h-[38.53px] flex items-center justify-center">
-              <img
-                className="w-[33px] h-[33px]"
-                alt="Arrow right icon"
-                src="/arrow-right-icon.svg"
-              />
-            </div>
+            <a
+              href="https://github.com/ATM-Developer/atm-contract"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="text-primary font-[family:var(--typography-family-body,Inter)]">
+                Learn more
+              </span>
+              <div className="w-[38.53px] h-[38.53px] flex items-center justify-center">
+                <img
+                  className="w-[33px] h-[33px]"
+                  alt="Arrow right icon"
+                  src="/arrow-right-icon.svg"
+                />
+              </div>
+            </a>
           </Button>
         </div>
       </div>

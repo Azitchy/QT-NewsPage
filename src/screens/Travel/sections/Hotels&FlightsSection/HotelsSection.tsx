@@ -11,16 +11,16 @@ export const HotelsSection = (): JSX.Element => {
     travelHero3,
   ]
   return (
-    <section className="pt-[60px] desktop:pt-[100px]">
+    <section className="pt-[60px] xl:pt-[100px]">
       <HeadingWithDots text="hotels" />
-      <div className="pt-[20px] px-0 tablet:px-[77px] desktop:px-[134px] large:px-[203px] space-y-[15px] desktop:space-y-[20px]">
+      <div className="pt-[20px] px-0 tablet:px-[77px] xl:px-[134px] large:px-[203px] space-y-[15px] xl:space-y-[20px]">
 
-        <p className="text-[20px] font-normal leading-[27px] desktop:text-[26px] desktop:leading-[34px]">
+        <p className="text-[20px] font-normal leading-[27px] xl:text-[26px] xl:leading-[34px]">
             Book your hotel through
         </p>
         <img src="/lucatravel.svg" alt="Luca Travel" className='block dark:hidden'/>
-        <img src="/lucatravel-dark.svg" alt="Luca Travel" className='block light:hidden'/>
-        <p className="pb-[40px] max-w-[519px] desktop:max-w-[784px] text-[16px] font-normal leading-[22px] desktop:text-[18px] desktop:leading-[24px]">
+        <img src="/lucatravel-dark.svg" alt="Luca Travel" className='hidden dark:block'/>
+        <p className="pb-[40px] max-w-[519px] xl:max-w-[784px] text-[16px] font-normal leading-[22px] xl:text-[18px] xl:leading-[24px]">
             Find exclusive hotel deals for your trip! Click ‘Book hotel’ to sign up with your email and explore all the hottest deals!
         </p>
 
@@ -29,18 +29,23 @@ export const HotelsSection = (): JSX.Element => {
         >
             <CarouselContent className='max-w-[517px] px-[12px] large:px-[52px] mx-auto large:mx-0'>
                 <div className='px-[60px] py-[50px] rounded-[20px] bg-[rgba(124,124,124,0.20)] shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] backdrop-blur-[15px] space-y-[10px] flex flex-col items-center'>
-                  <p className="text-center text-white font-['Space_Grotesk'] font-bold not-italic text-[26px] leading-[34px] desktop:text-[38px] desktop:leading-[48px]">
+                  <p className="text-center text-white font-['Space_Grotesk'] font-bold not-italic text-[26px] leading-[34px] xl:text-[38px] xl:leading-[48px]">
                     Save up to 60%
                   </p>
-                  <p className='text-center text-white font-normal text-[20px] leading-[27px] desktop:text-[26px] desktop:leading-[34px]'>
+                  <p className='text-center text-white font-normal text-[20px] leading-[27px] xl:text-[26px] xl:leading-[34px]'>
                     on your next hotel booking
                   </p>
 
-                  <button className='bg-primary-colour px-[50px] py-[25px] rounded-[40px]'>
+                  <a
+                      href="https://www.luca.travel/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-primary-colour px-[50px] py-[25px] rounded-[40px] flex items-center justify-center"
+                    >
                     <span className='text-white font-inter font-medium not-italic text-[18px] leading-[24px] md:text-[20px] md:leading-[27px]'>
                         Book hotel
                     </span>
-                  </button>
+                  </a>
                 </div>
             </CarouselContent>
         </TravelCarousel>

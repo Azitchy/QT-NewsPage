@@ -23,12 +23,12 @@ export const QnaSection = (): JSX.Element => {
   };
 
   return (
-    <section className="px-[16px] md:px-[70px] large:px-[120px] pt-[60px] desktop:pt-[100px]">
+    <section className="px-[16px] md:px-[70px] large:px-[120px] pt-[60px] xl:pt-[100px]">
       <HeadingWithDots text="Q&A" />
 
       <Tabs value={activeTab} onValueChange={handleTabChange} className="mx-auto flex flex-col max-w-[1603px]">
         {/* Tabs Header */}
-        <div className="flex justify-center desktop:justify-end">
+        <div className="flex justify-center xl:justify-end">
           <TabsList className="flex bg-transparent rounded-[40px] border border-border p-[5px] h-auto gap-[10px] my-[20px]">
             {faqTabs.map((tab) => (
               <TabsTrigger
@@ -57,7 +57,7 @@ export const QnaSection = (): JSX.Element => {
                   >
                     <div className="flex items-start justify-between w-full">
                       <div className="flex flex-col items-start flex-1 min-w-0 pr-4">
-                        <div className="text-foreground text-[18px] leading-[24px] font-medium desktop:text-[20px] desktop:leading-[27px] break-words w-full">
+                        <div className="text-foreground text-[18px] leading-[24px] font-medium xl:text-[20px] xl:leading-[27px] break-words w-full">
                           {item.question}
                         </div>
                         
@@ -69,7 +69,7 @@ export const QnaSection = (): JSX.Element => {
                           }`}
                         >
                           {item.answer && (
-                            <div className="text-foreground text-[16px] leading-[22px] font-normal desktop:text-[18px] desktop:leading-[24px] break-words">
+                            <div className="text-foreground text-[16px] leading-[22px] font-normal xl:text-[18px] xl:leading-[24px] break-words">
                               {/* Handle both string and JSX content */}
                               {typeof item.answer === 'string' ? item.answer : item.answer}
                             </div>
@@ -77,8 +77,8 @@ export const QnaSection = (): JSX.Element => {
                         </div>
                       </div>
                       
-                      {/* Chevron hidden on desktop and larger screens */}
-                      <div className="flex-shrink-0 desktop:hidden">
+                      {/* Chevron hidden on xl and larger screens */}
+                      <div className="flex-shrink-0 xl:hidden">
                         <div className="w-6 h-6 flex items-center justify-center text-primary transition-transform duration-300">
                           {expandedIndex === index ? (
                             <ChevronUp size={20} />

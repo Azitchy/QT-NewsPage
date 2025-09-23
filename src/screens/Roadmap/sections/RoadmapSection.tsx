@@ -93,6 +93,7 @@ const roadmapData: RoadmapSection[] = [
 export const RoadmapSection: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
 
+
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", handleScroll);
@@ -100,7 +101,7 @@ export const RoadmapSection: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative bg-[url(/roadmap.png)] bg-cover text-white min-h-screen overflow-hidden">
+    <div className="relative bg-[url(/source_slidebggalaxy.png)] bg-cover text-white min-h-screen overflow-hidden">
       {roadmapData.map((section, i) => (
         <div
           key={i}

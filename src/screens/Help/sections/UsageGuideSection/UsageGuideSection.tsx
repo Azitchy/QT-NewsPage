@@ -9,9 +9,9 @@ export const UsageGuideSection = (): JSX.Element => {
     return (
       <section className="px-[16px] md:px-[70px] large:px-[120px]">
         <HeadingWithDots text="usage guide" />
-        <div className="px-0 tablet:px-[77px] desktop:px-[134px] large:px-[203px]">
-            <p className="py-[20px] font-light font-body text-[18px] leading-[24px] desktop:text-[20px] desktop:leading-[27px] tablet:max-w-[516px] 
-                desktop:max-w-[782px]">
+        <div className="px-0 tablet:px-[77px] xl:px-[134px] large:px-[203px]">
+            <p className="py-[20px] font-light font-body text-[18px] leading-[24px] xl:text-[20px] xl:leading-[27px] tablet:max-w-[516px] 
+                xl:max-w-[782px]">
                 {content.text}
             </p>
         </div>

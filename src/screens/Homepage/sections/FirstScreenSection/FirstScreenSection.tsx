@@ -13,6 +13,7 @@ export const FirstScreenSection = (): JSX.Element => {
       rightTitleHighlight: "rewards",
       rightSubtitle: "in our web3 community",
       image: "/connect-with-your-friends-image.png",
+      darkImage: "/connection-main1-dark.webp"
     },
     {
       id: 1,
@@ -21,6 +22,7 @@ export const FirstScreenSection = (): JSX.Element => {
       rightTitleHighlight: "connections",
       rightSubtitle: "that grow your influence",
       image: "/hero1.png",
+       darkImage: "/rewards-main3-dark.webp"
     },
     {
       id: 2,
@@ -29,6 +31,7 @@ export const FirstScreenSection = (): JSX.Element => {
       rightTitleHighlight: "contribution",
       rightSubtitle: "to the ecosystem",
       image: "/hero2.png",
+       darkImage: "/avatar-main2-dark.webp"
     },
   ];
 
@@ -76,7 +79,12 @@ export const FirstScreenSection = (): JSX.Element => {
               <img
                 src={currentSlideData.image}
                 alt="carousel visual"
-                className="w-full h-full object-contain bg-cover transition-all duration-700 ease-in-out"
+                className="w-full h-full object-contain bg-cover transition-all duration-700 ease-in-out dark:hidden"
+              />
+              <img
+                src={currentSlideData.darkImage}
+                alt="carousel visual"
+                className="w-full h-full object-contain bg-cover transition-all duration-700 ease-in-out hidden dark:block"
               />
             </div>
           </div>

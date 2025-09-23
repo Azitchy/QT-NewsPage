@@ -9,13 +9,12 @@ export const ContentSection = (): JSX.Element => {
   return (
     <section className="py-[60px]">
         <ResourcesSection/>
-      <div className="w-full mx-auto max-w-[1600px] px-[16px] md:px-[70px] large:px-[120px]">
-        <CommunitySection/>
-        <PrAlgorithmSection/>
-
-        <AutonomySection/>
-        <TechnologySection/>
-      </div>
+        <div className="px-[16px] md:px-[70px] large:px-[120px]"> 
+          <CommunitySection/>
+          <PrAlgorithmSection/>
+          <AutonomySection/>
+          <TechnologySection/>
+        </div>
       <ContractsCarousel/>
     </section>
   );

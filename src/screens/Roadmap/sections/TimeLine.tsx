@@ -131,7 +131,7 @@ const Timeline: React.FC = () => {
   };
 
   return (
-    <div className="w-full bg-[url(/roadmap.png)] h-full bg-cover bg-no-repeat mx-auto p-6 md:px-20 font-sans text-white">
+    <div className="w-full bg-[url(/source_bggalaxy-19.png)]  h-full bg-cover bg-no-repeat mx-auto p-6 md:px-20 font-sans text-white">
       {timelineData.map(({ year, items }) => (
         <div key={year} className="mb-5">
           <div

@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "@/components/ui/tabs";
 
 // Media query hook
 function useMediaQuery(query: string) {
@@ -24,23 +29,38 @@ function CardSwap({ activeTab }: { activeTab: "white-paper" | "audit-report" }) 
   const isSwapped = activeTab === "audit-report";
   const isLarge = useMediaQuery("(min-width: 720px)");
 
-  const CARD_OFFSET = isLarge ? 150 : 50;
+  const CARD_OFFSET = isLarge ? 150 : 40;
 
-  const sharedTransition = {
-    type: "spring",
-    stiffness: 80,
-    damping: 14,
-    mass: 1,
-  };
+  const sharedTransition = { type: "spring", stiffness: 80, damping: 14, mass: 1 };
 
   const cardAVariants = {
-    initial: { x: -CARD_OFFSET, scale: 1, zIndex: 2, transition: sharedTransition },
-    swapped: { x: CARD_OFFSET, scale: 0.83, zIndex: 1, transition: sharedTransition },
+    initial: {
+      x: -CARD_OFFSET,
+      scale: 1,
+      zIndex: 2,
+      transition: sharedTransition,
+    },
+    swapped: {
+      x: CARD_OFFSET,
+      scale: 0.83,
+      zIndex: 1,
+      transition: sharedTransition,
+    },
   };
 
   const cardBVariants = {
-    initial: { x: CARD_OFFSET, scale: 0.83, zIndex: 1, transition: sharedTransition },
-    swapped: { x: -CARD_OFFSET, scale: 1, zIndex: 2, transition: sharedTransition },
+    initial: {
+      x: CARD_OFFSET,
+      scale: 0.83,
+      zIndex: 1,
+      transition: sharedTransition,
+    },
+    swapped: {
+      x: -CARD_OFFSET,
+      scale: 1,
+      zIndex: 2,
+      transition: sharedTransition,
+    },
   };
 
   return (
@@ -56,7 +76,6 @@ function CardSwap({ activeTab }: { activeTab: "white-paper" | "audit-report" }) 
           alt="White Paper"
         />
       </motion.div>
-
       <motion.div
         className="absolute"
         variants={cardBVariants}
@@ -74,58 +93,104 @@ function CardSwap({ activeTab }: { activeTab: "white-paper" | "audit-report" }) 
 
 // Main Section
 export const ResourcesSection = (): JSX.Element => {
-  const [activeTab, setActiveTab] = useState<"white-paper" | "audit-report">("white-paper");
+  const [activeTab, setActiveTab] = useState<"white-paper" | "audit-report">(
+    "white-paper"
+  );
 
   return (
     <div className="w-full bg-card">
-      <div className="max-w-[1226px] px-[16px] pb-[85px] mx-auto flex flex-col items-center">
+      <div className="max-w-[1000px] px-[16px] pb-[85px] mx-auto flex flex-col items-center">
         {/* Tabs Header */}
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full flex flex-col items-center">
+        <Tabs
+          value={activeTab}
+          onValueChange={(v) => setActiveTab(v as any)}
+          className="w-full flex flex-col items-center"
+        >
           <TabsList className="flex bg-transparent rounded-[40px] border border-border p-[5px] h-auto gap-[10px] my-[20px]">
-            <TabsTrigger value="white-paper" className="inline-flex items-center justify-center px-[15px] py-2.5 rounded-[100px] overflow-hidden hover:bg-[#f6f6f6] data-[state=active]:bg-primary-foreground !shadow-none">
+            <TabsTrigger
+              value="white-paper"
+              className="inline-flex items-center justify-center px-[15px] py-2.5 rounded-[100px] overflow-hidden hover:bg-[#f6f6f6] data-[state=active]:bg-primary-foreground !shadow-none"
+            >
               <span className="text-primary">White Paper</span>
             </TabsTrigger>
-            <TabsTrigger value="audit-report" className="inline-flex items-center justify-center px-[15px] py-2.5 rounded-[100px] overflow-hidden hover:bg-[#f6f6f6] data-[state=active]:bg-primary-foreground !shadow-none">
+            <TabsTrigger
+              value="audit-report"
+              className="inline-flex items-center justify-center px-[15px] py-2.5 rounded-[100px] overflow-hidden hover:bg-[#f6f6f6] data-[state=active]:bg-primary-foreground !shadow-none"
+            >
               <span className="text-primary">Audit Report</span>
             </TabsTrigger>
           </TabsList>
 
           {/* Content Layout */}
-          <div className="w-full flex flex-col desktop:flex-row desktop:items-center desktop:justify-between gap-[40px]">
+          <div className="w-full flex flex-col xl:flex-row xl:items-center xl:justify-between gap-[40px]">
             {/* Left Side - Tab Content */}
-            <div className="flex flex-col desktop:max-w-[430px] tablet:px-[140px] desktop:px-0">
+            <div className="flex flex-col xl:max-w-[430px] tablet:px-[140px] xl:px-0">
               {/* White Paper Content */}
-              <TabsContent value="white-paper" className="w-full gap-[20px] flex flex-col data-[state=inactive]:hidden">
-                <p className="self-stretch font-inter text-[18px] leading-[24px] font-[300] desktop:text-[20px] desktop:leading-[27px] desktop:font-light">
+              <TabsContent
+                value="white-paper"
+                className="w-full gap-[20px] flex flex-col data-[state=inactive]:hidden"
+              >
+                <p className="self-stretch font-inter text-[18px] leading-[24px] font-[300] xl:text-[20px] xl:leading-[27px] xl:font-light">
                   Explore our white paper if you're interested in the behind the
                   scenes and brains of the project - it outlines our aims,
                   ambitions and technical solutions.
                 </p>
-                <Button variant="ghost" className="w-fit inline-flex items-center gap-[10px] p-0 rounded-[30px]">
-                  <span className="text-primary-colour font-inter text-[14px] font-normal leading-[19px]">
-                    View white paper
-                  </span>
-                  <img className="w-[33px] h-[33px]" alt="Arrow right icon" src="/arrow-right-icon.svg" />
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="w-fit inline-flex items-center gap-[10px] p-0 rounded-[30px]"
+                >
+                  <a
+                    href="https://atm.network/pdf/ATMWhitePaper.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span className="text-primary-colour font-inter text-[14px] font-normal leading-[19px]">
+                      View white paper
+                    </span>
+                    <img
+                      className="w-[33px] h-[33px]"
+                      alt="Arrow right icon"
+                      src="/arrow-right-icon.svg"
+                    />
+                  </a>
                 </Button>
               </TabsContent>
 
               {/* Audit Report Content */}
-              <TabsContent value="audit-report" className="w-full gap-6 flex flex-col data-[state=inactive]:hidden">
-                <p className="self-stretch font-inter text-[18px] leading-[24px] font-[300] desktop:text-[20px] desktop:leading-[27px] desktop:font-light">
+              <TabsContent
+                value="audit-report"
+                className="w-full gap-6 flex flex-col data-[state=inactive]:hidden"
+              >
+                <p className="self-stretch font-inter text-[18px] leading-[24px] font-[300] xl:text-[20px] xl:leading-[27px] xl:font-light">
                   Dive into our project's detailed documentation for an in-depth
                   look at its intricacies and strong foundation.
                 </p>
-                <Button variant="ghost" className="w-fit inline-flex items-center gap-[10px] p-0 rounded-[30px]">
-                  <span className="text-primary-colour font-inter text-[14px] font-normal leading-[19px]">
-                    View audit report
-                  </span>
-                  <img className="w-[33px] h-[33px]" alt="Arrow right icon" src="/arrow-right-icon.svg" />
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="w-fit inline-flex items-center gap-[10px] p-0 rounded-[30px]"
+                >
+                  <a
+                    href="https://skynet.certik.com/projects/atm"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span className="text-primary-colour font-inter text-[14px] font-normal leading-[19px]">
+                      View audit report
+                    </span>
+                    <img
+                      className="w-[33px] h-[33px]"
+                      alt="Arrow right icon"
+                      src="/arrow-right-icon.svg"
+                    />
+                  </a>
                 </Button>
               </TabsContent>
             </div>
 
             {/* Right Side - Animated Cards */}
-            <div className="flex justify-center desktop:justify-end w-full desktop:w-auto">
+            <div className="flex justify-center xl:justify-end w-full xl:w-auto">
               <CardSwap activeTab={activeTab} />
             </div>
           </div>

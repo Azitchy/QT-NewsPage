@@ -10,8 +10,8 @@ export const ContentSection = (): JSX.Element => {
       <div className="px-[16px] md:px-[70px] large:px-[120px]">
 
       {/* Quote 1*/}
-      <div className="pt-[60px] desktop:pt-[100px] flex justify-center text-center">
-        <h1 className="font-space-grotesk text-[26px] font-bold leading-[34px] desktop:text-[38px] desktop:leading-[48px]">
+      <div className="pt-[60px] xl:pt-[100px] flex justify-center text-center">
+        <h1 className="font-space-grotesk text-[26px] font-light leading-[34px] xl:text-[38px] xl:leading-[48px]">
           <span className="bg-gradient-to-tr from-[#AADA5D] to-[#0DAEB9] bg-clip-text text-transparent font-bold">
             Enhance your travel experience {" "}
           </span>
@@ -22,8 +22,8 @@ export const ContentSection = (): JSX.Element => {
       <HotelsSection />
 
       {/* Quote 2*/}
-      <div className="pt-[60px] desktop:pt-[100px] flex justify-center text-center">
-        <h1 className="font-space-grotesk text-[26px] font-bold leading-[34px] desktop:text-[38px] desktop:leading-[48px]">
+      <div className="pt-[60px] xl:pt-[100px] flex justify-center text-center">
+        <h1 className="font-space-grotesk text-[26px] font-light leading-[34px] xl:text-[38px] xl:leading-[48px]">
           Book your next{" "}
           <span className="bg-gradient-to-tr from-[#AADA5D] to-[#0DAEB9] bg-clip-text text-transparent font-bold">
             holiday getaway with ATM

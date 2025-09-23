@@ -6,7 +6,7 @@ export const ConnectCardsSection = (): JSX.Element => {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   return (
-    <section className="px-[16px] md:px-[70px] large:px-[120px] pt-[60px] desktop:pt-[100px] mb-[120px]">
+    <section className="px-[16px] md:px-[30px] large:px-[120px] pt-[60px] 2xl:pt-[100px] mb-[120px]">
       <HeadingWithDots text="connect to atm" />
 
       {/* Mobile: Cards stacked vertically, horizontally centered */}
@@ -16,8 +16,8 @@ export const ConnectCardsSection = (): JSX.Element => {
         <FundWalletCard />
       </div>
 
-      {/* MD and up (but not desktop): Card 1 and 2 on first row, Card 3 below them */}
-      <div className="pt-[20px] hidden md:flex desktop:hidden flex-col items-center gap-[30px]">
+      {/* MD and up (but not 2xl): Card 1 and 2 on first row, Card 3 below them */}
+      <div className="pt-[20px] hidden md:flex 2xl:hidden flex-col items-center gap-[30px]">
         <div className="flex items-center gap-[30px]">
         <InstallWalletCard />
         <ConnectToATMCard />
@@ -25,8 +25,8 @@ export const ConnectCardsSection = (): JSX.Element => {
         <FundWalletCard />
       </div>
 
-      {/* Desktop and bigger: InstallWallet centered, ConnectToATM left, FundWallet right with hover animations */}
-      <div className="pt-[20px] hidden desktop:flex items-center justify-center">
+      {/* 2xl and bigger: InstallWallet centered, ConnectToATM left, FundWallet right with hover animations */}
+      <div className="pt-[20px] hidden 2xl:flex items-center justify-center">
         <div className="relative">
           {/* Card 1 - Connect to ATM (Left, Rotated) */}
           <div 

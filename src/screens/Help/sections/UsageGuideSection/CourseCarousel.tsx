@@ -20,48 +20,56 @@ export const CourseCarousel = (): JSX.Element => {
       title: "Connect MetaMask wallet",
       date: "10/01/2025",
       showDate: true,
+      link: "https://www.atm.network/pdf/atm-en/connectWallet.pdf",
     },
     {
       image: "/img-2.png",
       title: "How to participate in PR node stake and election",
       date: "10/01/2025",
       showDate: true,
+      link: "https://www.atm.network/pdf/atm-en/participateInPR.pdf",
     },
     {
       image: "/img-3.png",
       title: "How to add LUCA/USDC liquidity",
       date: "10/01/2025",
       showDate: true,
+      link: "https://www.atm.network/pdf/atm-en/howAddLiquidity.pdf",
     },
     {
       image: "/img-4.png",
       title: "Create a consensus connection",
       date: "10/01/2025",
       showDate: false,
+      link: "https://www.atm.network/pdf/atm-en/createConsensusConnection.pdf",
     },
     {
       image: "/img-5.png",
       title: "How to check and receive total income",
       date: "10/01/2025",
       showDate: false,
+      link: "https://www.atm.network/pdf/atm-en/checkIncome.pdf",
     },
     {
       image: "/img-6.png",
       title: "How to purchase LUCA",
       date: "10/01/2025",
       showDate: false,
+      link: "https://www.atm.network/pdf/atm-en/purchaseLUCA.pdf",
     },
     {
       image: "/img-7.png",
       title: "How to check consensus connection details",
       date: "10/01/2025",
       showDate: false,
+      link: "https://www.atm.network/pdf/atm-en/queryConnectionByAddress.pdf",
     },
     {
       image: "/img-8.png",
       title: "How to initiate a community proposal",
       date: "10/01/2025",
       showDate: false,
+      link: "https://www.atm.network/pdf/atm-en/initiateCommunityProposal.pdf",
     },
   ];
 
@@ -122,16 +130,16 @@ export const CourseCarousel = (): JSX.Element => {
           setApi={setApi}
           opts={{ align: "start", loop: false }}
         >
-          <CarouselContent className="-mx-[7.5px] desktop:-mx-[10px]">
+          <CarouselContent className="-mx-[7.5px] xl:-mx-[10px]">
             {tutorialCards.map((card, index) => (
               <CarouselItem
                 key={index}
-                className="px-[7.5px] desktop:px-[10px] basis-auto flex-shrink-0"
+                className="px-[7.5px] xl:px-[10px] basis-auto flex-shrink-0"
               >
-                <Card className="flex flex-col w-[360px] desktop:w-[402px] h-[300px] desktop:h-[340px] border border-solid border-border rounded-[20px] bg-card shadow-sm">
+                <Card className="flex flex-col w-[360px] xl:w-[402px] h-[300px] xl:h-[340px] border border-solid border-border rounded-[20px] bg-card shadow-sm">
                   <CardContent className="flex flex-col p-[15px] rounded-[20px] flex-1">
                     <img
-                      className="w-full h-[122px] desktop:h-[164px] rounded-[10px] object-cover"
+                      className="w-full h-[122px] xl:h-[164px] rounded-[10px] object-cover"
                       alt="Tutorial thumbnail"
                       src={card.image}
                     />
@@ -152,12 +160,17 @@ export const CourseCarousel = (): JSX.Element => {
                       >
                         {card.date}
                       </div>
-                      <div className="flex items-center gap-[10px] text-primary-colour">
+                      <a
+                        href={card.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-[10px] text-primary-colour hover:opacity-80 transition"
+                      >
                         <div className="text-primary font-normal font-body text-[14px] leading-[19px]">
                           View PDF
                         </div>
                         <ArrowRight className="w-[24px] h-[24px] text-primary -rotate-[30deg]" />
-                      </div>
+                      </a>
                     </div>
                   </div>
                 </Card>
