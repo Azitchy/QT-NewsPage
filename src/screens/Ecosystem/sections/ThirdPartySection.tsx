@@ -155,7 +155,7 @@ export const ThirdPartySection = () => {
 
       {/* Carousel */}
       <Carousel className="w-full" setApi={setApi} opts={{ align: "start" }}>
-        <CarouselContent className="flex mt-[20px]">
+        <CarouselContent className="flex mt-[20px] large:justify-center">
           {/* For Mobile */}
           {isMobile
             ? groupedPartners.map((pair, idx) => (

@@ -131,7 +131,7 @@ export const RewardsSection = () => {
           setApi={setApi}
           opts={{ align: "start", loop: false }}
         >
-          <CarouselContent className="flex gap-[21px] mt-[69px]">
+          <CarouselContent className="flex gap-[21px] mt-[69px] justify-start large:justify-center mr-10">
             {rewardsData.map((reward, index) => (
               <CarouselItem key={index} className="basis-auto flex-shrink-0">
                 <div className="relative w-[330px] sm:w-[300px] xl:w-[355px] 2xl:w-[450px] h-[500px] lg:h-[605px] rounded-[20px] flex-shrink-0">

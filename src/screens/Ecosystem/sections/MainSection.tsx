@@ -76,10 +76,10 @@ export const MainSection = () => {
     },
   ];
 
-  const copyToClipboard = (text?: string) => {
-    if (text) {
-      navigator.clipboard.writeText(text);
-    }
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Copied!");
+    });
   };
 
   const slideInVariants = {
@@ -155,9 +155,11 @@ export const MainSection = () => {
                           key={index}
                           className="flex items-center gap-2 cursor-pointer"
                         >
-                          <span className="font-body-body-4-400 text-primary-colour text-[12px] md:text-[14px] tracking-[var(--body-body-4-400-letter-spacing)] leading-[var(--body-body-4-400-line-height)]">
-                            {button.text}
-                          </span>
+                          <a href={button.href}>
+                            <span className="font-body-body-4-400 text-primary-colour text-[12px] md:text-[14px] tracking-[var(--body-body-4-400-letter-spacing)] leading-[var(--body-body-4-400-line-height)]">
+                              {button.text}
+                            </span>
+                          </a>
                           <a href={button.href}>
                             <div className="w-[38px] h-[38px] relative">
                               <img
@@ -218,7 +220,7 @@ export const MainSection = () => {
                       alt="Copy icon"
                       src="/copy-icon.png"
                       onClick={() =>
-                        copyToClipboard(section.walletInfo?.address)
+                        copyToClipboard(section.walletInfo?.address as string)
                       }
                     />
                   </div>

@@ -41,25 +41,28 @@ export const DashboardSection = () => {
   }, []);
 
   const formatNumber = (str: number | string, holdPoint = false): string => {
-    if (!str) return '';
-    let suffix = '';
+    if (!str) return "";
+    let suffix = "";
     if (holdPoint) {
       str = parseFloat(str.toString()).toFixed(6);
-      const arr = String(str).split('.');
+      const arr = String(str).split(".");
       str = arr[0];
       suffix = arr[1];
     }
-    str = String(parseInt(str.toString())).replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,');
+    str = String(parseInt(str.toString())).replace(
+      /\d{1,3}(?=(\d{3})+(\.\d*)?$)/g,
+      "$&,"
+    );
     return suffix ? `${str}.${suffix}` : str;
   };
 
   const formatPrice = (value: number, n = 4): string => {
-    if (value === undefined || value === null) return `0.${'0'.repeat(n)}`;
+    if (value === undefined || value === null) return `0.${"0".repeat(n)}`;
     value = parseFloat(value.toString());
-    let str = '';
-    const index = String(value).indexOf('.');
+    let str = "";
+    const index = String(value).indexOf(".");
     if (index > 0) {
-      const arr = String(value).split('.');
+      const arr = String(value).split(".");
       str = `${arr[0]}.${arr[1].slice(0, n)}`;
     } else {
       str = value.toFixed(n);
@@ -70,24 +73,53 @@ export const DashboardSection = () => {
   const getOverviewItems = () => {
     if (!overviewData) return [];
 
-    const userMarketNum = overviewData.circulationTotal - overviewData.contractTotalAmount;
+    const userMarketNum =
+      overviewData.circulationTotal - overviewData.contractTotalAmount;
 
     return [
       {
         label: "Luca Price",
         value: formatPrice(overviewData.price),
         hasPercentage: true,
-        percentage: overviewData.pre ? `${parseFloat(overviewData.pre) >= 0 ? '+' : ''}${overviewData.pre}%` : "+0.00%",
+        percentage: overviewData.pre
+          ? `${parseFloat(overviewData.pre) >= 0 ? "+" : ""}${
+              overviewData.pre
+            }%`
+          : "+0.00%",
       },
-      { label: "Total supply", value: formatNumber(overviewData.issuanceTotal) },
+      {
+        label: "Total supply",
+        value: formatNumber(overviewData.issuanceTotal),
+      },
       { label: "User market circulation", value: formatNumber(userMarketNum) },
-      { label: "Circulating supply", value: formatNumber(overviewData.circulationTotal) },
-      { label: "Remaining liquidity rewards", value: formatNumber(overviewData.liquidityReward) },
-      { label: "LUCA staked in Consensus Connections", value: formatNumber(overviewData.contractTotalAmount) },
-      { label: "LUCA staked in PR servers", value: formatNumber(overviewData.treatyTotal) },
-      { label: "Remaining Community Fund", value: formatNumber(overviewData.communityFundStock) },
-      { label: "LUCA Consesus Connections", value: formatNumber(overviewData.contractCount) },
-      { label: "PR Servers in Operation", value: formatNumber(overviewData.prCount) },
+      {
+        label: "Circulating supply",
+        value: formatNumber(overviewData.circulationTotal),
+      },
+      {
+        label: "Remaining liquidity rewards",
+        value: formatNumber(overviewData.liquidityReward),
+      },
+      {
+        label: "LUCA staked in Consensus Connections",
+        value: formatNumber(overviewData.contractTotalAmount),
+      },
+      {
+        label: "LUCA staked in PR servers",
+        value: formatNumber(overviewData.treatyTotal),
+      },
+      {
+        label: "Remaining Community Fund",
+        value: formatNumber(overviewData.communityFundStock),
+      },
+      {
+        label: "LUCA Consesus Connections",
+        value: formatNumber(overviewData.contractCount),
+      },
+      {
+        label: "PR Servers in Operation",
+        value: formatNumber(overviewData.prCount),
+      },
     ];
   };
 
@@ -96,7 +128,8 @@ export const DashboardSection = () => {
       return { outer: [], inner: [] };
     }
 
-    const userMarketNum = overviewData.circulationTotal - overviewData.contractTotalAmount;
+    const userMarketNum =
+      overviewData.circulationTotal - overviewData.contractTotalAmount;
 
     const outer: ChartData[] = [
       {
@@ -104,15 +137,15 @@ export const DashboardSection = () => {
         value: overviewData.contractTotalAmount,
         color: "#3CC9C7",
       },
-      { 
-        name: "Remaining Community Fund", 
-        value: overviewData.communityFundStock, 
-        color: "#FFC94D" 
+      {
+        name: "Remaining Community Fund",
+        value: overviewData.communityFundStock,
+        color: "#FFC94D",
       },
-      { 
-        name: "Remaining liquidity rewards", 
-        value: overviewData.liquidityReward, 
-        color: "#FF69B4" 
+      {
+        name: "Remaining liquidity rewards",
+        value: overviewData.liquidityReward,
+        color: "#FF69B4",
       },
     ];
 
@@ -122,25 +155,25 @@ export const DashboardSection = () => {
         value: overviewData.circulationTotal,
         color: "#97D76D",
       },
-      { 
-        name: "User market circulation", 
-        value: userMarketNum, 
-        color: "#5B6BF5" 
+      {
+        name: "User market circulation",
+        value: userMarketNum,
+        color: "#5B6BF5",
       },
-      { 
-        name: "LUCA staked in PR servers", 
-        value: overviewData.treatyTotal, 
-        color: "#1B5E20" 
+      {
+        name: "LUCA staked in PR servers",
+        value: overviewData.treatyTotal,
+        color: "#1B5E20",
       },
     ];
 
     return { outer, inner };
   };
 
-  const copyToClipboard = (text?: string) => {
-    if (text) {
-      navigator.clipboard.writeText(text);
-    }
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Copied!");
+    });
   };
 
   const CustomLegend = ({ dataOuter, dataInner }: any) => {
@@ -213,13 +246,21 @@ export const DashboardSection = () => {
                   {item.value}
                 </div>
                 {item.hasPercentage && (
-                  <Badge className={`${
-                    parseFloat(item.percentage || '0') >= 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                  } rounded-full px-3 py-1 text-xs font-medium border-0 hover:bg-green-100`}>
+                  <Badge
+                    className={`${
+                      parseFloat(item.percentage || "0") >= 0
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                    } rounded-full px-3 py-1 text-xs font-medium border-0 hover:bg-green-100`}
+                  >
                     <img
                       className="mr-1"
                       alt="Image"
-                      src={parseFloat(item.percentage || '0') >= 0 ? "/green-up-arrow.svg" : "/red-down-arrow.svg"}
+                      src={
+                        parseFloat(item.percentage || "0") >= 0
+                          ? "/green-up-arrow.svg"
+                          : "/red-down-arrow.svg"
+                      }
                     />
                     <span>{item.percentage}</span>
                   </Badge>

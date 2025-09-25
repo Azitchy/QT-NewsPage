@@ -4,7 +4,10 @@ import {
   PaginationContent,
   PaginationItem,
 } from "../../../../components/ui/pagination";
-import { fetchStakeTransactions, StakeTransactionItem } from "../../../../lib/webApi";
+import {
+  fetchStakeTransactions,
+  StakeTransactionItem,
+} from "../../../../lib/webApi";
 
 const columns = [
   "Hash",
@@ -39,30 +42,32 @@ const TableComponent = ({
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentData = data.slice(startIndex, startIndex + itemsPerPage);
 
-  const copyToClipboard = (text?: string) => {
-    if (text) {
-      navigator.clipboard.writeText(text);
-    }
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Copied!");
+    });
   };
 
   const hideAddress = (address: string) => {
-    return address ? `${address.substring(0, 4)}...${address.substring(address.length - 4)}` : '';
+    return address
+      ? `${address.substring(0, 4)}...${address.substring(address.length - 4)}`
+      : "";
   };
 
   const formatTime = (value: string | number) => {
-    if (!value) return '';
+    if (!value) return "";
     const date = new Date(value);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear();
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const seconds = date.getSeconds().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
   };
 
   const getStakeMethod = (ledgeType: number) => {
-    return ledgeType === 1 ? 'LUCA stake' : 'Consensus contract';
+    return ledgeType === 1 ? "LUCA stake" : "Consensus contract";
   };
 
   // Detail View
@@ -180,7 +185,11 @@ const TableComponent = ({
                       {hideAddress(row.userAddress)}
                     </div>
                     <div>
-                      <img src="/table-arrow.svg" onClick={() => onRowSelect(row)} className="cursor-pointer" />
+                      <img
+                        src="/table-arrow.svg"
+                        onClick={() => onRowSelect(row)}
+                        className="cursor-pointer"
+                      />
                     </div>
                   </div>
                 </td>
@@ -188,7 +197,9 @@ const TableComponent = ({
                   {hideAddress(row.serverAddress)}
                 </td>
                 <td className="px-4 py-3 text-sm">{row.ledgeAmount} LUCA</td>
-                <td className="px-4 py-3 text-sm">{formatTime(row.createTime)}</td>
+                <td className="px-4 py-3 text-sm">
+                  {formatTime(row.createTime)}
+                </td>
                 {showAction && (
                   <td className="px-4 py-3 text-sm">
                     <button
@@ -213,17 +224,24 @@ const TableComponent = ({
               <span className="truncate max-w-[220px] text-card-foreground">
                 {hideAddress(row.hash)}
               </span>
-              <span onClick={() => onRowSelect(row)} className="text-primary cursor-pointer">
+              <span
+                onClick={() => onRowSelect(row)}
+                className="text-primary cursor-pointer"
+              >
                 {row.ledgeAmount} LUCA
               </span>
             </div>
             <div className="flex justify-between text-sm font-normal mt-2">
               <span className="text-card-foreground">Initiator:</span>
-              <span className="truncate max-w-[250px]">{hideAddress(row.userAddress)}</span>
+              <span className="truncate max-w-[250px]">
+                {hideAddress(row.userAddress)}
+              </span>
             </div>
             <div className="flex justify-between text-sm font-normal mt-2">
               <span className="text-card-foreground">Receiver:</span>
-              <span className="truncate max-w-[250px]">{hideAddress(row.serverAddress)}</span>
+              <span className="truncate max-w-[250px]">
+                {hideAddress(row.serverAddress)}
+              </span>
             </div>
           </div>
         ))}
@@ -276,8 +294,12 @@ const StakeTransactionTable = () => {
   const fetchData = async (pageNo = 1) => {
     try {
       setLoading(true);
-      const response = await fetchStakeTransactions(pageNo, 10, filters.chainId);
-      
+      const response = await fetchStakeTransactions(
+        pageNo,
+        10,
+        filters.chainId
+      );
+
       if (response.data && Array.isArray(response.data)) {
         setData(response.data);
         setTotal(response.total || response.data.length);
@@ -304,9 +326,9 @@ const StakeTransactionTable = () => {
   };
 
   const handleFilterChange = (filterType: string, value: string) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
-      [filterType]: value === 'All Network' ? null : value,
+      [filterType]: value === "All Network" ? null : value,
     }));
     setCurrentPage(1);
   };
@@ -320,7 +342,9 @@ const StakeTransactionTable = () => {
           </div>
         </div>
         <div className="h-96 flex items-center justify-center dark:bg-card">
-          <div className="text-card-foreground">Loading stake transactions...</div>
+          <div className="text-card-foreground">
+            Loading stake transactions...
+          </div>
         </div>
       </div>
     );
@@ -353,7 +377,7 @@ const StakeTransactionTable = () => {
               <select
                 className="h-10 px-2 py-2 pr-10 rounded-[10px] border  border-border dark:border-[#454545] bg-transparent hover:bg-gray-50 flex items-center gap-3 appearance-none text-sm text-card-foreground focus:outline-none focus:ring-0"
                 value={filters.chainId || "All Network"}
-                onChange={(e) => handleFilterChange('chainId', e.target.value)}
+                onChange={(e) => handleFilterChange("chainId", e.target.value)}
               >
                 <option value="All Network">All Network</option>
                 <option value="BSC">BSC</option>
@@ -387,24 +411,33 @@ const StakeTransactionTable = () => {
                 onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                 className="w-5 h-5 cursor-pointer"
               />
-              {Array.from({ length: Math.min(5, Math.ceil(total / 10)) }, (_, i) => {
-                const page = currentPage <= 3 ? i + 1 : currentPage - 2 + i;
-                return page <= Math.ceil(total / 10) ? (
-                  <PaginationItem key={page}>
-                    <div
-                      onClick={() => handlePageChange(page)}
-                      className={`flex w-[30px] items-center justify-center cursor-pointer ${
-                        page === currentPage ? "text-primary" : "text-foreground"
-                      }`}
-                    >
-                      {page}
-                    </div>
-                  </PaginationItem>
-                ) : null;
-              })}
+              {Array.from(
+                { length: Math.min(5, Math.ceil(total / 10)) },
+                (_, i) => {
+                  const page = currentPage <= 3 ? i + 1 : currentPage - 2 + i;
+                  return page <= Math.ceil(total / 10) ? (
+                    <PaginationItem key={page}>
+                      <div
+                        onClick={() => handlePageChange(page)}
+                        className={`flex w-[30px] items-center justify-center cursor-pointer ${
+                          page === currentPage
+                            ? "text-primary"
+                            : "text-foreground"
+                        }`}
+                      >
+                        {page}
+                      </div>
+                    </PaginationItem>
+                  ) : null;
+                }
+              )}
               <img
                 src="/arrow-right-icon-3.svg"
-                onClick={() => handlePageChange(Math.min(Math.ceil(total / 10), currentPage + 1))}
+                onClick={() =>
+                  handlePageChange(
+                    Math.min(Math.ceil(total / 10), currentPage + 1)
+                  )
+                }
                 className="w-7 h-7 bg-[#e9f6f7] rounded-full cursor-pointer p-1"
               />
             </PaginationContent>

@@ -9,22 +9,22 @@ const ContractCard: React.FC<{
       case 1:
       case 2:
         return [
-          <a 
+          <a
             key="view-all"
-            href={`https://bscscan.com/address/${contract.address}`} 
-            target="_blank" 
+            href={`https://bscscan.com/address/${contract.address}`}
+            target="_blank"
             rel="noopener noreferrer"
             className="flex-1 text-center text-[14px] leading-[19px] font-normal px-[10px] lg:px-[20px] py-[12px] rounded-full bg-primary-foreground text-primary hover:bg-sky-100 transition"
           >
             View all
-          </a>
+          </a>,
         ];
       case 3:
         return [
-          <a 
+          <a
             key="source-code"
-            href="https://github.com/ATM-Developer/atm-contract/tree/main/contracts" 
-            target="_blank" 
+            href="https://github.com/ATM-Developer/atm-contract/tree/main/contracts"
+            target="_blank"
             rel="noopener noreferrer"
             className="flex-1 text-center text-[14px] leading-[19px] font-normal px-[10px] lg:px-[20px] py-[12px] rounded-full bg-primary-foreground text-primary hover:bg-sky-100 transition"
           >
@@ -35,18 +35,18 @@ const ContractCard: React.FC<{
             className="flex-1 text-center text-[14px] leading-[19px] font-normal px-[10px] lg:px-[20px] py-[12px] rounded-full bg-primary-foreground text-primary hover:bg-sky-100 transition"
             onClick={() => {
               // Navigate to consensus connections tab
-              window.location.hash = '#consensus';
+              window.location.hash = "#consensus";
             }}
           >
             View all connections
-          </button>
+          </button>,
         ];
       case 4:
         return [
-          <a 
+          <a
             key="source-code"
-            href="https://github.com/ATM-Developer/atm-contract/tree/main/contracts" 
-            target="_blank" 
+            href="https://github.com/ATM-Developer/atm-contract/tree/main/contracts"
+            target="_blank"
             rel="noopener noreferrer"
             className="flex-1 text-center text-[14px] leading-[19px] font-normal px-[10px] lg:px-[20px] py-[12px] rounded-full bg-primary-foreground text-primary hover:bg-sky-100 transition"
           >
@@ -57,20 +57,22 @@ const ContractCard: React.FC<{
             className="flex-1 text-center text-[14px] leading-[19px] font-normal px-[10px] lg:px-[20px] py-[12px] rounded-full bg-primary-foreground text-primary hover:bg-sky-100 transition"
             onClick={() => {
               // Navigate to stake transactions tab
-              window.location.hash = '#stake';
+              window.location.hash = "#stake";
             }}
           >
             View all connections
-          </button>
+          </button>,
         ];
       default:
         return [
-          <button
-            key="view-all"
+          <a
+            href={`https://bscscan.com/address/${contract.address}`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex-1 text-center text-[14px] leading-[19px] font-normal px-[10px] lg:px-[20px] py-[12px] rounded-full bg-primary-foreground text-primary hover:bg-sky-100 transition"
           >
             View all
-          </button>
+          </a>,
         ];
     }
   };
@@ -94,7 +96,10 @@ const ContractCard: React.FC<{
         </span>
       </div>
 
-      <p className="text-[14px] max-w-[300px] md:max-w-full truncate leading-[19px] font-normal text-card-foreground mb-[40px]" title={contract.address}>
+      <p
+        className="text-[14px] max-w-[300px] md:max-w-full truncate leading-[19px] font-normal text-card-foreground mb-[40px]"
+        title={contract.address}
+      >
         {contract.address}
       </p>
 
@@ -110,9 +115,7 @@ const ContractCard: React.FC<{
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-3 mt-2">
-        {getButtons()}
-      </div>
+      <div className="flex flex-wrap gap-3 mt-2">{getButtons()}</div>
     </div>
   );
 };
@@ -145,8 +148,13 @@ const ContractInformation = () => {
     return (
       <div className="grid grid-cols-1 mt-10 md:mt-0 md:grid-cols-2 gap-12 md:gap-6 p-0 lg:p-6">
         {Array.from({ length: 4 }).map((_, idx) => (
-          <div key={idx} className="dark:bg-card rounded-[10px] w-full p-4 lg:p-6 h-64 flex items-center justify-center">
-            <div className="text-card-foreground">Loading contract {idx + 1}...</div>
+          <div
+            key={idx}
+            className="dark:bg-card rounded-[10px] w-full p-4 lg:p-6 h-64 flex items-center justify-center"
+          >
+            <div className="text-card-foreground">
+              Loading contract {idx + 1}...
+            </div>
           </div>
         ))}
       </div>
@@ -167,7 +175,9 @@ const ContractInformation = () => {
     return (
       <div className="grid grid-cols-1 mt-10 md:mt-0 md:grid-cols-2 gap-12 md:gap-6 p-0 lg:p-6">
         <div className="dark:bg-card rounded-[10px] w-full p-4 lg:p-6 h-64 flex items-center justify-center">
-          <div className="text-card-foreground">No contract information available</div>
+          <div className="text-card-foreground">
+            No contract information available
+          </div>
         </div>
       </div>
     );

@@ -2,32 +2,37 @@ import React from "react";
 
 export const HeroSection = () => {
   return (
-    <div className="relative w-full lg:mb-20">
-      {/* Background as actual image */}
+    <div className="relative w-full lg:mb-20 large:mb-44">
+      {/* Background Image */}
       <img
         src="/game-hero-bg.png"
         alt="Background"
-        className="hidden md:block w-full h-[200px] tablet:h-[300px] desktop:h-[450px] large:h-[600px] bg-cover bg-no-repeat"
+        className="hidden md:block large:hidden w-full h-full object-cover"
+      />
+      <img
+        src="/game-bg-large.png"
+        alt="Background"
+        className="hidden large:block w-full h-full large:h-[500px] object-cover"
       />
       <img
         src="/game-bg-sm.png"
         alt="Background"
-        className="md:hidden w-full h-[171px] bg-contain bg-no-repeat"
+        className="md:hidden w-full h-auto object-contain"
       />
 
       {/* Text */}
-      <div className="absolute top-[45px] left-2 md:top-[80px] md:left-[40px] xl:top-[100px] xl:left-14 large:top-[245px] large:left-[315px]">
-        <h1 className="text-[50px] leading-[45px] max-w-[50px] md:max-w-full xl:text-[120px] xl:leading-[140px] large:text-[150px] large:leading-[160px] font-bold uppercase font-inter text-[#02EEA8]">
+      <div className="absolute top-[25%] left-4  max-w-[50px] md:max-w-full md:top-[15%] md:left-10 xl:top-[20%] xl:left-28 large:top-[25%] large:left-[20%]">
+        <h1 className="text-[40px] md:text-[80px] xl:text-[120px] large:text-[150px] leading-tight font-bold uppercase font-inter text-[#02EEA8]">
           Game <span className="text-white">Fund</span>
         </h1>
       </div>
 
       {/* Character Image */}
-      <div className="absolute top-0 right-[0px] md:right-[150px] lg:right-[120px]  desktop:right-[200px]  large:right-[700px] w-[265px] md:w-[400px] lg:w-[668px] large:w-[900px] z-20">
+      <div className="absolute top-0 right-0 md:right-10 lg:right-20 xl:right-32 large:right-[20%] w-[68%] md:w-[40%] lg:w-[40%] xl:w-[40%] 2xl:w-[40%] large:w-[40%]">
         <img
           src="/game-hero-character.svg"
           alt="Hero Character"
-          className="w-full h-[233px] md:h-[270px] lg:h-[400px] large:h-[800px] object-contain"
+          className="w-full h-full large:h-[680px] object-contain"
         />
       </div>
     </div>

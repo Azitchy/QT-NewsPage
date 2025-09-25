@@ -190,9 +190,11 @@ export const CommunitySection = () => {
                 key={index}
                 className="flex items-center gap-[10px] cursor-pointer"
               >
-                <span className="font-body-body-4-400 text-primary text-[14px] lg:text-[16px] tracking-[var(--body-body-4-400-letter-spacing)] leading-[19px] lg:leading-[var(--body-body-4-400-line-height)]">
-                  {button.text}
-                </span>
+                <a href={button.href}>
+                  <span className="font-body-body-4-400 text-primary text-[14px] lg:text-[16px] tracking-[var(--body-body-4-400-letter-spacing)] leading-[19px] lg:leading-[var(--body-body-4-400-line-height)]">
+                    {button.text}
+                  </span>
+                </a>
                 <a href={button.href}>
                   <div className="w-[38px] h-[38px] relative">
                     <img
