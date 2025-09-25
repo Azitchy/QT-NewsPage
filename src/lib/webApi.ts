@@ -2,11 +2,16 @@ import axios from "axios";
 import { API_CONFIG, getFormHeaders, getAuthHeaders, getTokenFromStorage } from "./apiConfig";
 
 const shouldUseCredentials = () => {
-
   return !import.meta.env.DEV;
 };
 
-// Types
+const base = API_CONFIG.WEB_API_BASE_URL;
+
+/* ------------------------------------------
+   Type Definitions
+   ------------------------------------------ */
+
+// News Types
 export interface NewsItem {
   id: string;
   title: string;
@@ -25,40 +30,98 @@ export interface NewsListResponse {
   };
 }
 
+// Overview Types
 export interface OverviewData {
-  totalUsers: number;
-  totalTransactions: number;
-  totalValue: string;
-  networkHealth: number;
+  price: number;
+  pre: string;
+  issuanceTotal: number;
+  circulationTotal: number;
+  contractTotalAmount: number;
+  liquidityReward: number;
+  communityFundStock: number;
+  treatyTotal: number;
+  contractCount: number;
+  prCount: number;
 }
 
+// Currency Types - Updated to match actual API response
 export interface CoinCurrency {
-  id: string;
-  name: string;
-  symbol: string;
-  price: number;
-  change24h: number;
-  marketCap: number;
+  id: number;
   aloneCalculateFlag: number;
+  aloneRewardAmount: number;
+  amountLimit: number;
+  asc: string;
+  baseCurrency: string;
+  chainId: number;
+  coefficient: number;
+  contractAddress: string;
+  createAtStr: string;
+  createTime: number;
+  currencyKey: string;
+  currencyLogo: string;
+  currencyName: string;
+  currencyNetStr: string;
+  gateWay: string;
+  ids: any[];
+  lockAmount: number;
+  netRewardAmount: number;
+  nowPrice: number;
+  numPlaces: number;
+  pairType: number;
+  pricePlaces: number;
+  rewardEndTime: number | null;
+  rewardStartTime: number | null;
+  showPrice: number;
+  status: number;
+  statustwo: string;
+  tradeCurrency: string;
+  updateAtStr: string;
+  updateTime: number;
+  weiPlaces: string;
+  
+  // Optional fields for backward compatibility
+  name?: string;
+  symbol?: string;
+  linkCurrency?: string;
+  quoteCurrency?: string;
+  price?: number;
+  pre?: string;
+  totalAmount?: number;
+  count?: number;
+  address?: string;
 }
 
+// User Link Data Types
 export interface UserLinkData {
-  totalLinks: number;
-  activeLinks: number;
-  totalValue: string;
+  data: {
+    linkList: Array<{
+      linkCurrency: string;
+      userCount: number;
+      linkCount: number;
+    }>;
+    userTotal: number;
+    linkTotal: number;
+  };
 }
 
+// Price Trend Types
 export interface PriceTrendData {
-  timestamp: number;
-  price: number;
-  volume: number;
+  info: {
+    nowPrice: number;
+    pre: string;
+    totalAmount: string;
+    count: number;
+    address: string;
+  };
+  x: string[];
+  y: number[];
 }
 
+// Ranking Types
 export interface RankingItem {
   rank: number;
   address: string;
-  value: number;
-  percentage: number;
+  totalAmount: number;
 }
 
 export interface ConsensusConnectionItem {
@@ -69,13 +132,36 @@ export interface ConsensusConnectionItem {
   lockupTime: string;
   connectionStatus: 'Connected' | 'Pending' | 'Waiting' | 'Cancelled' | 'Disconnected';
   connectionDetails: string;
-  lockedPositionAmount: string;
-  counterpartyLockedAmount: string;
+  linkCurrency: string;
   creationTime: string;
   hash: string;
-  linkCurrency: string;
-  consensusType: string;
-  liquidatedDamage?: string;
+  lockedPositionAmount: string;
+  counterpartyLockedAmount: string;
+  liquidatedDamage: string;
+  
+  // Keep the original properties for backward compatibility if needed
+  createHash?: string;
+  createAddress?: string;
+  targetAddress?: string;
+  amount?: string;
+  createTime?: string;
+  chainNetWork?: string;
+  linkStatus?: number;
+  linkAddress?: string;
+  lockedDay?: number;
+  nftName?: string;
+  nftAddress?: string;
+}
+
+// Also add/update these related interfaces:
+
+export interface ConsensusConnectionListResponse {
+  success: boolean;
+  data: {
+    list: ConsensusConnectionItem[];
+    total: number;
+  };
+  message?: string;
 }
 
 export interface CreateConnectionRequest {
@@ -91,6 +177,7 @@ export interface CreateConnectionRequest {
 export interface ConnectionDetailResponse {
   success: boolean;
   data: {
+    id: string;
     connectionObject: string;
     lockedPositionAmount: string;
     counterpartyLockedAmount: string;
@@ -101,9 +188,42 @@ export interface ConnectionDetailResponse {
     liquidatedDamage: string;
     connectionStatus: string;
   };
+  message?: string;
 }
 
-const base = API_CONFIG.WEB_API_BASE_URL;
+
+// PR Node Types
+export interface PRNodeItem {
+  serverAddress: string;
+  serverUrl: string;
+  serverIp: string;
+  serverNickname: string;
+  ledgeAmount: string;
+  rank?: number;
+}
+
+// Stake Transaction Types
+export interface StakeTransactionItem {
+  hash: string;
+  userAddress: string;
+  serverAddress: string;
+  ledgeAmount: string;
+  createTime: string;
+  chainNetWork: string;
+  ledgeType: number;
+  rank?: number;
+}
+
+// Contract Info Types
+export interface ContractInfoItem {
+  name: string;
+  nameEn: string;
+  address: string;
+  transactions: number;
+  balance: string;
+  lastBlock: string;
+  type: number;
+}
 
 /* ------------------------------------------
    News APIs
@@ -177,39 +297,6 @@ export const showDefaultImageIfEmpty = (news: NewsItem): void => {
 };
 
 /* ------------------------------------------
-   Proposal APIs
-   ------------------------------------------ */
-export const getInitiateList = async (): Promise<any> => {
-  try {
-    const params = new URLSearchParams({
-      pageIndex: "1",
-      pageSize: "1",
-    });
-
-    const requestOptions: RequestInit = {
-      method: "POST",
-      headers: getFormHeaders(),
-      body: params,
-    };
-
-    if (shouldUseCredentials()) {
-      requestOptions.credentials = "include";
-    }
-
-    const response = await fetch(`${base}/community/getInitiateList`, requestOptions);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching initiate list:", error);
-    throw error;
-  }
-};
-
-/* ------------------------------------------
    Overview APIs
    ------------------------------------------ */
 export const getOverviewData = async (): Promise<OverviewData> => {
@@ -220,7 +307,6 @@ export const getOverviewData = async (): Promise<OverviewData> => {
     }
 
     const response = await axios.get(`${base}/atm/overview`, config);
-
     return response.data.data as OverviewData;
   } catch (error) {
     console.error("Error fetching overview data:", error);
@@ -229,9 +315,9 @@ export const getOverviewData = async (): Promise<OverviewData> => {
 };
 
 /* ------------------------------------------
-   Subscription API
+   Explorer APIs
    ------------------------------------------ */
-export const subscribe = async (email: string): Promise<any> => {
+export const getCoinCurrency = async (): Promise<CoinCurrency[]> => {
   try {
     const config: any = {
       headers: getFormHeaders(),
@@ -241,11 +327,526 @@ export const subscribe = async (email: string): Promise<any> => {
       config.withCredentials = true;
     }
 
-    const response = await axios.post(`${base}/atm/emailSubscription`, { email }, config);
+    const response = await axios.post(`${base}/site/getCoinCurrencyList`, {}, config);
+    const responseData = response.data?.data;
+
+    if (responseData && Array.isArray(responseData.coinCurrencyPairList)) {
+      return responseData.coinCurrencyPairList.filter(
+        (item: CoinCurrency) => item.aloneCalculateFlag === 1
+      );
+    } else {
+      console.warn("coinCurrencyPairList not found or is not an array:", responseData);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching coin currency data:", error);
+    throw error;
+  }
+};
+
+export const getUserLinkData = async (): Promise<UserLinkData> => {
+  try {
+    const config: any = {};
+    if (shouldUseCredentials()) {
+      config.withCredentials = true;
+    }
+
+    const response = await axios.get(`${base}/site/getUserLinkCount`, config);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user link data:", error);
+    throw error;
+  }
+};
+
+export const fetchCoinPriceTrend = async (
+  coinCurrency: string,
+  type: string
+): Promise<PriceTrendData> => {
+  try {
+    const config: any = {
+      params: {
+        coinCurrency,
+        type,
+      },
+    };
+
+    if (shouldUseCredentials()) {
+      config.withCredentials = true;
+    }
+
+    const response = await axios.get(`${base}/atm/coinPriceTrend`, config);
+    return response.data?.data || { info: { nowPrice: 0, pre: "0", totalAmount: "0", count: 0, address: "" }, x: [], y: [] };
+  } catch (error) {
+    console.error("Error fetching coin price trend:", error);
+    throw error;
+  }
+};
+
+export const fetchSystemTime = async (): Promise<number | null> => {
+  try {
+    const config: any = {
+      headers: getFormHeaders(),
+    };
+
+    if (shouldUseCredentials()) {
+      config.withCredentials = true;
+    }
+
+    const response = await axios.post(`${base}/site/getCoinCurrencyList`, {}, config);
+    return response.data?.data?.systemTime ?? null;
+  } catch (error) {
+    console.error("Error fetching system time:", error);
+    throw error;
+  }
+};
+
+/* ------------------------------------------
+   Ranking APIs
+   ------------------------------------------ */
+export const fetchRankList = async (
+  pageNo: number,
+  pageSize: number = 10,
+  type: number = 1
+): Promise<{ list: RankingItem[]; total: number }> => {
+  try {
+    const config: any = {
+      params: { pageNo, pageSize, type },
+    };
+
+    if (shouldUseCredentials()) {
+      config.withCredentials = true;
+    }
+
+    const response = await axios.get(`${base}/atm/allNetworkRanking`, config);
+
+    if (response.data && Array.isArray(response.data.data)) {
+      return {
+        list: response.data.data,
+        total: response.data.total ?? 0,
+      };
+    } else {
+      console.error("Invalid response format:", response.data);
+      throw new Error("Invalid response format");
+    }
+  } catch (error) {
+    console.error("Error fetching rank list:", error);
+    throw error;
+  }
+};
+
+/* ------------------------------------------
+   Consensus Connection APIs
+   ------------------------------------------ */
+export const fetchConsensusContractList = async (params: {
+  pageNo: number;
+  pageSize?: number;
+  linkCurrency?: string;
+  chainId?: string | null;
+  consensusType?: string;
+  searchType?: string;
+  searchKey?: string;
+}): Promise<any> => {
+  try {
+    const {
+      pageNo,
+      pageSize = 10,
+      linkCurrency,
+      chainId,
+      consensusType,
+      searchType,
+      searchKey,
+    } = params;
+
+    const queryParams: any = {
+      pageNo,
+      pageSize,
+      linkCurrency,
+      chainId: chainId === "null" ? null : chainId,
+      consensusType,
+    };
+
+    if (searchType && searchKey) {
+      queryParams[searchType] = searchKey;
+    }
+
+    const config: any = {
+      params: queryParams,
+    };
+
+    if (shouldUseCredentials()) {
+      config.withCredentials = true;
+    }
+
+    const response = await axios.get(`${base}/atm/consensusContractList`, config);
+
+    if (response.data?.errorcode === "INTERNAL_ERROR") {
+      throw new Error(response.data.msg || "Internal server error");
+    }
 
     return response.data;
   } catch (error) {
-    console.error("Error subscribing:", error);
+    console.error("Error fetching consensus contract list:", error);
+    throw error;
+  }
+};
+
+export const fetchUserConsensusConnections = async (params: {
+  pageNo: number;
+  pageSize?: number;
+  status?: string;
+  searchKey?: string;
+  userAddress?: string;
+}): Promise<any> => {
+  try {
+    const { pageNo, pageSize = 10, status, searchKey, userAddress } = params;
+
+    const queryParams: any = {
+      pageNo,
+      pageSize,
+      ...(status && { status }),
+      ...(searchKey && { searchKey }),
+      ...(userAddress && { userAddress }),
+    };
+
+    const config: any = {
+      params: queryParams,
+    };
+
+    if (shouldUseCredentials()) {
+      config.withCredentials = true;
+    }
+
+    const response = await axios.get(`${base}/atm/consensusContractList`, config);
+
+    if (response.data?.errorcode === "INTERNAL_ERROR") {
+      throw new Error(response.data.msg || "Internal server error");
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user consensus connections:", error);
+    throw error;
+  }
+};
+
+export const createConsensusConnection = async (data: CreateConnectionRequest): Promise<any> => {
+  try {
+    const params = new URLSearchParams({
+      connectionAddress: data.connectionAddress,
+      connectionToken: data.connectionToken,
+      totalLockedAmount: data.totalLockedAmount,
+      lockedPositionProperties: data.lockedPositionProperties,
+      lockupTime: data.lockupTime,
+      counterpartyLockedAmount: data.counterpartyLockedAmount,
+      connectionType: data.connectionType,
+    });
+
+    const config: any = {
+      headers: getFormHeaders(),
+    };
+
+    if (shouldUseCredentials()) {
+      config.withCredentials = true;
+    }
+
+    const response = await axios.post(`${base}/atm/createConsensusConnection`, params.toString(), config);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error creating consensus connection:", error);
+    throw error;
+  }
+};
+
+export const getConsensusConnectionDetail = async (connectionId: string): Promise<ConnectionDetailResponse> => {
+  try {
+    const params = new URLSearchParams({ connectionId });
+
+    const config: any = {
+      headers: getFormHeaders(),
+    };
+
+    if (shouldUseCredentials()) {
+      config.withCredentials = true;
+    }
+
+    const response = await axios.post(`${base}/atm/consensusConnectionDetail`, params.toString(), config);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching consensus connection detail:", error);
+    throw error;
+  }
+};
+
+export const updateConsensusConnectionStatus = async (
+  connectionId: string,
+  action: "approve" | "reject" | "disconnect"
+): Promise<any> => {
+  try {
+    const params = new URLSearchParams({
+      connectionId,
+      action,
+    });
+
+    const config: any = {
+      headers: getFormHeaders(),
+    };
+
+    if (shouldUseCredentials()) {
+      config.withCredentials = true;
+    }
+
+    const response = await axios.post(`${base}/atm/updateConsensusConnectionStatus`, params.toString(), config);
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error ${action} consensus connection:`, error);
+    throw error;
+  }
+};
+
+export const searchConsensusConnectionByAddress = async (address: string): Promise<any> => {
+  try {
+    const config: any = {
+      params: {
+        pageNo: 1,
+        pageSize: 50,
+        searchType: 'userAddress',
+        searchKey: address,
+      },
+    };
+
+    if (shouldUseCredentials()) {
+      config.withCredentials = true;
+    }
+
+    const response = await axios.get(`${base}/atm/consensusContractList`, config);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error searching consensus connection by address:", error);
+    throw error;
+  }
+};
+
+/* ------------------------------------------
+   PR Node APIs
+   ------------------------------------------ */
+export const fetchPRNodes = async (
+  pageNo: number,
+  pageSize: number = 10,
+  searchKey?: string,
+  searchType?: string
+): Promise<any> => {
+  try {
+    const params: any = {
+      pageNo,
+      pageSize,
+    };
+
+    if (searchKey && searchType) {
+      params[searchType] = searchKey;
+    }
+
+    const config: any = {
+      params,
+    };
+
+    if (shouldUseCredentials()) {
+      config.withCredentials = true;
+    }
+
+    const response = await axios.get(`${base}/atm/prList`, config);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching PR nodes:", error);
+    throw error;
+  }
+};
+
+/* ------------------------------------------
+   Stake Transaction APIs
+   ------------------------------------------ */
+export const fetchStakeTransactions = async (
+  pageNo: number,
+  pageSize: number = 10,
+  chainId: string | null = null,
+  searchKey?: string,
+  searchType?: string
+): Promise<any> => {
+  try {
+    const params: any = {
+      pageNo,
+      pageSize,
+      chainId: chainId || undefined,
+    };
+
+    if (searchKey && searchType) {
+      params[searchType] = searchKey;
+    }
+
+    const config: any = {
+      params,
+    };
+
+    if (shouldUseCredentials()) {
+      config.withCredentials = true;
+    }
+
+    const response = await axios.get(`${base}/atm/treatyList`, config);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching stake transactions:", error);
+    throw error;
+  }
+};
+
+export const fetchUserTreatyList = async (params: {
+  pageIndex: number;
+  pageSize?: number;
+  type: number;
+  ledgeAddress: string;
+  chainId?: string;
+}): Promise<any> => {
+  try {
+    const {
+      pageIndex,
+      pageSize = 10,
+      type,
+      ledgeAddress,
+      chainId
+    } = params;
+
+    const formParams = new URLSearchParams({
+      pageIndex: pageIndex.toString(),
+      pageSize: pageSize.toString(),
+      type: type.toString(),
+      ledgeAddress,
+      ...(chainId && { chainId })
+    });
+
+    const config: any = {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cssg-Language": "en",
+        ...(getTokenFromStorage() && { token: getTokenFromStorage() })
+      },
+      body: formParams
+    };
+
+    if (shouldUseCredentials()) {
+      config.credentials = "include";
+    }
+
+    const response = await fetch(`${base}/server/getUserTreatyList`, config);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    return {
+      success: result.success || false,
+      data: result.data || null,
+      total: result.total || 0,
+      message: result.msg || 'Success'
+    };
+  } catch (error) {
+    console.error("Error fetching user treaty list:", error);
+    throw error;
+  }
+};
+
+/* ------------------------------------------
+   Contract Info APIs
+   ------------------------------------------ */
+export const fetchContractInfo = async (): Promise<{ data: ContractInfoItem[]; total: number }> => {
+  try {
+    const config: any = {};
+    if (shouldUseCredentials()) {
+      config.withCredentials = true;
+    }
+
+    const response = await axios.get(`${base}/atm/contractInfo`, config);
+
+    if (!response.data || !response.data.data) {
+      throw new Error("Invalid response data");
+    }
+
+    return {
+      data: response.data.data,
+      total: response.data.total ?? 0,
+    };
+  } catch (error) {
+    console.error("Error fetching contract info:", error);
+    throw error;
+  }
+};
+
+/* ------------------------------------------
+   User Information API
+   ------------------------------------------ */
+export const fetchUserInformation = async (
+  pageNo: number,
+  pageSize: number = 10
+): Promise<any> => {
+  try {
+    // Since there's no specific user info API, we'll use consensus contract list
+    // and aggregate user data from it
+    const config: any = {
+      params: {
+        pageNo,
+        pageSize,
+      },
+    };
+
+    if (shouldUseCredentials()) {
+      config.withCredentials = true;
+    }
+
+    const response = await axios.get(`${base}/atm/consensusContractList`, config);
+    
+    if (response.data?.errorcode === "INTERNAL_ERROR") {
+      throw new Error(response.data.msg || "Internal server error");
+    }
+
+    // Transform the data to create user information
+    const users = new Map();
+    const connections = response.data.data || [];
+    
+    connections.forEach((conn: any) => {
+      const userAddress = conn.createAddress;
+      if (!users.has(userAddress)) {
+        users.set(userAddress, {
+          userAddress,
+          prValue: "0",
+          consensusConnection: 0,
+          connectionQuality: "0 LUCA",
+          totalAmount: 0
+        });
+      }
+      
+      const user = users.get(userAddress);
+      user.consensusConnection += 1;
+      const amount = parseFloat(conn.amount || "0");
+      user.totalAmount += amount;
+      user.connectionQuality = `${user.totalAmount.toFixed(8)} ${conn.linkCurrency || 'LUCA'}`;
+      // Simple PR value calculation based on total connections and amounts
+      user.prValue = (user.totalAmount * user.consensusConnection / 1000).toFixed(4);
+    });
+
+    return {
+      data: Array.from(users.values()),
+      total: users.size,
+    };
+  } catch (error) {
+    console.error("Error fetching user information:", error);
     throw error;
   }
 };
@@ -323,9 +924,9 @@ export const getLoginToken = async (
 };
 
 /* ------------------------------------------
-   Explorer APIs
+   Subscription API
    ------------------------------------------ */
-export const getCoinCurrency = async (): Promise<CoinCurrency[]> => {
+export const subscribe = async (email: string): Promise<any> => {
   try {
     const config: any = {
       headers: getFormHeaders(),
@@ -335,460 +936,43 @@ export const getCoinCurrency = async (): Promise<CoinCurrency[]> => {
       config.withCredentials = true;
     }
 
-    const response = await axios.post(`${base}/site/getCoinCurrencyList`, {}, config);
-
-    const responseData = response.data?.data;
-
-    if (responseData && Array.isArray(responseData.coinCurrencyPairList)) {
-      return responseData.coinCurrencyPairList.filter(
-        (item: CoinCurrency) => item.aloneCalculateFlag === 1
-      );
-    } else {
-      console.warn("coinCurrencyPairList not found or is not an array:", responseData);
-      return [];
-    }
-  } catch (error) {
-    console.error("Error fetching coin currency data:", error);
-    throw error;
-  }
-};
-
-export const getUserLinkData = async (): Promise<UserLinkData> => {
-  try {
-    const config: any = {};
-    if (shouldUseCredentials()) {
-      config.withCredentials = true;
-    }
-
-    const response = await axios.get(`${base}/site/getUserLinkCount`, config);
+    const response = await axios.post(`${base}/atm/emailSubscription`, { email }, config);
     return response.data;
   } catch (error) {
-    console.error("Error fetching user link data:", error);
-    throw error;
-  }
-};
-
-export const fetchConsensusContractList = async (params: {
-  pageNo: number;
-  pageSize?: number;
-  linkCurrency?: string;
-  chainId?: string | null;
-  consensusType?: string;
-  searchType?: string;
-  searchKey?: string;
-}): Promise<any> => {
-  try {
-    const {
-      pageNo,
-      pageSize = 10,
-      linkCurrency,
-      chainId,
-      consensusType,
-      searchType,
-      searchKey,
-    } = params;
-
-    const queryParams: any = {
-      pageNo,
-      pageSize,
-      linkCurrency,
-      chainId: chainId === "null" ? null : chainId,
-      consensusType,
-    };
-
-    if (searchType && searchKey) {
-      queryParams[searchType] = searchKey;
-    }
-
-    const config: any = {
-      params: queryParams,
-    };
-
-    if (shouldUseCredentials()) {
-      config.withCredentials = true;
-    }
-
-    const response = await axios.get(`${base}/atm/consensusContractList`, config);
-
-    if (response.data?.errorcode === "INTERNAL_ERROR") {
-      throw new Error(response.data.msg || "Internal server error");
-    }
-
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching consensus contract list:", error);
-    throw error;
-  }
-};
-
-export const fetchCoinPriceTrend = async (
-  coinCurrency: string,
-  type: string
-): Promise<PriceTrendData[]> => {
-  try {
-    const config: any = {
-      params: {
-        coinCurrency,
-        type,
-      },
-    };
-
-    if (shouldUseCredentials()) {
-      config.withCredentials = true;
-    }
-
-    const response = await axios.get(`${base}/atm/coinPriceTrend`, config);
-
-    return response.data?.data || [];
-  } catch (error) {
-    console.error("Error fetching coin price trend:", error);
-    throw error;
-  }
-};
-
-export const fetchSystemTime = async (): Promise<number | null> => {
-  try {
-    const config: any = {
-      headers: getFormHeaders(),
-    };
-
-    if (shouldUseCredentials()) {
-      config.withCredentials = true;
-    }
-
-    const response = await axios.post(`${base}/site/getCoinCurrencyList`, {}, config);
-    return response.data?.data?.systemTime ?? null;
-  } catch (error) {
-    console.error("Error fetching system time:", error);
-    throw error;
-  }
-};
-
-export const fetchRankList = async (
-  pageNo: number,
-  pageSize: number = 10,
-  type: number = 1
-): Promise<{ list: RankingItem[]; total: number }> => {
-  try {
-    const config: any = {
-      params: { pageNo, pageSize, type },
-    };
-
-    if (shouldUseCredentials()) {
-      config.withCredentials = true;
-    }
-
-    const response = await axios.get(`${base}/atm/allNetworkRanking`, config);
-
-    if (response.data && Array.isArray(response.data.data)) {
-      return {
-        list: response.data.data,
-        total: response.data.total ?? 0,
-      };
-    } else {
-      console.error("Invalid response format:", response.data);
-      throw new Error("Invalid response format");
-    }
-  } catch (error) {
-    console.error("Error fetching rank list:", error);
-    throw error;
-  }
-};
-
-export const fetchPRNodes = async (
-  pageNo: number,
-  pageSize: number = 10,
-  searchKey?: string,
-  searchType?: string
-): Promise<any> => {
-  try {
-    const params: any = {
-      pageNo,
-      pageSize,
-    };
-
-    if (searchKey && searchType) {
-      params[searchType] = searchKey;
-    }
-
-    const config: any = {
-      params,
-    };
-
-    if (shouldUseCredentials()) {
-      config.withCredentials = true;
-    }
-
-    const response = await axios.get(`${base}/atm/prList`, config);
-
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching PR nodes:", error);
-    throw error;
-  }
-};
-
-export const fetchStakeTransactions = async (
-  pageNo: number,
-  pageSize: number = 10,
-  chainId: string | null = null,
-  searchKey?: string,
-  searchType?: string
-): Promise<any> => {
-  try {
-    const params: any = {
-      pageNo,
-      pageSize,
-      chainId: chainId || undefined,
-    };
-
-    if (searchKey && searchType) {
-      params[searchType] = searchKey;
-    }
-
-    const config: any = {
-      params,
-    };
-
-    if (shouldUseCredentials()) {
-      config.withCredentials = true;
-    }
-
-    const response = await axios.get(`${base}/atm/treatyList`, config);
-
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching stake transactions:", error);
-    throw error;
-  }
-};
-
-export const fetchContractInfo = async (): Promise<{ data: any; total: number }> => {
-  try {
-    const config: any = {};
-    if (shouldUseCredentials()) {
-      config.withCredentials = true;
-    }
-
-    const response = await axios.get(`${base}/atm/contractInfo`, config);
-
-    if (!response.data || !response.data.data) {
-      throw new Error("Invalid response data");
-    }
-
-    return {
-      data: response.data.data,
-      total: response.data.total ?? 0,
-    };
-  } catch (error) {
-    console.error("Error fetching contract info:", error);
+    console.error("Error subscribing:", error);
     throw error;
   }
 };
 
 /* ------------------------------------------
-   Consensus Connection APIs
+   Community APIs
    ------------------------------------------ */
-
-// Get user's consensus connections with filtering
-export const fetchUserConsensusConnections = async (params: {
-  pageNo: number;
-  pageSize?: number;
-  status?: string;
-  searchKey?: string;
-  userAddress?: string;
-}): Promise<any> => {
-  try {
-    const { pageNo, pageSize = 10, status, searchKey, userAddress } = params;
-
-    const queryParams: any = {
-      pageNo,
-      pageSize,
-      ...(status && { status }),
-      ...(searchKey && { searchKey }),
-      ...(userAddress && { userAddress }),
-    };
-
-    const config: any = {
-      params: queryParams,
-    };
-
-    if (shouldUseCredentials()) {
-      config.withCredentials = true;
-    }
-
-    const response = await axios.get(`${base}/atm/consensusContractList`, config);
-
-    if (response.data?.errorcode === "INTERNAL_ERROR") {
-      throw new Error(response.data.msg || "Internal server error");
-    }
-
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching user consensus connections:", error);
-    throw error;
-  }
-};
-
-// Create new consensus connection
-export const createConsensusConnection = async (data: CreateConnectionRequest): Promise<any> => {
+export const getInitiateList = async (): Promise<any> => {
   try {
     const params = new URLSearchParams({
-      connectionAddress: data.connectionAddress,
-      connectionToken: data.connectionToken,
-      totalLockedAmount: data.totalLockedAmount,
-      lockedPositionProperties: data.lockedPositionProperties,
-      lockupTime: data.lockupTime,
-      counterpartyLockedAmount: data.counterpartyLockedAmount,
-      connectionType: data.connectionType,
+      pageIndex: "1",
+      pageSize: "1",
     });
 
-    const config: any = {
+    const requestOptions: RequestInit = {
+      method: "POST",
       headers: getFormHeaders(),
+      body: params,
     };
 
     if (shouldUseCredentials()) {
-      config.withCredentials = true;
+      requestOptions.credentials = "include";
     }
 
-    const response = await axios.post(`${base}/atm/createConsensusConnection`, params.toString(), config);
-
-    return response.data;
-  } catch (error) {
-    console.error("Error creating consensus connection:", error);
-    throw error;
-  }
-};
-
-// Get connection details by ID
-export const getConsensusConnectionDetail = async (connectionId: string): Promise<ConnectionDetailResponse> => {
-  try {
-    const params = new URLSearchParams({ connectionId });
-
-    const config: any = {
-      headers: getFormHeaders(),
-    };
-
-    if (shouldUseCredentials()) {
-      config.withCredentials = true;
-    }
-
-    const response = await axios.post(`${base}/atm/consensusConnectionDetail`, params.toString(), config);
-
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching consensus connection detail:", error);
-    throw error;
-  }
-};
-
-// Update connection status (approve/reject/disconnect)
-export const updateConsensusConnectionStatus = async (
-  connectionId: string,
-  action: "approve" | "reject" | "disconnect"
-): Promise<any> => {
-  try {
-    const params = new URLSearchParams({
-      connectionId,
-      action,
-    });
-
-    const config: any = {
-      headers: getFormHeaders(),
-    };
-
-    if (shouldUseCredentials()) {
-      config.withCredentials = true;
-    }
-
-    const response = await axios.post(`${base}/atm/updateConsensusConnectionStatus`, params.toString(), config);
-
-    return response.data;
-  } catch (error) {
-    console.error(`Error ${action} consensus connection:`, error);
-    throw error;
-  }
-};
-
-// Search consensus connection by user address
-export const searchConsensusConnectionByAddress = async (address: string): Promise<any> => {
-  try {
-    const config: any = {
-      params: {
-        pageNo: 1,
-        pageSize: 50,
-        searchType: 'userAddress',
-        searchKey: address,
-      },
-    };
-
-    if (shouldUseCredentials()) {
-      config.withCredentials = true;
-    }
-
-    const response = await axios.get(`${base}/atm/consensusContractList`, config);
-
-    return response.data;
-  } catch (error) {
-    console.error("Error searching consensus connection by address:", error);
-    throw error;
-  }
-};
-
-export const fetchUserTreatyList = async (params: {
-  pageIndex: number;
-  pageSize?: number;
-  type: number;
-  ledgeAddress: string;
-  chainId?: string;
-}): Promise<any> => {
-  try {
-    const {
-      pageIndex,
-      pageSize = 10,
-      type,
-      ledgeAddress,
-      chainId
-    } = params;
-
-    const formParams = new URLSearchParams({
-      pageIndex: pageIndex.toString(),
-      pageSize: pageSize.toString(),
-      type: type.toString(),
-      ledgeAddress,
-      ...(chainId && { chainId })
-    });
-
-    const config: any = {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Cssg-Language": "en",
-        ...(getTokenFromStorage() && { token: getTokenFromStorage() })
-      },
-      body: formParams
-    };
-
-    if (shouldUseCredentials()) {
-      config.credentials = "include";
-    }
-
-    const response = await fetch(`${base}/server/getUserTreatyList`, config);
+    const response = await fetch(`${base}/community/getInitiateList`, requestOptions);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const result = await response.json();
-
-    return {
-      success: result.success || false,
-      data: result.data || null,
-      total: result.total || 0,
-      message: result.msg || 'Success'
-    };
+    return await response.json();
   } catch (error) {
-    console.error("Error fetching user treaty list:", error);
+    console.error("Error fetching initiate list:", error);
     throw error;
   }
 };

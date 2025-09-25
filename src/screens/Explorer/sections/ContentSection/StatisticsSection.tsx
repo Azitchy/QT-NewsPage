@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "../../../../components/ui/card";
 import {
   Bar,
@@ -8,24 +8,60 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-
-const fullData = [
-  { name: "Total", User: 22000, Connections: 42000 },
-  { name: "LUCA", User: 15000, Connections: 35000 },
-  { name: "BTCB", User: 500, Connections: 700 },
-  { name: "ETH", User: 1200, Connections: 1500 },
-  { name: "BNB", User: 3000, Connections: 2500 },
-  { name: "LINK", User: 400, Connections: 600 },
-  { name: "FIL", User: 300, Connections: 450 },
-  { name: "Cake", User: 1600, Connections: 1300 },
-  { name: "ADA", User: 200, Connections: 300 },
-  { name: "XRP", User: 600, Connections: 500 },
-  { name: "DOT", User: 100, Connections: 200 },
-];
+import { getUserLinkData, UserLinkData } from "../../../../lib/webApi";
 
 export const StatisticsSection = () => {
   const [showMore, setShowMore] = useState(false);
-  const data = showMore ? fullData : fullData.slice(0, 5);
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const linkData: UserLinkData = await getUserLinkData();
+        
+        if (linkData?.data) {
+          // Transform the data for the chart
+          const chartData = [
+            {
+              name: "Total",
+              User: linkData.data.userTotal || 0,
+              Connections: linkData.data.linkTotal || 0,
+            }
+          ];
+
+          // Add individual currency data
+          if (linkData.data.linkList && Array.isArray(linkData.data.linkList)) {
+            linkData.data.linkList.forEach((item) => {
+              chartData.push({
+                name: item.linkCurrency || "Unknown",
+                User: item.userCount || 0,
+                Connections: item.linkCount || 0,
+              });
+            });
+          }
+
+          setData(chartData);
+        }
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching statistics data:", err);
+        setError("Failed to load statistics data");
+        // Fallback data in case of error
+        setData([
+          { name: "Total", User: 0, Connections: 0 },
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const displayData = showMore ? data : data.slice(0, 5);
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
@@ -42,20 +78,61 @@ export const StatisticsSection = () => {
     }
     return null;
   };
+
+  if (loading) {
+    return (
+      <Card className="bg-card rounded-2xl border-[0px] shadow-none md:shadow-sm">
+        <CardContent className="p-0">
+          <div className="p-2 md:p-4">
+            <div className="flex justify-between items-center mb-4 border-b border-border dark:border-primary-foreground pb-4">
+              <h3 className="text-[16px] leading-[24px] font-normal text-foreground">
+                Statistics
+              </h3>
+            </div>
+            <div className="h-96 flex items-center justify-center">
+              <div className="text-card-foreground">Loading statistics...</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="bg-card rounded-2xl border-[0px] shadow-none md:shadow-sm">
+        <CardContent className="p-0">
+          <div className="p-2 md:p-4">
+            <div className="flex justify-between items-center mb-4 border-b border-border dark:border-primary-foreground pb-4">
+              <h3 className="text-[16px] leading-[24px] font-normal text-foreground">
+                Statistics
+              </h3>
+            </div>
+            <div className="h-96 flex items-center justify-center">
+              <div className="text-red-500">{error}</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <Card className="bg-card rounded-2xl  border-[0px] shadow-none md:shadow-sm">
+    <Card className="bg-card rounded-2xl border-[0px] shadow-none md:shadow-sm">
       <CardContent className="p-0">
         <div className="p-2 md:p-4">
           <div className="flex justify-between items-center mb-4 border-b border-border dark:border-primary-foreground pb-4">
             <h3 className="text-[16px] leading-[24px] font-normal text-foreground">
               Statistics
             </h3>
-            <button
-              className="text-primary font-normal text-[14px] leading-[19px] hover:underline"
-              onClick={() => setShowMore(!showMore)}
-            >
-              {showMore ? "Less >" : "More >"}
-            </button>
+            {data.length > 5 && (
+              <button
+                className="text-primary font-normal text-[14px] leading-[19px] hover:underline"
+                onClick={() => setShowMore(!showMore)}
+              >
+                {showMore ? "Less >" : "More >"}
+              </button>
+            )}
           </div>
 
           <div className="hidden md:flex flex-col items-end">
@@ -73,7 +150,7 @@ export const StatisticsSection = () => {
           <div style={{ width: "100%", height: 400 }}>
             <ResponsiveContainer>
               <BarChart
-                data={data}
+                data={displayData}
                 margin={{ top: 10, right: 20, left: 0, bottom: 0 }}
               >
                 <XAxis

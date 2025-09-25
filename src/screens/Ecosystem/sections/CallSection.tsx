@@ -24,7 +24,8 @@ export const CallSection = () => {
             {ctaData.description}
           </p>
           <Button className="bg-primary text-background dark:text-primary-foreground rounded-[30px] px-5 py-3 font-body-body3-400 text-[14px] lg:text-[16px] leading-[19px] lg:leading-[24px] hover:bg-primary/90">
-            {ctaData.buttonText}
+            <a href="https://atm.network/v1/#/joinATM" target="_blank" >{ctaData.buttonText}
+              </a>
           </Button>
         </div>
       </div>

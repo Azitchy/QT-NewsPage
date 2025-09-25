@@ -13,7 +13,7 @@ export const FirstScreenSection = (): JSX.Element => {
       rightTitleHighlight: "rewards",
       rightSubtitle: "in our web3 community",
       image: "/connect-with-your-friends-image.png",
-      darkImage: "/connection-main1-dark.webp"
+      darkImage: "/connection-main1-dark.webp",
     },
     {
       id: 1,
@@ -22,7 +22,7 @@ export const FirstScreenSection = (): JSX.Element => {
       rightTitleHighlight: "connections",
       rightSubtitle: "that grow your influence",
       image: "/hero1.png",
-       darkImage: "/rewards-main3-dark.webp"
+      darkImage: "/rewards-main3-dark.webp",
     },
     {
       id: 2,
@@ -31,7 +31,7 @@ export const FirstScreenSection = (): JSX.Element => {
       rightTitleHighlight: "contribution",
       rightSubtitle: "to the ecosystem",
       image: "/hero2.png",
-       darkImage: "/avatar-main2-dark.webp"
+      darkImage: "/avatar-main2-dark.webp",
     },
   ];
 
@@ -75,7 +75,7 @@ export const FirstScreenSection = (): JSX.Element => {
             </div>
 
             {/* Center image */}
-            <div className="flex lg:relative lg:right-[200px] items-center justify-center mr-20 md:mr-0 w-[450px] sm:w-[300px] md:w-[350px] lg:w-[800px] xl:h-[424px] z-10">
+            <div className="flex xl:relative xl:right-[200px] items-center justify-center md:mr-0 w-[450px] sm:w-[300px] md:w-[350px] xl:w-[800px] xl:h-[424px] z-10">
               <img
                 src={currentSlideData.image}
                 alt="carousel visual"
@@ -90,7 +90,7 @@ export const FirstScreenSection = (): JSX.Element => {
           </div>
 
           {/* Right text */}
-          <div className="flex-1 text-center md:text-left mt-0 md:mt-6 lg:-mt-24 lg:relative lg:right-[200px]">
+          <div className="flex-1 text-center md:text-left mt-0 md:mt-6 xl:-mt-24 xl:relative xl:right-[200px]">
             <Card className="inline-flex items-center mb-[15px] md:mb-[30px] px-[8px] md:px-[10px] py-[5px] rounded-full border border-border backdrop-blur-md bg-[linear-gradient(180deg,rgba(252,252,252,0.40)_44.56%,rgba(242,242,242,0.40)_100%)] dark:bg-[linear-gradient(180deg,rgba(81,79,79,0.40)_49.59%,rgba(36,36,36,0.40)_100%)] z-30">
               <CardContent className="flex items-center gap-[5px] p-0">
                 <Badge className="px-3 py-1 rounded-full bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] text-background dark:text-primary-foreground text-sm">

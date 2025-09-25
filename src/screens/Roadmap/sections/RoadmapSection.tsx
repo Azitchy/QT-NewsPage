@@ -49,8 +49,14 @@ const roadmapData: RoadmapSection[] = [
       {
         title: "Travel Agency collaboration",
         description:
-          "Collaboration with travel Agency to explore real-world use case of LUCA.",
+          "Collaboration with travel Agency to explore more real-world use case of LUCA, bringing the crypto to life.",
         side: "left",
+      },
+      {
+        title: "AGF Game release",
+        description:
+          "Launching the platform enticing more developers to join the ecosystem and enriching the gaming experience for community users.",
+        side: "right",
       },
     ],
   },
@@ -60,13 +66,18 @@ const roadmapData: RoadmapSection[] = [
       {
         title: "iOS App live",
         description:
-          "ATM connect iOS App available on App Store unlocking exclusive experience.",
-        side: "left",
+          "“ATM connect” iOS App available on App Store unlocking exclusive experience in ATM ecosystem.",
+        side: "right",
       },
       {
         title: "Upgrading website",
         description:
-          "Fresh look of ATM website with visualization, animations, and multi-language support.",
+          "New fresh look of ATM website upgrades the concept visualization, animated illustrations, and multi-language support boosting user experience when surfing in ATM.",
+        side: "left",
+      },
+      {
+        title: "Q1 End of recovery plan",
+        description: "Recovery from the previous incident.",
         side: "right",
       },
     ],
@@ -75,15 +86,21 @@ const roadmapData: RoadmapSection[] = [
     year: "2023",
     items: [
       {
-        title: "iOS App live",
+        title: "AVATAR AI launch",
         description:
           "ATM connect iOS App available on App Store unlocking exclusive experience.",
-        side: "left",
+        side: "right",
       },
       {
         title: "Upgrading website",
         description:
           "Fresh look of ATM website with visualization, animations, and multi-language support.",
+        side: "left",
+      },
+      {
+        title: "Third Feature",
+        description:
+          "Launching the platform enticing more developers to join the ecosystem and enriching the gaming experience for community users.",
         side: "right",
       },
     ],
@@ -91,63 +108,59 @@ const roadmapData: RoadmapSection[] = [
 ];
 
 export const RoadmapSection: React.FC = () => {
-  const [scrollY, setScrollY] = useState(0);
-
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <div className="relative bg-[url(/source_slidebggalaxy.png)] bg-cover text-white min-h-screen overflow-hidden">
+    <div className="relative bg-[url(/source_slidebggalaxy.png)] bg-cover text-white min-h-screen overflow-hidden pt-28 large:pt-40">
       {roadmapData.map((section, i) => (
         <div
           key={i}
-          className="relative min-h-screen flex flex-col items-center justify-start py-2"
+          className="relative py-10 flex flex-col items-center gap-0"
         >
-          {/* Year Title */}
-          <h1
-            className="z-20 uppercase text-[60px] md:text-[100px] font-bold text-center text-transparent mb-10"
-            style={{
-              opacity: i === 0 ? 1 : Math.min(1, scrollY / 400),
-              WebkitTextStroke: "2px white",
-            }}
-          >
-            {section.year}
-          </h1>
+          {/* Row: Year center + First item right side */}
+          <div className="relative w-full flex items-center justify-between">
+            {/* Left empty space */}
+            <div className="flex-1"></div>
 
-          {/* Glowing Star */}
-          <div
-            className="w-5 h-5 bg-[url(/roadmap-star.svg)] bg-cover z-10 rounded-full mb-10"
-            style={{
-              animation: "glow 2s infinite",
-            }}
-          />
-          <style>
-            {`
-              @keyframes glow {
-                0%, 100% { box-shadow: 0 0 20px 5px rgba(255,255,255,0.3); }
-                50% { box-shadow: 0 0 60px 20px rgba(255,255,255,0.8); }
-              }
-            `}
-          </style>
+            {/* Year in center */}
+            <div className="flex flex-col items-center mx-4">
+              <h1
+                className="uppercase text-[40px] md:text-[150px] leading-[160px] font-bold text-transparent"
+                style={{ WebkitTextStroke: "2px white" }}
+              >
+                {section.year}
+              </h1>
+              <div className="w-[2px] h-full bg-white/40 mt-2"></div>
+            </div>
 
-          {/* Timeline container */}
-          <div className="relative w-full flex justify-center">
-            {/* Vertical line */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 bg-white w-[1px] h-full" />
-
-            {/* Roadmap Items */}
-            <div className="flex flex-col gap-0 w-full max-w-5xl relative">
-              {section.items.map((item, j) => (
+            {/* First item on right side */}
+            <div className="flex-1 flex justify-start pl-6">
+              {section.items[0] && (
                 <RoadmapItem
-                  key={j}
-                  title={item.title}
-                  description={item.description}
-                  side={item.side}
+                  title={section.items[0].title}
+                  description={section.items[0].description}
+                  side="right"
                 />
+              )}
+            </div>
+          </div>
+
+          <div className="relative w-full  mt-10">
+            <div className="absolute left-[50%] top-0 bottom-0 w-[2px] bg-white/40"></div>
+            <div className="flex flex-col gap-10">
+              {section.items.slice(1).map((item, j) => (
+                <div
+                  key={j}
+                  className={`w-full flex ${
+                    item.side === "left"
+                      ? "justify-end pr-[65%] large:pr-[60%]"
+                      : "justify-start pl-[55%]"
+                  }`}
+                >
+                  <RoadmapItem
+                    title={item.title}
+                    description={item.description}
+                    side={item.side}
+                  />
+                </div>
               ))}
             </div>
           </div>
@@ -175,9 +188,7 @@ const RoadmapItem: React.FC<RoadmapItemProps> = ({
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-          }
+          if (entry.isIntersecting) setIsVisible(true);
         });
       },
       { threshold: 0.2 }
@@ -192,23 +203,17 @@ const RoadmapItem: React.FC<RoadmapItemProps> = ({
   return (
     <div
       ref={ref}
-      className={`w-full flex ${
-        side === "left" ? "justify-start" : "justify-end"
-      }`}
+      className={`p-4 rounded-xl w-[280px] md:w-[382px] transition-all duration-700 ease-out transform
+        ${isVisible ? "opacity-100 translate-x-0" : "opacity-0"}
+        ${!isVisible && side === "left" ? "-translate-x-10" : ""}
+        ${!isVisible && side === "right" ? "translate-x-10" : ""}`}
     >
-      <div
-        className={`p-6 rounded-xl w-[300px] md:w-[400px] transition-all duration-700 ease-out transform 
-        ${isVisible ? "opacity-100 translate-x-0" : "opacity-0"} 
-        ${!isVisible && side === "left" ? "-translate-x-20" : ""} 
-        ${!isVisible && side === "right" ? "translate-x-20" : ""}`}
-      >
-        <h2 className="text-[18px] leading-[24px] text-[#DCDCDC] font-normal mb-2">
-          {title}
-        </h2>
-        <p className="text-[16px] leading-[24px] font-normal text-gray-300">
-          {description}
-        </p>
-      </div>
+      <h2 className="text-[18px] leading-[24px] text-[#DCDCDC] font-normal mb-2">
+        {title}
+      </h2>
+      <p className="text-[16px] leading-[24px] font-normal text-gray-300">
+        {description}
+      </p>
     </div>
   );
 };

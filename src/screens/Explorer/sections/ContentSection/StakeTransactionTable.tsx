@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
 } from "../../../../components/ui/pagination";
+import { fetchStakeTransactions, StakeTransactionItem } from "../../../../lib/webApi";
 
 const columns = [
   "Hash",
@@ -12,69 +13,6 @@ const columns = [
   "Connection quantity",
   "Time",
   "Action",
-];
-
-const dataRewardPoints = [
-  {
-    hash: "0x3b90c30a3ae3424857d584af5e6d1d953466283072079670dd9ddcb29ed77a1",
-    network: "BSC",
-    stakeMethod: "Consensus contract",
-    creationTime: "18/03/2024 18:47:35",
-    stakeAmount: "1108.0000 LUCA",
-    initiator: "0x04314defdfdfda4c458f2706a85b2039856be690",
-    stakeNode: "0xd0c0bbd909ef0a8c1e0a3c7cb84c260d99301d10",
-    nodeRanking: "1",
-  },
-  {
-    hash: "0x3b90c30a3ae3424857d584af5e6d1d953466283072079670dd9ddcb29ed77a1",
-    network: "BSC",
-    stakeMethod: "Consensus contract",
-    creationTime: "18/03/2024 18:47:35",
-    stakeAmount: "1108.0000 LUCA",
-    initiator: "0x04314defdfdfda4c458f2706a85b2039856be690",
-    stakeNode: "0xd0c0bbd909ef0a8c1e0a3c7cb84c260d99301d10",
-    nodeRanking: "1",
-  },
-  {
-    hash: "0x3b90c30a3ae3424857d584af5e6d1d953466283072079670dd9ddcb29ed77a1",
-    network: "BSC",
-    stakeMethod: "Consensus contract",
-    creationTime: "18/03/2024 18:47:35",
-    stakeAmount: "1108.0000 LUCA",
-    initiator: "0x04314defdfdfda4c458f2706a85b2039856be690",
-    stakeNode: "0xd0c0bbd909ef0a8c1e0a3c7cb84c260d99301d10",
-    nodeRanking: "1",
-  },
-  {
-    hash: "0x3b90c30a3ae3424857d584af5e6d1d953466283072079670dd9ddcb29ed77a1",
-    network: "BSC",
-    stakeMethod: "Consensus contract",
-    creationTime: "18/03/2024 18:47:35",
-    stakeAmount: "1108.0000 LUCA",
-    initiator: "0x04314defdfdfda4c458f2706a85b2039856be690",
-    stakeNode: "0xd0c0bbd909ef0a8c1e0a3c7cb84c260d99301d10",
-    nodeRanking: "1",
-  },
-  {
-    hash: "0x3b90c30a3ae3424857d584af5e6d1d953466283072079670dd9ddcb29ed77a1",
-    network: "BSC",
-    stakeMethod: "Consensus contract",
-    creationTime: "18/03/2024 18:47:35",
-    stakeAmount: "1108.0000 LUCA",
-    initiator: "0x04314defdfdfda4c458f2706a85b2039856be690",
-    stakeNode: "0xd0c0bbd909ef0a8c1e0a3c7cb84c260d99301d10",
-    nodeRanking: "1",
-  },
-  {
-    hash: "0x3b90c30a3ae3424857d584af5e6d1d953466283072079670dd9ddcb29ed77a1",
-    network: "BSC",
-    stakeMethod: "Consensus contract",
-    creationTime: "18/03/2024 18:47:35",
-    stakeAmount: "1108.0000 LUCA",
-    initiator: "0x04314defdfdfda4c458f2706a85b2039856be690",
-    stakeNode: "0xd0c0bbd909ef0a8c1e0a3c7cb84c260d99301d10",
-    nodeRanking: "1",
-  },
 ];
 
 const TableComponent = ({
@@ -107,6 +45,26 @@ const TableComponent = ({
     }
   };
 
+  const hideAddress = (address: string) => {
+    return address ? `${address.substring(0, 4)}...${address.substring(address.length - 4)}` : '';
+  };
+
+  const formatTime = (value: string | number) => {
+    if (!value) return '';
+    const date = new Date(value);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+  };
+
+  const getStakeMethod = (ledgeType: number) => {
+    return ledgeType === 1 ? 'LUCA stake' : 'Consensus contract';
+  };
+
   // Detail View
   if (selectedRow) {
     return (
@@ -130,28 +88,28 @@ const TableComponent = ({
           <hr className="md:hidden my-1" />
 
           <div className="text-card-foreground md:text-foreground">Network</div>
-          <div>{selectedRow.network}</div>
+          <div>{selectedRow.chainNetWork}</div>
 
           <hr className="md:hidden my-1" />
 
           <div className="text-card-foreground md:text-foreground">
             Stake method
           </div>
-          <div>{selectedRow.stakeMethod}</div>
+          <div>{getStakeMethod(selectedRow.ledgeType)}</div>
 
           <hr className="md:hidden my-1" />
 
           <div className="text-card-foreground md:text-foreground">
             Creation Time
           </div>
-          <div>{selectedRow.creationTime}</div>
+          <div>{formatTime(selectedRow.createTime)}</div>
 
           <hr className="md:hidden my-1" />
 
           <div className="text-card-foreground md:text-foreground">
             Stake amount
           </div>
-          <div>{selectedRow.stakeAmount}</div>
+          <div>{selectedRow.ledgeAmount} LUCA</div>
           <hr className="md:hidden my-1" />
 
           <div className="text-card-foreground md:text-foreground">
@@ -159,11 +117,11 @@ const TableComponent = ({
           </div>
           <div className="flex gap-2 items-center">
             <span className="truncate  max-w-[300px] md:max-w-full">
-              {selectedRow.initiator}
+              {selectedRow.userAddress}
             </span>
             <img
               src="/copy.svg"
-              onClick={() => copyToClipboard(selectedRow.initiator)}
+              onClick={() => copyToClipboard(selectedRow.userAddress)}
               className="cursor-pointer"
             />
           </div>
@@ -174,11 +132,11 @@ const TableComponent = ({
           </div>
           <div className="flex gap-2 items-center">
             <span className="truncate  max-w-[300px] md:max-w-full">
-              {selectedRow.stakeNode}
+              {selectedRow.serverAddress}
             </span>{" "}
             <img
               src="/copy.svg"
-              onClick={() => copyToClipboard(selectedRow.stakeNode)}
+              onClick={() => copyToClipboard(selectedRow.serverAddress)}
               className="cursor-pointer"
             />
           </div>
@@ -187,7 +145,7 @@ const TableComponent = ({
           <div className="text-card-foreground md:text-foreground">
             Node ranking
           </div>
-          <span>{selectedRow.nodeRanking} </span>
+          <span>{selectedRow.rank || "N/A"} </span>
         </div>
       </div>
     );
@@ -214,12 +172,12 @@ const TableComponent = ({
             {currentData.map((row, idx) => (
               <tr key={idx}>
                 <td className="px-4 py-3 text-sm truncate max-w-[180px]">
-                  {row.hash}
+                  {hideAddress(row.hash)}
                 </td>
                 <td className="px-4 py-3 text-sm truncate max-w-[180px]">
                   <div className="flex gap-[15px]">
                     <div className="truncate max-w-[180px]">
-                      {row.initiator}
+                      {hideAddress(row.userAddress)}
                     </div>
                     <div>
                       <img src="/table-arrow.svg" onClick={() => onRowSelect(row)} className="cursor-pointer" />
@@ -227,10 +185,10 @@ const TableComponent = ({
                   </div>
                 </td>
                 <td className="px-4 py-3 text-sm truncate max-w-[180px]">
-                  {row.stakeNode}
+                  {hideAddress(row.serverAddress)}
                 </td>
-                <td className="px-4 py-3 text-sm">{row.stakeAmount}</td>
-                <td className="px-4 py-3 text-sm">{row.creationTime}</td>
+                <td className="px-4 py-3 text-sm">{row.ledgeAmount} LUCA</td>
+                <td className="px-4 py-3 text-sm">{formatTime(row.createTime)}</td>
                 {showAction && (
                   <td className="px-4 py-3 text-sm">
                     <button
@@ -253,19 +211,19 @@ const TableComponent = ({
           <div key={idx} className="border-b dark:border-[#454545] p-3">
             <div className="flex justify-between text-sm font-normal">
               <span className="truncate max-w-[220px] text-card-foreground">
-                {row.hash}
+                {hideAddress(row.hash)}
               </span>
-              <span onClick={() => onRowSelect(row)} className="text-primary">
-                {row.connectionQuality}
+              <span onClick={() => onRowSelect(row)} className="text-primary cursor-pointer">
+                {row.ledgeAmount} LUCA
               </span>
             </div>
             <div className="flex justify-between text-sm font-normal mt-2">
               <span className="text-card-foreground">Initiator:</span>
-              <span className="truncate max-w-[250px]">{row.initiator}</span>
+              <span className="truncate max-w-[250px]">{hideAddress(row.userAddress)}</span>
             </div>
             <div className="flex justify-between text-sm font-normal mt-2">
               <span className="text-card-foreground">Receiver:</span>
-              <span className="truncate max-w-[250px]">{row.stakeNode}</span>
+              <span className="truncate max-w-[250px]">{hideAddress(row.serverAddress)}</span>
             </div>
           </div>
         ))}
@@ -306,6 +264,82 @@ const TableComponent = ({
 
 const StakeTransactionTable = () => {
   const [selectedRow, setSelectedRow] = useState<any>(null);
+  const [data, setData] = useState<StakeTransactionItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [filters, setFilters] = useState({
+    chainId: null as string | null,
+  });
+
+  const fetchData = async (pageNo = 1) => {
+    try {
+      setLoading(true);
+      const response = await fetchStakeTransactions(pageNo, 10, filters.chainId);
+      
+      if (response.data && Array.isArray(response.data)) {
+        setData(response.data);
+        setTotal(response.total || response.data.length);
+      } else {
+        setData([]);
+        setTotal(0);
+      }
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching stake transactions:", err);
+      setError("Failed to load stake transactions");
+      setData([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(currentPage);
+  }, [currentPage, filters]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleFilterChange = (filterType: string, value: string) => {
+    setFilters(prev => ({
+      ...prev,
+      [filterType]: value === 'All Network' ? null : value,
+    }));
+    setCurrentPage(1);
+  };
+
+  if (loading) {
+    return (
+      <div>
+        <div className="flex flex-col md:flex-row md:items-center rounded-t-[10px] px-2 pt-2 dark:bg-card justify-between pb-5">
+          <div className="px-0 py-4 md:px-4 md:py-0 text-[14px] leading-[19px] font-normal text-foreground">
+            Stake transaction information
+          </div>
+        </div>
+        <div className="h-96 flex items-center justify-center dark:bg-card">
+          <div className="text-card-foreground">Loading stake transactions...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>
+        <div className="flex flex-col md:flex-row md:items-center rounded-t-[10px] px-2 pt-2 dark:bg-card justify-between pb-5">
+          <div className="px-0 py-4 md:px-4 md:py-0 text-[14px] leading-[19px] font-normal text-foreground">
+            Stake transaction information
+          </div>
+        </div>
+        <div className="h-96 flex items-center justify-center dark:bg-card">
+          <div className="text-red-500">{error}</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -318,11 +352,12 @@ const StakeTransactionTable = () => {
             <div className="relative inline-block">
               <select
                 className="h-10 px-2 py-2 pr-10 rounded-[10px] border  border-border dark:border-[#454545] bg-transparent hover:bg-gray-50 flex items-center gap-3 appearance-none text-sm text-card-foreground focus:outline-none focus:ring-0"
-                defaultValue="All Network"
+                value={filters.chainId || "All Network"}
+                onChange={(e) => handleFilterChange('chainId', e.target.value)}
               >
                 <option value="All Network">All Network</option>
-                <option value="Contract">Contract</option>
-                <option value="Hash">Hash</option>
+                <option value="BSC">BSC</option>
+                <option value="ETH">Ethereum</option>
               </select>
               <img
                 className="w-3.5 h-3.5 absolute right-3 top-1/2 -translate-y-1/2"
@@ -336,11 +371,46 @@ const StakeTransactionTable = () => {
 
       <TableComponent
         columns={columns}
-        data={dataRewardPoints}
+        data={data}
         showAction={true}
         onRowSelect={setSelectedRow}
         selectedRow={selectedRow}
       />
+
+      {/* API Pagination */}
+      {!selectedRow && total > 10 && (
+        <div className="flex justify-center bg-card md:bg-background py-10">
+          <Pagination>
+            <PaginationContent className="inline-flex items-center gap-[10px] md:gap-[35px] px-[9px] py-[10px] rounded-[40px] border border-solid border-border dark:border-primary-foreground">
+              <img
+                src="/arrow-left-icon.svg"
+                onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                className="w-5 h-5 cursor-pointer"
+              />
+              {Array.from({ length: Math.min(5, Math.ceil(total / 10)) }, (_, i) => {
+                const page = currentPage <= 3 ? i + 1 : currentPage - 2 + i;
+                return page <= Math.ceil(total / 10) ? (
+                  <PaginationItem key={page}>
+                    <div
+                      onClick={() => handlePageChange(page)}
+                      className={`flex w-[30px] items-center justify-center cursor-pointer ${
+                        page === currentPage ? "text-primary" : "text-foreground"
+                      }`}
+                    >
+                      {page}
+                    </div>
+                  </PaginationItem>
+                ) : null;
+              })}
+              <img
+                src="/arrow-right-icon-3.svg"
+                onClick={() => handlePageChange(Math.min(Math.ceil(total / 10), currentPage + 1))}
+                className="w-7 h-7 bg-[#e9f6f7] rounded-full cursor-pointer p-1"
+              />
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </div>
   );
 };

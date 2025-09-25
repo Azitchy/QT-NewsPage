@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Badge } from "../../../../components/ui/badge";
 import { Card, CardContent, CardHeader } from "../../../../components/ui/card";
 import {
@@ -9,6 +9,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { getOverviewData, OverviewData } from "../../../../lib/webApi";
 
 interface ChartData {
   name: string;
@@ -17,43 +18,124 @@ interface ChartData {
 }
 
 export const DashboardSection = () => {
-  const overviewData = [
-    {
-      label: "Luca Price",
-      value: "1.6601",
-      hasPercentage: true,
-      percentage: "+5.32%",
-    },
-    { label: "Total supply", value: "51,349,472" },
-    { label: "User market circulation", value: "11,308,088" },
-    { label: "Circulating supply", value: "46,133,373" },
-    { label: "Remaining liquidity rewards", value: "965,000" },
-    { label: "LUCA staked in Consensus Connections", value: "34,825,285" },
-    { label: "LUCA staked in PR servers", value: "101,099" },
-    { label: "Remaining Community Fund", value: "4,150,000" },
-    { label: "LUCA Consesus Connections", value: "35,812" },
-    { label: "PR Servers in Operation", value: "22" },
-  ];
+  const [overviewData, setOverviewData] = useState<OverviewData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const dataOuter: ChartData[] = [
-    {
-      name: "LUCA staked in Consensus Connections",
-      value: 70,
-      color: "#3CC9C7",
-    },
-    { name: "Remaining Community Fund", value: 5, color: "#FFC94D" },
-    { name: "Remaining liquidity rewards", value: 0, color: "#FF69B4" },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const data = await getOverviewData();
+        setOverviewData(data);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching overview data:", err);
+        setError("Failed to load data");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const dataInner: ChartData[] = [
-    {
-      name: "Circulating supply",
-      value: 60,
-      color: "#97D76D",
-    },
-    { name: "User market circulation", value: 20, color: "#5B6BF5" },
-    { name: "LUCA staked in PR servers", value: 0, color: "#1B5E20" },
-  ];
+    fetchData();
+  }, []);
+
+  const formatNumber = (str: number | string, holdPoint = false): string => {
+    if (!str) return '';
+    let suffix = '';
+    if (holdPoint) {
+      str = parseFloat(str.toString()).toFixed(6);
+      const arr = String(str).split('.');
+      str = arr[0];
+      suffix = arr[1];
+    }
+    str = String(parseInt(str.toString())).replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,');
+    return suffix ? `${str}.${suffix}` : str;
+  };
+
+  const formatPrice = (value: number, n = 4): string => {
+    if (value === undefined || value === null) return `0.${'0'.repeat(n)}`;
+    value = parseFloat(value.toString());
+    let str = '';
+    const index = String(value).indexOf('.');
+    if (index > 0) {
+      const arr = String(value).split('.');
+      str = `${arr[0]}.${arr[1].slice(0, n)}`;
+    } else {
+      str = value.toFixed(n);
+    }
+    return str;
+  };
+
+  const getOverviewItems = () => {
+    if (!overviewData) return [];
+
+    const userMarketNum = overviewData.circulationTotal - overviewData.contractTotalAmount;
+
+    return [
+      {
+        label: "Luca Price",
+        value: formatPrice(overviewData.price),
+        hasPercentage: true,
+        percentage: overviewData.pre ? `${parseFloat(overviewData.pre) >= 0 ? '+' : ''}${overviewData.pre}%` : "+0.00%",
+      },
+      { label: "Total supply", value: formatNumber(overviewData.issuanceTotal) },
+      { label: "User market circulation", value: formatNumber(userMarketNum) },
+      { label: "Circulating supply", value: formatNumber(overviewData.circulationTotal) },
+      { label: "Remaining liquidity rewards", value: formatNumber(overviewData.liquidityReward) },
+      { label: "LUCA staked in Consensus Connections", value: formatNumber(overviewData.contractTotalAmount) },
+      { label: "LUCA staked in PR servers", value: formatNumber(overviewData.treatyTotal) },
+      { label: "Remaining Community Fund", value: formatNumber(overviewData.communityFundStock) },
+      { label: "LUCA Consesus Connections", value: formatNumber(overviewData.contractCount) },
+      { label: "PR Servers in Operation", value: formatNumber(overviewData.prCount) },
+    ];
+  };
+
+  const getPieChartData = (): { outer: ChartData[]; inner: ChartData[] } => {
+    if (!overviewData) {
+      return { outer: [], inner: [] };
+    }
+
+    const userMarketNum = overviewData.circulationTotal - overviewData.contractTotalAmount;
+
+    const outer: ChartData[] = [
+      {
+        name: "LUCA staked in Consensus Connections",
+        value: overviewData.contractTotalAmount,
+        color: "#3CC9C7",
+      },
+      { 
+        name: "Remaining Community Fund", 
+        value: overviewData.communityFundStock, 
+        color: "#FFC94D" 
+      },
+      { 
+        name: "Remaining liquidity rewards", 
+        value: overviewData.liquidityReward, 
+        color: "#FF69B4" 
+      },
+    ];
+
+    const inner: ChartData[] = [
+      {
+        name: "Circulating supply",
+        value: overviewData.circulationTotal,
+        color: "#97D76D",
+      },
+      { 
+        name: "User market circulation", 
+        value: userMarketNum, 
+        color: "#5B6BF5" 
+      },
+      { 
+        name: "LUCA staked in PR servers", 
+        value: overviewData.treatyTotal, 
+        color: "#1B5E20" 
+      },
+    ];
+
+    return { outer, inner };
+  };
 
   const copyToClipboard = (text?: string) => {
     if (text) {
@@ -80,6 +162,32 @@ export const DashboardSection = () => {
     );
   };
 
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full">
+        <div className="bg-card rounded-2xl border-[0px] shadow-none md:shadow-sm p-6 h-96 flex items-center justify-center">
+          <div className="text-card-foreground">Loading overview data...</div>
+        </div>
+        <div className="bg-card rounded-2xl border-[0px] shadow-none md:shadow-sm p-6 h-96 flex items-center justify-center">
+          <div className="text-card-foreground">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full">
+        <div className="bg-card rounded-2xl border-[0px] shadow-none md:shadow-sm p-6 h-96 flex items-center justify-center">
+          <div className="text-red-500">{error}</div>
+        </div>
+      </div>
+    );
+  }
+
+  const overviewItems = getOverviewItems();
+  const { outer: dataOuter, inner: dataInner } = getPieChartData();
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full">
       <Card className="bg-card rounded-2xl border-[0px] shadow-none md:shadow-sm">
@@ -92,7 +200,7 @@ export const DashboardSection = () => {
           </div>
         </CardHeader>
         <CardContent className="p-0 divide-y divide-[#E6E6E6]">
-          {overviewData.map((item, index) => (
+          {overviewItems.map((item, index) => (
             <div
               key={index}
               className="flex justify-between items-center px-6 py-4 transition-colors"
@@ -105,11 +213,13 @@ export const DashboardSection = () => {
                   {item.value}
                 </div>
                 {item.hasPercentage && (
-                  <Badge className="bg-green-100 text-green-700 rounded-full px-3 py-1 text-xs font-medium border-0 hover:bg-green-100">
+                  <Badge className={`${
+                    parseFloat(item.percentage || '0') >= 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                  } rounded-full px-3 py-1 text-xs font-medium border-0 hover:bg-green-100`}>
                     <img
                       className="mr-1"
                       alt="Image"
-                      src="/green-up-arrow.svg"
+                      src={parseFloat(item.percentage || '0') >= 0 ? "/green-up-arrow.svg" : "/red-down-arrow.svg"}
                     />
                     <span>{item.percentage}</span>
                   </Badge>
@@ -224,7 +334,7 @@ export const DashboardSection = () => {
                       className="w-4 h-4 cursor-pointer"
                       alt="Copy icon"
                       src="/copy-icon.png"
-                       onClick={() => copyToClipboard("0xa3c6...1431A7")}
+                      onClick={() => copyToClipboard("0xa3c6...1431A7")}
                     />
                   </div>
                 </div>

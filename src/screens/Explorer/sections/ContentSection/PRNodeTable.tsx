@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
 } from "../../../../components/ui/pagination";
+import { fetchPRNodes, PRNodeItem } from "../../../../lib/webApi";
 
 const columns = [
   "PR node",
@@ -12,63 +13,6 @@ const columns = [
   "Server nickname",
   "Stake amount",
   "Action",
-];
-
-const dataRewardPoints = [
-  {
-    prNode: "0x41afb7032199151d5cDE524037cD85ddACCe708E",
-    serverDomainName:
-      "http://ec2-18-141-169-230.ap-southeast-1.compute.amazonaws.com:5000",
-    serverIP: "18.141.169.230",
-    serverNickname: "pr09",
-    nodeRanking: "1",
-    stakeAmount: "94438955.5526 LUCA",
-  },
-  {
-    prNode: "0x41afb7032199151d5cDE524037cD85ddACCe708E",
-    serverDomainName:
-      "http://ec2-18-141-169-230.ap-southeast-1.compute.amazonaws.com:5000",
-    serverIP: "18.141.169.230",
-    serverNickname: "pr09",
-    nodeRanking: "1",
-    stakeAmount: "9748911.614100000000000001 LUCA",
-  },
-  {
-    prNode: "0x41afb7032199151d5cDE524037cD85ddACCe708E",
-    serverDomainName:
-      "http://ec2-18-141-169-230.ap-southeast-1.compute.amazonaws.com:5000",
-    serverIP: "18.141.169.230",
-    serverNickname: "pr09",
-    nodeRanking: "1",
-    stakeAmount: "9748911.614100000000000001 LUCA",
-  },
-  {
-    prNode: "0x41afb7032199151d5cDE524037cD85ddACCe708E",
-    serverDomainName:
-      "http://ec2-18-141-169-230.ap-southeast-1.compute.amazonaws.com:5000",
-    serverIP: "18.141.169.230",
-    serverNickname: "pr09",
-    nodeRanking: "1",
-    stakeAmount: "9748911.614100000000000001 LUCA",
-  },
-  {
-    prNode: "0x41afb7032199151d5cDE524037cD85ddACCe708E",
-    serverDomainName:
-      "http://ec2-18-141-169-230.ap-southeast-1.compute.amazonaws.com:5000",
-    serverIP: "18.141.169.230",
-    serverNickname: "pr09",
-    nodeRanking: "1",
-    stakeAmount: "9748911.614100000000000001 LUCA",
-  },
-  {
-    prNode: "0x41afb7032199151d5cDE524037cD85ddACCe708E",
-    serverDomainName:
-      "http://ec2-18-141-169-230.ap-southeast-1.compute.amazonaws.com:5000",
-    serverIP: "18.141.169.230",
-    serverNickname: "pr09",
-    nodeRanking: "1",
-    stakeAmount: "9748911.614100000000000001 LUCA",
-  },
 ];
 
 const TableComponent = ({
@@ -95,6 +39,10 @@ const TableComponent = ({
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentData = data.slice(startIndex, startIndex + itemsPerPage);
 
+  const hideAddress = (address: string) => {
+    return address ? `${address.substring(0, 4)}...${address.substring(address.length - 4)}` : '';
+  };
+
   // Detail View
   if (selectedRow) {
     return (
@@ -111,21 +59,21 @@ const TableComponent = ({
         </div>
         <div className="grid md:grid-cols-[180px_1fr] gap-y-1 md:gap-y-4 text-[14px] leading-[19px] text-foreground">
           <div className="text-card-foreground md:text-foreground">PR node</div>
-          <div className="truncate max-w-full">{selectedRow.prNode}</div>
+          <div className="truncate max-w-full">{selectedRow.serverAddress}</div>
 
           <hr className="md:hidden my-2 dark:border-[#454545]" />
 
           <div className="text-card-foreground md:text-foreground">
             Server domain name
           </div>
-          <div>{selectedRow.serverDomainName}</div>
+          <div className="truncate max-w-full">{selectedRow.serverUrl}</div>
 
           <hr className="md:hidden my-2 dark:border-[#454545]" />
 
           <div className="text-card-foreground md:text-foreground">
             Server IP
           </div>
-          <div>{selectedRow.serverIP}</div>
+          <div>{selectedRow.serverIp}</div>
 
           <hr className="md:hidden my-2 dark:border-[#454545]" />
 
@@ -139,13 +87,13 @@ const TableComponent = ({
           <div className="text-card-foreground md:text-foreground">
             Node ranking
           </div>
-          <div>{selectedRow.nodeRanking}</div>
+          <div>{selectedRow.rank || "N/A"}</div>
           <hr className="md:hidden my-2 dark:border-[#454545]" />
 
           <div className="text-card-foreground md:text-foreground">
             Stake amount
           </div>
-          <div>{selectedRow.stakeAmount}</div>
+          <div>{selectedRow.ledgeAmount} LUCA</div>
         </div>
       </div>
     );
@@ -172,16 +120,16 @@ const TableComponent = ({
             {currentData.map((row, idx) => (
               <tr key={idx}>
                 <td className="px-4 py-3 text-sm truncate max-w-[180px]">
-                  {row.prNode}
+                  {hideAddress(row.serverAddress)}
                 </td>
                 <td className="px-4 py-3 text-sm truncate max-w-[180px]">
-                  {row.serverDomainName}
+                  {row.serverUrl}
                 </td>
                 <td className="px-4 py-3 text-sm truncate max-w-[180px]">
-                  {row.serverIP}
+                  {row.serverIp}
                 </td>
                 <td className="px-4 py-3 text-sm">{row.serverNickname}</td>
-                <td className="px-4 py-3 text-sm">{row.stakeAmount}</td>
+                <td className="px-4 py-3 text-sm">{row.ledgeAmount} LUCA</td>
                 {showAction && (
                   <td className="px-4 py-3 text-sm">
                     <button
@@ -206,15 +154,15 @@ const TableComponent = ({
               <span className="truncate max-w-[220px] text-card-foreground">
                 {row.serverNickname}
               </span>
-              <span>IP {row.serverIP}</span>
+              <span>IP {row.serverIp}</span>
             </div>
             <div className="flex justify-between gap-10 text-sm font-normal mt-2">
-              <span className="truncate max-w-[100px]">{row.prNode}</span>
+              <span className="truncate max-w-[100px]">{hideAddress(row.serverAddress)}</span>
               <span
                 onClick={() => onRowSelect(row)}
-                className="truncate max-w-full text-primary"
+                className="truncate max-w-full text-primary cursor-pointer"
               >
-                {row.stakeAmount}
+                {row.ledgeAmount} LUCA
               </span>
             </div>
           </div>
@@ -256,6 +204,61 @@ const TableComponent = ({
 
 const PRNodeTable = () => {
   const [selectedRow, setSelectedRow] = useState<any>(null);
+  const [data, setData] = useState<PRNodeItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
+
+  const fetchData = async (pageNo = 1) => {
+    try {
+      setLoading(true);
+      const response = await fetchPRNodes(pageNo, 10);
+      
+      if (response.data && Array.isArray(response.data)) {
+        setData(response.data);
+        setTotal(response.total || response.data.length);
+      } else {
+        setData([]);
+        setTotal(0);
+      }
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching PR nodes:", err);
+      setError("Failed to load PR nodes");
+      setData([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(currentPage);
+  }, [currentPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  if (loading) {
+    return (
+      <div className="dark:bg-card rounded-t-[10px] pt-4">
+        <div className="h-96 flex items-center justify-center">
+          <div className="text-card-foreground">Loading PR nodes...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="dark:bg-card rounded-t-[10px] pt-4">
+        <div className="h-96 flex items-center justify-center">
+          <div className="text-red-500">{error}</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="dark:bg-card rounded-t-[10px] pt-4">
@@ -269,11 +272,46 @@ const PRNodeTable = () => {
 
       <TableComponent
         columns={columns}
-        data={dataRewardPoints}
+        data={data}
         showAction={true}
         onRowSelect={setSelectedRow}
         selectedRow={selectedRow}
       />
+
+      {/* API Pagination */}
+      {!selectedRow && total > 10 && (
+        <div className="flex justify-center bg-card md:bg-background py-10">
+          <Pagination>
+            <PaginationContent className="inline-flex items-center gap-[10px] md:gap-[35px] px-[9px] py-[10px] rounded-[40px] border border-solid border-border dark:border-primary-foreground">
+              <img
+                src="/arrow-left-icon.svg"
+                onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                className="w-5 h-5 cursor-pointer"
+              />
+              {Array.from({ length: Math.min(5, Math.ceil(total / 10)) }, (_, i) => {
+                const page = currentPage <= 3 ? i + 1 : currentPage - 2 + i;
+                return page <= Math.ceil(total / 10) ? (
+                  <PaginationItem key={page}>
+                    <div
+                      onClick={() => handlePageChange(page)}
+                      className={`flex w-[30px] items-center justify-center cursor-pointer ${
+                        page === currentPage ? "text-primary" : "text-foreground"
+                      }`}
+                    >
+                      {page}
+                    </div>
+                  </PaginationItem>
+                ) : null;
+              })}
+              <img
+                src="/arrow-right-icon-3.svg"
+                onClick={() => handlePageChange(Math.min(Math.ceil(total / 10), currentPage + 1))}
+                className="w-7 h-7 bg-[#e9f6f7] rounded-full cursor-pointer p-1"
+              />
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </div>
   );
 };

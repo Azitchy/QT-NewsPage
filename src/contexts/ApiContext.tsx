@@ -18,26 +18,38 @@ interface ApiContextType {
   
   // Web API methods
   webApi: {
+    // News APIs
     fetchNewsList: typeof webApi.fetchNewsList;
     getNewsDetail: typeof webApi.getNewsDetail;
-    getInitiateList: typeof webApi.getInitiateList;
+    showDefaultImageIfEmpty: typeof webApi.showDefaultImageIfEmpty;
+    
+    // Overview & Statistics APIs
     getOverviewData: typeof webApi.getOverviewData;
-    subscribe: typeof webApi.subscribe;
-    getSignMessage: typeof webApi.getSignMessage;
-    getLoginToken: typeof webApi.getLoginToken;
-    getCoinCurrency: typeof webApi.getCoinCurrency;
     getUserLinkData: typeof webApi.getUserLinkData;
-    fetchConsensusContractList: typeof webApi.fetchConsensusContractList;
+    
+    // Explorer APIs
+    getCoinCurrency: typeof webApi.getCoinCurrency;
     fetchCoinPriceTrend: typeof webApi.fetchCoinPriceTrend;
     fetchSystemTime: typeof webApi.fetchSystemTime;
+    
+    // Ranking & User APIs
     fetchRankList: typeof webApi.fetchRankList;
+    fetchUserInformation: typeof webApi.fetchUserInformation;
+    
+    // Transaction & Node APIs
+    fetchConsensusContractList: typeof webApi.fetchConsensusContractList;
     fetchPRNodes: typeof webApi.fetchPRNodes;
     fetchStakeTransactions: typeof webApi.fetchStakeTransactions;
     fetchContractInfo: typeof webApi.fetchContractInfo;
+    
+    // Authentication APIs
+    getSignMessage: typeof webApi.getSignMessage;
+    getLoginToken: typeof webApi.getLoginToken;
+    
+    // Subscription & Community APIs
+    subscribe: typeof webApi.subscribe;
+    getInitiateList: typeof webApi.getInitiateList;
   };
-
-  // Utility methods
-  showDefaultImageIfEmpty: typeof webApi.showDefaultImageIfEmpty;
 }
 
 const ApiContext = createContext<ApiContextType | undefined>(undefined);
@@ -56,24 +68,38 @@ export const ApiProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       gameContributed: gameApi.gameContributed,
     },
     webApi: {
+      // News APIs
       fetchNewsList: webApi.fetchNewsList,
       getNewsDetail: webApi.getNewsDetail,
-      getInitiateList: webApi.getInitiateList,
+      showDefaultImageIfEmpty: webApi.showDefaultImageIfEmpty,
+      
+      // Overview & Statistics APIs
       getOverviewData: webApi.getOverviewData,
-      subscribe: webApi.subscribe,
-      getSignMessage: webApi.getSignMessage,
-      getLoginToken: webApi.getLoginToken,
-      getCoinCurrency: webApi.getCoinCurrency,
       getUserLinkData: webApi.getUserLinkData,
-      fetchConsensusContractList: webApi.fetchConsensusContractList,
+      
+      // Explorer APIs
+      getCoinCurrency: webApi.getCoinCurrency,
       fetchCoinPriceTrend: webApi.fetchCoinPriceTrend,
       fetchSystemTime: webApi.fetchSystemTime,
+      
+      // Ranking & User APIs
       fetchRankList: webApi.fetchRankList,
+      fetchUserInformation: webApi.fetchUserInformation,
+      
+      // Transaction & Node APIs
+      fetchConsensusContractList: webApi.fetchConsensusContractList,
       fetchPRNodes: webApi.fetchPRNodes,
       fetchStakeTransactions: webApi.fetchStakeTransactions,
       fetchContractInfo: webApi.fetchContractInfo,
+      
+      // Authentication APIs
+      getSignMessage: webApi.getSignMessage,
+      getLoginToken: webApi.getLoginToken,
+      
+      // Subscription & Community APIs
+      subscribe: webApi.subscribe,
+      getInitiateList: webApi.getInitiateList,
     },
-    showDefaultImageIfEmpty: webApi.showDefaultImageIfEmpty,
   };
 
   return (
