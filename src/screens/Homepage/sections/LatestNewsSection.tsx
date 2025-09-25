@@ -9,12 +9,7 @@ export const LatestNewsSection = () => {
   const [selectedNews, setSelectedNews] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const {
-    data: newsList,
-    loading,
-    error,
-    execute: fetchNews,
-  } = useFetchNewsList();
+  const { data: newsList, loading, execute: fetchNews } = useFetchNewsList();
 
   useEffect(() => {
     fetchNews({ pageIndex: 1, pageSize: 100, type: "" });
@@ -41,6 +36,42 @@ export const LatestNewsSection = () => {
     }
   }, [newsList]);
 
+  useEffect(() => {
+    const pathParts = window.location.pathname.split("/");
+    const idFromUrl = pathParts[pathParts.length - 1];
+
+    if (idFromUrl && allNews.length > 0) {
+      const matchedNews = allNews.find((n) => n.id?.toString() === idFromUrl);
+      if (matchedNews) {
+        setSelectedNews(matchedNews);
+        setIsModalOpen(true);
+      }
+    }
+  }, [allNews]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const pathParts = window.location.pathname.split("/");
+      const idFromUrl = pathParts[pathParts.length - 1];
+
+      if (!idFromUrl || idFromUrl === "news") {
+        setIsModalOpen(false);
+        setSelectedNews(null);
+      } else {
+        const matchedNews = allNews.find((n) => n.id?.toString() === idFromUrl);
+        if (matchedNews) {
+          setSelectedNews(matchedNews);
+          setIsModalOpen(true);
+        }
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [allNews]);
+
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
     try {
@@ -54,18 +85,22 @@ export const LatestNewsSection = () => {
   const handleReadNews = (newsItem: any) => {
     setSelectedNews(newsItem);
     setIsModalOpen(true);
+    if (newsItem?.id) {
+      window.history.pushState({}, "", `/news/${newsItem.id}`);
+    }
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedNews(null);
+    window.history.pushState({}, "", `/news`);
   };
 
   return (
     <>
       <div className="relative w-full px-4 lg:px-0">
         <div className="relative h-[100px] ml-0 lg:ml-[71px]">
-          <div className="left-10 absolute top-[25px] lg:left-[49px] font-titles-h2-sectionheading-400 font-[number:var(--titles-h2-sectionheading-400-font-weight)] text-primary-colour text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] whitespace-nowrap [font-style:var(--titles-h2-sectionheading-400-font-style)]">
+          <div className="left-10 absolute top-[25px] lg:left-[49px] font-titles-h2-sectionheading-400 text-primary-colour">
             LATEST NEWS
           </div>
           <img
@@ -136,10 +171,16 @@ export const LatestNewsSection = () => {
         </div>
       </div>
 
+      {/* News Modal */}
       <NewsModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         newsItem={selectedNews}
+        newsList={allNews}
+        setNewsItem={(item) => {
+          setSelectedNews(item);
+          setIsModalOpen(true);
+        }}
       />
     </>
   );

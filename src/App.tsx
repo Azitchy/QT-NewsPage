@@ -65,6 +65,7 @@ export const App = (): JSX.Element => {
                   </Route>
                   {/* Other pages */}
                   <Route path="/news" element={<News />} />
+                  <Route path="/news/*" element={<News />} />
                   <Route path="/help" element={<Help />} />
                   <Route path="/games" element={<Games />} />
                   <Route path="/roadmap" element={<Roadmap />} />

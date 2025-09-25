@@ -1,7 +1,6 @@
 "use client";
 
-import type React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Pagination,
@@ -29,19 +28,15 @@ export const NewsSection = (): JSX.Element => {
   } = useFetchNewsList();
 
   useEffect(() => {
-    // Load all news data with a large page size to get everything
     fetchNews({ pageIndex: 1, pageSize: 100, type: "" });
   }, []);
 
   useEffect(() => {
     if (newsList?.data?.newsList && Array.isArray(newsList.data.newsList)) {
-      // Process API news data
       const processedNews = newsList.data.newsList.map((item: any) => {
-        // Ensure image fallback
         const newsItem = { ...item };
         showDefaultImageIfEmpty(newsItem);
 
-        // Map type to category
         let category = "Updates";
         if (item.type === 2) category = "Community";
         if (item.type === 3) category = "Notice";
@@ -56,6 +51,43 @@ export const NewsSection = (): JSX.Element => {
       setAllNews(processedNews);
     }
   }, [newsList]);
+
+  const checkUrlAndOpenModal = () => {
+    if (!allNews || allNews.length === 0) {
+      console.log("[checkUrlAndOpenModal] No news loaded yet");
+      return;
+    }
+
+    const pathParts = window.location.pathname.split("/").filter(Boolean);
+
+    if (pathParts.length >= 2 && pathParts[0] === "news") {
+      const idFromUrl = pathParts[1];
+      console.log("[checkUrlAndOpenModal] idFromUrl:", idFromUrl);
+
+      const matched = allNews.find((item) => item.id?.toString() === idFromUrl);
+
+      if (matched) {
+        console.log("[checkUrlAndOpenModal] matched news:", matched);
+        setSelectedNews(matched);
+        setIsModalOpen(true);
+        return;
+      }
+    }
+
+    setSelectedNews(null);
+    setIsModalOpen(false);
+  };
+
+  useEffect(() => {
+    checkUrlAndOpenModal();
+  }, [allNews]);
+
+  useEffect(() => {
+    window.addEventListener("popstate", checkUrlAndOpenModal);
+    return () => {
+      window.removeEventListener("popstate", checkUrlAndOpenModal);
+    };
+  }, [allNews]);
 
   const filterTabs = ["All", "Updates", "Notice", "Community"];
 
@@ -72,23 +104,7 @@ export const NewsSection = (): JSX.Element => {
   const getFilteredNews = () => {
     if (activeTab === "All") return allNews;
 
-    if (activeTab === "Updates") {
-      return allNews.filter(
-        (news) => news.type === 1 || news.category === "Updates"
-      );
-    }
-    if (activeTab === "Community") {
-      return allNews.filter(
-        (news) => news.type === 2 || news.category === "Community"
-      );
-    }
-    if (activeTab === "Notice") {
-      return allNews.filter(
-        (news) => news.type === 3 || news.category === "Notice"
-      );
-    }
-
-    return allNews;
+    return allNews.filter((news) => news.category === activeTab);
   };
 
   const filteredNews = getFilteredNews();
@@ -113,11 +129,16 @@ export const NewsSection = (): JSX.Element => {
   const handleReadNews = (newsItem: any) => {
     setSelectedNews(newsItem);
     setIsModalOpen(true);
+
+    const slug = newsItem.slug || "";
+    window.history.pushState({}, "", `/news/${newsItem.id}/${slug}`);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedNews(null);
+
+    window.history.pushState({}, "", `/news`);
   };
 
   return (
@@ -276,6 +297,14 @@ export const NewsSection = (): JSX.Element => {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         newsItem={selectedNews}
+        newsList={allNews}
+        setNewsItem={(item) => {
+          setSelectedNews(item);
+          setIsModalOpen(true);
+
+          const slug = item.slug || "";
+          window.history.pushState({}, "", `/news/${item.id}/${slug}`);
+        }}
       />
     </>
   );

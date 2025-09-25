@@ -8,6 +8,7 @@ import { NewsModal } from "./NewsModal";
 export const HeroSection = (): JSX.Element => {
   const [featuredNews, setFeaturedNews] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const {
     data: newsList,
     loading,
@@ -16,7 +17,7 @@ export const HeroSection = (): JSX.Element => {
   } = useFetchNewsList();
 
   useEffect(() => {
-    fetchNews({ pageIndex: 1, pageSize: 1, type: "" });
+    fetchNews({ pageIndex: 1, pageSize: 100, type: "" });
   }, []);
 
   useEffect(() => {
@@ -25,11 +26,39 @@ export const HeroSection = (): JSX.Element => {
     }
   }, [newsList]);
 
+  useEffect(() => {
+    const pathParts = window.location.pathname.split("/");
+    const idFromUrl = pathParts[pathParts.length - 1];
+
+    if (
+      featuredNews &&
+      idFromUrl &&
+      featuredNews.id?.toString() === idFromUrl
+    ) {
+      setIsModalOpen(true);
+    }
+  }, [featuredNews]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const pathParts = window.location.pathname.split("/");
+      const idFromUrl = pathParts[pathParts.length - 1];
+
+      if (idFromUrl === "news" || !idFromUrl) {
+        setIsModalOpen(false);
+      } else if (featuredNews && featuredNews.id?.toString() === idFromUrl) {
+        setIsModalOpen(true);
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [featuredNews]);
+
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
     try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString("en-GB");
+      return new Date(dateString).toLocaleDateString("en-GB");
     } catch {
       return "";
     }
@@ -37,16 +66,20 @@ export const HeroSection = (): JSX.Element => {
 
   const handleReadNews = () => {
     setIsModalOpen(true);
+    if (featuredNews?.id) {
+      window.history.pushState({}, "", `/news/${featuredNews.id}`);
+    }
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    window.history.pushState({}, "", `/news`);
   };
 
   if (loading) {
     return (
       <section className="w-full flex justify-center py-8 md:py-12 px-4 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
-        <Card className="max-w-[1400px] w-full border border-border dark:border-primary-foreground rounded-[10px] md:rounded-[20px] overflow-hidden mx-auto">
+        <Card className="max-w-[1400px] w-full border border-border rounded-[10px] md:rounded-[20px] overflow-hidden mx-auto">
           <CardContent className="flex items-center justify-center p-[60px]">
             <div className="text-card-foreground">Loading featured news...</div>
           </CardContent>
@@ -103,6 +136,7 @@ export const HeroSection = (): JSX.Element => {
                     </React.Fragment>
                   ))}
               </p>
+
               <div className="flex items-center justify-between">
                 <time className="font-body-body3-400 font-[number:var(--body-body3-400-font-weight)] text-[#4f5555] dark:text-card-foreground text-[16px] md:text-[14px] lg:text-[length:var(--body-body3-400-font-size)] tracking-[var(--body-body3-400-letter-spacing)] leading-[var(--body-body3-400-line-height)] [font-style:var(--body-body3-400-font-style)]">
                   {formatDate(featuredNews?.createTime)}
@@ -129,13 +163,13 @@ export const HeroSection = (): JSX.Element => {
         </Card>
       </section>
 
-      {isModalOpen && (
-        <NewsModal
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          newsItem={featuredNews}
-        />
-      )}
+      <NewsModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        newsItem={featuredNews}
+        newsList={newsList?.data?.newsList || []}
+        setNewsItem={setFeaturedNews}
+      />
     </>
   );
 };

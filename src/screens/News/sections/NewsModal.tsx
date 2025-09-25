@@ -7,20 +7,23 @@ interface NewsModalProps {
   isOpen: boolean;
   onClose: () => void;
   newsItem: any;
+  newsList: any[];
+  setNewsItem: (item: any) => void;
 }
 
 export const NewsModal = ({
   isOpen,
   onClose,
   newsItem,
+  newsList,
+  setNewsItem,
 }: NewsModalProps): JSX.Element | null => {
   if (!isOpen || !newsItem) return null;
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
     try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString("en-US", {
+      return new Date(dateString).toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -32,17 +35,25 @@ export const NewsModal = ({
     }
   };
 
-  // Parse HTML content and convert to JSX
   const parseContent = (htmlContent: string) => {
     if (!htmlContent) return null;
-
-    // Simple HTML parsing for the content structure
     return (
       <div
         className="prose prose-lg max-w-none text-foreground leading-relaxed"
         dangerouslySetInnerHTML={{ __html: htmlContent }}
       />
     );
+  };
+
+  const notices = newsList?.slice(0, 3);
+
+  const hotNews = newsList && newsList.length > 0 ? newsList[0] : null;
+
+  const handleCopy = () => {
+    const url = `${window.location.origin}/news/${newsItem.id}`;
+    navigator.clipboard.writeText(url).then(() => {
+      alert("Link copied! Now go ahead and share it!");
+    });
   };
 
   return (
@@ -57,11 +68,9 @@ export const NewsModal = ({
       <div className="relative bg-card rounded-2xl shadow-2xl max-w-6xl w-full mx-4 max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-6">
-          <div className="flex items-center gap-3">
-            <span className="px-3 py-1 bg-teal-100 text-primary rounded-full text-sm font-medium">
-              News
-            </span>
-          </div>
+          <span className="px-3 py-1 bg-teal-100 text-primary rounded-full text-sm font-medium">
+            News
+          </span>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -88,7 +97,10 @@ export const NewsModal = ({
             <div className="flex items-center gap-4 mb-6 text-sm text-foreground">
               <span className="font-medium">NEWS</span>
               <span>{formatDate(newsItem.createTime)}</span>
-              <button className="ml-auto p-2 hover:bg-gray-100 rounded-full">
+              <button
+                className="ml-auto p-2 hover:bg-gray-100 rounded-full"
+                onClick={handleCopy}
+              >
                 <svg
                   className="w-4 h-4"
                   viewBox="0 0 24 24"
@@ -121,7 +133,9 @@ export const NewsModal = ({
             )}
 
             {/* Article Content */}
-            <div className="space-y-6 text-foreground dark:text-foreground">{parseContent(newsItem.content)}</div>
+            <div className="space-y-6 text-foreground dark:text-foreground">
+              {parseContent(newsItem.content)}
+            </div>
           </div>
 
           <div className="border-l border-gray-300 h-screen mx-4"></div>
@@ -133,61 +147,56 @@ export const NewsModal = ({
               <div>
                 <h3 className="text-xl font-bold text-primary mb-4">NOTICE</h3>
                 <div className="space-y-4">
-                  <div className=" p-4 ">
-                    <h4 className="font-semibold text-foreground mb-2">
-                      Connection is live now for the ATM...
-                    </h4>
-                    <a
-                      href="#"
-                      className="text-primary text-sm hover:underline"
-                    >
-                      Read more
-                    </a>
-                  </div>
-                  <div className="p-4">
-                    <h4 className="font-semibold text-foreground mb-2">
-                      LUCA Travel is Live – Travel wit...
-                    </h4>
-                    <a
-                      href="#"
-                      className="text-primary text-sm hover:underline"
-                    >
-                      Read more
-                    </a>
-                  </div>
-                  <div className="p-4">
-                    <h4 className="font-semibold text-foreground mb-2">
-                      ATM Network Rings in 2024 wit...
-                    </h4>
-                    <a
-                      href="#"
-                      className="text-primary text-sm hover:underline"
-                    >
-                      Read more
-                    </a>
-                  </div>
+                  {notices.map((item) => (
+                    <div key={item.id} className="p-2">
+                      <h4 className="font-semibold text-foreground mb-2 line-clamp-2">
+                        {item.title}
+                      </h4>
+                      <button
+                        onClick={() => {
+                          setNewsItem(item);
+                          window.history.pushState({}, "", `/news/${item.id}`);
+                        }}
+                        className="text-primary text-sm hover:underline"
+                      >
+                        Read more
+                      </button>
+                    </div>
+                  ))}
                 </div>
               </div>
 
               {/* Hot News Section */}
-              <div>
-                <h3 className="text-xl font-bold text-primary mb-4">
-                  HOT NEWS
-                </h3>
-                <div className="p-4 rounded-lg">
-                  <h4 className="font-semibold text-foreground mb-2">
-                    Presale and Launch in this...
-                  </h4>
-                  <img
-                    src={newsItem.coverImg || "/placeholder.svg"}
-                    alt="Hot news banner"
-                    className="w-full h-20 object-cover mb-2"
-                  />
-                  <a href="#" className="text-primary text-sm hover:underline">
-                    Read more
-                  </a>
+              {hotNews && (
+                <div>
+                  <h3 className="text-xl font-bold text-primary mb-4">
+                    HOT NEWS
+                  </h3>
+                  <div className="p-4 rounded-lg ">
+                    <h4 className="font-semibold text-foreground mb-2 line-clamp-2">
+                      {hotNews.title}
+                    </h4>
+
+                    {hotNews.coverImg && (
+                      <img
+                        src={hotNews.coverImg || "/placeholder.svg"}
+                        alt={hotNews.title}
+                        className="w-full h-20 object-cover mb-2"
+                      />
+                    )}
+
+                    <button
+                      onClick={() => {
+                        setNewsItem(hotNews);
+                        window.history.pushState({}, "", `/news/${hotNews.id}`);
+                      }}
+                      className="text-primary text-sm hover:underline"
+                    >
+                      Read more
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
