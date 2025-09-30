@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Input } from "../../components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "../../components/ui/tabs";
 import { FooterSection } from "../../components/FooterSection";

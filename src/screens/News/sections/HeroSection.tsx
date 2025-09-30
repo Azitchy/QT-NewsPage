@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import * as React from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useFetchNewsList } from "@/hooks/useApi";
 import { NewsModal } from "./NewsModal";
@@ -76,6 +77,12 @@ export const HeroSection = (): JSX.Element => {
     window.history.pushState({}, "", `/news`);
   };
 
+  const decodeHTML = (html: string) => {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  };
+
   if (loading) {
     return (
       <section className="w-full flex justify-center py-8 md:py-12 px-4 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
@@ -118,7 +125,7 @@ export const HeroSection = (): JSX.Element => {
 
             <div className="flex flex-col gap-4 md:gap-5 flex-1 min-w-0">
               <h1 className="font-titles-h5-large-text-400 font-[number:var(--titles-h5-large-text-400-font-weight)] text-foreground text-[26px] md:text-[16px] lg:text-[24px] 2xl:text-[26px] tracking-[var(--titles-h5-large-text-400-letter-spacing)] leading-[34px] md:leading-[20px] lg:leading-[30px] xl:leading-[var(--titles-h5-large-text-400-line-height)] [font-style:var(--titles-h5-large-text-400-font-style)]">
-                {featuredNews?.title}
+                {decodeHTML(featuredNews?.title)}
               </h1>
 
               <p className="font-body-body3-400 font-[number:var(--body-body3-400-font-weight)] text-foreground text-[16px] md:text-[14px] tracking-[var(--body-body3-400-letter-spacing)] leading-[24px] md:leading-[19px] lg:leading-[var(--body-body3-400-line-height)] [font-style:var(--body-body3-400-font-style)] line-clamp-2">

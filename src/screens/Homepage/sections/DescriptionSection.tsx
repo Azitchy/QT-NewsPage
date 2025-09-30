@@ -1,6 +1,9 @@
-import React from "react";
+import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 export const DescriptionSection = (): JSX.Element => {
+  const { t } = useTranslation('home');
+
   return (
     <div className="flex items-center overflow-hidden justify-center w-full min-h-[299px] px-4 lg:px-0">
       <img
@@ -10,14 +13,9 @@ export const DescriptionSection = (): JSX.Element => {
       />
       <div className="max-w-[790px] 2xl:max-w-[948px] mx-auto leading-6 sm:leading-7 lg:text-left">
         <div className="w-full xl:w-[784px] 2xl:w-[948px] text-foreground dark:text-foreground font-inter text-[18px] md:text-[20px] font-light">
-          Autonomous Trust Momentum (ATM) lets you earn rewards by securely
-          locking funds in financial agreements called Consensus Connections.
-          Using the advanced ATM-Rank (PR) algorithm, your contributions are
-          evaluated to calculate fair rewards in LUCA, ATM's native token.{" "}
+          {t('descriptionSection.text')}{" "}
           <span className="font-[500] text-[18px] md:text-[20px] ">
-            The more connections you create, the greater your earning potential,
-            unlocking higher rewards and opportunities. These tools aim to build
-            a healthier, more stable, and prosperous DeFi ecosystem.
+            {t('descriptionSection.highlight')}
           </span>
         </div>
       </div>

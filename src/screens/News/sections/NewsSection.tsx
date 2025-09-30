@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import * as React from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Pagination,
@@ -141,6 +142,12 @@ export const NewsSection = (): JSX.Element => {
     window.history.pushState({}, "", `/news`);
   };
 
+  const decodeHTML = (html: string) => {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  };
+
   return (
     <>
       <section className="w-full px-4 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
@@ -200,7 +207,7 @@ export const NewsSection = (): JSX.Element => {
 
                   <div className="flex flex-col items-start gap-2.5 pt-0 pb-2.5 px-[20px] md:px-[30px] flex-1">
                     <h3 className="font-titles-h5-large-text-400 text-foreground text-[26px] md:text-[20px] lg:text-[20px] xl:text-[26px] line-clamp-3 leading-[34px] md:leading-[27px] lg:leading-[34px]">
-                      {news.title}
+                      {decodeHTML(news.title)}
                     </h3>
                   </div>
 

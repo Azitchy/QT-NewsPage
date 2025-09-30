@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import {
   Tabs,
   TabsList,
   TabsTrigger,
   TabsContent,
 } from "@/components/ui/tabs";
+import { StyledLink } from "@/components/StyledLink";
 
 // Media query hook
 function useMediaQuery(query: string) {
@@ -135,26 +135,8 @@ export const ResourcesSection = (): JSX.Element => {
                   scenes and brains of the project - it outlines our aims,
                   ambitions and technical solutions.
                 </p>
-                <Button
-                  asChild
-                  variant="ghost"
-                  className="w-fit inline-flex items-center gap-[10px] p-0 rounded-[30px]"
-                >
-                  <a
-                    href="https://atm.network/pdf/ATMWhitePaper.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <span className="text-primary-colour font-inter text-[14px] font-normal leading-[19px]">
-                      View white paper
-                    </span>
-                    <img
-                      className="w-[33px] h-[33px]"
-                      alt="Arrow right icon"
-                      src="/arrow-right-icon.svg"
-                    />
-                  </a>
-                </Button>
+                
+                <StyledLink text="View white paper" link="./pdf/ATMWhitePaper.pdf" newTab />
               </TabsContent>
 
               {/* Audit Report Content */}
@@ -166,26 +148,8 @@ export const ResourcesSection = (): JSX.Element => {
                   Dive into our project's detailed documentation for an in-depth
                   look at its intricacies and strong foundation.
                 </p>
-                <Button
-                  asChild
-                  variant="ghost"
-                  className="w-fit inline-flex items-center gap-[10px] p-0 rounded-[30px]"
-                >
-                  <a
-                    href="https://skynet.certik.com/projects/atm"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <span className="text-primary-colour font-inter text-[14px] font-normal leading-[19px]">
-                      View audit report
-                    </span>
-                    <img
-                      className="w-[33px] h-[33px]"
-                      alt="Arrow right icon"
-                      src="/arrow-right-icon.svg"
-                    />
-                  </a>
-                </Button>
+                
+                <StyledLink text="View audit report" link="https://skynet.certik.com/projects/atm" newTab />
               </TabsContent>
             </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import type React from "react";
+import * as React from "react";
 import { X } from "lucide-react";
 
 interface NewsModalProps {
@@ -56,6 +56,12 @@ export const NewsModal = ({
     });
   };
 
+  const decodeHTML = (html: string) => {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
@@ -90,7 +96,7 @@ export const NewsModal = ({
           <div className="p-6 md:max-w-[500px] lg:max-w-[700px]">
             {/* Title */}
             <h1 className="text-3xl font-bold text-foreground mb-4 leading-tight">
-              {newsItem.title}
+              {decodeHTML(newsItem.title)}
             </h1>
 
             {/* Meta info */}
@@ -150,7 +156,7 @@ export const NewsModal = ({
                   {notices.map((item) => (
                     <div key={item.id} className="p-2">
                       <h4 className="font-semibold text-foreground mb-2 line-clamp-2">
-                        {item.title}
+                        {decodeHTML(item.title)}
                       </h4>
                       <button
                         onClick={() => {
@@ -174,7 +180,7 @@ export const NewsModal = ({
                   </h3>
                   <div className="p-4 rounded-lg ">
                     <h4 className="font-semibold text-foreground mb-2 line-clamp-2">
-                      {hotNews.title}
+                      {decodeHTML(hotNews.title)}
                     </h4>
 
                     {hotNews.coverImg && (

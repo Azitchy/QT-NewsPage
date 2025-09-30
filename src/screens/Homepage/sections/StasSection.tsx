@@ -1,5 +1,6 @@
 import { Info } from "lucide-react";
-import React from "react";
+import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 type Stat = {
   value: string;
@@ -9,25 +10,26 @@ type Stat = {
   showLine?: boolean;
 };
 export const StasSection = (): JSX.Element => {
+  const { t } = useTranslation('home');
+
   // Stats data
   const statsData: Stat[] = [
     {
-      value: "42.1k",
-      label: "Number of CC",
+      value: t('stasSection.stats.cc.value'),
+      label: t('stasSection.stats.cc.label'),
       hasInfo: false,
       showLine: true,
     },
     {
-      value: "53.8M",
-      label: "Amount staked in CC",
+      value: t('stasSection.stats.staked.value'),
+      label: t('stasSection.stats.staked.label'),
       hasInfo: true,
       showLine: true,
-      tooltip:
-        "Consensus Connections (CC) are secure financial agreements where you lock funds with others to earn rewards.",
+      tooltip: t('stasSection.stats.staked.tooltip'),
     },
     {
-      value: "65.5M",
-      label: "Total supply",
+      value: t('stasSection.stats.supply.value'),
+      label: t('stasSection.stats.supply.label'),
       hasInfo: false,
       showLine: false,
     },

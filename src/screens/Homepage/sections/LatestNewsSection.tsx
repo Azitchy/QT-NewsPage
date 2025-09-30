@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "../../../components/ui/card";
 import { NewsModal } from "@/screens/News/sections/NewsModal";
 import { useFetchNewsList } from "@/hooks/useApi";
 import { showDefaultImageIfEmpty } from "@/lib/webApi";
 
 export const LatestNewsSection = () => {
+  const { t } = useTranslation('home');
   const [allNews, setAllNews] = useState<any[]>([]);
   const [selectedNews, setSelectedNews] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -96,24 +98,28 @@ export const LatestNewsSection = () => {
     window.history.pushState({}, "", `/news`);
   };
 
+  const decodeHTML = (html: string) => {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  };
+
   return (
     <>
       <div className="relative w-full px-4 lg:px-0">
-        <div className="relative h-[100px] ml-0 lg:ml-[71px]">
-          <div className="left-10 absolute top-[25px] lg:left-[49px] font-titles-h2-sectionheading-400 text-primary-colour">
-            LATEST NEWS
+        <div className="relative w-full lg:w-[225px] h-[99px]">
+          <div className="relative w-full lg:w-[232px] h-[99px] lg:ml-[71px]">
+            <div className="left-10 absolute top-[26px] lg:left-[49px] font-titles-h2-sectionheading-400 font-[number:var(--titles-h2-sectionheading-400-font-weight)] text-primary-colour text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] whitespace-nowrap [font-style:var(--titles-h2-sectionheading-400-font-style)]">
+              {t('latestNewsSection.title')}
+            </div>
+            <img className="w-[99px] h-[99px]" alt="Dots" src="/dots.svg" />
           </div>
-          <img
-            className="w-[99px] h-[100px] absolute top-0 left-0"
-            alt="Dots"
-            src="/dots-2.svg"
-          />
         </div>
 
         {/* Loading State */}
         {loading && (
           <div className="flex justify-center items-center py-10">
-            <div className="text-gray-500">Loading news...</div>
+            <div className="text-gray-500">{t('latestNewsSection.loading')}</div>
           </div>
         )}
 
@@ -139,7 +145,7 @@ export const LatestNewsSection = () => {
 
                 <div className="flex flex-col items-start gap-2.5 pt-0 pb-2.5 px-[20px] md:px-[30px] flex-1">
                   <h3 className="font-titles-h5-large-text-400 text-foreground text-[26px] md:text-[20px] lg:text-[20px] xl:text-[26px] line-clamp-3 leading-[34px] md:leading-[27px] lg:leading-[34px]">
-                    {news.title}
+                    {decodeHTML(news.title || "")}
                   </h3>
                 </div>
 
@@ -156,7 +162,7 @@ export const LatestNewsSection = () => {
                         handleReadNews(news);
                       }}
                     >
-                      <span>Read news</span>
+                      <span>{t('latestNewsSection.readNews')}</span>
                       <img
                         className="w-[30px] h-[30px] md:w-[20px] md:h-[20px] lg:w-[30px] lg:h-[30px] hover:bg-primary-foreground rounded-full transition-all duration-700 ease-in-out hover:scale-110 hover:rotate-[-12deg]"
                         alt="Arrow right icon"

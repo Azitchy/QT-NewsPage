@@ -1,11 +1,14 @@
+import { useTranslation } from "react-i18next";
 import { Button } from "../../../components/ui/button";
 
 export const CommunitySection = () => {
+  const { t } = useTranslation('home');
+
   return (
     <div className="relative w-full px-4 lg:px-0">
       <div className="relative h-[99px] ml-0 lg:ml-[71px]">
         <div className="left-10 absolute h-11 top-[27px] lg:left-[49px] font-titles-h2-sectionheading-400 font-[number:var(--titles-h2-sectionheading-400-font-weight)] text-primary-colour text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] whitespace-nowrap [font-style:var(--titles-h2-sectionheading-400-font-style)]">
-          COMMUNITY
+          {t('communitySection.title')}
         </div>
         <img
           className="w-[99px] h-[99px] absolute top-0 left-0"
@@ -16,30 +19,29 @@ export const CommunitySection = () => {
 
       <div className="flex flex-col w-full max-w-[1316px] h-auto lg:h-[287px] items-center gap-5 mx-auto mt-6 md:px-4">
         <div className="relative self-stretch mt-[-1.00px] font-titles-h5-large-text-400 font-[number:var(--titles-h5-large-text-400-font-weight)] text-foreground dark:text-foreground text-[20px] lg:text-[length:var(--titles-h5-large-text-400-font-size)] text-center tracking-[var(--titles-h5-large-text-400-letter-spacing)] leading-[30px] lg:leading-[var(--titles-h5-large-text-400-line-height)] [font-style:var(--titles-h5-large-text-400-font-style)]">
-          Unleash your influence
+          {t('communitySection.subtitle')}
         </div>
 
         <div className="relative w-full font-space-grotesk font-[number:var(--body-body1-300-font-weight)] text-foreground dark:text-foreground text-[26px] lg:text-[38px] text-center tracking-[var(--body-body1-300-letter-spacing)] leading-[34px] lg:leading-[48px] [font-style:var(--body-body1-300-font-style)]">
-          Your voice holds power –{" "}
+          {t('communitySection.description')}{" "}
           <span className="bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] font-extrabold bg-clip-text text-transparent">
-            become a part of our vibrant community
+            {t('communitySection.descriptionHighlight1')}
           </span>
           ,{" "}
           <span className="bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] font-extrabold  bg-clip-text text-transparent">
-            make your mark
+            {t('communitySection.descriptionHighlight2')}
           </span>
-          , and lead the way to a groundbreaking tomorrow.
+          {t('communitySection.descriptionEnd')}
         </div>
 
         <div className="text-[18px] text-center lg:text-[20px] max-w-[750px] font-light text-[#4f5555] font-inter dark:text-foreground leading-6">
-          Step into a world where your influence matters. Be a Key Opinion
-          Leader (KOL) who shapes the future of ATM Innovation
+          {t('communitySection.additionalText')}
         </div>
 
         <Button className="bg-primary rounded-[30px] px-[15px] py-[12px] md:px-5 md:py-6 z-20">
           <a href="/community">
             <span className="font-body-body3-400 font-[number:var(--body-body3-400-font-weight)] text-background dark:text-primary-foreground text-[14px] md:text-[length:var(--body-body3-400-font-size)] tracking-[var(--body-body3-400-letter-spacing)] leading-[var(--body-body3-400-line-height)] whitespace-nowrap [font-style:var(--body-body3-400-font-style)]">
-              Become KOL today
+              {t('communitySection.button')}
             </span>
           </a>
         </Button>

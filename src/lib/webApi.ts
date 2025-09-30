@@ -976,3 +976,88 @@ export const getInitiateList = async (): Promise<any> => {
     throw error;
   }
 };
+
+/* ------------------------------------------
+   Contact Form Mail API
+   ------------------------------------------ */
+
+export interface ContactFormData {
+  name: string;
+  email: string;
+  walletAddress?: string;
+  message: string;
+}
+
+export const sendContactMail = async (
+  formData: ContactFormData,
+  token: string
+): Promise<{ success: boolean; message: string }> => {
+  try {
+    const mailApiUrl = "https://svtest-web.kodelab.io/mail";
+    
+    const emailContent = `
+New Contact Form Submission from ATM Website
+
+Name: ${formData.name}
+Email: ${formData.email}
+Wallet Address: ${formData.walletAddress || 'Not provided'}
+
+Message:
+${formData.message}
+
+---
+Submitted at: ${new Date().toLocaleString()}
+    `.trim();
+
+    const requestBody = {
+      personalizations: [
+        {
+          to: [
+            {
+              email: "jainesh@kodelab.io"
+            }
+          ],
+          subject: "New Contact Form Submission"
+        }
+      ],
+      from: {
+        email: "info@kodelab.io",
+        name: "ATM Website Contact Form"
+      },
+      content: [
+        {
+          type: "text/plain",
+          value: emailContent
+        }
+      ]
+    };
+
+    const response = await fetch(mailApiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify(requestBody)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    return {
+      success: true,
+      message: result.message || "Email sent successfully"
+    };
+  } catch (error: any) {
+    console.error("Error sending contact mail:", error);
+    return {
+      success: false,
+      message: error.message || "Failed to send email. Please try again later."
+    };
+  }
+};
+

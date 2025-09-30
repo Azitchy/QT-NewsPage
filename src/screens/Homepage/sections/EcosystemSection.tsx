@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type EcosystemTab = "gaming" | "ecology" | "travel";
 
 export const EcosystemSection = () => {
+  const { t } = useTranslation('home');
   const [activeEcosystemTab, setActiveEcosystemTab] =
     useState<EcosystemTab>("gaming");
 
@@ -17,28 +19,23 @@ export const EcosystemSection = () => {
     }
   > = {
     gaming: {
-      title: "Gaming",
-      description1:
-        "Embark on an exhilarating journey into the future of gaming, where innovation knows no bounds.",
-      description2:
-        "The gaming future transcends entertainment, blending technology, creativity, and community to craft an immersive digital landscape.",
+      title: t('ecosystemSection.gaming.title'),
+      description1: t('ecosystemSection.gaming.description1'),
+      description2: t('ecosystemSection.gaming.description2'),
       image: "/ecosystem-gaming.png",
       href: "/games",
     },
     ecology: {
-      title: "Ecology",
-      description1:
-        "Discover sustainable solutions that harmonize technology with environmental responsibility.",
-      description2:
-        "Our ecological initiatives focus on creating a greener future through innovative blockchain technology and sustainable practices.",
+      title: t('ecosystemSection.ecology.title'),
+      description1: t('ecosystemSection.ecology.description1'),
+      description2: t('ecosystemSection.ecology.description2'),
       image: "/ecosystem-ecology.png",
+      href: "/ecosystem#ecology",
     },
     travel: {
-      title: "Traveling",
-      description1:
-        "Elevate your travel experience with LUCA. Through strategic partnerships with travel agencies, LUCA opens doors to a world of possibilities.",
-      description2:
-        "Now, users can seamlessly use LUCA to explore the globe, unlocking a new era of convenience and flexibility in travel.",
+      title: t('ecosystemSection.travel.title'),
+      description1: t('ecosystemSection.travel.description1'),
+      description2: t('ecosystemSection.travel.description2'),
       image: "/ecosystem-travel.png",
       href: "/ecosystem/travel",
     },
@@ -50,7 +47,7 @@ export const EcosystemSection = () => {
     <div className="relative w-full px-4 lg:px-0 lg:mb-56 xl:mb-0">
       <div className="relative h-[99px] ml-0 lg:ml-[71px]">
         <div className="left-10 absolute h-11 top-[27px] lg:left-[45px] font-titles-h2-sectionheading-400 font-[number:var(--titles-h2-sectionheading-400-font-weight)] text-primary-colour text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] whitespace-nowrap [font-style:var(--titles-h2-sectionheading-400-font-style)]">
-          ECOSYSTEM
+          {t('ecosystemSection.title')}
         </div>
         <img
           className="w-[99px] h-[99px] absolute top-0 left-0"
@@ -72,7 +69,7 @@ export const EcosystemSection = () => {
                     : "text-primary hover:bg-primary-foreground"
                 }`}
               >
-                Gaming
+                {t('ecosystemSection.tabs.gaming')}
               </button>
               <button
                 onClick={() => setActiveEcosystemTab("ecology")}
@@ -82,7 +79,7 @@ export const EcosystemSection = () => {
                     : "text-primary hover:bg-primary-foreground"
                 }`}
               >
-                Ecology
+                {t('ecosystemSection.tabs.ecology')}
               </button>
               <button
                 onClick={() => setActiveEcosystemTab("travel")}
@@ -92,7 +89,7 @@ export const EcosystemSection = () => {
                     : "text-primary hover:bg-primary-foreground"
                 }`}
               >
-                Travel
+                {t('ecosystemSection.tabs.travel')}
               </button>
             </div>
           </div>
@@ -119,9 +116,11 @@ export const EcosystemSection = () => {
 
               <div className="inline-flex items-center gap-2.5 relative rounded-[30px]">
                 <div className="relative w-[72px] h-[19px]">
-                  <div className="absolute h-[19px] -top-px left-0 font-body-body-4-400 font-[number:var(--body-body-4-400-font-weight)] text-primary text-[length:var(--body-body-4-400-font-size)] tracking-[var(--body-body-4-400-letter-spacing)] leading-[var(--body-body-4-400-line-height)] whitespace-nowrap [font-style:var(--body-body-4-400-font-style)]">
-                    Learn more
-                  </div>
+                  <a href={currentEcosystemData.href}>
+                    <div className="absolute h-[19px] -top-px left-0 font-body-body-4-400 font-[number:var(--body-body-4-400-font-weight)] text-primary text-[length:var(--body-body-4-400-font-size)] tracking-[var(--body-body-4-400-letter-spacing)] leading-[var(--body-body-4-400-line-height)] whitespace-nowrap [font-style:var(--body-body-4-400-font-style)]">
+                      {t('ecosystemSection.learnMore')}
+                    </div>
+                  </a>
                 </div>
                 <a href={currentEcosystemData.href}>
                   <div className="relative w-[38.53px] h-[38.53px]">

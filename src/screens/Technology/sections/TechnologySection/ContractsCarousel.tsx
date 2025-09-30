@@ -8,6 +8,7 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
+import { StyledLink } from "@/components/StyledLink";
 
 export const contractCards = [
   {
@@ -173,28 +174,7 @@ export const ContractsCarousel = (): JSX.Element => {
 
         {/* Learn More Button */}
         <div className="mt-[20px]">
-          <Button
-            asChild
-            variant="ghost"
-            className="inline-flex items-center gap-2.5 p-0 rounded-[30px] hover:bg-transparent"
-          >
-            <a
-              href="https://github.com/ATM-Developer/atm-contract"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="text-primary font-[family:var(--typography-family-body,Inter)]">
-                Learn more
-              </span>
-              <div className="w-[38.53px] h-[38.53px] flex items-center justify-center">
-                <img
-                  className="w-[33px] h-[33px]"
-                  alt="Arrow right icon"
-                  src="/arrow-right-icon.svg"
-                />
-              </div>
-            </a>
-          </Button>
+          <StyledLink text="Learn more" link="https://github.com/ATM-Developer/atm-contract" newTab />
         </div>
       </div>
     </div>

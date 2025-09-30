@@ -1,5 +1,5 @@
 import { HeadingWithDots } from "@/components/HeadingWithDots";
-import { Button } from "@/components/ui/button";
+import { StyledLink } from "@/components/StyledLink";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 const prTabs = {
@@ -115,22 +115,8 @@ export const PrAlgorithmSection = (): JSX.Element => {
                 <p className="self-stretch  mb-[20px]">
                   Any user can build ATM&apos;s PageRank computing server, and elect the top 11 servers with the highest stake by pledging ATM&apos;s native currency (LUCA). These servers work together for executing the PageRank algorithm, calculate and synchronise the daily PR value of all users on the ATM network.
                 </p>
-                <Button
-                  asChild
-                  variant="ghost"
-                  className="w-fit inline-flex items-center gap-[10px] p-0 rounded-[30px]"
-                >
-                  <a href="/webapp">
-                    <span className="text-primary-colour font-inter text-[14px] font-normal leading-[19px]">
-                      Create node
-                    </span>
-                    <img
-                      className="w-[33px] h-[33px]"
-                      alt="Arrow right icon"
-                      src="/arrow-right-icon.svg"
-                    />
-                  </a>
-                </Button>
+                
+                <StyledLink text="Create node" link="/webapp" />
               </div>
             </div>
           </div>

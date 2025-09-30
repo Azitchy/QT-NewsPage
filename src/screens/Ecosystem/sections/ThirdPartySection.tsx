@@ -198,7 +198,7 @@ export const ThirdPartySection = () => {
                 //  For Desktop
                 <CarouselItem
                   key={idx}
-                  className="basis-auto flex-shrink-0 w-[330px] md:w-[280px] 2xl:w-[330px] py-2 ml-2"
+                  className="basis-auto flex-shrink-0 w-[330px] md:w-[280px] 2xl:w-[330px] py-2 pb-5 ml-2"
                 >
                   <div className="relative rounded-[20px] w-full h-full lg:h-[350px] transform transition-all duration-700 ease-in-out delay-150 hover:scale-105 hover:shadow-lg">
                     {/* Gradient border layer */}

@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { FooterSection } from "../../components/FooterSection";
 import { ContentSection } from "./sections/ContentSection";
 import { HeroSection } from "./sections/HeroSection";

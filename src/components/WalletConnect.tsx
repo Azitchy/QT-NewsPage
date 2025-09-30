@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import * as React from "react";
+import { useState, useEffect } from "react";
 import { Wallet, AlertCircle, Loader2, CheckCircle, ArrowRight, Shield, Key } from 'lucide-react';
 import { useWeb3Auth } from '../contexts/Web3AuthContext';
 

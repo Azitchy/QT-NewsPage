@@ -1,4 +1,5 @@
-import React, { createContext, useContext, ReactNode, useCallback } from 'react';
+import * as React from "react";
+import { createContext, useContext, ReactNode } from 'react';
 import * as gameApi from '../lib/gameApi';
 import * as webApi from '../lib/webApi';
 
@@ -14,6 +15,7 @@ interface ApiContextType {
     getGameById: typeof gameApi.getGameById;
     gameRating: typeof gameApi.gameRating;
     gameContributed: typeof gameApi.gameContributed;
+    submitJoinATMApplication: typeof gameApi.submitJoinATMApplication;
   };
   
   // Web API methods
@@ -54,7 +56,7 @@ interface ApiContextType {
 
 const ApiContext = createContext<ApiContextType | undefined>(undefined);
 
-export const ApiProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const ApiProvider: React.FC<{ children: ReactNode }> = ({ children }: { children: ReactNode }) => {
   const contextValue: ApiContextType = {
     gameApi: {
       createProposal: gameApi.createProposal,
@@ -66,6 +68,7 @@ export const ApiProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       getGameById: gameApi.getGameById,
       gameRating: gameApi.gameRating,
       gameContributed: gameApi.gameContributed,
+      submitJoinATMApplication: gameApi.submitJoinATMApplication,
     },
     webApi: {
       // News APIs
@@ -99,6 +102,8 @@ export const ApiProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       // Subscription & Community APIs
       subscribe: webApi.subscribe,
       getInitiateList: webApi.getInitiateList,
+      
+
     },
   };
 

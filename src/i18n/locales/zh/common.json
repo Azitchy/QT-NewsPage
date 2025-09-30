@@ -1,0 +1,65 @@
+{
+  "navbar": {
+    "logo": {
+      "alt": "ATM 标志"
+    },
+    "navigation": {
+      "technology": {
+        "label": "技术",
+        "description": "塑造未来的前沿技术",
+        "subItems": {
+          "roadmap": "路线图"
+        }
+      },
+      "ecosystem": {
+        "label": "生态系统",
+        "description": "合作共创难忘体验",
+        "subItems": {
+          "agf": "AGF",
+          "games": "游戏",
+          "travel": "旅行",
+          "ecology": "生态"
+        }
+      },
+      "community": "社区",
+      "explorer": "探索者",
+      "news": "新闻",
+      "help": "帮助"
+    },
+    "walletButton": {
+      "connect": "连接钱包",
+      "connecting": "连接中...",
+      "authenticated": {
+        "connectedWallet": "钱包已连接",
+        "authenticatedViaSIWE": "通过 SIWE 验证",
+        "copyAddress": "复制地址",
+        "goToWebApp": "前往 WebApp",
+        "disconnectWallet": "断开钱包"
+      }
+    },
+    "mobileMenu": {
+      "back": "返回"
+    },
+    "languageSwitcher": {
+      "alt": "语言"
+    },
+    "userMenu": {
+      "sessionExpires": "会话即将过期"
+    },
+    "language": "语言"
+  },
+
+    "footer": {
+    "cta": {
+      "title": {
+        "action": "下载",
+        "app": "ATM.CONNECT 现在"
+      },
+      "desc": "随时随地访问您的钱包。"
+    },
+    "download": {
+      "android": "下载安卓版本",
+      "ios": "下载 iOS 版本"
+    }
+  }
+}

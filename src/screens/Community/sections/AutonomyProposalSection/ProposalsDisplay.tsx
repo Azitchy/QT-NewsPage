@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import * as React from "react";
+import { useState } from "react";
 
 type Proposal = {
   id: number;
@@ -26,7 +27,7 @@ const ProposalsDisplay: React.FC = () => {
   const activeIndex = proposalsData.findIndex((p) => p.id === active);
 
   return (
-    <div className="flex justify-center items-center relative w-full py-[20px]">
+    <div className="max-w-[1087px] flex justify-center items-center relative w-full py-[20px]">
       {/* xl version with animation */}
       <div className="hidden md:flex flex-row items-center transition-all duration-700 ease-in-out space-x-8">
         {proposalsData.map((proposal) => {

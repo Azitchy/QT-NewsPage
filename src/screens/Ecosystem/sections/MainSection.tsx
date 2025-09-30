@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Button } from "../../../components/ui/button";
 import { VideoPlayer } from "./VideoPlayer";
 import { motion } from "framer-motion";
@@ -23,7 +23,7 @@ export const MainSection = () => {
         {
           text: "Submit a project",
           primary: true,
-          href: "#",
+          href: "/webapp",
         },
         {
           text: "Learn about funding",
@@ -47,7 +47,7 @@ export const MainSection = () => {
         "ATM proudly announces our partnership with <span class='text-[#2ea8af] underline'>Ecologi</span>, a globally recognised B Corp-certified platform dedicated to accelerating climate action. Together, we are working towards a carbon-free future by actively engaging in reforestation efforts. As part of this collaboration, ATM has pledged to plant 100 trees. This commitment underscores our dedication to reducing our carbon footprint and fostering a greener planet for future generations. By connecting to Ecologi wallet through ATM, you're not only ensuring smooth and secure transactions but also actively participating in ecosystem restoration.",
       walletInfo: {
         label: "Ecologi Wallet:",
-        address: "0xb6c8...0031B9",
+        address: "0xb6c83fA7Bb9B5C23e96130CDEFD70977460031B9",
       },
       mediaUrl: "/ecosystem.png",
     },
@@ -82,6 +82,12 @@ export const MainSection = () => {
     });
   };
 
+  const hideAddress = (address: string) => {
+    return address
+      ? `${address.substring(0, 5)}...${address.substring(address.length - 5)}`
+      : "";
+  };
+
   const slideInVariants = {
     hidden: { opacity: 0, y: 200 },
     visible: { opacity: 1, y: 0 },
@@ -105,6 +111,7 @@ export const MainSection = () => {
           </div>
 
           <motion.section
+            id={section.id}
             className="pt-[60px] xl:pt-[100px]"
             variants={slideInVariants}
             initial="hidden"
@@ -212,7 +219,7 @@ export const MainSection = () => {
                         {section.walletInfo?.label}{" "}
                       </span>
                       <span className="font-normal text-[14px] lg:text-[16px] tracking-[var(--body-body3-400-letter-spacing)] leading-[22px] lg:leading-6">
-                        {section.walletInfo?.address}
+                        {hideAddress(section.walletInfo?.address as string)}
                       </span>
                     </div>
                     <img

@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import * as React from "react";
+import { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Web3AuthProvider } from "./contexts/Web3AuthContext";
 import { ApiProvider } from "./contexts/ApiContext";
@@ -25,6 +26,7 @@ import PRNodeTable from "./screens/Explorer/sections/ContentSection/PRNodeTable"
 import StakeTransactionTable from "./screens/Explorer/sections/ContentSection/StakeTransactionTable";
 import UserInformationTable from "./screens/Explorer/sections/ContentSection/UserInformationTable";
 import ContractInformation from "./screens/Explorer/sections/ContentSection/ContractInformation";
+import JoinATMForm from "./screens/Ecosystem/sections/JoinAtm";
 
 export const App = (): JSX.Element => {
   const { pathname } = useLocation();
@@ -48,6 +50,7 @@ export const App = (): JSX.Element => {
                   <Route path="/ecosystem" element={<Ecosystem />} />
                   <Route path="/ecosystem/travel" element={<Travel />} />
                   <Route path="/community" element={<Community />} />
+                  <Route path="/joinATM" element={<JoinATMForm />} />
                   {/* Explorer with nested routes */}
                   <Route path="/explorer" element={<Explorer />}>
                     <Route index element={<ContentSection />} />{" "}

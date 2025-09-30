@@ -65,7 +65,7 @@ export const faqTabs: Tab[] = [
           <>
             Go to the “Consensus Connection” page and click the “Create Consensus” button. Fill in the requested information and then submit! For more details, follow the “Create a Consensus Connection” guide located{" "}
             <a 
-              href="https://www.atmrank.com/pdf/atm-en/4.pdf"
+              href="./pdf/createConsensusConnection.pdf"
               target="_blank" 
               rel="noopener noreferrer"
               className="text-primary underline hover:text-[#1f7a7a]"
@@ -81,7 +81,7 @@ export const faqTabs: Tab[] = [
           <>
             Go to the “Consensus Connection - Connected” page and navigate to “View Details” and then “Agree to Disconnect”. For more details look for step 6 in our guide located{" "}
             <a 
-              href="https://www.atmrank.com/pdf/atm-en/4.pdf"
+              href="./pdf/createConsensusConnection.pdf"
               target="_blank" 
               rel="noopener noreferrer"
               className="text-primary underline hover:text-[#1f7a7a]"
@@ -156,7 +156,7 @@ export const faqTabs: Tab[] = [
             Navigate to the “Consensus Connection-PR Node” page and select a node. Click on “Stake” and enter the amount before confirming. 
             You can follow our more in-depth guide {" "}
             <a 
-              href="https://www.atmrank.com/pdf/atm-en/1.pdf"
+              href="./pdf/participateInPR.pdf"
               target="_blank" 
               rel="noopener noreferrer"
               className="text-primary underline hover:text-[#1f7a7a]"

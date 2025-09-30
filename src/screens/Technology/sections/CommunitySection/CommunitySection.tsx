@@ -1,5 +1,5 @@
 import { HeadingWithDots } from "@/components/HeadingWithDots";
-import { Button } from "@/components/ui/button";
+import { StyledLink } from "@/components/StyledLink";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import React, { useState } from "react";
@@ -143,20 +143,7 @@ export const CommunitySection = (): JSX.Element => {
               </CardContent>
             </Card>
 
-            <Button asChild variant="ghost" className="gap-2.5 p-0 rounded-[30px]">
-              <a href="/webapp">
-                <span className="text-primary text-[14px] leading-[20px] font-normal whitespace-nowrap">
-                  View my connections
-                </span>
-                <div className="w-[38.53px] h-[38.53px]">
-                  <img
-                    className="w-[33px] h-[33px] object-contain"
-                    alt="Arrow right icon"
-                    src="/arrow-right-icon.svg"
-                  />
-                </div>
-              </a>
-            </Button>
+            <StyledLink text="View my connections" link="/webapp" />
           </div>
 
           {/* Consensus connection income */}
@@ -181,24 +168,8 @@ export const CommunitySection = (): JSX.Element => {
                 there is enough balance and processes the user's application for
                 withdrawal.
               </p>
-              <Button
-                asChild
-                variant="ghost"
-                className="inline-flex items-center gap-2.5 p-0 rounded-[30px] self-start"
-              >
-                <a href="/webapp">
-                  <span className="text-primary text-[14px] leading-[20px] font-normal whitespace-nowrap">
-                    View my income
-                  </span>
-                  <div className="w-[38.53px] h-[38.53px]">
-                    <img
-                      className="w-[33px] h-[33px] object-contain"
-                      alt="Arrow right icon"
-                      src="/arrow-right-icon.svg"
-                    />
-                  </div>
-                </a>
-              </Button>
+              
+              <StyledLink text="View my income" link="/webapp" />
             </div>
 
             {/* Image second on mobile, first on xl */}

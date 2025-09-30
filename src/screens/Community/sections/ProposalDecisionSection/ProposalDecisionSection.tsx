@@ -1,4 +1,5 @@
 import { HeadingWithDots } from "@/components/HeadingWithDots";
+import { StyledLink } from "@/components/StyledLink";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -28,12 +29,8 @@ export const ProposalDecisionSection = (): JSX.Element => {
                     <Button variant="ghost" className="pointer-events-none py-[10px] px-[18px] text-center font-normal font-[Inter] text-[14px] leading-[19px]">
                       Ended
                     </Button>
-                    <Button variant="ghost" className="inline-flex items-center gap-2.5 p-0 rounded-[30px] hover:bg-transparent">
-                      <span className="text-primary font-inter"> View Proposal </span>
-                      <div className="w-[38px] h-[38px] flex items-center justify-center">
-                        <img className="w-[33px] h-[33px]" alt="Arrow right icon" src="/arrow-right-icon.svg" />
-                      </div>
-                    </Button>
+                    
+                    <StyledLink text="View Proposal" link="/webapp" />
                   </div>
                 </CardContent>
               </Card>
@@ -46,12 +43,7 @@ export const ProposalDecisionSection = (): JSX.Element => {
             />
           </div>
 
-            <Button variant="ghost" className="mt-[20px] inline-flex items-center gap-2.5 p-0 rounded-[30px] hover:bg-transparent">
-              <span className="text-primary"> View all </span>
-              <div className="w-[38px] h-[38px] flex items-center justify-center">
-                <img className="w-[33px] h-[33px]" alt="Arrow right icon" src="/arrow-right-icon.svg" />
-              </div>
-            </Button>
+            <StyledLink text="View all" link="/webapp" />
         </div>
 
       </section>        

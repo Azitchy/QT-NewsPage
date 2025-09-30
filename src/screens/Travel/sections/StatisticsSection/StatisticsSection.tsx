@@ -1,15 +1,18 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export const StatisticsSection = (): JSX.Element => {
+  const { t } = useTranslation("travel");
+
   const [openTooltip1, setOpenTooltip1] = useState(false);
   const [openTooltip2, setOpenTooltip2] = useState(false);
 
   const handleTooltipClick = (tooltipNumber: number, event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    
+
     if (tooltipNumber === 1) {
       setOpenTooltip1(!openTooltip1);
       setOpenTooltip2(false); // Close other tooltip
@@ -28,31 +31,32 @@ export const StatisticsSection = (): JSX.Element => {
   return (
     <div onClick={handleClickOutside}>
       <section className="bg-card py-[25px] xl:py-[34px] flex flex-col items-center xl:flex-row xl:justify-center xl:items-stretch">
+
         {/* Stat 1 */}
         <div className="flex flex-col text-card-foreground text-center font-inter font-medium text-[20px] leading-[27px]">
-          Up to
-          <span className="text-foreground text-center font-['Space_Grotesk']  font-light text-[38px] leading-[48px]">
-            96 
+          {t("statisticsSection.stat1.upTo")}
+          <span className="text-foreground text-center font-['Space_Grotesk'] font-light text-[38px] leading-[48px]">
+            96
           </span>
-          Bookings Made
+          {t("statisticsSection.stat1.bookingsMade")}
         </div>
-        
+
         <div className="bg-border h-[1px] w-[320px] my-[10px] block xl:hidden" />
         <div className="bg-border w-[1px] self-stretch mx-[106px] hidden xl:block" />
-        
+
         {/* Stat 2 */}
         <div className="flex flex-col text-card-foreground text-center font-inter font-medium text-[20px] leading-[27px] gap-[5px]">
-          Up to
+          {t("statisticsSection.stat2.upTo")}
 
           <div className="flex items-center justify-center gap-[8px]">
-            <span className="text-foreground text-center font-['Space_Grotesk']  font-light text-[38px] leading-[48px]">
+            <span className="text-foreground text-center font-['Space_Grotesk'] font-light text-[38px] leading-[48px]">
               1177.24
             </span>
             <img src="/luca-1.svg" alt="luca icon" className=""/>
           </div>
 
           <div className="flex items-center justify-center gap-[6px]">
-            Amount of LUCA Consumed
+            {t("statisticsSection.stat2.lucaConsumed")}
             <Tooltip open={openTooltip1}>
               <TooltipTrigger 
                 onClick={(e) => handleTooltipClick(1, e)}
@@ -64,9 +68,7 @@ export const StatisticsSection = (): JSX.Element => {
               </TooltipTrigger>
               <TooltipContent className="shadow-sm rounded-[8px]" side="bottom" align="end">
                 <p className="text-[#1C1C1C] text-[12px] font-normal leading-[17px] max-w-[260px]"> 
-                  Track the total amount burned in real time! Every time you book a trip, 
-                  part of your payment burns LUCA, permanently reducing supply and strengthening its value. 
-                  This process keeps LUCA's economy stable and sustainable.
+                  {t("statisticsSection.stat2.tooltip")}
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -76,7 +78,7 @@ export const StatisticsSection = (): JSX.Element => {
             <div className="text-[#999F9F] font-normal text-[12px] leading-[17px]">
               Wallet Address
               <div className="flex items-center gap-[3px]">
-                <span className="text-foreground font-inter font-normal text-[14px] leading-[19px]"> 0xb6c8...0031B9 </span>
+                <span className="text-foreground font-inter font-normal text-[14px] leading-[19px]">0xb6c8...0031B9</span>
                 <img src="/copy-icon.svg" alt='copy icon' className="" />
               </div>
             </div>
@@ -86,7 +88,7 @@ export const StatisticsSection = (): JSX.Element => {
             <div className="text-[#999F9F] font-normal text-[12px] leading-[17px]">
               Smart Contract
               <div className="flex items-center gap-[3px]">
-                <span className="text-foreground font-inter font-normal text-[14px] leading-[19px]"> 0xa3c6...1431A7 </span>
+                <span className="text-foreground font-inter font-normal text-[14px] leading-[19px]">0xa3c6...1431A7</span>
                 <img src="/copy-icon.svg" alt='copy icon' className="" />
               </div>
             </div>
@@ -98,12 +100,12 @@ export const StatisticsSection = (): JSX.Element => {
 
         {/* Stat 3 */}
         <div className="flex flex-col text-card-foreground text-center font-inter font-medium text-[20px] leading-[27px]">
-          Up to
+          {t("statisticsSection.stat3.upTo")}
           <span className="text-foreground text-center font-['Space_Grotesk'] font-light text-[38px] leading-[48px]">
             $7440.71
           </span>
           <div className="flex items-center gap-[6px]">
-            Total Amount Saved
+            {t("statisticsSection.stat3.totalSaved")}
             <Tooltip open={openTooltip2}>
               <TooltipTrigger 
                 onClick={(e) => handleTooltipClick(2, e)}
@@ -115,7 +117,7 @@ export const StatisticsSection = (): JSX.Element => {
               </TooltipTrigger>
               <TooltipContent className="shadow-sm rounded-[8px]" side="bottom" align="end">
                 <p className="text-[#1C1C1C] text-[12px] font-normal leading-[17px] max-w-[260px]"> 
-                  Users' saving by booking with LUCA Travel compared to other platform.
+                  {t("statisticsSection.stat3.tooltip")}
                 </p>
               </TooltipContent>
             </Tooltip>

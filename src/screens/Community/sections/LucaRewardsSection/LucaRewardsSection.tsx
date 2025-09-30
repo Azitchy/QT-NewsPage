@@ -2,7 +2,7 @@ import { HeadingWithDots } from "@/components/HeadingWithDots";
 
 export const LucaRewardsSection = (): JSX.Element => {
   return (
-    <section className="relative pt-[60px] xl:pt-[100px]">
+    <section id="rewards" className="relative pt-[60px] xl:pt-[100px]">
       {/* Background image*/}
       <img
         src="/luca-bg.svg"

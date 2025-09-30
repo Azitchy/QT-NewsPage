@@ -1,15 +1,18 @@
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 export const FooterSection = (): JSX.Element => {
+  const { t } = useTranslation("common");
+
   const downloadButtons = [
     {
       icon: "/frame-1138.svg",
-      text: "Download for Android",
+      text: t("footer.download.android"),
       link: "https://play.google.com/store/apps/details?id=network.atm.atmconnect&hl=en_GB&gl=US&pli=1",
     },
     {
       icon: "/frame-1139.svg",
-      text: "Download for iOS",
+      text: t("footer.download.ios"),
       link: "https://apps.apple.com/gb/app/atm-connect/id6463245714",
     },
   ];
@@ -65,14 +68,16 @@ export const FooterSection = (): JSX.Element => {
             src="/walletpromo.svg"
           />
 
-          {/* Text above image */}
-          <div className="flex-0 tablet:flex relative z-10 text-white font-[400] text-[38px] leading-[42px] font-['Bebas_Neue']">
-            <h2>DOWNLOAD &nbsp;</h2>
-            <h2>ATM.CONNECT NOW</h2>
+          <div className="min-h-[50px]">
+            {/* Text above image */}
+            <div className="flex-0 tablet:flex relative z-10 text-white font-[400] text-[38px] leading-[42px] font-['Bebas_Neue']">
+              <h2> {t("footer.cta.title.action")} &nbsp;</h2>
+              <h2> {t("footer.cta.title.app")} </h2>
+            </div>
           </div>
 
           <p className="relative z-10 text-white font-[300] text-[18px] leading-[24px] font-['Inter']">
-            Access to your wallet anytime, anywhere.
+            {t("footer.cta.desc")}
           </p>
 
           {/* Store Badges */}

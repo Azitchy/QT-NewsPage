@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
   Carousel,
@@ -9,55 +10,50 @@ import {
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 
 export const FeaturesSection = () => {
+  const { t } = useTranslation('home');
   const [api, setApi] = useState<CarouselApi>();
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
 
   const featuresData = [
     {
-      title: "Create your digital-self",
-      description:
-        "Create and customise your AVATAR for various purposes. These avatars can be used as profile pictures, in shared links, or for interactive communication.",
+      title: t('featuresSection.features.digitalSelf.title'),
+      description: t('featuresSection.features.digitalSelf.description'),
       image: "/feature-create-digital-self.png",
       gradientClass:
         "bg-[linear-gradient(0deg,rgba(126,80,255,1)_11%,rgba(194,172,255,1)_37%,rgba(235,227,255,1)_66%,rgba(241,236,255,1)_84%)]",
     },
     {
-      title: "Higher PR value, greater rewards",
-      description:
-        "ATM-Rank measures user influence based on connections and stakes. Higher PR values earn greater LUCA rewards and increased community influence.",
+      title: t('featuresSection.features.prValue.title'),
+      description: t('featuresSection.features.prValue.description'),
       image: "/feature-higher-pr-value.png",
       gradientClass:
         "bg-[linear-gradient(0deg,rgba(255,191,25,1)_11%,rgba(255,219,127,1)_37%,rgba(255,247,224,1)_66%,rgba(255,247,224,1)_84%)]",
     },
     {
-      title: "Connect with a friend",
-      description:
-        "Create secure token agreements, earn LUCA rewards, and contribute to a stable and trusted ecosystem.",
+      title: t('featuresSection.features.connectFriend.title'),
+      description: t('featuresSection.features.connectFriend.description'),
       image: "/feature-connect-with-friend.png",
       gradientClass:
         "bg-[linear-gradient(0deg,rgba(30,181,191,1)_11%,rgba(129,214,219,1)_37%,rgba(226,246,247,1)_66%,rgba(232,248,249,1)_84%)]",
     },
     {
-      title: "AI-Powered Support",
-      description:
-        "A-Team provides 24/7 financial advice, offering honest, data-driven insights from market analysis, risk, and research.",
+      title: t('featuresSection.features.aiSupport.title'),
+      description: t('featuresSection.features.aiSupport.description'),
       image: "/feature-ai-powered-support.png",
       gradientClass:
         "bg-[linear-gradient(0deg,rgba(126,80,255,1)_11%,rgba(194,172,255,1)_37%,rgba(235,227,255,1)_66%,rgba(241,236,255,1)_84%)]",
     },
     {
-      title: "Decentralised messaging",
-      description:
-        "Join discussions, share insights, and connect with the ATM community through chatrooms or direct messages.",
+      title: t('featuresSection.features.messaging.title'),
+      description: t('featuresSection.features.messaging.description'),
       image: "/feature-decentralised-messaging.png",
       gradientClass:
         "bg-[linear-gradient(0deg,rgba(30,181,191,1)_11%,rgba(129,214,219,1)_37%,rgba(226,246,247,1)_66%,rgba(232,248,249,1)_84%)]",
     },
     {
-      title: "Engage in social platform",
-      description:
-        "Share news, join discussions, and connect with the ATM community in a seamless, interactive space.",
+      title: t('featuresSection.features.socialPlatform.title'),
+      description: t('featuresSection.features.socialPlatform.description'),
       image: "/feature-engage-social-platform.png",
       gradientClass:
         "bg-[linear-gradient(0deg,rgba(30,181,191,1)_11%,rgba(129,214,219,1)_37%,rgba(226,246,247,1)_66%,rgba(232,248,249,1)_84%)]",
@@ -84,7 +80,7 @@ export const FeaturesSection = () => {
       {/* Title Section */}
       <div className="relative h-[99px] ml-0 lg:ml-[71px]">
         <div className="left-10 absolute w-auto lg:w-[148px] h-11 top-[27px] lg:left-[51px] font-titles-h2-sectionheading-400 font-[number:var(--titles-h2-sectionheading-400-font-weight)] text-primary-colour text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] [font-style:var(--titles-h2-sectionheading-400-font-style)]">
-          FEATURES
+          {t('featuresSection.title')}
         </div>
         <img
           className="w-[102px] h-[99px] absolute top-0 left-0"

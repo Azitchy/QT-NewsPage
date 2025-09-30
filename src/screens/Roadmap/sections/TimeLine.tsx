@@ -22,7 +22,7 @@ const timelineData: TimelineSection[] = [
       },
       {
         title: "Airdrops and ecosystem development",
-        desc: "Deployment of AGF smart contract pave the foundation for the Game Fund, allowing users to crowdfund and developers to grant",
+        desc: "More opportunities to partnership and collaborate with other projects to initiate airdrops and bring other communities into ATM to foster a more inclusive and functional ecosystem.",
         expanded: false,
       },
     ],
@@ -32,17 +32,17 @@ const timelineData: TimelineSection[] = [
     items: [
       {
         title: "WebApp redesign",
-        desc: "Deployment of AGF smart contract pave the foundation for the Game Fund, allowing users to crowdfund and developers to grant",
+        desc: `New WebApp now equipped with a fresh interface and clear instructions on connecting to ATM through the "ATM Connect" wallet.`,
         expanded: false,
       },
       {
         title: "Travel Agency collaboration",
-        desc: "Deployment of AGF smart contract pave the foundation for the Game Fund, allowing users to crowdfund and developers to grant",
+        desc: "Collaboration with travel Agency to explore more real-world use case of LUCA, bringing the crypto to life.",
         expanded: false,
       },
       {
         title: "AGF Game release",
-        desc: "Deployment of AGF smart contract pave the foundation for the Game Fund, allowing users to crowdfund and developers to grant",
+        desc: "Launching the platform enticing more developers to join the ecosystem and enriching the gaming experience for community users.",
         expanded: false,
       },
     ],
@@ -52,17 +52,17 @@ const timelineData: TimelineSection[] = [
     items: [
       {
         title: "iOS App live",
-        desc: "Deployment of AGF smart contract pave the foundation for the Game Fund, allowing users to crowdfund and developers to grant",
+        desc: "“ATM connect” iOS App available on App Store unlocking exclusive experience in ATM ecosystem.",
         expanded: false,
       },
       {
         title: "Q2 Upgrading website",
-        desc: "Deployment of AGF smart contract pave the foundation for the Game Fund, allowing users to crowdfund and developers to grant",
+        desc: "New fresh look of ATM website upgrades the concept visualization, animated illustrations, and multi-language support boosting user experience when surfing in ATM.",
         expanded: false,
       },
       {
         title: "Q1 End of recovery plan",
-        desc: "Deployment of AGF smart contract pave the foundation for the Game Fund, allowing users to crowdfund and developers to grant",
+        desc: "Recovery from the previous incident.",
         expanded: false,
       },
     ],
@@ -71,13 +71,13 @@ const timelineData: TimelineSection[] = [
     year: "2023",
     items: [
       {
-        title: "Recovery plan complete",
-        desc: "Deployment of AGF smart contract pave the foundation for the Game Fund, allowing users to crowdfund and developers to grant",
+        title: "AVATAR AI launch",
+        desc: "Our aim is to boost Luca value by intensifying our Avatar purchase mechanism to increase scarcity. Strategies will focus on gradually escalating Luca destruction aligned with Avatar popularity. We aim to empower our community, allowing users to freely generate Avatar links, engage in diverse interactions.",
         expanded: false,
       },
       {
-        title: "AVATAR AI launch",
-        desc: "Deployment of AGF smart contract pave the foundation for the Game Fund, allowing users to crowdfund and developers to grant",
+        title: "Recovery plan",
+        desc: "As of October 21st, notable achievements include significant system security updates, reactivation of our rewarding system, successful minting process completion, and seamless reward retrieval.",
         expanded: false,
       },
     ],
@@ -87,12 +87,12 @@ const timelineData: TimelineSection[] = [
     items: [
       {
         title: "Q4 TokenPR",
-        desc: "Deployment of AGF smart contract pave the foundation for the Game Fund, allowing users to crowdfund and developers to grant",
+        desc: "The introduction of Token PR, ATM’s token launch pad.",
         expanded: false,
       },
       {
         title: "Complete the transition of all PR nodes becoming decentralised",
-        desc: "Deployment of AGF smart contract pave the foundation for the Game Fund, allowing users to crowdfund and developers to grant",
+        desc: "All resulting data from the PR calculation results will be completely decentralised and stored on the chain, making the data safer, immutable, and thus more reliable.",
         expanded: false,
       },
     ],
@@ -102,12 +102,12 @@ const timelineData: TimelineSection[] = [
     items: [
       {
         title: "Smart contracts undergo audit",
-        desc: "Deployment of AGF smart contract pave the foundation for the Game Fund, allowing users to crowdfund and developers to grant",
+        desc: "We found that we could create a platform that uses the blockchain to connect people on a new type of social network – a relative consensus network, which we hope will be a more stable and stronger economic system.",
         expanded: false,
       },
       {
         title: "The concept was born",
-        desc: "Deployment of AGF smart contract pave the foundation for the Game Fund, allowing users to crowdfund and developers to grant",
+        desc: "In the first steps to be verified as a beacon of trust in the cryptocurrency community ATM underwent an audit by the CertiK Cybersecurity company.",
         expanded: false,
       },
     ],

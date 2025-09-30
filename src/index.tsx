@@ -1,14 +1,17 @@
-import './polyfills' 
+import './i18n'; 
+import './polyfills';
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { App } from "./App";
 
+const rootElement = document.getElementById("app") as HTMLElement;
 
-createRoot(document.getElementById("app") as HTMLElement).render(
+createRoot(rootElement).render(
   <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </StrictMode>,
+    {/* English preloaded */}
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+  </StrictMode>
 );

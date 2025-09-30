@@ -1,5 +1,6 @@
 // Income.tsx
-import React, { useState, useEffect } from "react";
+import * as React from "react";
+import { useState, useEffect } from "react";
 import { useWeb3Auth } from "@/contexts/Web3AuthContext";
 import { Wallet, Info, RefreshCw, Zap, AlertTriangle, Shield, CheckCircle } from "lucide-react";
 

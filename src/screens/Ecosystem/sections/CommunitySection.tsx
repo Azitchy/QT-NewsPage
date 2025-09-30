@@ -1,57 +1,60 @@
 import React, { useState } from "react";
 import { Button } from "../../../components/ui/button";
 
-export const CommunitySection = () => {
-  const communityData = {
-    title: "community",
+const communityData = {
+  title: "community",
+  description:
+    "Token PR is one of ATM's open decentralised community ecosystem. Third-party projects can join Token PR and add their project token to the ATM ecosystem. And by accessing the PR algorithm, they reward users who use the project Token to connect, incentivise ATM users and project users, and provide users with better ecosystem services.",
+  howToJoin: {
+    title: "How to join Token PR",
     description:
-      "Token PR is one of ATM's open decentralised community ecosystem. Third-party projects can join Token PR and add their project token to the ATM ecosystem. And by accessing the PR algorithm, they reward users who use the project Token to connect, incentivise ATM users and project users, and provide users with better ecosystem services.",
-    howToJoin: {
-      title: "How to join Token PR",
-      description:
-        "After a third-party project joins the ATM ecosystem through a community proposal, users can use the Token of the project party to create a consensus connection, and calculate the Token PR value of the Token through the ATM PR algorithm. ATM will calculate and distribute the consensus income of the Token to the user according to the Token PR value and the reward distribution proportion of the project party.",
-    },
-    rewardModes: {
-      title: "Reward modes for ATM projects",
-      subtitle: "Tap numbers to view 3 reward modes",
-      modes: [
-        {
-          id: 1,
-          number: "1",
-          description:
-            "All Token rewards are overall distribution without the need to calculate Token PR. Rewards are distributed according to the main PR weight;",
-        },
-        {
-          id: 2,
-          number: "2",
-          description:
-            "Token rewards consists of overall distribution and independent distribution. For example, the overall rewards account for 40% and the independent rewards account for 60%. Token PR needs to be calculated. The overall rewards are distributed based on the main PR weight and the independent rewards are distributed based on the Token PR weight;",
-        },
-        {
-          id: 3,
-          number: "3",
-          description:
-            "Token rewards are all independent distribution and need to calculate Token PR. Rewards are distributed according to the Token PR weight.",
-        },
-      ],
-      buttons: [
-        {
-          text: "Join now",
-          primary: true,
-          href: "#",
-        },
-        {
-          text: "Learn more about rewards",
-          primary: false,
-          href: "/community",
-        },
-      ],
-    },
-  };
+      "After a third-party project joins the ATM ecosystem through a community proposal, users can use the Token of the project party to create a consensus connection, and calculate the Token PR value of the Token through the ATM PR algorithm. ATM will calculate and distribute the consensus income of the Token to the user according to the Token PR value and the reward distribution proportion of the project party.",
+  },
+  rewardModes: {
+    title: "Reward modes for ATM projects",
+    subtitle: "Tap numbers to view 3 reward modes",
+    modes: [
+      {
+        id: 1,
+        number: "1",
+        description:
+          "All Token rewards are overall distribution without the need to calculate Token PR. Rewards are distributed according to the main PR weight;",
+      },
+      {
+        id: 2,
+        number: "2",
+        description:
+          "Token rewards consists of overall distribution and independent distribution. For example, the overall rewards account for 40% and the independent rewards account for 60%. Token PR needs to be calculated. The overall rewards are distributed based on the main PR weight and the independent rewards are distributed based on the Token PR weight;",
+      },
+      {
+        id: 3,
+        number: "3",
+        description:
+          "Token rewards are all independent distribution and need to calculate Token PR. Rewards are distributed according to the Token PR weight.",
+      },
+    ],
+    buttons: [
+      {
+        text: "Join now",
+        primary: true,
+        href: "#",
+      },
+      {
+        text: "Learn more about rewards",
+        primary: false,
+        href: "/community#rewards",
+      },
+    ],
+  },
+};
+
+export const CommunitySection = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [active, setActive] = useState(communityData.rewardModes.modes[0].id);
 
   return (
     <div className="flex flex-col gap-10 lg:gap-16 w-full">
+      {/* Community Intro Section  */}
       <div className="w-full">
         <div className="flex flex-col md:flex-row gap-[20px] lg:gap-[70px] 2xl:gap-[200px] md:mt-[60px] items-start  mb-12">
           <div className="flex flex-col">
@@ -84,6 +87,7 @@ export const CommunitySection = () => {
         </div>
       </div>
 
+      {/*  How to Join Section  */}
       <div className="flex flex-col w-full items-start gap-5 max-w-[782px] 2xl:max-w-[955px] lg:mx-60 2xl:mx-96">
         <h3 className="font-titles-h5-large-text-400 text-foreground dark:text-foreground text-[20px] lg:text-[length:var(--titles-h5-large-text-400-font-size)] tracking-[var(--titles-h5-large-text-400-letter-spacing)] leading-[27px] lg:leading-[var(--titles-h5-large-text-400-line-height)] text-left">
           {communityData.howToJoin.title}
@@ -93,6 +97,7 @@ export const CommunitySection = () => {
         </p>
       </div>
 
+      {/*  Reward Modes Section */}
       <div className="flex flex-col items-center gap-[5px] mb-12">
         <h3 className="font-titles-h5-large-text-400 text-foreground dark:text-foreground text-[20px] lg:text-[length:var(--titles-h5-large-text-400-font-size)] tracking-[var(--titles-h5-large-text-400-letter-spacing)] leading-[27px] lg:leading-[var(--titles-h5-large-text-400-line-height)] text-center">
           {communityData.rewardModes.title}
@@ -127,8 +132,6 @@ export const CommunitySection = () => {
                     className={`font-bold transition-all duration-700 ease-in-out ${
                       isActive
                         ? "text-[150px] lg:text-[250px] text-primary"
-                        : isNext
-                        ? "text-[150px] lg:text-[250px] text-[#F2F9FF] dark:text-[#40576A]"
                         : "text-[150px] lg:text-[250px] text-[#F2F9FF] dark:text-[#40576A]"
                     }`}
                   >
@@ -181,9 +184,10 @@ export const CommunitySection = () => {
             button.primary ? (
               <Button
                 key={index}
+                onClick={() => setIsModalOpen(true)}
                 className="bg-primary text-background dark:text-primary-foreground rounded-[30px] px-[12px] lg:px-[20px] py-3 font-body-body3-400 text-[16px] leading-[24px] hover:bg-primary/90"
               >
-                <a href={button.href}>{button.text}</a>
+                {button.text}
               </Button>
             ) : (
               <div
@@ -209,6 +213,51 @@ export const CommunitySection = () => {
           )}
         </div>
       </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="bg-background dark:bg-white rounded-xl shadow-lg max-w-xl w-full relative p-6">
+            {/* Close X */}
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-3 right-3 text-primary"
+            >
+              ✕
+            </button>
+
+            {/* Modal content */}
+            <h2 className="text-lg mb-4 text-[#1c1c1c]">Reward example</h2>
+            <p className="text-[22px] leading-relaxed mb-3 text-center text-[#1c1c1c] font-medium">
+              The third-party token, COOL, connects the ATM ecosystem and
+              presents one million tokens to distribute rewards for 100 days and
+              10,000 tokens per day.
+            </p>
+            <p className="text-[22px] leading-relaxed mb-3 text-center text-[#1c1c1c] font-medium">
+              The reward distribution proportion: 60% for overall rewards and
+              40% for independent rewards. When users use COOL to create a
+              consensus, they will receive rewards from both main PR calculation
+              and the Token PR calculation.
+            </p>
+            <p className="text-[22px] leading-relaxed mb-4 text-center text-[#1c1c1c] font-medium">
+              In other words, users of the entire network share 6,000 COOL
+              tokens per day based on the main PR weight, and users who use COOL
+              to create consensus connections share 4,000 COOL tokens per day
+              based on the Token PR weight.
+            </p>
+
+            {/* Footer button */}
+            <div className="flex justify-center mt-6">
+              <div
+                onClick={() => setIsModalOpen(false)}
+                className="text-primary rounded-full px-6 py-2 cursor-pointer"
+              >
+                I’ve understood
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

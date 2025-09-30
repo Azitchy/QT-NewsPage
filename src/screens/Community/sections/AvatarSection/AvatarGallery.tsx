@@ -98,7 +98,7 @@ export const AvatarGallery = (): JSX.Element => {
               {/* Video */}
               <iframe
                 className="w-full h-full"
-                src=""
+                src="./videos/avatar-promo.mp4"
                 title="Avatar Video"
                 allow="autoplay; encrypted-media"
                 allowFullScreen

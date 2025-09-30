@@ -1,5 +1,5 @@
 import { HeadingWithDots } from "@/components/HeadingWithDots";
-import { Button } from "@/components/ui/button";
+import { StyledLink } from "@/components/StyledLink";
 
 export const TechnologySection = (): JSX.Element => {
   return (
@@ -10,7 +10,7 @@ export const TechnologySection = (): JSX.Element => {
       <div className="px-0 tablet:px-[77px] xl:px-[134px] large:px-[203px]">
 
         {/* System Integration Section */}
-        <div className="flex flex-col tablet:flex-row gap-[60px] tablet:gap-[80px] mt-8 tablet:mt-12 items-start">
+        <div className="flex flex-col tablet:flex-row gap-[60px] tablet:gap-[80px] mt-8 tablet:mt-12 items-start justify-center">
           {/* Tech Image */}
           <img
             src="/tech-img.png"
@@ -33,27 +33,8 @@ export const TechnologySection = (): JSX.Element => {
               Each cryptocurrency can also tailor its own reward system algorithm, seamlessly facilitated by Lucy. 
               This integration ensures continuous refinement and elevation of the ATMRank system, keeping it at the forefront of crypto valuation.
             </p>
-            {/* Learn More Button */}
-            <Button
-              asChild
-              variant="ghost"
-              className="inline-flex items-center gap-2.5 p-0 rounded-[30px] hover:bg-transparent"
-            >
-              <a
-                href="https://en.wikipedia.org/wiki/PageRank"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span className="text-primary">Learn more</span>
-                <div className="w-[38px] h-[38px] flex items-center justify-center">
-                  <img
-                    className="w-[33px] h-[33px]"
-                    alt="Arrow right icon"
-                    src="/arrow-right-icon.svg"
-                  />
-                </div>
-              </a>
-            </Button>
+            
+            <StyledLink text="Learn more" link="https://en.wikipedia.org/wiki/PageRank" newTab />
           </div>
         </div>
 

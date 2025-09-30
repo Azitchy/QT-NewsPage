@@ -1,5 +1,5 @@
-// contexts/Web3AuthContext.tsx
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import * as React from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getSignMessage, getLoginToken } from '../lib/webApi';
 
 interface Wallet {

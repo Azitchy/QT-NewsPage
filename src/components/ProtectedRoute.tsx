@@ -1,5 +1,6 @@
 // components/ProtectedRoute.tsx
-import React, { useEffect, useState } from 'react';
+import * as React from "react";
+import { useState, useEffect } from "react";
 import { useWeb3Auth } from '../contexts/Web3AuthContext';
 import { WalletConnect } from './WalletConnect';
 import { Loader2, Shield, CheckCircle } from 'lucide-react';

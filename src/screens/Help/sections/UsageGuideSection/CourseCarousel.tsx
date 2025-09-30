@@ -8,6 +8,7 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { ArrowLeftIcon, ArrowRightIcon, ArrowRight } from "lucide-react";
+import { StyledLink } from "@/components/StyledLink";
 
 export const CourseCarousel = (): JSX.Element => {
   const [api, setApi] = useState<CarouselApi>();
@@ -20,56 +21,56 @@ export const CourseCarousel = (): JSX.Element => {
       title: "Connect MetaMask wallet",
       date: "10/01/2025",
       showDate: true,
-      link: "https://www.atm.network/pdf/atm-en/connectWallet.pdf",
+      link: "./pdf/connectWallet.pdf",
     },
     {
       image: "/img-2.png",
       title: "How to participate in PR node stake and election",
       date: "10/01/2025",
       showDate: true,
-      link: "https://www.atm.network/pdf/atm-en/participateInPR.pdf",
+      link: "./pdf/participateInPR.pdf",
     },
     {
       image: "/img-3.png",
       title: "How to add LUCA/USDC liquidity",
       date: "10/01/2025",
       showDate: true,
-      link: "https://www.atm.network/pdf/atm-en/howAddLiquidity.pdf",
+      link: "./pdf/howAddLiquidity.pdf",
     },
     {
       image: "/img-4.png",
       title: "Create a consensus connection",
       date: "10/01/2025",
       showDate: false,
-      link: "https://www.atm.network/pdf/atm-en/createConsensusConnection.pdf",
+      link: "./pdf/createConsensusConnection.pdf",
     },
     {
       image: "/img-5.png",
       title: "How to check and receive total income",
       date: "10/01/2025",
       showDate: false,
-      link: "https://www.atm.network/pdf/atm-en/checkIncome.pdf",
+      link: "./pdf/checkIncome.pdf",
     },
     {
       image: "/img-6.png",
       title: "How to purchase LUCA",
       date: "10/01/2025",
       showDate: false,
-      link: "https://www.atm.network/pdf/atm-en/purchaseLUCA.pdf",
+      link: "./pdf/purchaseLUCA.pdf",
     },
     {
       image: "/img-7.png",
       title: "How to check consensus connection details",
       date: "10/01/2025",
       showDate: false,
-      link: "https://www.atm.network/pdf/atm-en/queryConnectionByAddress.pdf",
+      link: "./pdf/queryConnectionByAddress.pdf",
     },
     {
       image: "/img-8.png",
       title: "How to initiate a community proposal",
       date: "10/01/2025",
       showDate: false,
-      link: "https://www.atm.network/pdf/atm-en/initiateCommunityProposal.pdf",
+      link: "./pdf/initiateCommunityProposal.pdf",
     },
   ];
 
@@ -160,17 +161,8 @@ export const CourseCarousel = (): JSX.Element => {
                       >
                         {card.date}
                       </div>
-                      <a
-                        href={card.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-[10px] text-primary-colour hover:opacity-80 transition"
-                      >
-                        <div className="text-primary font-normal font-body text-[14px] leading-[19px]">
-                          View PDF
-                        </div>
-                        <ArrowRight className="w-[24px] h-[24px] text-primary -rotate-[30deg]" />
-                      </a>
+                      
+                      <StyledLink text="View PDF" link={card.link} newTab />
                     </div>
                   </div>
                 </Card>

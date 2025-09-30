@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import * as React from "react";
+import { useState, useEffect } from "react";
 import { Badge } from "../../../../components/ui/badge";
 import { Card, CardContent, CardHeader } from "../../../../components/ui/card";
 import {

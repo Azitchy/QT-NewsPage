@@ -131,7 +131,7 @@ export const useFetchConsensusContractList = () => {
 };
 
 export const useFetchCoinPriceTrend = () => {
-  return useApiCall<webApi.PriceTrendData[], { coinCurrency: string; type: string }>(
+  return useApiCall<webApi.PriceTrendData, { coinCurrency: string; type: string }>(
     ({ coinCurrency, type }) => webApi.fetchCoinPriceTrend(coinCurrency, type)
   );
 };
