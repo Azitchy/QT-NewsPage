@@ -1,3 +1,91 @@
 {
-    "test": "hi"
+  "future": {
+    "futureHeading": "future",
+    "items": [
+      {
+        "title": "Q3 AGF smart contract deployment",
+        "description": "Deployment of AGF smart contract pave the foundation for the Game Fund, allowing users to crowdfund and developers to grant."
+      },
+      {
+        "title": "Airdrops and ecosystem development",
+        "description": "More opportunities to partnership and collaborate with other projects to initiate airdrops and bring other communities into ATM."
+      },
+      {
+        "title": "Third Feature",
+        "description": "Launching the platform enticing more developers to join the ecosystem and enriching the gaming experience for community users."
+      }
+    ]
+  },
+  "year_2025": {
+    "items": [
+      {
+        "title": "WebApp redesign",
+        "description": "New WebApp now equipped with a fresh interface and clear instructions on connecting to ATM."
+      },
+      {
+        "title": "Travel Agency collaboration",
+        "description": "Collaboration with travel Agency to explore more real-world use case of LUCA, bringing the crypto to life."
+      },
+      {
+        "title": "AGF Game release",
+        "description": "Launching the platform enticing more developers to join the ecosystem and enriching the gaming experience for community users."
+      }
+    ]
+  },
+  "year_2024": {
+    "items": [
+      {
+        "title": "iOS App live",
+        "description": "\"ATM connect\" iOS App available on App Store unlocking exclusive experience in ATM ecosystem."
+      },
+      {
+        "title": "Q2 Upgrading website",
+        "description": "New fresh look of ATM website upgrades the concept visualization, animated illustrations, and multi-language support boosting user experience when surfing in ATM."
+      },
+      {
+        "title": "Q1 End of recovery plan",
+        "description": "Recovery from the previous incident."
+      }
+    ]
+  },
+  "year_2023": {
+    "items": [
+      {
+        "title": "Recovery plan complete",
+        "description": "Recovery plan completed successfully, establishing foundation for future growth."
+      },
+      {
+        "title": "AVATAR AI launch",
+        "description": "ATM connect iOS App available on App Store unlocking exclusive experience."
+      },
+      {
+        "title": "Third Feature",
+        "description": "Launching the platform enticing more developers to join the ecosystem and enriching the gaming experience for community users."
+      }
+    ]
+  },
+  "year_2022": {
+    "items": [
+      {
+        "title": "Q4 TokenPR",
+        "description": "Implementation of TokenPR system to enhance token distribution and rewards mechanism."
+      },
+      {
+        "title": "Complete the transition of all PR nodes becoming decentralised",
+        "description": "Successfully transitioned all PR nodes to a fully decentralized infrastructure."
+      }
+    ]
+  },
+  "year_2021": {
+    "items": [
+      {
+        "title": "Smart contracts undergo audit",
+        "description": "Comprehensive security audit of all smart contracts to ensure safety and reliability."
+      },
+      {
+        "title": "The concept was born",
+        "description": "Initial conception and ideation of the ATM ecosystem and its core features."
+      }
+    ]
+  }
 }

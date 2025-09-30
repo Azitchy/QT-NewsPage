@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type Side = "left" | "right";
 
@@ -13,127 +14,62 @@ interface RoadmapSection {
   items: RoadmapItemType[];
 }
 
-const roadmapData: RoadmapSection[] = [
-  {
-    year: "FUTURE",
-    items: [
-      {
-        title: "",
-        description: "",
-        side: "right",
-      },
-      {
-        title: "Q3 AGF smart contract deployment",
-        description:
-          "Deployment of AGF smart contract pave the foundation for the Game Fund, allowing users to crowdfund and developers to grant.",
-        side: "right",
-      },
-      {
-        title: "Airdrops and ecosystem development",
-        description:
-          "More opportunities to partnership and collaborate with other projects to initiate airdrops and bring other communities into ATM to foster a more inclusive and functional ecosystem.",
-        side: "left",
-      },
-    ],
-  },
-  {
-    year: "2025",
-    items: [
-      {
-        title: "WebApp redesign",
-        description: `New WebApp now equipped with a fresh interface and clear instructions on connecting to ATM through the "ATM Connect" wallet.`,
-        side: "right",
-      },
-      {
-        title: "Travel Agency collaboration",
-        description:
-          "Collaboration with travel Agency to explore more real-world use case of LUCA, bringing the crypto to life.",
-        side: "left",
-      },
-      {
-        title: "AGF Game release",
-        description:
-          "Launching the platform enticing more developers to join the ecosystem and enriching the gaming experience for community users.",
-        side: "right",
-      },
-    ],
-  },
-  {
-    year: "2024",
-    items: [
-      {
-        title: "iOS App live",
-        description:
-          "“ATM connect” iOS App available on App Store unlocking exclusive experience in ATM ecosystem.",
-        side: "right",
-      },
-      {
-        title: "Q2 Upgrading website",
-        description:
-          "New fresh look of ATM website upgrades the concept visualization, animated illustrations, and multi-language support boosting user experience when surfing in ATM.",
-        side: "left",
-      },
-      {
-        title: "Q1 End of recovery plan",
-        description: "Recovery from the previous incident.",
-        side: "right",
-      },
-    ],
-  },
-  {
-    year: "2023",
-    items: [
-      {
-        title: "AVATAR AI launch",
-        description:
-          "Our aim is to boost Luca value by intensifying our Avatar purchase mechanism to increase scarcity. Strategies will focus on gradually escalating Luca destruction aligned with Avatar popularity. We aim to empower our community, allowing users to freely generate Avatar links, engage in diverse interactions.",
-        side: "right",
-      },
-      {
-        title: "Recovery plan",
-        description:
-          "As of October 21st, notable achievements include significant system security updates, reactivation of our rewarding system, successful minting process completion, and seamless reward retrieval.",
-        side: "left",
-      },
-    ],
-  },
-  {
-    year: "2022",
-    items: [
-      {
-        title: "Q4 TokenPR",
-        description: "The introduction of Token PR, ATM’s token launch pad.",
-        side: "right",
-      },
-      {
-        title: "Complete the transition of all PR nodes becoming decentralised",
-        description:
-          "All resulting data from the PR calculation results will be completely decentralised and stored on the chain, making the data safer, immutable, and thus more reliable.",
-        side: "left",
-      },
-    ],
-  },
-  {
-    year: "2021",
-    items: [
-      {
-        title: "Smart contracts undergo audit",
-        description:
-          "We found that we could create a platform that uses the blockchain to connect people on a new type of social network – a relative consensus network, which we hope will be a more stable and stronger economic system.",
-        side: "right",
-      },
-      {
-        title: "The concept was born",
-        description:
-          "In the first steps to be verified as a beacon of trust in the cryptocurrency community ATM underwent an audit by the CertiK Cybersecurity company.",
-        side: "left",
-      },
-    ],
-  },
-];
-
+ 
 // Main Roadmap Section
 export const RoadmapSection: React.FC = () => {
+   const { t } = useTranslation("roadmap");
+
+  // Build roadmap data from translations with alternating sides
+  const roadmapData: RoadmapSection[] = [
+    {
+      year: t("future.futureHeading"),
+      items: (t("future.items", { returnObjects: true }) as any[]).map((_, idx) => ({
+        title: t(`future.items.${idx}.title`),
+        description: t(`future.items.${idx}.description`),
+        side: (idx === 0 ? "right" : idx % 2 === 0 ? "right" : "left") as Side,
+      })),
+    },
+    {
+      year: "2025",
+      items: (t("year_2025.items", { returnObjects: true }) as any[]).map((_, idx) => ({
+        title: t(`year_2025.items.${idx}.title`),
+        description: t(`year_2025.items.${idx}.description`),
+        side: (idx === 0 ? "right" : idx % 2 === 0 ? "right" : "left") as Side,
+      })),
+    },
+    {
+      year: "2024",
+      items: (t("year_2024.items", { returnObjects: true }) as any[]).map((_, idx) => ({
+        title: t(`year_2024.items.${idx}.title`),
+        description: t(`year_2024.items.${idx}.description`),
+        side: (idx === 0 ? "right" : idx % 2 === 0 ? "right" : "left") as Side,
+      })),
+    },
+    {
+      year: "2023",
+      items: (t("year_2023.items", { returnObjects: true }) as any[]).map((_, idx) => ({
+        title: t(`year_2023.items.${idx}.title`),
+        description: t(`year_2023.items.${idx}.description`),
+        side: (idx === 0 ? "right" : idx % 2 === 0 ? "right" : "left") as Side,
+      })),
+    },
+    {
+      year: "2022",
+      items: (t("year_2022.items", { returnObjects: true }) as any[]).map((_, idx) => ({
+        title: t(`year_2022.items.${idx}.title`),
+        description: t(`year_2022.items.${idx}.description`),
+        side: (idx === 0 ? "right" : idx % 2 === 0 ? "right" : "left") as Side,
+      })),
+    },
+    {
+      year: "2021",
+      items: (t("year_2021.items", { returnObjects: true }) as any[]).map((_, idx) => ({
+        title: t(`year_2021.items.${idx}.title`),
+        description: t(`year_2021.items.${idx}.description`),
+        side: (idx === 0 ? "right" : idx % 2 === 0 ? "right" : "left") as Side,
+      })),
+    },
+  ];
   const [visibleYears, setVisibleYears] = useState<Set<string>>(new Set());
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 

@@ -1,3 +1,91 @@
 {
-    "test": "hi"
+  "future": {
+    "futureHeading": "未来",
+    "items": [
+      {
+        "title": "Q3 AGF 智能合约部署",
+        "description": "部署 AGF 智能合约，为游戏基金奠定基础，使用户能够众筹，开发者能够提供资助。"
+      },
+      {
+        "title": "空投与生态发展",
+        "description": "更多与其他项目合作的机会，发起空投，将其他社区引入 ATM。"
+      },
+      {
+        "title": "第三项功能",
+        "description": "平台上线，吸引更多开发者加入生态系统，丰富社区用户的游戏体验。"
+      }
+    ]
+  },
+  "year_2025": {
+    "items": [
+      {
+        "title": "WebApp 重设计",
+        "description": "全新 WebApp 配备清爽界面及清晰的 ATM 连接指南。"
+      },
+      {
+        "title": "与旅行社合作",
+        "description": "与旅行社合作，探索 LUCA 的更多现实应用场景，让加密货币真正走进生活。"
+      },
+      {
+        "title": "AGF 游戏发布",
+        "description": "平台上线，吸引更多开发者加入生态系统，丰富社区用户的游戏体验。"
+      }
+    ]
+  },
+  "year_2024": {
+    "items": [
+      {
+        "title": "iOS App 上线",
+        "description": "“ATM Connect” iOS App 在 App Store 上线，解锁 ATM 生态的专属体验。"
+      },
+      {
+        "title": "Q2 网站升级",
+        "description": "ATM 网站焕新升级，提升概念展示、动画插画和多语言支持，提升用户浏览体验。"
+      },
+      {
+        "title": "Q1 恢复计划结束",
+        "description": "完成对之前事件的恢复工作。"
+      }
+    ]
+  },
+  "year_2023": {
+    "items": [
+      {
+        "title": "恢复计划完成",
+        "description": "恢复计划成功完成，为未来增长奠定基础。"
+      },
+      {
+        "title": "AVATAR AI 上线",
+        "description": "ATM Connect iOS App 在 App Store 上线，解锁专属体验。"
+      },
+      {
+        "title": "第三项功能",
+        "description": "平台上线，吸引更多开发者加入生态系统，丰富社区用户的游戏体验。"
+      }
+    ]
+  },
+  "year_2022": {
+    "items": [
+      {
+        "title": "Q4 代币 PR",
+        "description": "实施 TokenPR 系统，优化代币分发和奖励机制。"
+      },
+      {
+        "title": "完成所有 PR 节点去中心化过渡",
+        "description": "成功将所有 PR 节点过渡为完全去中心化的基础设施。"
+      }
+    ]
+  },
+  "year_2021": {
+    "items": [
+      {
+        "title": "智能合约审计",
+        "description": "对所有智能合约进行全面安全审计，确保安全可靠。"
+      },
+      {
+        "title": "概念诞生",
+        "description": "ATM 生态及核心功能的初步构想和创意形成。"
+      }
+    ]
+  }
 }
