@@ -52,7 +52,7 @@ const TableComponent = ({
   };
 
   const getStakeMethod = (ledgeType: number) => {
-    return ledgeType === 1 ? t("stakeMethod.lucaStake") : t("stakeMethod.consensusContract");
+    return ledgeType === 1 ? t("stake.stakeMethod.lucaStake") : t("stake.stakeMethod.consensusContract");
   };
 
   if (selectedRow) {

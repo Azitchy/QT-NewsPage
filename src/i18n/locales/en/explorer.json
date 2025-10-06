@@ -18,7 +18,18 @@
     "placeholder": "Search...",
     "addressType": "Address",
     "contractType": "Contract",
-    "hashType": "Hash"
+    "hashType": "Hash",
+    "tabs": {
+      "consensusConnection": "Consensus Connection",
+      "prNode": "PR Node",
+      "stakeTransaction": "Stake Transaction"
+    },
+    "noResults": "No results found",
+    "invalidInput": "Please enter a valid address"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
   },
   "overview": {
     "lucaPrice": "Luca Price",
@@ -178,7 +189,9 @@
       "consensusContract": "Consensus contract"
     },
     "loading": "Loading stake transactions...",
-    "error": "Failed to load stake transactions"
+    "error": "Failed to load stake transactions",
+    "initiator": "Initiator",
+    "receiver": "Receiver"
   },
   "user": {
     "title": "User information",

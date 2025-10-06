@@ -132,11 +132,11 @@ export const DashboardSection = () => {
 
   const getPieChartData = (): { outer: ChartData[]; inner: ChartData[] } => {
     // Hardcoded data values
-    const circulatingSupply = 71907365;
+    const circulatingSupply = 72196001;
     const remainingCommunityFund = 3183353;
     const remainingLiquidityRewards = 0;
-    const lucaStakedConsensus = 58171035;
-    const userMarketCirculation = 13736329;
+    const lucaStakedConsensus = 58248873;
+    const userMarketCirculation = 13947127;
     const lucaStakedPR = 8820;
 
     // For display purposes, give a minimum value to make the sector visible
@@ -423,7 +423,7 @@ export const DashboardSection = () => {
               </ResponsiveContainer>
             </div>
 
-            <div className="flex flex-col items-center justify-center gap-[5px] mt-6">
+            {/* <div className="flex flex-col items-center justify-center gap-[5px] mt-6">
               <div className="flex items-center gap-2">
                 <div className="text-sm text-card-foreground text-[14px] leading-[19px]">
                   {t('overview.travelBurnt.title')}
@@ -478,7 +478,7 @@ export const DashboardSection = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </CardContent>
         </Card>
       </div>
