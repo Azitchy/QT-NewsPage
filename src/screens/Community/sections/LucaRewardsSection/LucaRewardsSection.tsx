@@ -1,6 +1,9 @@
 import { HeadingWithDots } from "@/components/HeadingWithDots";
+import { useTranslation } from "react-i18next";
 
 export const LucaRewardsSection = (): JSX.Element => {
+  const { t } = useTranslation("community");
+
   return (
     <section id="rewards" className="relative pt-[60px] xl:pt-[100px]">
       {/* Background image*/}
@@ -11,19 +14,15 @@ export const LucaRewardsSection = (): JSX.Element => {
       />
 
       <div className="relative z-10">
-        <HeadingWithDots text="luca rewards" />
+        <HeadingWithDots text={t("lucaRewardsSection.heading")} />
         <div className="px-0 tablet:px-[77px] xl:px-[134px] large:px-[203px] flex flex-col md:flex-row items-center tablet:gap-[50px]">
           <p
             className="pt-[20px] pb-[40px] font-light text-[18px] leading-[24px] xl:text-[20px] xl:leading-[27px] tablet:max-w-[516px] 
               xl:max-w-[782px]"
           >
-            Earn LUCA rewards through consensus connections and staking with
-            LUCA, the native cryptocurrency of ATM.{" "}
+            {t("lucaRewardsSection.paragraph.text")}{" "}
             <span className="font-medium">
-              Dive into our rewarding ecosystem where 85% of daily issuance is
-              dedicated to consensus connection rewards, distributed based on
-              your PR values. The remaining 15% is for staking rewards, with top
-              users qualifying for issuance.
+              {t("lucaRewardsSection.paragraph.boldText")}
             </span>
           </p>
           <img

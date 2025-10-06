@@ -1,10 +1,12 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { fetchContractInfo, ContractInfoItem } from "../../../../lib/webApi";
+import { useTranslation } from "react-i18next";
 
 const ContractCard: React.FC<{
   contract: ContractInfoItem;
 }> = ({ contract }) => {
+  const { t } = useTranslation("explorer");
   const getButtons = () => {
     switch (contract.type) {
       case 1:
@@ -17,7 +19,7 @@ const ContractCard: React.FC<{
             rel="noopener noreferrer"
             className="flex-1 text-center text-[14px] leading-[19px] font-normal px-[10px] lg:px-[20px] py-[12px] rounded-full bg-primary-foreground text-primary hover:bg-sky-100 transition"
           >
-            View all
+            {t("contract.viewAll")}
           </a>,
         ];
       case 3:
@@ -29,7 +31,7 @@ const ContractCard: React.FC<{
             rel="noopener noreferrer"
             className="flex-1 text-center text-[14px] leading-[19px] font-normal px-[10px] lg:px-[20px] py-[12px] rounded-full bg-primary-foreground text-primary hover:bg-sky-100 transition"
           >
-            View source code
+            {t("contract.viewSourceCode")}
           </a>,
           <button
             key="connections"
@@ -39,7 +41,7 @@ const ContractCard: React.FC<{
               window.location.hash = "#consensus";
             }}
           >
-            View all connections
+            {t("contract.viewAllConnections")}
           </button>,
         ];
       case 4:
@@ -51,7 +53,7 @@ const ContractCard: React.FC<{
             rel="noopener noreferrer"
             className="flex-1 text-center text-[14px] leading-[19px] font-normal px-[10px] lg:px-[20px] py-[12px] rounded-full bg-primary-foreground text-primary hover:bg-sky-100 transition"
           >
-            View source code
+            {t("contract.viewSourceCode")}
           </a>,
           <button
             key="connections"
@@ -61,7 +63,7 @@ const ContractCard: React.FC<{
               window.location.hash = "#stake";
             }}
           >
-            View all connections
+            {t("contract.viewAllConnections")}
           </button>,
         ];
       default:
@@ -72,7 +74,7 @@ const ContractCard: React.FC<{
             rel="noopener noreferrer"
             className="flex-1 text-center text-[14px] leading-[19px] font-normal px-[10px] lg:px-[20px] py-[12px] rounded-full bg-primary-foreground text-primary hover:bg-sky-100 transition"
           >
-            View all
+            {t("contract.viewAll")}
           </a>,
         ];
     }
@@ -93,7 +95,7 @@ const ContractCard: React.FC<{
           </h2>
         </div>
         <span className="text-[12px] text-foreground leading-[17px] px-[10px] py-[8px] bg-[#EEEEEE] dark:bg-[#504F63] rounded-full">
-          {contract.transactions.toLocaleString()} Transactions
+          {contract.transactions.toLocaleString()} {t("contract.transactions")}
         </span>
       </div>
 
@@ -106,13 +108,13 @@ const ContractCard: React.FC<{
 
       <div className="mb-[40px]">
         <p className="text-[14px] leading-[19px] font-normal text-foreground mb-[5px]">
-          Contract account balance
+          {t("contract.balance")}
         </p>
         <p className="font-light text-[16px] leading-[22px] lg:text-[20px] lg:leading-[27px] text-foreground mb-[5px]">
           {contract.balance}
         </p>
         <p className="text-[12px] leading-[17px] font-normal text-card-foreground">
-          Last Balance Update: {contract.lastBlock || "N/A"}
+          {t("contract.lastUpdate")} {contract.lastBlock || "N/A"}
         </p>
       </div>
 
@@ -122,6 +124,7 @@ const ContractCard: React.FC<{
 };
 
 const ContractInformation = () => {
+  const { t } = useTranslation("explorer");
   const [contracts, setContracts] = useState<ContractInfoItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -154,7 +157,7 @@ const ContractInformation = () => {
             className="dark:bg-card rounded-[10px] w-full p-4 lg:p-6 h-64 flex items-center justify-center"
           >
             <div className="text-card-foreground">
-              Loading contract {idx + 1}...
+              {t("contract.loading")} {idx + 1}...
             </div>
           </div>
         ))}
@@ -177,7 +180,7 @@ const ContractInformation = () => {
       <div className="grid grid-cols-1 mt-10 md:mt-0 md:grid-cols-2 gap-12 md:gap-6 p-0 lg:p-6">
         <div className="dark:bg-card rounded-[10px] w-full p-4 lg:p-6 h-64 flex items-center justify-center">
           <div className="text-card-foreground">
-            No contract information available
+            {t("contract.noData")}
           </div>
         </div>
       </div>

@@ -1,13 +1,16 @@
 import { HeadingWithDots } from "@/components/HeadingWithDots";
 import { ConnectToATMCard, FundWalletCard, InstallWalletCard } from "./ConnectCards";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export const ConnectCardsSection = (): JSX.Element => {
+  const { t } = useTranslation("help");
+  
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   return (
     <section className="px-[16px] md:px-[30px] large:px-[120px] pt-[60px] 2xl:pt-[100px] mb-[120px]">
-      <HeadingWithDots text="connect to atm" />
+      <HeadingWithDots text={t("connectCardsSection.heading")} />
 
       {/* Mobile: Cards stacked vertically, horizontally centered */}
       <div className="pt-[20px] flex flex-col items-center gap-[30px] md:hidden">

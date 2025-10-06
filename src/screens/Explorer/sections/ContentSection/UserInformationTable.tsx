@@ -6,13 +6,7 @@ import {
   PaginationItem,
 } from "../../../../components/ui/pagination";
 import { fetchUserInformation } from "../../../../lib/webApi";
-
-const columns = [
-  "User address",
-  "PR value",
-  "Consensus connection",
-  "Connection quantity",
-];
+import { useTranslation } from "react-i18next";
 
 interface UserInfo {
   userAddress: string;
@@ -28,6 +22,8 @@ const TableComponent = ({
   columns: string[];
   data: UserInfo[];
 }) => {
+  const { t } = useTranslation("explorer");
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(data.length / itemsPerPage);
@@ -87,18 +83,18 @@ const TableComponent = ({
           <div key={idx} className="border-b dark:border-[#454545] p-3">
             <div className="flex justify-between text-sm font-normal">
               <span className="truncate max-w-[220px] text-card-foreground">
-                User address:
+                {t("user.columns.userAddress")}:
               </span>
               <span className="truncate max-w-[200px]" title={row.userAddress}>
                 {hideAddress(row.userAddress)}
               </span>
             </div>
             <div className="flex gap-16 text-sm font-normal mt-2">
-              <span className="text-card-foreground">PR Value:</span>
+              <span className="text-card-foreground"> {t("user.columns.prValue")}: </span>
               <span>{row.prValue}</span>
             </div>
             <div className="flex gap-2 text-sm font-normal mt-2">
-              <span className="text-card-foreground">Connection Quality:</span>
+              <span className="text-card-foreground"> {t("user.columns.connectionQuality")} </span>
               <span>{row.connectionQuality}</span>
             </div>
           </div>
@@ -139,6 +135,14 @@ const TableComponent = ({
 };
 
 const UserInformationTable = () => {
+  const { t } = useTranslation("explorer");
+
+  const columns = [
+    t("user.columns.userAddress"),
+    t("user.columns.prValue"),
+    t("user.columns.consensusConnection"),
+    t("user.columns.connectionQuantity"),
+  ];
   const [data, setData] = useState<UserInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -180,7 +184,7 @@ const UserInformationTable = () => {
       <div>
         <div className="dark:bg-card flex flex-col md:flex-row md:items-center rounded-t-[10px] justify-between p-4 pb-5">
           <div className="px-0 py-4 md:px-4 md:py-0 text-[14px] leading-[19px] font-normal text-foreground">
-            User information
+            {t("user.title")}
           </div>
         </div>
         <div className="h-96 flex items-center justify-center dark:bg-card">
@@ -195,7 +199,7 @@ const UserInformationTable = () => {
       <div>
         <div className="dark:bg-card flex flex-col md:flex-row md:items-center rounded-t-[10px] justify-between p-4 pb-5">
           <div className="px-0 py-4 md:px-4 md:py-0 text-[14px] leading-[19px] font-normal text-foreground">
-            User information
+            {t("user.title")}
           </div>
         </div>
         <div className="h-96 flex items-center justify-center dark:bg-card">
@@ -210,11 +214,11 @@ const UserInformationTable = () => {
       <div>
         <div className="dark:bg-card flex flex-col md:flex-row md:items-center rounded-t-[10px] justify-between p-4 pb-5">
           <div className="px-0 py-4 md:px-4 md:py-0 text-[14px] leading-[19px] font-normal text-foreground">
-            User information
+            {t("user.title")}
           </div>
         </div>
         <div className="h-96 flex items-center justify-center dark:bg-card">
-          <div className="text-card-foreground">No user data available</div>
+          <div className="text-card-foreground"> {t("user.noData")} </div>
         </div>
       </div>
     );
@@ -224,7 +228,7 @@ const UserInformationTable = () => {
     <div>
       <div className="dark:bg-card flex flex-col md:flex-row md:items-center rounded-t-[10px] justify-between p-4 pb-5">
         <div className="px-0 py-4 md:px-4 md:py-0 text-[14px] leading-[19px] font-normal text-foreground">
-          User information
+          {t("user.title")}
         </div>
       </div>
 

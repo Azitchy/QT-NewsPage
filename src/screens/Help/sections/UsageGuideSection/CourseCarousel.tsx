@@ -7,10 +7,13 @@ import {
   CarouselItem,
   type CarouselApi,
 } from "@/components/ui/carousel";
-import { ArrowLeftIcon, ArrowRightIcon, ArrowRight } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { StyledLink } from "@/components/StyledLink";
+import { useTranslation } from "react-i18next";
 
 export const CourseCarousel = (): JSX.Element => {
+  const { t } = useTranslation("help");
+
   const [api, setApi] = useState<CarouselApi>();
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
@@ -18,56 +21,56 @@ export const CourseCarousel = (): JSX.Element => {
   const tutorialCards = [
     {
       image: "/img-1.png",
-      title: "Connect MetaMask wallet",
+      title: t("courseCarousel.cards.0.title"),
       date: "10/01/2025",
       showDate: true,
       link: "./pdf/connectWallet.pdf",
     },
     {
       image: "/img-2.png",
-      title: "How to participate in PR node stake and election",
+      title: t("courseCarousel.cards.1.title"),
       date: "10/01/2025",
       showDate: true,
       link: "./pdf/participateInPR.pdf",
     },
     {
       image: "/img-3.png",
-      title: "How to add LUCA/USDC liquidity",
+      title: t("courseCarousel.cards.2.title"),
       date: "10/01/2025",
       showDate: true,
       link: "./pdf/howAddLiquidity.pdf",
     },
     {
       image: "/img-4.png",
-      title: "Create a consensus connection",
+      title: t("courseCarousel.cards.3.title"),
       date: "10/01/2025",
       showDate: false,
       link: "./pdf/createConsensusConnection.pdf",
     },
     {
       image: "/img-5.png",
-      title: "How to check and receive total income",
+      title: t("courseCarousel.cards.4.title"),
       date: "10/01/2025",
       showDate: false,
       link: "./pdf/checkIncome.pdf",
     },
     {
       image: "/img-6.png",
-      title: "How to purchase LUCA",
+      title: t("courseCarousel.cards.5.title"),
       date: "10/01/2025",
       showDate: false,
       link: "./pdf/purchaseLUCA.pdf",
     },
     {
       image: "/img-7.png",
-      title: "How to check consensus connection details",
+      title: t("courseCarousel.cards.6.title"),
       date: "10/01/2025",
       showDate: false,
       link: "./pdf/queryConnectionByAddress.pdf",
     },
     {
       image: "/img-8.png",
-      title: "How to initiate a community proposal",
+      title: t("courseCarousel.cards.7.title"),
       date: "10/01/2025",
       showDate: false,
       link: "./pdf/initiateCommunityProposal.pdf",
@@ -162,7 +165,7 @@ export const CourseCarousel = (): JSX.Element => {
                         {card.date}
                       </div>
                       
-                      <StyledLink text="View PDF" link={card.link} newTab />
+                      <StyledLink text={t("courseCarousel.viewPdf")} link={card.link} newTab />
                     </div>
                   </div>
                 </Card>

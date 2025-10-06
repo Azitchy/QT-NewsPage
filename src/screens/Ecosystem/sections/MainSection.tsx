@@ -1,78 +1,80 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "../../../components/ui/button";
 import { VideoPlayer } from "./VideoPlayer";
 import { motion } from "framer-motion";
 
 export const MainSection = () => {
+  const { t } = useTranslation('ecosystem');
+
   const sections = [
     {
       id: "agf",
-      title: "agf",
+      title: t('mainSection.agf.title'),
       badge: {
         icon: "/game-launcher.svg",
-        text: "Gaming",
+        text: t('mainSection.agf.badge'),
         bgColor: "bg-[#effffa]",
         textColor: "text-[#01cc90]",
         borderColor: "border-[#01cc90]",
       },
       paragraphs: [
-        "Discover the ATM Gaming Fund, where community support powers innovation, with backing from our trusted VC partners, ready to spark a new era of gaming. The ATM community holds the power to vote which games come to life through their pledges. Players can earn ATM Stars and level up their gaming journey, unlocking LUCA rewards along the way.",
-        "Meanwhile, developers set their funding goals and deadlines, with the chance to bring their ideas to life. By joining in, developers have the opportunity to reach a passionate player base and make their visions real.",
+        t('mainSection.agf.paragraph1'),
+        t('mainSection.agf.paragraph2'),
       ],
       buttons: [
         {
-          text: "Submit a project",
+          text: t('mainSection.agf.buttons.submit'),
           primary: true,
           href: "/webapp",
         },
         {
-          text: "Learn about funding",
+          text: t('mainSection.agf.buttons.learn'),
           primary: false,
           href: "/games",
         },
       ],
-      mediaUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+      mediaUrl: "/ecosystem/agf-video-promotion-british.mp4",
     },
     {
       id: "ecology",
-      title: "ecology",
+      title: t('mainSection.ecology.title'),
       badge: {
         icon: "/plant.svg",
-        text: "Environment",
+        text: t('mainSection.ecology.badge'),
         bgColor: "bg-[#f0fcf7]",
         textColor: "text-[#119b56]",
         borderColor: "border-[#119b56]",
       },
-      content:
-        "ATM proudly announces our partnership with <span class='text-[#2ea8af] underline'>Ecologi</span>, a globally recognised B Corp-certified platform dedicated to accelerating climate action. Together, we are working towards a carbon-free future by actively engaging in reforestation efforts. As part of this collaboration, ATM has pledged to plant 100 trees. This commitment underscores our dedication to reducing our carbon footprint and fostering a greener planet for future generations. By connecting to Ecologi wallet through ATM, you're not only ensuring smooth and secure transactions but also actively participating in ecosystem restoration.",
+      content: t('mainSection.ecology.content'),
       walletInfo: {
-        label: "Ecologi Wallet:",
+        label: t('mainSection.ecology.walletLabel'),
         address: "0xb6c83fA7Bb9B5C23e96130CDEFD70977460031B9",
       },
       mediaUrl: "/ecosystem.png",
     },
     {
       id: "luca-travel",
-      title: "luca.travel",
+      title: t('mainSection.travel.title'),
       badge: {
         icon: "/travel-holidays.svg",
-        text: "Travel",
+        text: t('mainSection.travel.badge'),
         bgColor: "bg-[#f1fdff]",
         textColor: "text-[#6bb0d0]",
         borderColor: "border-[#6bb0d0]",
       },
       paragraphs: [
-        "We're revolutionising travel experiences. Through strategic partnerships with top travel agencies, we open doors to a world of possibilities. Seamlessly integrated into everyday transactions, LUCA simplifies global exploration, offering unparalleled convenience and flexibility.",
-        "As LUCA becomes woven into daily life through strategic alliances, it's not just about travel—it's about enhancing every moment. Whether booking flights, hotels, or activities, LUCA is the go-to currency. Join us in embracing a future where convenience and flexibility redefine travel.",
+        t('mainSection.travel.paragraph1'),
+        t('mainSection.travel.paragraph2'),
       ],
       buttons: [
         {
-          text: "Learn about travel",
+          text: t('mainSection.travel.buttons.learn'),
           primary: false,
           href: "/ecosystem/travel",
         },
       ],
-      mediaUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+      mediaUrl: "/ecosystem/travel-promo-video2.mp4",
     },
   ];
 

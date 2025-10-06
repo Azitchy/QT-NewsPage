@@ -1,6 +1,9 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 export const HeroSection = () => {
+  const { t } = useTranslation('games');
+
   return (
     <div className="relative w-full lg:mb-20 large:mb-44">
       {/* Background Image */}
@@ -23,7 +26,7 @@ export const HeroSection = () => {
       {/* Text */}
       <div className="absolute top-[25%] left-4  max-w-[50px] md:max-w-full md:top-[15%] md:left-10 xl:top-[20%] xl:left-28 large:top-[25%] large:left-[20%]">
         <h1 className="text-[40px] md:text-[80px] xl:text-[120px] large:text-[150px] leading-tight font-bold uppercase font-inter text-[#02EEA8]">
-          Game <span className="text-white">Fund</span>
+          {t('heroSection.title')} <span className="text-white">{t('heroSection.titleHighlight')}</span>
         </h1>
       </div>
 

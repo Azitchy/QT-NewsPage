@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "../../../components/ui/card";
 import { Button } from "../../../components/ui/button";
 import {
@@ -10,46 +11,39 @@ import {
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 
 export const ThirdPartySection = () => {
+  const { t } = useTranslation('ecosystem');
   const [api, setApi] = useState<CarouselApi>();
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  const thirdPartyData = {
-    title: "third-party ecosystem",
-    partners: [
-      {
-        icon: "/binance.svg",
-        name: "Binance",
-        description:
-          "The ATM community can use USDC or USDT as a trading pair of the governance token LUCA. It can also be used as the 'lock-up token' for consensus contract creation.",
-      },
-      {
-        icon: "/bit-go.svg",
-        name: "BitGo",
-        description:
-          "Users can use WBTC as a payment token when creating consensus contracts.",
-      },
-      {
-        icon: "/chain-link.svg",
-        name: "Chainlink",
-        description:
-          "Chainlink will be used as an 'oracle' to update the prices of LUCA and other token in real time.",
-      },
-      {
-        icon: "/eth.svg",
-        name: "ETH",
-        description:
-          "ATM will be issued on the ETH public chain, which is also where the event will take place.",
-      },
-      {
-        icon: "/pancake.svg",
-        name: "Pancake",
-        description:
-          "Here the community can start stake mining, where users can deposit LUCA/USDC or LUCA/USDT to obtain a stable income.",
-      },
-    ],
-  };
+  const partners = [
+    {
+      icon: "/binance.svg",
+      name: t('thirdPartySection.partners.binance.name'),
+      description: t('thirdPartySection.partners.binance.description'),
+    },
+    {
+      icon: "/bit-go.svg",
+      name: t('thirdPartySection.partners.bitgo.name'),
+      description: t('thirdPartySection.partners.bitgo.description'),
+    },
+    {
+      icon: "/chain-link.svg",
+      name: t('thirdPartySection.partners.chainlink.name'),
+      description: t('thirdPartySection.partners.chainlink.description'),
+    },
+    {
+      icon: "/eth.svg",
+      name: t('thirdPartySection.partners.eth.name'),
+      description: t('thirdPartySection.partners.eth.description'),
+    },
+    {
+      icon: "/pancake.svg",
+      name: t('thirdPartySection.partners.pancake.name'),
+      description: t('thirdPartySection.partners.pancake.description'),
+    },
+  ];
 
   useEffect(() => {
     if (!api) return;
@@ -77,8 +71,8 @@ export const ThirdPartySection = () => {
 
   // for mobile view
   const groupedPartners = [];
-  for (let i = 0; i < thirdPartyData.partners.length; i += 2) {
-    groupedPartners.push(thirdPartyData.partners.slice(i, i + 2));
+  for (let i = 0; i < partners.length; i += 2) {
+    groupedPartners.push(partners.slice(i, i + 2));
   }
 
   return (
@@ -87,7 +81,7 @@ export const ThirdPartySection = () => {
       <div className="flex items-start mb-12">
         <div className="relative ml-0 lg:ml-[30px]">
           <div className="font-titles-h2-sectionheading-400 text-primary-colour text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] ml-12 mt-7 uppercase">
-            {thirdPartyData.title}
+            {t('thirdPartySection.title')}
           </div>
           <img
             className="absolute w-[99px] h-[99px] top-0 left-0"
@@ -99,13 +93,9 @@ export const ThirdPartySection = () => {
 
       <div className="w-full mb-[40px] md:pl-[135px] 2xl:pl-[260px]">
         <p className="max-w-[784px] font-inter font-light text-foreground text-[18px] lg:text-[20px] leading-[24px] lg:leading-[27px] text-left">
-          In support of development, we've opted to integrate numerous
-          third-party applications. Our open-source code is readily accessible
-          for all developers.{" "}
+          {t('thirdPartySection.description')}{" "}
           <span className="font-medium">
-            ATM's vision encompasses broadening third-party options, enhancing
-            our infrastructure to provide developers with a more robust and
-            stable platform
+            {t('thirdPartySection.descriptionHighlight')}
           </span>
         </p>
       </div>
@@ -164,16 +154,13 @@ export const ThirdPartySection = () => {
                   className="basis-full flex-shrink-0 flex flex-col gap-[10px]"
                 >
                   {pair.map((partner, i) => (
-                    <div className="relative w-full h-[320px] rounded-[20px]">
+                    <div key={i} className="relative w-full h-[320px] rounded-[20px]">
                       <div className="absolute inset-0 rounded-[20px] p-[1px] bg-border dark:bg-[linear-gradient(96deg,#C6C6C6_69.03%,#2B2B2B_102.49%)]">
                         <div className="w-full h-full rounded-[20px] bg-card dark:bg-card" />
                       </div>
 
                       {/* Actual Card Content */}
-                      <Card
-                        key={i}
-                        className="relative w-full h-full rounded-[20px] border-none bg-transparent"
-                      >
+                      <Card className="relative w-full h-full rounded-[20px] border-none bg-transparent">
                         <CardContent className="flex flex-col h-full items-start justify-between gap-[20px] p-[30px]">
                           <img
                             className="w-[50px] h-[50px]"
@@ -194,7 +181,7 @@ export const ThirdPartySection = () => {
                   ))}
                 </CarouselItem>
               ))
-            : thirdPartyData.partners.map((partner, idx) => (
+            : partners.map((partner, idx) => (
                 //  For Desktop
                 <CarouselItem
                   key={idx}

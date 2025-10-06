@@ -8,8 +8,11 @@ import { useFetchNewsList } from "@/hooks/useApi"
 import { showDefaultImageIfEmpty } from "@/lib/webApi"
 import { NewsModal } from "./NewsModal"
 import { formatDate } from "@/lib/utils"
+import { useTranslation } from "react-i18next"
 
 export const ContentSection = (): JSX.Element => {
+  const { t } = useTranslation("news");
+
   const [newsData, setNewsData] = useState<any[]>([])
   const [selectedNews, setSelectedNews] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -52,7 +55,7 @@ export const ContentSection = (): JSX.Element => {
     return (
       <section className="w-full px-4 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
         <div className="flex justify-center items-center py-10">
-          <div className="text-gray-500">Loading news...</div>
+          <div className="text-gray-500"> {t("loading.news")} </div>
         </div>
       </section>
     )
@@ -62,7 +65,7 @@ export const ContentSection = (): JSX.Element => {
     return (
       <section className="w-full px-4 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
         <div className="flex justify-center items-center py-10">
-          <div className="text-red-500">Failed to fetch news data</div>
+          <div className="text-red-500"> {t("error.news")} </div>
         </div>
       </section>
     )
@@ -109,7 +112,7 @@ export const ContentSection = (): JSX.Element => {
                       onClick={() => handleReadNews(news)}
                     >
                       <span className="font-body-body-4-400 font-[number:var(--body-body-4-400-font-weight)] text-primary-colour text-[11px] md:text-[12px] lg:text-[length:var(--body-body-4-400-font-size)] tracking-[var(--body-body-4-400-letter-spacing)] leading-[var(--body-body-4-400-line-height)] [font-style:var(--body-body-4-400-font-style)] whitespace-nowrap">
-                        Read news
+                        {t("buttons.readNews")}
                       </span>
 
                       <div className="w-[28px] h-[28px] md:w-[32px] md:h-[32px] lg:w-[38.53px] lg:h-[38.53px] flex items-center justify-center group-hover:scale-110 transition-transform duration-200">

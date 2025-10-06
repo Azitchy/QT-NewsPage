@@ -1,3 +1,69 @@
 {
-    "test": "hi"
+  "heroSection": {
+    "title": "游戏",
+    "titleHighlight": "基金"
+  },
+  "aboutSection": {
+    "description": "通过玩游戏，",
+    "highlight": "ATM 用户将赚取 ATM 星星并提升游戏等级",
+    "descriptionEnd": "，这将帮助他们赚取更多 LUCA 奖励。",
+    "paragraph": "我们决定启动游戏基金来",
+    "paragraphHighlight": "支持游戏开发者并拥有我们自己的 ATM 游戏。每个 ATM 用户都可以玩游戏、享受乐趣并赚取奖励。游戏开发者需要设定他们的资金目标和截止日期",
+    "paragraphEnd": "（例如，设定游戏发布日期）。如果 ATM 用户喜欢这个游戏，他们可以承诺资金来创建游戏。"
+  },
+  "fundingSection": {
+    "title": "资金与游戏开发",
+    "subtitle": "点击下方按钮观看我们的解说视频"
+  },
+  "gameLaunchSection": {
+    "title": "游戏发布",
+    "paragraph1": "随着玩家与游戏连接，他们的 PR 值飙升到新高度。同时，游戏钱包从用户连接中积累每日 PR 收入。每日 ATM PR 的每一点都将被用于 ATM 游戏基金，保证 ATM 投资者获得全额退款。",
+    "paragraph2": "我们的系统确保用户与游戏钱包之间的标准化连接，仅基于他们的贡献金额和连接天数。用户的 PR 值将受到他们积累的 ATM 星星和游戏等级进展的影响。这种透明的方法确保所有玩家的公平性和一致性，增强他们的游戏体验。",
+    "quote": "当资金完全退还后，",
+    "quoteHighlight": "70% 将归用户（玩家），30% 将归 ATM 投资者",
+    "quoteEnd": "，每天从所有游戏中分配。"
+  },
+  "atmStarSection": {
+    "title": "如何获得 ATM 星星",
+    "method1": "用户将通过与游戏创建 100% 连接来获得 ATM 星星",
+    "method1Highlight": "（例如，100 LUCA 持续 90 天）；",
+    "method2": "通过赢得战斗。如果玩家输掉战斗，他们将失去 ATM 星星",
+    "method2Highlight": "（他们在战斗中投入的数量）；",
+    "features": "使用 ATM 星星解锁令人兴奋的功能！购买独家战斗门票、NFT 服装和物品。",
+    "deduction": "当从游戏断开连接时，游戏钱包将自动从您的账户中扣除星星，确保公平和平衡。如果您的星星余额不足，它将重置为零，给每个人一个全新的开始。"
+  },
+  "rewardsSection": {
+    "title": "奖励",
+    "subtitle": "ATM 用户将通过以下方式获得奖励：",
+    "rewards": {
+      "connectGames": {
+        "title": "连接游戏",
+        "description": "通过链接您的游戏钱包获得即时 ATM 星星并提升每日奖励。连接的时间越长，连接越多，奖励就越大！"
+      },
+      "playToWin": {
+        "title": "玩以取胜",
+        "description": "赢得战斗以赚取 ATM 星星，但要小心——输掉会损失您下注的金额！攀登排行榜以获得每日奖励星星并主导游戏！"
+      },
+      "investGames": {
+        "title": "投资游戏",
+        "description": "支持您最喜欢的游戏并赚取每日 ATM 奖励！首先获得全额退款，然后随着游戏的增长享受每日利润分成。"
+      },
+      "dailyStarPool": {
+        "title": "每日星星池",
+        "description": "领取您在每日星星池中的份额！使用 ATM 星星参加特殊战斗，每天赢得独家 NFT 服装和物品。"
+      }
+    }
+  },
+  "atmRankSection": {
+    "title": "atm pr 排名",
+    "description": "PR 值将取决于玩家的 ATM 游戏等级和 ATM 星星。将有标准化的 ATM XP，用于 ATMRank。",
+    "formulas": {
+      "pr": "PR = PR × 标准化 [ATM XP]",
+      "xp": "ATM XP = ATM 星星 + 标准化 [ATM 游戏等级]"
+    },
+    "definitions": {
+      "gameLevel": "ATM 游戏等级：代表玩家的 ATM 游戏等级经验。",
+      "stars": "ATM 星星：代表玩家拥有的 ATM 星星数量。"
+    }
+  }
 }

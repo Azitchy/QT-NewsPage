@@ -1,6 +1,9 @@
 import { HeadingWithDots } from "@/components/HeadingWithDots"
+import { useTranslation } from "react-i18next"
 
 export const AutonomySection = (): JSX.Element => {
+    const { t } = useTranslation('technology');
+    
     return (
         <div className="relative pt-[60px] xl:pt-[100px]">
 
@@ -12,28 +15,27 @@ export const AutonomySection = (): JSX.Element => {
         />
 
         <div className="relative z-10">
-            <HeadingWithDots text="autonomy" />
+            <HeadingWithDots text={t('autonomySection.heading')} />
         </div>
 
         {/* Content */}
         <div className="pt-[20px] max-w-[1300px] mx-auto relative z-10 flex flex-col items-center gap-5 text-center">
             <h2 className="font-titlesh5-mob-large-text-400 xl:font-titlesh5-large-text-400">
-            Unlock a new era of communication
+            {t('autonomySection.title')}
             </h2>
 
             <h1 className="font-light text-[26px] leading-[32px] tablet:text-[32px] tablet:leading-[40px] font-['Space_Grotesk']">
-            Say goodbye to centralised control and hello to security.{" "}
+            {t('autonomySection.description1')}{" "}
             <span className="bg-gradient-to-tr from-[#AADA5D] to-[#0DAEB9] bg-clip-text text-transparent font-bold">
-                Experience true ownership of your data and the power to communicate
+                {t('autonomySection.highlightedText')}
             </span>{" "}
-            without fear of censorship or surveillance.
+            {t('autonomySection.description2')}
             </h1>
 
             <p className="font-bodybody1-mob-300  xl:font-bodybody1-300 md:pb-[60px]">
-            Try our platform today and embrace the future of messaging!
+            {t('autonomySection.cta')}
             </p>
         </div>
         </div>        
     )
 }
-

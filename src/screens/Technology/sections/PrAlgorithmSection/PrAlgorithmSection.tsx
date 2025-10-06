@@ -1,37 +1,7 @@
 import { HeadingWithDots } from "@/components/HeadingWithDots";
 import { StyledLink } from "@/components/StyledLink";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-
-const prTabs = {
-  pr: {
-    id: "pr",
-    name: "PR",
-    heading: "What is PageRank?",
-    image: "./pr-img.png",
-    alt: "PageRank Algorithm",
-  },
-  strengths: {
-    id: "strengths",
-    name: "Strengths",
-    heading: "Strengths of PageRank",
-    image: "./strengths-img.png",
-    alt: "PageRank Strengths",
-  },
-  create: {
-    id: "create",
-    name: "Create",
-    heading: "How to create a PR node",
-    image: "./create-img.png",
-    alt: "Create PR Node",
-  },
-  income: {
-    id: "income",
-    name: "Income",
-    heading: "Income from PR node",
-    image: "./income-img.png",
-    alt: "Income from PR Node",
-  },
-};
+import { useTranslation } from "react-i18next";
 
 // Reusable Image Component
 const TabImage = ({ src, alt }: { src: string; alt: string }) => (
@@ -45,9 +15,42 @@ const TabImage = ({ src, alt }: { src: string; alt: string }) => (
 );
 
 export const PrAlgorithmSection = (): JSX.Element => {
+  const { t } = useTranslation('technology');
+
+  const prTabs = {
+    pr: {
+      id: "pr",
+      name: t('prAlgorithmSection.tabs.pr'),
+      heading: t('prAlgorithmSection.pr.title'),
+      image: "./pr-img.png",
+      alt: "PageRank Algorithm",
+    },
+    strengths: {
+      id: "strengths",
+      name: t('prAlgorithmSection.tabs.strengths'),
+      heading: t('prAlgorithmSection.strengths.title'),
+      image: "./strengths-img.png",
+      alt: "PageRank Strengths",
+    },
+    create: {
+      id: "create",
+      name: t('prAlgorithmSection.tabs.create'),
+      heading: t('prAlgorithmSection.create.title'),
+      image: "./create-img.png",
+      alt: "Create PR Node",
+    },
+    income: {
+      id: "income",
+      name: t('prAlgorithmSection.tabs.income'),
+      heading: t('prAlgorithmSection.income.title'),
+      image: "./income-img.png",
+      alt: "Income from PR Node",
+    },
+  };
+
   return (
     <div className="pt-[60px] xl:pt-[100px]">
-      <HeadingWithDots text="Pr Algorithm" />
+      <HeadingWithDots text={t('prAlgorithmSection.heading')} />
       <Tabs defaultValue="pr" className="pt-[20px] max-w-[1600px] mx-auto flex flex-col">
         {/* Tabs Header */}
         <div className="flex justify-center xl:justify-end">
@@ -76,7 +79,7 @@ export const PrAlgorithmSection = (): JSX.Element => {
               </h3>
               <div className="text-left font-normal font-inter text-[14px] leading-[19px] xl:text-[16px] xl:leading-[24px]">
                 <p className="self-stretch ">
-                  PageRank refers to the core algorithm of Google’s search engine, and it is an algorithm for ranking the importance of webpages on the Internet. The reason why it is called “PageRank” is that such algorithm is used to rank webpages and was first proposed by Larry Page, the Google co-founder. Equivalently, we use the consensus connection between users to replace the link between web pages in the original PageRank algorithm, and calculate the PR value of each user node in the ATM network to represent the user's influence in the community.
+                  {t('prAlgorithmSection.pr.description')}
                 </p>
               </div>
             </div>
@@ -93,10 +96,10 @@ export const PrAlgorithmSection = (): JSX.Element => {
               </h3>
               <div className="text-left font-normal font-inter text-[14px] leading-[19px] xl:text-[16px] xl:leading-[24px]">
                 <p className="self-stretch  mb-[20px]">
-                  When Google was first established websites were ranked by traffic, not by an intelligent algorithm. This method was unstable and was open to exploitation - which meant that important websites often got lost.
+                  {t('prAlgorithmSection.strengths.description1')}
                 </p>
                 <p>
-                  By looking at the relationships between websites, and not their network traffic, PageRank looks to solve this problem. The algorithm is naturally resistant to various cheating websites, and only those that are influential can be found.
+                  {t('prAlgorithmSection.strengths.description2')}
                 </p>
               </div>
             </div>
@@ -113,10 +116,10 @@ export const PrAlgorithmSection = (): JSX.Element => {
               </h3>
               <div className="text-left font-normal font-inter text-[14px] leading-[19px] xl:text-[16px] xl:leading-[24px]">
                 <p className="self-stretch  mb-[20px]">
-                  Any user can build ATM&apos;s PageRank computing server, and elect the top 11 servers with the highest stake by pledging ATM&apos;s native currency (LUCA). These servers work together for executing the PageRank algorithm, calculate and synchronise the daily PR value of all users on the ATM network.
+                  {t('prAlgorithmSection.create.description')}
                 </p>
                 
-                <StyledLink text="Create node" link="/webapp" />
+                <StyledLink text={t('prAlgorithmSection.create.createNode')} link="/webapp" />
               </div>
             </div>
           </div>
@@ -132,16 +135,16 @@ export const PrAlgorithmSection = (): JSX.Element => {
               </h3>
               <div className="text-left font-normal font-inter text-[14px] leading-[19px] xl:text-[16px] xl:leading-[24px]">
                 <p className="self-stretch  mb-[20px]">
-                  <span className="text-primary-colour">Operation rewards</span> <br />
-                  Users and server operators involving in the PageRank computing server stake will receive the corresponding node operation rewards.
+                  <span className="text-primary-colour">{t('prAlgorithmSection.income.operationRewards.title')}</span> <br />
+                  {t('prAlgorithmSection.income.operationRewards.description')}
                 </p>
                 <p className="self-stretch  mb-[20px]">
-                  <span className="text-primary-colour">Stake rewards</span> <br />
-                  User with a higher pledging ratio in the server node could receive more rewards.
+                  <span className="text-primary-colour">{t('prAlgorithmSection.income.stakeRewards.title')}</span> <br />
+                  {t('prAlgorithmSection.income.stakeRewards.description')}
                 </p>
                 <p className="self-stretch  mb-[20px]">
-                  <span className="text-primary-colour">Consensus rewards</span> <br />
-                  The greater the strength of the consensus connection between users, the higher the income distributed by PR computing power.
+                  <span className="text-primary-colour">{t('prAlgorithmSection.income.consensusRewards.title')}</span> <br />
+                  {t('prAlgorithmSection.income.consensusRewards.description')}
                 </p>
               </div>
             </div>

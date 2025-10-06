@@ -1,3 +1,125 @@
-{
-    "test": "hi"
+{   
+    "common": {
+        "avatarBadge": "avatars",
+        "connectBadge": "Connect",
+        "comingSoon": "Coming Soon"
+    },
+    "heroSection": {
+        "highlightedText": "Unleash the power of connection:",
+        "text": "redefining community interactions through decentralisation"
+    },
+    "aiAvatarContent": {
+        "heading": "ai avatars",
+        "para1": {
+            "text": "In our ATM community, we're transforming the way we interact with AI. Imagine a world where humans and AI coexist seamlessly,",
+            "boldText": "blurring boundaries and enriching every interaction. Our innovative AI technology brings this vision to life, creating a vibrant and dynamic community where the possibilities are endless."
+        },
+        "para2": "Meet Lucy, your next-generation conversational agent, expertly trained to respond to your queries with ease. Curious about LUCA, ATM-Rank, or Consensus Connections?",
+        "para3": "Lucy has you covered. With advanced natural language processing, she recognises your intent and delivers accurate information. Experience the convenience of Lucy as she expertly guides you through ATM.",
+        "avatarBadge": "$t(common.avatarBadge)",
+        "lucyButton": "Chat with Lucy"
+    },
+    "avatarGallery": {
+        "heading": {
+            "text": "Discover your digital-self with",
+            "highlightedText": "avatars"
+        },
+        "watchButton": "Watch Video"
+    },
+    "avatarTabs": {
+        "about": {
+            "name": "About",
+            "heading": "What is AVATAR?",
+            "description": "AVATARS redefine digital presence by extending your consciousness and enhancing your abilities in the virtual realm. They go beyond mere assistants, representing the various facets of your life - from professional to personal spheres."
+        },
+        "create": {
+            "name": "Create",
+            "heading": "Craft your AVATAR",
+            "description": "With Avatar, the power of creation is in your hands. Simply write a prompt, and watch as your vision comes to life before your eyes. Whether you envision a sleek professional or a whimsical adventurer, Avatar can embody any role you desire, bringing your digital dreams to fruition."
+        },
+        "train": {
+            "name": "Train",
+            "heading": "Train it to be like you",
+            "description": "Your Avatar isn't just a static creation; it's a dynamic entity that evolves alongside you. Through personalized training sessions, you can upload documents and engage in Q&A sessions to refine your Avatar's consciousness. Watch as it learns from your behaviors, interests, and preferences, becoming an accurate reflection of your digital self."
+        },
+        "share": {
+            "name": "Share",
+            "heading": "Share your AVATAR with friends",
+            "description": "Once you've crafted your perfect Avatar, it's time to share the magic with your friends. With just a click, you can generate an AVATAR link and invite others to interact with your digital creation. Whether it's introducing your Avatar to your social circle or connecting with friends through their Avatars, the possibilities for meaningful interaction are boundless."
+        }
+    },
+    "lucaRewardsSection": {
+        "heading": "Luca Rewards",
+        "paragraph": {
+            "text": "Earn LUCA rewards through consensus connections and staking with LUCA, the native cryptocurrency of ATM.",
+            "boldText": "Dive into our rewarding ecosystem where 85% of daily issuance is dedicated to consensus connection rewards, distributed based on your PR values. The remaining 15% is for staking rewards, with top users qualifying for issuance."
+        }
+    },
+    "aTeamSection": {
+        "heading": "A-Team",
+        "avatarBadge": "$t(common.avatarBadge)",
+        "para1": "A financial expert team for Researchers, Journalists, and Business Consultants. Whether exploring, working on projects, or making critical decisions, our AI agents assist you every step of the way.",
+        "para2": "The Innovation Oracle offers a comprehensive, personalised overview. Experience the power of our AI agents today and unlock new possibilities!",
+        "chatButton": "Chat with multi-agents"
+    },
+    "messagingPlatformSection": {
+        "heading": "Messaging Platform",
+        "connectBadge": "$t(common.connectBadge)",
+        "comingSoon": "$t(common.comingSoon)",
+        "para": "The Innovation Oracle offers a comprehensive, personalised overview. Experience the power of our AI agents today and unlock new possibilities!",
+        "chatButton": "Chat with multi-agents"
+    },
+    "socialPlatformSection": {
+        "heading": "Messaging Platform",
+        "connectBadge": "$t(common.connectBadge)",
+        "comingSoon": "$t(common.comingSoon)",
+        "para": "Our platform is a dynamic hub for members to share news, posts, and insights, fostering engaging discussions on topics relevant to the ATM ecosystem. Stay updated, interact with enthusiasts, and forge connections in a seamless, intuitive space. Customise your experience with interactive tools for a personalised social experience."
+    },
+    "automonyProposalSection": {
+        "heading": "Autonomy Proposal",
+        "paragraph": {
+            "text1": "ATM is a decentralised distribution mechanism. This means that users need to manage it as a community to allow it to continuously evolve and stay relevant.",
+            "boldText": "We hope that this should offer stability when the economic environment changes unpredictably around us.",
+            "text2": "n short, the community manages the ATM functions, algorithms and technical architectures by voting on proposed changes."
+        },
+        "proposalSection": {
+            "heading": "Different proposals are passed under diffferent conditions",
+            "subText": "Tap numbers to view 2 proposal modes",
+            "tip": "AGT stands for ATM Governance Token. When users establish a consensus connection with LUCA, they become eligible to receive AGT distributed by the ATM.",
+            "proposal": [
+                {
+                    "description": "In general proposals community members can vote for or against, and the voting will conclude once the total votes exceed 1% of AGT in circulation. The proposal will pass if it receives two thirds of the vote in its favour. If the proposal fails to meet this threshold, it is deemed unsuccessful."
+                },
+                {
+                    "description": "In special proposals there is no for and against, but instead the terms of execution are laid out for the community members to discuss. If there is any objection during this period, the proposal will be reintroduced with modifications."
+                }
+            ]
+        }
+    },
+    "proposalDecisionSection": {
+        "heading": "Proposal & Decision",
+        "title": "New Year's Celebration Rewarding 2025",
+        "description": "Community Funds need to be unlocked, 540,000 LUCA, to reward those who contributed to build ATM community. The funds will be refunded after the activity is completed.",
+        "ended": "Ended",
+        "viewButton": "View Proposal",
+        "viewAllButton": "View All"
+    },
+    "communityFoundationSection": {
+        "heading": "community foundation",
+        "paragraph": [
+        {
+            "part1": "The community foundation belongs to all users. Its ",
+            "boldPart": "accounts are fully autonomous, and the private key of the foundation wallet is jointly held by the directors of the foundation."
+        },
+        {
+            "part1": "The fund management board is composed of the 47 users with the highest PR value in the community. The board of directors has executive power, ",
+            "boldPart": "but the final decision always belongs to all members of the community ",
+            "part2": "via voting on proposals."
+        },
+        {
+            "boldPart": "Funds require approval by over half of the board of directors. ",
+            "part2": "Inactive members are replaced by the algorithm, with the next highest PR user taking their place as director."
+        }
+        ]
+    }
 }

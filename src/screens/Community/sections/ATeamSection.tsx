@@ -1,8 +1,11 @@
 import { HeadingWithDots } from "@/components/HeadingWithDots";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export const ATeamSection = (): JSX.Element => {
+  const { t } = useTranslation("community");
+
   const slideInVariants = {
     hidden: { opacity: 0, y: 200 },
     visible: { opacity: 1, y: 0 },
@@ -17,7 +20,7 @@ export const ATeamSection = (): JSX.Element => {
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
-      <HeadingWithDots text="a-team" />
+      <HeadingWithDots text={t("aTeamSection.heading")} />
 
       <div className="pt-[20px] flex flex-col xl:flex-row items-start justify-center xl:gap-[50px] max-w-[1454px] mx-auto">
         {/* Content */}
@@ -29,25 +32,21 @@ export const ATeamSection = (): JSX.Element => {
               alt="Face icon"
               src="/face_icon.svg"
             />
-            <span className="text-[#8E1BF4] font-inter text-[12px] font-normal leading-[17px]">
-              AVATARS
+            <span className="text-[#8E1BF4] font-inter text-[12px] font-normal leading-[17px] uppercase">
+              {t("aTeamSection.avatarBadge")}
             </span>
           </div>
 
           {/* Text Content */}
           <p className="font-normal text-[16px] leading-[22px] xl:text-[18px] xl:leading-[24px]">
-            A financial expert team for Researchers, Journalists, and Business
-            Consultants. Whether exploring, working on projects, or making
-            critical decisions, our AI agents assist you every step of the way.
+            {t("aTeamSection.para1")}
             <br /> <br />
-            The Innovation Oracle offers a comprehensive, personalised overview.
-            Experience the power of our AI agents today and unlock new
-            possibilities!
+            {t("aTeamSection.para2")}
           </p>
 
           <Button className="inline-flex items-center justify-center gap-[5px] px-5 py-3 bg-primary rounded-[30px] hover:bg-[#A2DEE2]">
             <span className="text-white font-sans text-[14px] leading-[19px] font-normal xl:text-[16px] xl:leading-[24px]">
-              Chat with multi-agents
+              {t("aTeamSection.chatButton")}
             </span>
           </Button>
         </div>

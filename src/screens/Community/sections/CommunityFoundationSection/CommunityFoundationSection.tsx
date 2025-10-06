@@ -1,35 +1,37 @@
 import { HeadingWithDots } from "@/components/HeadingWithDots";
+import { useTranslation } from "react-i18next";
 
 export const CommunityFoundationSection = (): JSX.Element => {
+  const { t } = useTranslation("community");
+
   return (
     <section className="pt-[60px] xl:pt-[100px]">
-        <HeadingWithDots text="community foundation" />
+        <HeadingWithDots text={t("communityFoundationSection.heading")} />
         <div className="px-0 tablet:px-[77px] xl:px-[134px] large:px-[203px] flex flex-col xl:flex-row xl:gap-[50px]">
           <div
             className="pt-[20px] flex flex-col gap-[20px] font-light text-[18px] leading-[24px] xl:text-[20px] xl:leading-[27px] max-w-[516px] 
               xl:max-w-[782px]"
           >
             <p>
-                The community foundation belongs to all users. Its {" "}
+                {t("communityFoundationSection.paragraph.0.part1")} {" "}
                 <span className="font-medium">
-                    accounts are fully autonomous, and the private key of the foundation wallet is jointly held by the directors of the foundation.
+                    {t("communityFoundationSection.paragraph.0.boldPart")}
                 </span>
             </p>
 
             <p>
-                The fund management board is composed of the 47 users with the highest PR value in the community. 
-                The board of directors has executive power, {" "}
+                {t("communityFoundationSection.paragraph.1.part1")} {" "}
                 <span className="font-medium">
-                    but the final decision always belongs to all members of the community {" "}
+                    {t("communityFoundationSection.paragraph.1.boldPart")} {" "}
                 </span>
-                via voting on proposals.
+                {t("communityFoundationSection.paragraph.1.part2")}
             </p>
 
             <p>
                 <span className="font-medium">
-                    Funds require approval by over half of the board of directors.{" "}
+                    {t("communityFoundationSection.paragraph.2.boldPart")}{" "}
                 </span>
-                Inactive members are replaced by the algorithm, with the next highest PR user taking their place as director.
+                {t("communityFoundationSection.paragraph.2.part2")}
             </p>
           </div>
           <div className="flex justify-end">

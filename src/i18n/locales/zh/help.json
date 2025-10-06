@@ -1,3 +1,242 @@
 {
-    "test": "hi"
+  "heroSection": {
+    "text": "ATM 简化操作：",
+    "highlightedText": "建立信心与专业技能"
+  },
+  "usageGuideSection": {
+    "heading": "使用指南",
+    "text": "如果您是 ATM 的新用户并希望更好地了解该技术，我们提供了一系列核心应用和功能的教程。从基础概念和白皮书说明到更深入的应用操作，我们的目标是让您对 ATM 有更全面的了解。"
+  },
+  "atmConnectSection": {
+    "heading": "ATM Connect",
+    "paragraphPart1": "解锁终极便捷体验，使用",
+    "paragraphBoldPart": "ATM Connect 应用 – 您随时随地无缝连接的首选方案！",
+    "paragraphPart2": "轻松与朋友连接、访问您的钱包、跟踪您的连接，并深入您的个性化仪表板，所有操作尽在掌中。",
+    "downloadHeading": "立即下载 ATM Connect 应用！"
+  },
+  "multiverseSection": {
+    "heading": "ATM 多元宇宙"
+  },
+  "courseCarousel": {
+    "cards": [
+      {
+        "title": "连接 MetaMask 钱包"
+      },
+      {
+        "title": "如何参与 PR 节点质押和选举"
+      },
+      {
+        "title": "如何添加 LUCA/USDC 流动性"
+      },
+      {
+        "title": "创建共识连接"
+      },
+      {
+        "title": "如何查看和领取总收益"
+      },
+      {
+        "title": "如何购买 LUCA"
+      },
+      {
+        "title": "如何查看共识连接详情"
+      },
+      {
+        "title": "如何发起社区提案"
+      }
+    ],
+    "viewPdf": "查看 PDF"
+  },
+  "faq": {
+    "commonText": "这里",
+    "tabs": {
+      "atm": {
+        "name": "ATM",
+        "qa": [
+          {
+            "question": "什么是 ATM？",
+            "answer": "ATM 是基于多条区块链的一套去中心化机制，由此可以产生相对的共识网络。"
+          },
+          {
+            "question": "谁可以使用 ATM？",
+            "answer": "任何使用 MetaMask 钱包并加入 BSC 网络的人都可以使用。"
+          },
+          {
+            "question": "在哪里可以找到并下载 ATM 移动应用？",
+            "answer": "要下载 ATM 移动应用，请前往您的设备应用商店（iOS 或 Google Play 商店）。在搜索栏中输入“ATM Connect”查找应用，找到后按照屏幕上的说明下载并安装即可。"
+          },
+          {
+            "question": "如何连接 MetaMask 钱包？",
+            "answer": "在 Google Chrome 上搜索“MetaMask”并从官方网站点击 [Download] 下载。将 MetaMask 添加到 Chrome 后，点击 'Web app' 以使用 MetaMask 钱包轻松登录 ATM。祝您连接愉快！"
+          },
+          {
+            "question": "如何连接到 ATM？",
+            "answer": "确保您的钱包已链接到 Binance Smart Chain。安装 MetaMask，使用 MetaMask 登录 ATM，并添加 'BSC network' 链。可通过添加 LUCA、USDC 和 AGT 提升体验。您可以随时通过 ‘Web app’ 访问钱包。为获得更多便利，请下载 ATM.Connect 应用。"
+          },
+          {
+            "question": "ATM 是开源的吗？",
+            "answer": "是的。您可以了解更多。"
+          },
+          {
+            "question": "ATM 由哪些组成？",
+            "answer": "ATM 的主要组成部分包括共识合约、ATM Rank 算法、LUCA 发行算法以及社区投票机制。"
+          },
+          {
+            "question": "如何创建共识连接？",
+            "answer": "前往“共识连接”页面，点击“创建共识”按钮，填写所需信息后提交！详细操作请参考“创建共识连接”指南。"
+          },
+          {
+            "question": "如何取消连接？",
+            "answer": "前往“共识连接 - 已连接”页面，导航至“查看详情”，然后点击“同意断开”。详细步骤请参考指南第6步。"
+          },
+          {
+            "question": "我可以创建多少个连接？",
+            "answer": "无限制！您可以建立任意数量的连接。"
+          },
+          {
+            "question": "ATM 当前支持哪些公有区块链？",
+            "answer": "目前仅支持 Binance 网络，未来将支持 Matic、OKExChain、Theta 和 Ethereum。"
+          },
+          {
+            "question": "这些是唯一会支持的区块链吗？",
+            "answer": "不是！根据社区意愿可以添加新的区块链。通过投票，您可以决定 ATM 接入的下一条区块链。"
+          },
+          {
+            "question": "ATM 是传销或金字塔计划吗？",
+            "answerPara1": "抱歉让怀疑者失望，ATM 不是！ATM 算法 ATMRank 灵感来自 Google 的 PageRank，不仅名字相似，代码也是开源的。您觉得 Google PageRank 是传销吗？🙂",
+            "answerPara2": "ATM 的奖励完全取决于您作为影响力用户的表现。早期采用者获得奖励，并不意味着他们从您的加入中获益，这与传统金字塔计划不同。",
+            "answerPara3": "奖励机制是零和游戏，意味着您只能增长自己在蛋糕中的份额，但蛋糕本身不会增加。而且加入 ATM 不需要邀请，这与金字塔计划完全相反！"
+          }
+        ]
+      },
+      "luca": {
+        "name": "LUCA",
+        "qa": [
+          {
+            "question": "如何获得 LUCA？",
+            "answer": "1. 参与初始 LUCA 活动；2. 提供流动性并获得 LUCA/USDC 交易对奖励；3. 通过建立共识连接；4. 参与质押挖矿。"
+          },
+          {
+            "question": "哪里可以买 LUCA？",
+            "answer": "您无法直接购买！初始 LUCA 活动结束后，可通过 Pancakeswap 平台兑换或通过前述方式获取。"
+          },
+          {
+            "question": "LUCA 将发行多少？",
+            "answer": "初始发行量为 1500 万代币，从 ATM 正式上线起，每天发行 36000 LUCA。1000 天后启动通缩机制。"
+          },
+          {
+            "question": "如何连接 MetaMask 钱包？",
+            "answer": "在 Google Chrome 上搜索“MetaMask”，从官方网站点击 [Download] 下载。添加到 Chrome 后，点击 'Web app' 使用 MetaMask 钱包登录 ATM。"
+          },
+          {
+            "question": "拥有 LUCA 有哪些好处？",
+            "answer": "拥有 LUCA 可参与社区提案投票，确保您的声音被听到！"
+          },
+          {
+            "question": "什么是‘通缩机制’？",
+            "answer": "初始 LUCA 活动 1000 天后，通缩机制启动。系统会根据当天与前一日平均价格的百分比差自动减少 LUCA 发行量。锁定在共识合约中的 LUCA 不受影响。"
+          },
+          {
+            "question": "如何成为节点质押者？",
+            "answer": "前往“共识连接-PR 节点”页面选择节点，点击“质押”并输入数量确认。详细操作请参考指南。"
+          },
+          {
+            "question": "在哪里查看我的质押收益？",
+            "answer": "前往“共识连接 – 总收益”页面查看。"
+          },
+          {
+            "question": "如何将以太坊主网代币转换到 Binance Smart Chain？",
+            "answer": "跨链转账允许用户将资金从一个区块链网络转移到另一个。各网络提供桥接服务，大多数提供教程指导。详情请查看。",
+            "link": {
+              "text": "https://docs.binance.org/smart-chain/guides/cross-chain.html"
+            }
+          }
+        ]
+      },
+      "community": {
+        "name": "社区",
+        "qa": [
+          {
+            "question": "如何跟踪提案？",
+            "answer": "可在我们的社区自治页面查看。"
+          },
+          {
+            "question": "什么是董事会？有什么作用？",
+            "answer": "董事会由社区中 47 个 PR 值最高的用户组成，共同持有社区基金的密钥。若成员长时间不活跃，将由下一个 PR 值最高的用户替换。"
+          },
+          {
+            "question": "董事会的职责是什么？",
+            "answer": "董事会成员共同保管基金钱包密钥，资金使用需超过半数成员签署。董事会行使执行和运营权。"
+          },
+          {
+            "question": "如何及时了解 ATM 动态？",
+            "answer": "查看我们的新闻页面。"
+          },
+          {
+            "question": "如何联系我们？",
+            "answer": "用户可发送邮件至：autonomoustrustmomentum@gmail.com。"
+          }
+        ]
+      },
+      "governance": {
+        "name": "治理",
+        "qa": [
+          {
+            "question": "AGT 用于什么？",
+            "answer": "社区提案功能可通过治理代币 AGT 实现，持有 AGT 的用户拥有投票权。"
+          },
+          {
+            "question": "普通提案与特殊提案有什么区别？",
+            "answer": "(1) 普通提案中，社区成员可投 YES/NO，若总投票数超过 AGT 流通量的 2%，则有效。若超过 2/3 投 YES，则批准实施，否则不执行。 (2) 特殊提案中，提案发起人需提前公示生效条件和实施方案。公示期结束后继续流程，如有人提出异议，需修改条件并再次公示。"
+          },
+          {
+            "question": "如何获取 AGT？",
+            "answer": "用户创建共识连接并拥有 LUCA 后，可获得 ATM 社区分发的 AGT。"
+          },
+          {
+            "question": "AGT 是社区唯一的治理代币吗？",
+            "answer": "是的，AGT 是 ATM 社区唯一的治理代币。"
+          },
+          {
+            "question": "提案结束后可以收回 AGT 吗？",
+            "answer": "每次提案投票结束后，社区用户可赎回 AGT，用于其他提案投票。"
+          },
+          {
+            "question": "需要多少 AGT 才能行使社区治理权？",
+            "answer": "至少 1 个 AGT。"
+          },
+          {
+            "question": "如何发起提案？",
+            "answer": "目前提案只能由 ATM 发起。如需发起，请邮件至官方邮箱 (autonomoustrustmomentum@gmail.com) 申请，后续将逐步开放用户发起提案功能。"
+          }
+        ]
+      }
+    }
+  },
+  "connectCardsSection": {
+    "heading": "连接到 ATM",
+    "installWalletCard": {
+      "title": "1. 安装钱包*",
+      "tip": "使用 ATM 需要一个连接到 Binance Smart Chain 的钱包。",
+      "instruction1": "点击下方按钮安装或登录 MetaMask 并完成设置。",
+      "instruction2": "2. 点击 '添加 BSC 网络' 按钮切换到 BSC 网络。",
+      "bscNetworkText": "添加 BSC 网络",
+      "instruction3": "如果您在手机端，请在 MetaMask 应用中重新打开此页面（菜单 → 浏览器）。使用下方按钮将 LUCA、USDC 和 AGT 添加到钱包中。"
+    },
+    "connectToATMCard": {
+      "title": "2. 连接到 ATM",
+      "instruction1": "点击 '连接 ATM' 并签署消息以绑定钱包。",
+      "instruction2": "不用担心，这是完全安全的——只是确认您是钱包的真实持有者！",
+      "tip": "探索仪表板找到所需功能，准备好后点击 '创建连接' 开始建立社交网络。",
+      "instruction3": "就是这样！点击下方按钮并签署消息，开始您的 ATM 之旅：",
+      "buttonText": "连接 ATM"
+    },
+    "fundWalletCard": {
+      "title": "3. 为钱包充值",
+      "instruction1": "如果是新钱包，需要充值 BNB 才能使用 Binance Smart Chain。",
+      "instruction2": "可通过 MoonPay 或 Transak 在 MetaMask 中购买 BNB，或从 Binance 购买后转入钱包（高级用户推荐）。",
+      "moonpayHeading": "通过 MoonPay 购买 BNB",
+      "moonpayDescription": "MoonPay 支持包括 Visa、Mastercard、Apple / Google / Samsung Pay 及银行转账在内的 145+ 个国家/地区的常用支付方式。",
+      "instruction3": "获得 BNB 后，可在 MetaMask 中兑换为 LUCA，或使用 PancakeSwap（更高级用户）。然后即可在网络中质押 LUCA。"
+    }
+  }
 }

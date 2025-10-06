@@ -1,9 +1,7 @@
-export const HeroSection = (): JSX.Element => {
-    const heroSection = {
-        highlightedtext: "Unleash the power of connection:",
-        text: "redefining community interactions through decentralisation",
+import { useTranslation } from "react-i18next";
 
-    };
+export const HeroSection = (): JSX.Element => {
+    const { t } = useTranslation("community");
 
     return (
       <section className="w-full flex justify-center">
@@ -15,9 +13,9 @@ export const HeroSection = (): JSX.Element => {
           <div className="w-1/2 flex justify-center pr-6">
             <h1 className="relative z-10 text-left font-[300] text-[26px] leading-[32px] tablet:text-[32px] tablet:leading-[40px] font-['Space_Grotesk'] xl:max-w-[512px] max-w-[758px]">
               <span className="bg-gradient-to-tr from-[#AADA5D] to-[#0DAEB9] bg-clip-text text-transparent font-bold">
-                {heroSection.highlightedtext}{" "}
+                {t("heroSection.highlightedText")}{" "}
               </span>
-              {heroSection.text}
+              {t("heroSection.text")}
             </h1>
           </div>
         </div>
@@ -29,9 +27,9 @@ export const HeroSection = (): JSX.Element => {
         >
           <h1 className="z-10 px-4 pb-4 font-[300] text-[20px] leading-[28px] font-['Space_Grotesk'] max-w-[360px]">
             <span className="bg-gradient-to-tr from-[#AADA5D] to-[#0DAEB9] bg-clip-text text-transparent font-bold">
-              {heroSection.highlightedtext}{" "}
+              {t("heroSection.highlightedText")}{" "}
             </span>
-            {heroSection.text}
+            {t("heroSection.text")}
           </h1>
         </div>
       </section>        

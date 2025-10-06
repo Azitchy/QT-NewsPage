@@ -1,7 +1,11 @@
+import { useTranslation } from "react-i18next";
+
 export const HeroSection = (): JSX.Element => {
+    const { t } = useTranslation("help");
+    
     const heroSection = {
-        text: "ATM Made Simple:",
-        highlightedtext: "Build Confidence and Expertise",
+        text: t("heroSection.text"),
+        highlightedtext: t("heroSection.highlightedText"),
     };
 
     return (

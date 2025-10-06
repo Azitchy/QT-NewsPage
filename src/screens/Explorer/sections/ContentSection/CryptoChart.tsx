@@ -10,6 +10,7 @@ import {
   Brush,
 } from "recharts";
 import { Button } from "../../../../components/ui/button";
+import { useTranslation } from "react-i18next";
 
 type TimeFrame = "day" | "week" | "month";
 
@@ -37,6 +38,7 @@ const CryptoChart: React.FC<CryptoChartProps> = ({
   timeFrameOptions,
   onTimeFrameChange,
 }) => {
+  const { t } = useTranslation("explorer");
   const [startIndex, setStartIndex] = useState(Math.max(data.length - 30, 0));
   const [endIndex, setEndIndex] = useState(data.length - 1);
   const lastY = useRef<number | null>(null);
@@ -62,7 +64,7 @@ const CryptoChart: React.FC<CryptoChartProps> = ({
       <div className="flex mb-3">
         <div className="flex flex-col-reverse gap-4 md:gap-0 md:flex-row md:items-center justify-between w-full py-4">
           <div className="text-[14px] leading-[19px] max-w-[100px] md:max-w-full font-normal text-foreground">
-            {name} price trend
+            {name} {t("chart.priceTrend")}
           </div>
           <div className="flex rounded-[5px] border border-primary overflow-hidden">
             {timeFrameOptions.map((option, index) => (

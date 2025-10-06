@@ -9,15 +9,8 @@ import {
   fetchStakeTransactions,
   StakeTransactionItem,
 } from "../../../../lib/webApi";
+import { useTranslation } from "react-i18next";
 
-const columns = [
-  "Hash",
-  "Initiator",
-  "Receiver",
-  "Connection quantity",
-  "Time",
-  "Action",
-];
 
 const TableComponent = ({
   columns,
@@ -32,16 +25,7 @@ const TableComponent = ({
   onRowSelect: (row: any) => void;
   selectedRow: any;
 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-  const totalPages = Math.ceil(data.length / itemsPerPage);
-
-  const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) setCurrentPage(page);
-  };
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentData = data.slice(startIndex, startIndex + itemsPerPage);
+  const { t } = useTranslation("explorer");
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -68,10 +52,9 @@ const TableComponent = ({
   };
 
   const getStakeMethod = (ledgeType: number) => {
-    return ledgeType === 1 ? "LUCA stake" : "Consensus contract";
+    return ledgeType === 1 ? t("stakeMethod.lucaStake") : t("stakeMethod.consensusContract");
   };
 
-  // Detail View
   if (selectedRow) {
     return (
       <div className="dark:bg-card rounded-[10px] p-4 md:p-5 w-full">
@@ -82,44 +65,44 @@ const TableComponent = ({
             onClick={() => onRowSelect(null)}
           />
           <h2 className="text-[14px] leading-[19px] font-normal">
-            Node stake transaction details
+            {t("stake.details.title")}
           </h2>
         </div>
         <div className="grid md:grid-cols-[180px_1fr] gap-y-1 md:gap-y-4 text-[14px] leading-[19px] text-foreground">
-          <div className="text-card-foreground md:text-foreground">Hash</div>
+          <div className="text-card-foreground md:text-foreground"> {t("stake.details.hash")} </div>
           <div className="truncate max-w-[300px] md:max-w-full">
             {selectedRow.hash}
           </div>
 
           <hr className="md:hidden my-1" />
 
-          <div className="text-card-foreground md:text-foreground">Network</div>
+          <div className="text-card-foreground md:text-foreground"> {t("stake.details.network")} </div>
           <div>{selectedRow.chainNetWork}</div>
 
           <hr className="md:hidden my-1" />
 
           <div className="text-card-foreground md:text-foreground">
-            Stake method
+            {t("stake.details.stakeMethod")}
           </div>
           <div>{getStakeMethod(selectedRow.ledgeType)}</div>
 
           <hr className="md:hidden my-1" />
 
           <div className="text-card-foreground md:text-foreground">
-            Creation Time
+            {t("stake.details.creationTime")}
           </div>
           <div>{formatTime(selectedRow.createTime)}</div>
 
           <hr className="md:hidden my-1" />
 
           <div className="text-card-foreground md:text-foreground">
-            Stake amount
+            {t("stake.details.stakeAmount")}
           </div>
           <div>{selectedRow.ledgeAmount} LUCA</div>
           <hr className="md:hidden my-1" />
 
           <div className="text-card-foreground md:text-foreground">
-            Initiator
+            {t("stake.details.initiator")}
           </div>
           <div className="flex gap-2 items-center">
             <span className="truncate  max-w-[300px] md:max-w-full">
@@ -134,7 +117,7 @@ const TableComponent = ({
           <hr className="md:hidden my-1" />
 
           <div className="text-card-foreground md:text-foreground">
-            Stake node
+            {t("stake.details.stakeNode")}
           </div>
           <div className="flex gap-2 items-center">
             <span className="truncate  max-w-[300px] md:max-w-full">
@@ -149,7 +132,7 @@ const TableComponent = ({
           <hr className="md:hidden my-1" />
 
           <div className="text-card-foreground md:text-foreground">
-            Node ranking
+            {t("stake.details.nodeRanking")}
           </div>
           <span>{selectedRow.rank || "N/A"} </span>
         </div>
@@ -159,7 +142,6 @@ const TableComponent = ({
 
   return (
     <>
-      {/* Desktop Table */}
       <div className="hidden md:block overflow-x-auto">
         <table className="min-w-full dark:bg-card rounded-lg overflow-hidden">
           <thead className="bg-[#F6F6F6] dark:bg-[#434352]">
@@ -175,7 +157,7 @@ const TableComponent = ({
             </tr>
           </thead>
           <tbody>
-            {currentData.map((row, idx) => (
+            {data.map((row, idx) => (
               <tr key={idx}>
                 <td className="px-4 py-3 text-sm truncate max-w-[180px]">
                   {hideAddress(row.hash)}
@@ -207,7 +189,7 @@ const TableComponent = ({
                       className="text-primary hover:underline"
                       onClick={() => onRowSelect(row)}
                     >
-                      More
+                      {t("stake.more")}
                     </button>
                   </td>
                 )}
@@ -217,9 +199,8 @@ const TableComponent = ({
         </table>
       </div>
 
-      {/* Mobile View */}
       <div className="md:hidden space-y-3  dark:bg-card">
-        {currentData.map((row, idx) => (
+        {data.map((row, idx) => (
           <div key={idx} className="border-b dark:border-[#454545] p-3">
             <div className="flex justify-between text-sm font-normal">
               <span className="truncate max-w-[220px] text-card-foreground">
@@ -233,13 +214,13 @@ const TableComponent = ({
               </span>
             </div>
             <div className="flex justify-between text-sm font-normal mt-2">
-              <span className="text-card-foreground">Initiator:</span>
+              <span className="text-card-foreground"> {t("stake.initiator")}: </span>
               <span className="truncate max-w-[250px]">
                 {hideAddress(row.userAddress)}
               </span>
             </div>
             <div className="flex justify-between text-sm font-normal mt-2">
-              <span className="text-card-foreground">Receiver:</span>
+              <span className="text-card-foreground"> {t("stake.receiver")}:</span>
               <span className="truncate max-w-[250px]">
                 {hideAddress(row.serverAddress)}
               </span>
@@ -247,41 +228,20 @@ const TableComponent = ({
           </div>
         ))}
       </div>
-
-      {/* Pagination */}
-      <div className="flex justify-center bg-card md:bg-background py-10">
-        <Pagination>
-          <PaginationContent className="inline-flex items-center gap-[10px] md:gap-[35px] px-[9px] py-[10px] rounded-[40px] border border-solid border-border dark:border-primary-foreground">
-            <img
-              src="/arrow-left-icon.svg"
-              onClick={() => handlePageChange(currentPage - 1)}
-              className="w-5 h-5 cursor-pointer"
-            />
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <PaginationItem key={page}>
-                <div
-                  onClick={() => handlePageChange(page)}
-                  className={`flex w-[30px] items-center justify-center cursor-pointer ${
-                    page === currentPage ? "text-primary" : "text-foreground"
-                  }`}
-                >
-                  {page}
-                </div>
-              </PaginationItem>
-            ))}
-            <img
-              src="/arrow-right-icon-3.svg"
-              onClick={() => handlePageChange(currentPage + 1)}
-              className="w-7 h-7 bg-[#e9f6f7] rounded-full cursor-pointer p-1"
-            />
-          </PaginationContent>
-        </Pagination>
-      </div>
     </>
   );
 };
 
 const StakeTransactionTable = () => {
+  const { t } = useTranslation("explorer");
+  const columns = [
+  t("stake.columns.hash"),
+  t("stake.columns.initiator"),
+  t("stake.columns.receiver"),
+  t("stake.columns.connectionQuantity"),
+  t("stake.columns.time"),
+  t("stake.columns.action"),
+];
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [data, setData] = useState<StakeTransactionItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -329,7 +289,7 @@ const StakeTransactionTable = () => {
   const handleFilterChange = (filterType: string, value: string) => {
     setFilters((prev) => ({
       ...prev,
-      [filterType]: value === "All Network" ? null : value,
+      [filterType]: value === t("stake.allNetwork") ? null : value,
     }));
     setCurrentPage(1);
   };
@@ -339,12 +299,12 @@ const StakeTransactionTable = () => {
       <div>
         <div className="flex flex-col md:flex-row md:items-center rounded-t-[10px] px-2 pt-2 dark:bg-card justify-between pb-5">
           <div className="px-0 py-4 md:px-4 md:py-0 text-[14px] leading-[19px] font-normal text-foreground">
-            Stake transaction information
+            {t("stake.title")}
           </div>
         </div>
         <div className="h-96 flex items-center justify-center dark:bg-card">
           <div className="text-card-foreground">
-            Loading stake transactions...
+            {t("stake.loading")}
           </div>
         </div>
       </div>
@@ -356,7 +316,7 @@ const StakeTransactionTable = () => {
       <div>
         <div className="flex flex-col md:flex-row md:items-center rounded-t-[10px] px-2 pt-2 dark:bg-card justify-between pb-5">
           <div className="px-0 py-4 md:px-4 md:py-0 text-[14px] leading-[19px] font-normal text-foreground">
-            Stake transaction information
+            {t("stake.title")}
           </div>
         </div>
         <div className="h-96 flex items-center justify-center dark:bg-card">
@@ -371,7 +331,7 @@ const StakeTransactionTable = () => {
       {!selectedRow && (
         <div className="flex flex-col md:flex-row md:items-center rounded-t-[10px] px-2 pt-2 dark:bg-card justify-between pb-5">
           <div className="px-0 py-4 md:px-4 md:py-0 text-[14px] leading-[19px] font-normal text-foreground">
-            Stake transaction information
+            {t("stake.title")}
           </div>
           <div className="flex gap-2">
             <div className="relative inline-block">
@@ -380,7 +340,7 @@ const StakeTransactionTable = () => {
                 value={filters.chainId || "All Network"}
                 onChange={(e) => handleFilterChange("chainId", e.target.value)}
               >
-                <option value="All Network">All Network</option>
+                <option value="All Network">{t("stake.allNetwork")}</option>
                 <option value="BSC">BSC</option>
                 <option value="ETH">Ethereum</option>
               </select>
@@ -402,7 +362,6 @@ const StakeTransactionTable = () => {
         selectedRow={selectedRow}
       />
 
-      {/* API Pagination */}
       {!selectedRow && total > 10 && (
         <div className="flex justify-center bg-card md:bg-background py-10">
           <Pagination>

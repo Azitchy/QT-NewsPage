@@ -12,9 +12,7 @@ import {
   PaginationItem,
 } from "../../../../components/ui/pagination";
 import { fetchRankList, fetchSystemTime, RankingItem } from "../../../../lib/webApi";
-
-const overallColumns = ["Ranking", "User Address", "PR Value"];
-const rewardColumns = ["Ranking", "User Address", "Total Income", "Action"];
+import { useTranslation } from "react-i18next";
 
 const getPageNumbers = (currentPage: number, totalPages: number) => {
   const pages: (number | string)[] = [];
@@ -64,6 +62,7 @@ const TableComponent = ({
   currentPage?: number;
   onPageChange?: (page: number) => void;
 }) => {
+  const { t } = useTranslation("explorer");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<any | null>(null);
 
@@ -93,7 +92,7 @@ const TableComponent = ({
   if (loading) {
     return (
       <div className="h-96 flex items-center justify-center">
-        <div className="text-card-foreground">Loading ranking data...</div>
+        <div className="text-card-foreground">{t("ranking.loading")}</div>
       </div>
     );
   }
@@ -109,7 +108,7 @@ const TableComponent = ({
   if (!data || data.length === 0) {
     return (
       <div className="h-96 flex items-center justify-center">
-        <div className="text-card-foreground">No ranking data available</div>
+        <div className="text-card-foreground">{t("ranking.noData")}</div>
       </div>
     );
   }
@@ -147,7 +146,7 @@ const TableComponent = ({
                       className="text-[#2EA8AF] hover:underline"
                       onClick={() => openModal(row)}
                     >
-                      Detail
+                      {t("ranking.detail")}
                     </button>
                   </td>
                 )}
@@ -162,9 +161,9 @@ const TableComponent = ({
         {data.map((row, idx) => (
           <div key={idx} className="border-b dark:border-[#454545]  p-3 ">
             <div className="flex justify-between text-sm font-normal">
-              <span>Rank {row.rank}</span>
+              <span>{t("ranking.columns.ranking")} {row.rank}</span>
               <span>
-                {showAction ? "Total income:" : "PR value:"} {row.totalAmount || row.pr}
+                {showAction ? `${t("ranking.columns.totalIncome")}:` : `${t("ranking.columns.prValue")}:`} {row.totalAmount || row.pr}
               </span>
             </div>
             <div className="flex gap-2 items-center justify-between">
@@ -177,7 +176,7 @@ const TableComponent = ({
                     className="text-primary hover:underline text-sm"
                     onClick={() => openModal(row)}
                   >
-                    Detail
+                    {t("ranking.detail")}
                   </button>
                 </div>
               )}
@@ -239,13 +238,13 @@ const TableComponent = ({
               ✕
             </button>
             <h2 className="text-[18px] leading-[24px] font-normal text-foreground mb-[30px]">
-              Income details
+              {t("ranking.incomeDetails.title")}
             </h2>
 
             <div className="space-y-2 text-sm text-gray-700 mb-4">
               <div className="flex gap-[33px]">
                 <span className="text-[#858585] text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] font-normal">
-                  Income ranking
+                  {t("ranking.incomeDetails.incomeRanking")}
                 </span>
                 <span className="font-normal text-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px]">
                   {selectedRow.rank}
@@ -253,7 +252,7 @@ const TableComponent = ({
               </div>
               <div className="flex gap-[33px]">
                 <span className="text-[#858585] text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] font-normal">
-                  Wallet address
+                  {t("ranking.incomeDetails.walletAddress")}
                 </span>
                 <span className="font-normal text-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] truncate text-right max-w-[180px] md:max-w-full overflow-hidden whitespace-nowrap">
                   {selectedRow.address}
@@ -261,7 +260,7 @@ const TableComponent = ({
               </div>
               <div className="flex gap-[33px]">
                 <span className="text-[#858585]  text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] font-normal ">
-                  Total income
+                  {t("ranking.incomeDetails.totalIncome")}
                 </span>
                 <span className="font-normal text-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px]">
                   {selectedRow.totalAmount || selectedRow.pr}
@@ -272,13 +271,13 @@ const TableComponent = ({
             <hr className="my-3" />
 
             <p className="font-normal text-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] mb-3">
-              The total income consists of the following four parts
+              {t("ranking.incomeDetails.description")}
             </p>
 
             <div className="grid grid-cols-2 gap-y-2 text-sm text-gray-700">
               <div className="flex flex-col justify-between">
                 <span className="text-card-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] font-normal">
-                  Income ranking
+                  {t("ranking.incomeDetails.consensusIncome")}
                 </span>
                 <span className="font-normal text-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px]">
                   {selectedRow.totalAmount || selectedRow.pr}
@@ -286,7 +285,7 @@ const TableComponent = ({
               </div>
               <div className="flex flex-col justify-between">
                 <span className="text-card-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] font-normal">
-                  Server operation income
+                  {t("ranking.incomeDetails.operationIncome")}
                 </span>
                 <span className="font-normal text-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px]">
                   {selectedRow.operationIncome || 0}
@@ -294,7 +293,7 @@ const TableComponent = ({
               </div>
               <div className="flex flex-col justify-between">
                 <span className="text-card-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] font-normal">
-                  Server stake income
+                  {t("ranking.incomeDetails.stakeIncome")}
                 </span>
                 <span className="font-normal text-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px]">
                   {selectedRow.stakeIncome || 0}
@@ -305,7 +304,7 @@ const TableComponent = ({
                   className="text-card-foreground
                  text-[14px] leading-[19px] md:text-[16px] md:leading-[24px] font-normal"
                 >
-                  Liquidity income
+                  {t("ranking.incomeDetails.liquidityIncome")}
                 </span>
                 <span className="font-normal text-foreground text-[14px] leading-[19px] md:text-[16px] md:leading-[24px]">
                   {selectedRow.liquidityIncome || 0}
@@ -320,6 +319,7 @@ const TableComponent = ({
 };
 
 const OverallRankingTable = () => {
+  const { t } = useTranslation("explorer");
   const [overallData, setOverallData] = useState<RankingItem[]>([]);
   const [rewardData, setRewardData] = useState<RankingItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -330,6 +330,19 @@ const OverallRankingTable = () => {
   const [rewardTotal, setRewardTotal] = useState(0);
   const [systemTime, setSystemTime] = useState<number | null>(null);
 
+  const overallColumns = [
+    t("ranking.columns.ranking"),
+    t("ranking.columns.userAddress"),
+    t("ranking.columns.prValue")
+  ];
+  
+  const rewardColumns = [
+    t("ranking.columns.ranking"),
+    t("ranking.columns.userAddress"),
+    t("ranking.columns.totalIncome"),
+    t("ranking.columns.action")
+  ];
+
   const fetchOverallRanking = async (page = 1) => {
     try {
       const { list, total } = await fetchRankList(page, 10, 1);
@@ -337,7 +350,7 @@ const OverallRankingTable = () => {
       setOverallTotal(total);
     } catch (err) {
       console.error("Error fetching overall ranking:", err);
-      setError("Failed to load overall ranking");
+      setError(t("ranking.error"));
     }
   };
 
@@ -348,7 +361,7 @@ const OverallRankingTable = () => {
       setRewardTotal(total);
     } catch (err) {
       console.error("Error fetching reward ranking:", err);
-      setError("Failed to load reward ranking");
+      setError(t("ranking.error"));
     }
   };
 
@@ -373,7 +386,7 @@ const OverallRankingTable = () => {
         setError(null);
       } catch (err) {
         console.error("Error fetching ranking data:", err);
-        setError("Failed to load ranking data");
+        setError(t("ranking.error"));
       } finally {
         setLoading(false);
       }
@@ -397,7 +410,7 @@ const OverallRankingTable = () => {
   const formatTime = (timestamp: number) => {
     if (!timestamp) return '';
     const date = new Date(timestamp);
-    date.setDate(date.getDate() - 1); // Subtract one day as per Vue code
+    date.setDate(date.getDate() - 1);
     const day = ('0' + date.getDate()).slice(-2);
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const year = date.getFullYear();
@@ -415,17 +428,17 @@ const OverallRankingTable = () => {
             value="overall"
             className="px-0 md:px-4 py-2 text-[14px] leading-[19px] font-normal text-card-foreground bg-transparent border-0 shadow-none data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap"
           >
-            Overall PR Ranking
+            {t("ranking.overallPR")}
           </TabsTrigger>
           <TabsTrigger
             value="reward"
             className="md:px-4 py-2 text-[14px] leading-[19px] font-normal text-card-foreground bg-transparent border-0 shadow-none data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap"
           >
-            Total Reward
+            {t("ranking.totalReward")}
           </TabsTrigger>
         </div>
         <div className="text-[12px] leading-[17px] md:text-[14px] md:leading-[19px] text-card-foreground dark:px-2 dark:pt-2 font-normal">
-          Ranking data is updated daily. The latest update:{" "}
+          {t("ranking.latestUpdate")}{" "}
           <span className="text-primary">
             {systemTime ? formatTime(systemTime) : "17/03/2024"} 23:00
           </span>

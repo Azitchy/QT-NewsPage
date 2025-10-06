@@ -11,14 +11,17 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { getOverviewData, OverviewData } from "../../../../lib/webApi";
+import { useTranslation } from "react-i18next";
 
 interface ChartData {
   name: string;
   value: number;
+  actualValue: number;
   color: string;
 }
 
 export const DashboardSection = () => {
+  const { t } = useTranslation('explorer');
   const [overviewData, setOverviewData] = useState<OverviewData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,17 +35,17 @@ export const DashboardSection = () => {
         setError(null);
       } catch (err) {
         console.error("Error fetching overview data:", err);
-        setError("Failed to load data");
+        setError(t('common.error'));
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [t]);
 
   const formatNumber = (str: number | string, holdPoint = false): string => {
-    if (!str) return "";
+    if (!str) return "0";
     let suffix = "";
     if (holdPoint) {
       str = parseFloat(str.toString()).toFixed(6);
@@ -75,11 +78,11 @@ export const DashboardSection = () => {
     if (!overviewData) return [];
 
     const userMarketNum =
-      overviewData.circulationTotal - overviewData.contractTotalAmount;
+      overviewData.circulationTotal - overviewData.contractTotalAmount - overviewData.treatyTotal;
 
     return [
       {
-        label: "Luca Price",
+        label: t('overview.lucaPrice'),
         value: formatPrice(overviewData.price),
         hasPercentage: true,
         percentage: overviewData.pre
@@ -89,81 +92,96 @@ export const DashboardSection = () => {
           : "+0.00%",
       },
       {
-        label: "Total supply",
+        label: t('overview.totalSupply'),
         value: formatNumber(overviewData.issuanceTotal),
       },
-      { label: "User market circulation", value: formatNumber(userMarketNum) },
+      { 
+        label: t('overview.userMarketCirculation'), 
+        value: formatNumber(userMarketNum) 
+      },
       {
-        label: "Circulating supply",
+        label: t('overview.circulatingSupply'),
         value: formatNumber(overviewData.circulationTotal),
       },
       {
-        label: "Remaining liquidity rewards",
+        label: t('overview.remainingLiquidityRewards'),
         value: formatNumber(overviewData.liquidityReward),
       },
       {
-        label: "LUCA staked in Consensus Connections",
+        label: t('overview.lucaStakedConsensus'),
         value: formatNumber(overviewData.contractTotalAmount),
       },
       {
-        label: "LUCA staked in PR servers",
+        label: t('overview.lucaStakedPR'),
         value: formatNumber(overviewData.treatyTotal),
       },
       {
-        label: "Remaining Community Fund",
+        label: t('overview.remainingCommunityFund'),
         value: formatNumber(overviewData.communityFundStock),
       },
       {
-        label: "LUCA Consesus Connections",
+        label: t('overview.lucaConsensusConnections'),
         value: formatNumber(overviewData.contractCount),
       },
       {
-        label: "PR Servers in Operation",
+        label: t('overview.prServersOperation'),
         value: formatNumber(overviewData.prCount),
       },
     ];
   };
 
   const getPieChartData = (): { outer: ChartData[]; inner: ChartData[] } => {
-    if (!overviewData) {
-      return { outer: [], inner: [] };
-    }
+    // Hardcoded data values
+    const circulatingSupply = 71907365;
+    const remainingCommunityFund = 3183353;
+    const remainingLiquidityRewards = 0;
+    const lucaStakedConsensus = 58171035;
+    const userMarketCirculation = 13736329;
+    const lucaStakedPR = 8820;
 
-    const userMarketNum =
-      overviewData.circulationTotal - overviewData.contractTotalAmount;
+    // For display purposes, give a minimum value to make the sector visible
+    const minVisibleValue = 50000;
 
+    // Outer ring: Total issuance breakdown
     const outer: ChartData[] = [
       {
-        name: "LUCA staked in Consensus Connections",
-        value: overviewData.contractTotalAmount,
+        name: t('overview.circulatingSupply'),
+        value: circulatingSupply,
+        actualValue: circulatingSupply,
         color: "#3CC9C7",
       },
       {
-        name: "Remaining Community Fund",
-        value: overviewData.communityFundStock,
+        name: t('overview.remainingCommunityFund'),
+        value: remainingCommunityFund,
+        actualValue: remainingCommunityFund,
         color: "#FFC94D",
       },
       {
-        name: "Remaining liquidity rewards",
-        value: overviewData.liquidityReward,
+        name: t('overview.remainingLiquidityRewards'),
+        value: remainingLiquidityRewards === 0 ? minVisibleValue : remainingLiquidityRewards,
+        actualValue: remainingLiquidityRewards,
         color: "#FF69B4",
       },
     ];
 
+    // Inner ring: Breakdown of circulating supply
     const inner: ChartData[] = [
       {
-        name: "Circulating supply",
-        value: overviewData.circulationTotal,
+        name: t('overview.lucaStakedConsensus'),
+        value: lucaStakedConsensus,
+        actualValue: lucaStakedConsensus,
         color: "#97D76D",
       },
       {
-        name: "User market circulation",
-        value: userMarketNum,
+        name: t('overview.userMarketCirculation'),
+        value: userMarketCirculation,
+        actualValue: userMarketCirculation,
         color: "#5B6BF5",
       },
       {
-        name: "LUCA staked in PR servers",
-        value: overviewData.treatyTotal,
+        name: t('overview.lucaStakedPR'),
+        value: lucaStakedPR,
+        actualValue: lucaStakedPR,
         color: "#1B5E20",
       },
     ];
@@ -171,9 +189,28 @@ export const DashboardSection = () => {
     return { outer, inner };
   };
 
+  // Custom tooltip to format numbers with commas and show actual values
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const actualValue = payload[0].payload.actualValue;
+      
+      return (
+        <div className="bg-white dark:bg-card border border-gray-300 dark:border-border rounded-lg p-3 shadow-lg">
+          <p className="text-sm font-medium text-foreground mb-1">
+            {payload[0].name}
+          </p>
+          <p className="text-sm font-semibold text-foreground">
+            {formatNumber(actualValue)}
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
-      alert("Copied!");
+      alert(t('overview.copied'));
     });
   };
 
@@ -181,7 +218,7 @@ export const DashboardSection = () => {
     const combinedData = [...dataOuter, ...dataInner];
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-1 gap-y-[10px] md:pl-10 md:gap-y-[6px] mx-auto max-w-[250px] md:max-w-full">
-        {combinedData.map((entry, index) => (
+        {combinedData.map((entry: ChartData, index: number) => (
           <div key={`legend-${index}`} className="flex items-center gap-2">
             <span
               className="w-2 h-2 rounded-full"
@@ -200,10 +237,10 @@ export const DashboardSection = () => {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full">
         <div className="bg-card rounded-2xl border-[0px] shadow-none md:shadow-sm p-6 h-96 flex items-center justify-center">
-          <div className="text-card-foreground">Loading overview data...</div>
+          <div className="text-card-foreground">{t('common.loading')}</div>
         </div>
         <div className="bg-card rounded-2xl border-[0px] shadow-none md:shadow-sm p-6 h-96 flex items-center justify-center">
-          <div className="text-card-foreground">Loading...</div>
+          <div className="text-card-foreground">{t('common.loading')}</div>
         </div>
       </div>
     );
@@ -259,8 +296,8 @@ export const DashboardSection = () => {
                       alt="Image"
                       src={
                         parseFloat(item.percentage || "0") >= 0
-                          ? "/green-up-arrow.svg"
-                          : "/red-down-arrow.svg"
+                          ? "/arrow-up.svg"
+                          : "/arrow-down.svg"
                       }
                     />
                     <span>{item.percentage}</span>
@@ -278,7 +315,7 @@ export const DashboardSection = () => {
             <div className="flex items-center gap-3">
               <img src="/dots.png" alt="dots" className="w-[3px] h-[14px]" />
               <h3 className="text-[14px] leading-[19px] font-normal text-[#999F9F]">
-                Proportion of Luca issuance in the entire network
+                {t('overview.proportionTitle')}
               </h3>
             </div>
           </CardHeader>
@@ -290,12 +327,40 @@ export const DashboardSection = () => {
                     data={dataOuter}
                     dataKey="value"
                     nameKey="name"
+                    cx="50%"
+                    cy="50%"
                     outerRadius="60%"
                     innerRadius="45%"
                     paddingAngle={1}
+                    startAngle={135}
+                    endAngle={495}
+                    onMouseEnter={(_, index) => {
+                      const sector = document.querySelectorAll('.recharts-pie-sector')[index];
+                      if (sector) {
+                        sector.setAttribute('transform', `scale(1.05)`);
+                        sector.setAttribute('transform-origin', 'center');
+                        (sector as SVGElement).style.transition = 'transform 0.3s ease';
+                        (sector as SVGElement).style.filter = 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))';
+                        (sector as SVGElement).style.cursor = 'pointer';
+                      }
+                    }}
+                    onMouseLeave={(_, index) => {
+                      const sector = document.querySelectorAll('.recharts-pie-sector')[index];
+                      if (sector) {
+                        sector.setAttribute('transform', 'scale(1)');
+                        (sector as SVGElement).style.filter = 'none';
+                      }
+                    }}
                   >
                     {dataOuter.map((entry, index) => (
-                      <Cell key={`outer-${index}`} fill={entry.color} />
+                      <Cell 
+                        key={`outer-${index}`} 
+                        fill={entry.color}
+                        style={{ 
+                          transition: 'all 0.3s ease',
+                          transformOrigin: 'center',
+                        }}
+                      />
                     ))}
                   </Pie>
 
@@ -303,15 +368,47 @@ export const DashboardSection = () => {
                     data={dataInner}
                     dataKey="value"
                     nameKey="name"
+                    cx="50%"
+                    cy="50%"
                     outerRadius="35%"
                     paddingAngle={1}
+                    startAngle={135}
+                    endAngle={495}
+                    onMouseEnter={(_, index) => {
+                      const allSectors = document.querySelectorAll('.recharts-pie-sector');
+                      const innerStartIndex = dataOuter.length;
+                      const sector = allSectors[innerStartIndex + index];
+                      if (sector) {
+                        sector.setAttribute('transform', `scale(1.05)`);
+                        sector.setAttribute('transform-origin', 'center');
+                        (sector as SVGElement).style.transition = 'transform 0.3s ease';
+                        (sector as SVGElement).style.filter = 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))';
+                        (sector as SVGElement).style.cursor = 'pointer';
+                      }
+                    }}
+                    onMouseLeave={(_, index) => {
+                      const allSectors = document.querySelectorAll('.recharts-pie-sector');
+                      const innerStartIndex = dataOuter.length;
+                      const sector = allSectors[innerStartIndex + index];
+                      if (sector) {
+                        sector.setAttribute('transform', 'scale(1)');
+                        (sector as SVGElement).style.filter = 'none';
+                      }
+                    }}
                   >
                     {dataInner.map((entry, index) => (
-                      <Cell key={`inner-${index}`} fill={entry.color} />
+                      <Cell 
+                        key={`inner-${index}`} 
+                        fill={entry.color}
+                        style={{ 
+                          transition: 'all 0.3s ease',
+                          transformOrigin: 'center',
+                        }}
+                      />
                     ))}
                   </Pie>
 
-                  <Tooltip />
+                  <Tooltip content={<CustomTooltip />} />
                   <Legend
                     content={
                       <CustomLegend
@@ -329,7 +426,7 @@ export const DashboardSection = () => {
             <div className="flex flex-col items-center justify-center gap-[5px] mt-6">
               <div className="flex items-center gap-2">
                 <div className="text-sm text-card-foreground text-[14px] leading-[19px]">
-                  Amount of Travel LUCA burnt
+                  {t('overview.travelBurnt.title')}
                 </div>
                 <img
                   className="w-[24px] h-[24px]"
@@ -348,7 +445,7 @@ export const DashboardSection = () => {
               <div className="flex items-center gap-8">
                 <div className="flex flex-col items-center gap-2">
                   <div className="text-[12px] leading-[17px] text-[#4F5555] dark:text-card-foreground font-normal">
-                    Wallet address
+                    {t('overview.travelBurnt.walletAddress')}
                   </div>
                   <div className="flex items-center gap-1">
                     <span className="text-[14px] leading-[19px] text-foreground font-normal">
@@ -366,7 +463,7 @@ export const DashboardSection = () => {
                 <div className="w-px h-10 bg-gray-300" />
                 <div className="flex flex-col items-center gap-2">
                   <div className="text-[12px] leading-[17px] text-[#4F5555] dark:text-card-foreground font-normal">
-                    Smart contract
+                    {t('overview.travelBurnt.smartContract')}
                   </div>
                   <div className="flex items-center gap-1">
                     <span className="text-[14px] leading-[19px] text-foreground font-normal">

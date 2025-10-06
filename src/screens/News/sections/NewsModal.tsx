@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface NewsModalProps {
   isOpen: boolean;
@@ -18,6 +19,8 @@ export const NewsModal = ({
   newsList,
   setNewsItem,
 }: NewsModalProps): JSX.Element | null => {
+  const { t } = useTranslation("news");
+  
   if (!isOpen || !newsItem) return null;
 
   const formatDate = (dateString: string) => {
@@ -75,7 +78,7 @@ export const NewsModal = ({
         {/* Header */}
         <div className="flex items-center justify-between p-6">
           <span className="px-3 py-1 bg-teal-100 text-primary rounded-full text-sm font-medium">
-            News
+            {t("labels.news")}
           </span>
           <button
             onClick={onClose}
@@ -101,7 +104,7 @@ export const NewsModal = ({
 
             {/* Meta info */}
             <div className="flex items-center gap-4 mb-6 text-sm text-foreground">
-              <span className="font-medium">NEWS</span>
+              <span className="font-medium uppercase"> {t("labels.news")} </span>
               <span>{formatDate(newsItem.createTime)}</span>
               <button
                 className="ml-auto p-2 hover:bg-gray-100 rounded-full"
@@ -151,7 +154,7 @@ export const NewsModal = ({
             <div className="space-y-6">
               {/* Notice Section */}
               <div>
-                <h3 className="text-xl font-bold text-primary mb-4">NOTICE</h3>
+                <h3 className="text-xl font-bold text-primary mb-4 uppercase"> {t("labels.notice")} </h3>
                 <div className="space-y-4">
                   {notices.map((item) => (
                     <div key={item.id} className="p-2">
@@ -165,7 +168,7 @@ export const NewsModal = ({
                         }}
                         className="text-primary text-sm hover:underline"
                       >
-                        Read more
+                        {t("buttons.readMore")}
                       </button>
                     </div>
                   ))}
@@ -175,8 +178,8 @@ export const NewsModal = ({
               {/* Hot News Section */}
               {hotNews && (
                 <div>
-                  <h3 className="text-xl font-bold text-primary mb-4">
-                    HOT NEWS
+                  <h3 className="text-xl font-bold text-primary mb-4 uppercase">
+                    {t("labels.hotNews")}
                   </h3>
                   <div className="p-4 rounded-lg ">
                     <h4 className="font-semibold text-foreground mb-2 line-clamp-2">
@@ -198,7 +201,7 @@ export const NewsModal = ({
                       }}
                       className="text-primary text-sm hover:underline"
                     >
-                      Read more
+                      {t("buttons.readMore")}
                     </button>
                   </div>
                 </div>

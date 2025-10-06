@@ -6,7 +6,8 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 export const QnaSection = (): JSX.Element => {
-  const [activeTab, setActiveTab] = useState(faqTabs[0].id);
+  const tabs = faqTabs();
+  const [activeTab, setActiveTab] = useState(tabs[0].id);
   const [expandedIndex, setExpandedIndex] = useState<number>(0); 
 
   const handleTabChange = (tabId: string) => {
@@ -30,7 +31,7 @@ export const QnaSection = (): JSX.Element => {
         {/* Tabs Header */}
         <div className="flex justify-center xl:justify-end">
           <TabsList className="flex bg-transparent rounded-[40px] border border-border p-[5px] h-auto gap-[10px] my-[20px]">
-            {faqTabs.map((tab) => (
+            {tabs.map((tab) => (
               <TabsTrigger
                 key={tab.id}
                 value={tab.id}
@@ -44,7 +45,7 @@ export const QnaSection = (): JSX.Element => {
           </TabsList>
         </div>
 
-        {faqTabs.map((tab) => (
+        {tabs.map((tab) => (
           <TabsContent key={tab.id} value={tab.id} className="w-full">
             <Card className="w-full bg-card rounded-[10px]">
               <CardContent className="flex flex-col items-start gap-[25px] p-[40px]">

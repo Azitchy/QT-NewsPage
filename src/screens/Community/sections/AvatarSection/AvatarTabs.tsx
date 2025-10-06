@@ -1,35 +1,45 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { useTranslation } from "react-i18next";
 
-const avatarTabs = {
-  about: {
-    id: "about",
-    name: "About",
-    heading: "What is AVATAR?",
-    image: "./about-img.png",
-    alt: "Avatar About",
-  },
-  create: {
-    id: "create",
-    name: "Create",
-    heading: "Craft your AVATAR",
-    image: "./create-img.png",
-    alt: "Avatar Create",
-  },
-  train: {
-    id: "train",
-    name: "Train",
-    heading: "Train it to be like you",
-    image: "./train-img.png",
-    alt: "Avatar Train",
-  },
-  share: {
-    id: "share",
-    name: "Share",
-    heading: "Share your AVATAR with friends",
-    image: "./share-img.png",
-    alt: "Avatar Share",
-  },
+const avatarTabs = () => {
+  const { t } = useTranslation("community");
+
+  return {
+    about: {
+      id: "about",
+      name: t("avatarTabs.about.name"),
+      heading: t("avatarTabs.about.heading"),
+      image: "./about-img.png",
+      alt: "Avatar About",
+      description: t("avatarTabs.about.description")
+    },
+    create: {
+      id: "create",
+      name: t("avatarTabs.create.name"),
+      heading: t("avatarTabs.create.heading"),
+      image: "./create-img.png",
+      alt: "Avatar Create",
+      description: t("avatarTabs.create.description"),
+    },
+    train: {
+      id: "train",
+      name: t("avatarTabs.train.name"),
+      heading: t("avatarTabs.train.heading"),
+      image: "./train-img.png",
+      alt: "Avatar Train",
+      description: t("avatarTabs.train.description"),
+    },
+    share: {
+      id: "share",
+      name: t("avatarTabs.share.name"),
+      heading: t("avatarTabs.share.heading"),
+      image: "./share-img.png",
+      alt: "Avatar Share",
+      description: t("avatarTabs.share.description"),
+    },
+  };
 };
+
 
 const TabImage = ({ src, alt }: { src: string; alt: string }) => (
   <div className="mb-[20px] xl:mb-0 xl:flex-shrink-0 w-full xl:w-fit">
@@ -42,13 +52,14 @@ const TabImage = ({ src, alt }: { src: string; alt: string }) => (
 );
 
 export const AvatarTabs = (): JSX.Element => {
+  const tabs = avatarTabs();
   return (
     <div className="pt-[60px] xl:pt-[100px] max-w-[1600px] mx-auto pb-[90px] tablet:pb-[75px] xl:pb-0">
       <Tabs defaultValue="about" className="mx-auto flex flex-col">
         {/* Tabs Header */}
         <div className="flex justify-center xl:justify-end">
           <TabsList className="flex bg-transparent rounded-[40px] border border-border p-[5px] h-auto gap-[10px] my-[20px]">
-            {Object.values(avatarTabs).map((tab) => (
+            {Object.values(tabs).map((tab) => (
               <TabsTrigger
                 key={tab.id}
                 value={tab.id}
@@ -62,101 +73,22 @@ export const AvatarTabs = (): JSX.Element => {
           </TabsList>
         </div>
 
-        {/* About Tab */}
-        <TabsContent value={avatarTabs.about.id} className="w-full">
-          <div className="flex flex-col xl:flex-row items-start xl:gap-[50px]">
-            <TabImage src={avatarTabs.about.image} alt={avatarTabs.about.alt} />
-            <div className="text-center xl:text-left xl:flex-1">
-              <h3 className="self-stretch text-left font-normal font-inter text-[20px] leading-[27px] xl:text-[26px] xl:leading-[34px] mb-[20px]">
-                {avatarTabs.about.heading}
-              </h3>
-              <div className="text-left font-normal font-inter text-[14px] leading-[19px] xl:text-[16px] xl:leading-[24px]">
-                <p className="self-stretch">
-                  AVATARS redefine digital presence by extending your
-                  consciousness and enhancing your abilities in the virtual
-                  realm. They go beyond mere assistants, representing the
-                  various facets of your life - from professional to personal
-                  spheres.
-                </p>
+        {/* Tabs Content */}
+        {Object.values(tabs).map((tab) => (
+          <TabsContent key={tab.id} value={tab.id} className="w-full">
+            <div className="flex flex-col xl:flex-row items-start xl:gap-[50px]">
+              <TabImage src={tab.image} alt={tab.alt} />
+              <div className="text-center xl:text-left xl:flex-1">
+                <h3 className="self-stretch text-left font-normal font-inter text-[20px] leading-[27px] xl:text-[26px] xl:leading-[34px] mb-[20px]">
+                  {tab.heading}
+                </h3>
+                <div className="text-left font-normal font-inter text-[14px] leading-[19px] xl:text-[16px] xl:leading-[24px]">
+                  <p className="self-stretch mb-[20px]">{tab.description}</p>
+                </div>
               </div>
             </div>
-          </div>
-        </TabsContent>
-
-        {/* Create Tab */}
-        <TabsContent value={avatarTabs.create.id} className="w-full">
-          <div className="flex flex-col xl:flex-row items-start xl:gap-[50px]">
-            <TabImage
-              src={avatarTabs.create.image}
-              alt={avatarTabs.create.alt}
-            />
-            <div className="text-center xl:text-left xl:flex-1">
-              <h3 className="self-stretch text-left font-normal font-inter text-[20px] leading-[27px] xl:text-[26px] xl:leading-[34px] mb-[20px]">
-                {avatarTabs.create.heading}
-              </h3>
-              <div className="text-left font-normal font-inter text-[14px] leading-[19px] xl:text-[16px] xl:leading-[24px]">
-                <p className="self-stretch mb-[20px]">
-                  With Avatar, the power of creation is in your hands. Simply
-                  write a prompt, and watch as your vision comes to life before
-                  your eyes. Whether you envision a sleek professional or a
-                  whimsical adventurer, Avatar can embody any role you desire,
-                  bringing your digital dreams to fruition.
-                </p>
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-
-        {/* Train Tab */}
-        <TabsContent value={avatarTabs.train.id} className="w-full">
-          <div className="flex flex-col xl:flex-row items-start xl:gap-[50px]">
-            <TabImage
-              src={avatarTabs.train.image}
-              alt={avatarTabs.train.alt}
-            />
-            <div className="text-center xl:text-left xl:flex-1">
-              <h3 className="self-stretch text-left font-normal font-inter text-[20px] leading-[27px] xl:text-[26px] xl:leading-[34px] mb-[20px]">
-                {avatarTabs.train.heading}
-              </h3>
-              <div className="text-left font-normal font-inter text-[14px] leading-[19px] xl:text-[16px] xl:leading-[24px]">
-                <p className="self-stretch mb-[20px]">
-                  Your Avatar isn't just a static creation; it's a dynamic
-                  entity that evolves alongside you. Through personalized
-                  training sessions, you can upload documents and engage in Q&A
-                  sessions to refine your Avatar's consciousness. Watch as it
-                  learns from your behaviors, interests, and preferences,
-                  becoming an accurate reflection of your digital self.
-                </p>
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-
-        {/* Share Tab */}
-        <TabsContent value={avatarTabs.share.id} className="w-full">
-          <div className="flex flex-col xl:flex-row items-start xl:gap-[50px]">
-            <TabImage
-              src={avatarTabs.share.image}
-              alt={avatarTabs.share.alt}
-            />
-            <div className="text-center xl:text-left xl:flex-1">
-              <h3 className="self-stretch text-left font-normal font-inter text-[20px] leading-[27px] xl:text-[26px] xl:leading-[34px] mb-[20px]">
-                {avatarTabs.share.heading}
-              </h3>
-              <div className="text-left font-normal font-inter text-[14px] leading-[19px] xl:text-[16px] xl:leading-[24px]">
-                <p className="self-stretch mb-[20px]">
-                  Once you've crafted your perfect Avatar, it's time to share
-                  the magic with your friends. With just a click, you can
-                  generate an AVATAR link and invite others to interact with
-                  your digital creation. Whether it's introducing your Avatar to
-                  your social circle or connecting with friends through their
-                  Avatars, the possibilities for meaningful interaction are
-                  boundless.
-                </p>
-              </div>
-            </div>
-          </div>
-        </TabsContent>
+          </TabsContent>
+        ))}
       </Tabs>
     </div>
   );

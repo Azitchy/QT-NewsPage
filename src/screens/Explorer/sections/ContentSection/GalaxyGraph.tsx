@@ -7,6 +7,7 @@ import "echarts-gl";
 import ReactECharts from "echarts-for-react";
 import { Input } from "../../../../components/ui/input";
 import { Search, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 echarts.use([GraphChart, CanvasRenderer, TitleComponent, TooltipComponent]);
 
@@ -25,6 +26,8 @@ type LinkType = {
 };
 
 const GalaxyGraph: React.FC = () => {
+  const { t } = useTranslation("explorer");
+
   const chartRef = useRef<any>(null);
   const [is3D, setIs3D] = useState(true);
   const [showSearchMobile, setShowSearchMobile] = useState(false);
@@ -88,13 +91,13 @@ const GalaxyGraph: React.FC = () => {
     <div className="w-full h-screen bg-black text-white relative">
       <div className="absolute top-10 left-1/2 transform -translate-x-1/2 z-20 p-[10px] md:p-[20px] opacity-90 bg-gray-200 rounded-lg flex items-center justify-between md:w-[740px] lg:w-full lg:max-w-6xl md:mx-auto">
         <h1 className="hidden md:block text-[16px] font-bold text-gray-800">
-          ATM Galaxy
+          {t("galaxy.title")}
         </h1>
 
         <div className="hidden md:flex gap-[10px] items-center">
           <div className="flex items-center flex-grow mx-4 lg:w-[400px]">
             <Input
-              placeholder="Search for address"
+              placeholder={(t("galaxy.searchPlaceholder"))}
               className="pl-4 pr-12 py-1 rounded-l-[4px] rounded-r-none border border-gray-400 bg-transparent text-sm text-[#858585] placeholder:text-[#858585] focus:ring-2 focus:ring-[#2ea8af] focus:border-transparent"
             />
             <div className="bg-primary-colour px-6 py-[10px] rounded-r-[4px] text-white cursor-pointer">
@@ -102,12 +105,12 @@ const GalaxyGraph: React.FC = () => {
             </div>
           </div>
           <button className="bg-gray-300 text-black hover:bg-gray-400 text-[10px] px-3 py-[2px] rounded">
-            Toggle <br /> Nodes
+            {t("galaxy.toggleNodes.toggle")} <br /> {t("galaxy.toggleNodes.nodes")}
           </button>
           <select className="border text-black border-gray-300 rounded px-2 py-2 text-sm">
-            <option>ALL</option>
-            <option>Option 1</option>
-            <option>Option 2</option>
+            <option> {t("galaxy.all")} </option>
+            <option> {t("galaxy.option1")} </option>
+            <option> {t("galaxy.option2")} </option>
           </select>
           <button
             onClick={() => setIs3D(true)}
@@ -115,7 +118,7 @@ const GalaxyGraph: React.FC = () => {
               is3D ? "bg-teal-500 hover:bg-teal-600" : "bg-gray-300 text-black"
             }`}
           >
-            3D
+            {t("galaxy.3d")}
           </button>
           <button
             onClick={() => setIs3D(false)}
@@ -125,7 +128,7 @@ const GalaxyGraph: React.FC = () => {
                 : "bg-gray-300 text-black"
             }`}
           >
-            2D
+            {t("galaxy.2d")}
           </button>
         </div>
 
@@ -133,7 +136,7 @@ const GalaxyGraph: React.FC = () => {
           {showSearchMobile ? (
             <div className="flex items-center gap-0 w-[340px]">
               <Input
-                placeholder="Search address"
+                placeholder={(t("galaxy.searchPlaceholder"))}
                 className="pl-2 pr-2 py-1 border border-gray-400 bg-transparent text-sm text-[#858585] placeholder:text-[#858585] focus:ring-2 focus:ring-[#2ea8af] focus:border-transparent flex-grow"
               />
               <button className="bg-primary-colour  px-3 py-[10px] mr-2  rounded-r-[4px] text-white">
@@ -149,12 +152,12 @@ const GalaxyGraph: React.FC = () => {
           ) : (
             <>
               <button className="bg-gray-300 text-black hover:bg-gray-400 text-[8px] px-3 py-1 rounded">
-                Toggle <br /> Nodes
+                {t("galaxy.toggleNodes.toggle")} <br /> {t("galaxy.toggleNodes.nodes")}
               </button>
               <select className="border text-black border-gray-300 rounded px-2 py-1 text-sm">
-                <option>ALL</option>
-                <option>Option 1</option>
-                <option>Option 2</option>
+                <option> {t("galaxy.all")} </option>
+                <option> {t("galaxy.option1")} </option>
+                <option> {t("galaxy.option2")} </option>
               </select>
 
               <select
@@ -162,8 +165,8 @@ const GalaxyGraph: React.FC = () => {
                 onChange={(e) => setIs3D(e.target.value === "3D")}
                 className="border text-black border-gray-300 rounded px-2 py-1 text-sm"
               >
-                <option>3D</option>
-                <option>2D</option>
+                <option> {t("galaxy.3d")} </option>
+                <option> {t("galaxy.2d")} </option>
               </select>
               <button
                 onClick={() => setShowSearchMobile(true)}

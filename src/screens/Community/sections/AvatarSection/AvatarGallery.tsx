@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const AvatarGallery = (): JSX.Element => {
+  const { t } = useTranslation("community");
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
   const avatarCards = [
@@ -44,16 +46,16 @@ export const AvatarGallery = (): JSX.Element => {
         ))}
 
         {/* CTA */}
-        <h1 className="max-w-[340px] xl:max-w-full font-titlesh3-captionmob-400 xl:font-titlesh3-caption-400 text-center">
-          Discover your digital-self with{" "}
-          <span className="font-titlesh3-captionmob-700 xl:font-titlesh3-caption-700 bg-gradient-to-br from-[#8E1BF4] to-[#100CD8] bg-clip-text text-transparent">
-            AVATARS
+        <h1 className="w-[340px] xl:w-[718px] font-titlesh3-captionmob-400 xl:font-titlesh3-caption-400 text-center">
+          {t("avatarGallery.heading.text")} {" "}
+          <span className="font-titlesh3-captionmob-700 xl:font-titlesh3-caption-700 bg-gradient-to-br from-[#8E1BF4] to-[#100CD8] bg-clip-text text-transparent uppercase">
+            {t("avatarGallery.heading.highlightedText")}
           </span>
         </h1>
 
         <div className="flex items-center gap-[18px]">
           <span className="text-primary font-bodybody-4---400 hidden xl:block">
-            Watch Video
+            {t("avatarGallery.watchButton")}
           </span>
 
           {/* Play Button */}

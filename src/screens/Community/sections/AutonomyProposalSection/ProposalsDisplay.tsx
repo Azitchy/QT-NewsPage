@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type Proposal = {
   id: number;
@@ -7,22 +8,25 @@ type Proposal = {
   description: string;
 };
 
-const proposalsData: Proposal[] = [
-  {
-    id: 1,
-    number: "1",
-    description:
-      "In general proposals community members can vote for or against, and the voting will conclude once the total votes exceed 1% of AGT in circulation. The proposal will pass if it receives two thirds of the vote in its favour. If the proposal fails to meet this threshold, it is deemed unsuccessful.",
-  },
-  {
-    id: 2,
-    number: "2",
-    description:
-      "In special proposals there is no for and against, but instead the terms of execution are laid out for the community members to discuss. If there is any objection during this period, the proposal will be reintroduced with modifications.",
-  },
-];
+const useProposalsData = (): Proposal[] => {
+  const { t } = useTranslation("community");
+
+  return [
+    {
+      id: 1,
+      number: "1",
+      description: t("automonyProposalSection.proposalSection.proposal.0.description"),
+    },
+    {
+      id: 2,
+      number: "2",
+      description: t("automonyProposalSection.proposalSection.proposal.1.description"),
+    },
+  ];
+};
 
 const ProposalsDisplay: React.FC = () => {
+  const proposalsData = useProposalsData(); 
   const [active, setActive] = useState<number>(1);
   const activeIndex = proposalsData.findIndex((p) => p.id === active);
 

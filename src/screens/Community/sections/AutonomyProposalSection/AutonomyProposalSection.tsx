@@ -1,30 +1,31 @@
 import { HeadingWithDots } from "@/components/HeadingWithDots";
 import { Card, CardContent } from "@/components/ui/card";
 import ProposalsDisplay from "./ProposalsDisplay";
+import { useTranslation } from "react-i18next";
 
 export const AutonomyProposalSection = (): JSX.Element => {
+    const { t } = useTranslation("community");
 
     return (
       <section className="pt-[60px] xl:pt-[100px]">
-        <HeadingWithDots text="autonomy proposal" />
+        <HeadingWithDots text={t("automonyProposalSection.heading")} />
         <div className="px-0 tablet:px-[77px] xl:px-[134px] large:px-[203px]">
             <p className="pt-[20px] pb-[40px] font-light text-[18px] leading-[24px] xl:text-[20px] xl:leading-[27px] tablet:max-w-[500px] 
                 xl:max-w-[740px] large:max-w-[1160px]">
-                ATM is a decentralised distribution mechanism. 
-                This means that users need to manage it as a community to allow it to continuously evolve and stay relevant.{" "}
+                {t("automonyProposalSection.paragraph.text1")}{" "}
                 <span className="font-medium">
-                    We hope that this should offer stability when the economic environment changes unpredictably around us.{" "}          
+                    {t("automonyProposalSection.paragraph.boldText")}{" "}          
                 </span>
-                 In short, the community manages the ATM functions, algorithms and technical architectures by voting on proposed changes.
+                 {t("automonyProposalSection.paragraph.text2")}
             </p>
 
             {/* Proposal Section */}
             <div className="mt-[40px] deskttop:mt-[90px] flex flex-col items-center">
                 <h5 className="text-center font-normal text-[20px] leading-[27px] xl:text-[26px] xl:leading-[34px]">
-                    Different proposals are passed under diffferent conditions 
+                    {t("automonyProposalSection.proposalSection.heading")}
                 </h5>
                 <p className="text-card-foreground text-[12px] font-normal leading-[17px]">
-                    Tap numbers to view 2 proposal modes
+                    {t("automonyProposalSection.proposalSection.subText")}
                 </p>
 
                 <ProposalsDisplay />
@@ -33,10 +34,8 @@ export const AutonomyProposalSection = (): JSX.Element => {
                     <CardContent className="flex items-start gap-2.5 p-0 flex-1">
                         <img className="w-6 h-6" alt="Tip icon" src="/light-bulb.svg" />
                         <p className="text-primary text-[12px] font-normal leading-[17px]">
-                            AGT stands for ATM Governance Token. When users establish a
-                            consensus connection with LUCA, they become eligible to receive
-                            AGT distributed by the ATM.
-                            </p>
+                            {t("automonyProposalSection.proposalSection.tip")}
+                        </p>
                     </CardContent>
                 </Card>
 

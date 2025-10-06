@@ -7,6 +7,7 @@ import {
   TabsContent,
 } from "@/components/ui/tabs";
 import { StyledLink } from "@/components/StyledLink";
+import { useTranslation } from "react-i18next";
 
 // Media query hook
 function useMediaQuery(query: string) {
@@ -93,6 +94,7 @@ function CardSwap({ activeTab }: { activeTab: "white-paper" | "audit-report" }) 
 
 // Main Section
 export const ResourcesSection = (): JSX.Element => {
+  const { t } = useTranslation('technology');
   const [activeTab, setActiveTab] = useState<"white-paper" | "audit-report">(
     "white-paper"
   );
@@ -111,13 +113,13 @@ export const ResourcesSection = (): JSX.Element => {
               value="white-paper"
               className="inline-flex items-center justify-center px-[15px] py-2.5 rounded-[100px] overflow-hidden hover:bg-[#f6f6f6] data-[state=active]:bg-primary-foreground !shadow-none"
             >
-              <span className="text-primary">White Paper</span>
+              <span className="text-primary">{t('resourcesSection.tabs.whitePaper')}</span>
             </TabsTrigger>
             <TabsTrigger
               value="audit-report"
               className="inline-flex items-center justify-center px-[15px] py-2.5 rounded-[100px] overflow-hidden hover:bg-[#f6f6f6] data-[state=active]:bg-primary-foreground !shadow-none"
             >
-              <span className="text-primary">Audit Report</span>
+              <span className="text-primary">{t('resourcesSection.tabs.auditReport')}</span>
             </TabsTrigger>
           </TabsList>
 
@@ -131,12 +133,10 @@ export const ResourcesSection = (): JSX.Element => {
                 className="w-full gap-[20px] flex flex-col data-[state=inactive]:hidden"
               >
                 <p className="self-stretch font-inter text-[18px] leading-[24px] font-[300] xl:text-[20px] xl:leading-[27px] xl:font-light">
-                  Explore our white paper if you're interested in the behind the
-                  scenes and brains of the project - it outlines our aims,
-                  ambitions and technical solutions.
+                  {t('resourcesSection.whitePaper.description')}
                 </p>
                 
-                <StyledLink text="View white paper" link="./pdf/ATMWhitePaper.pdf" newTab />
+                <StyledLink text={t('resourcesSection.whitePaper.link')} link="./pdf/ATMWhitePaper.pdf" newTab />
               </TabsContent>
 
               {/* Audit Report Content */}
@@ -145,11 +145,10 @@ export const ResourcesSection = (): JSX.Element => {
                 className="w-full gap-6 flex flex-col data-[state=inactive]:hidden"
               >
                 <p className="self-stretch font-inter text-[18px] leading-[24px] font-[300] xl:text-[20px] xl:leading-[27px] xl:font-light">
-                  Dive into our project's detailed documentation for an in-depth
-                  look at its intricacies and strong foundation.
+                  {t('resourcesSection.auditReport.description')}
                 </p>
                 
-                <StyledLink text="View audit report" link="https://skynet.certik.com/projects/atm" newTab />
+                <StyledLink text={t('resourcesSection.auditReport.link')} link="https://skynet.certik.com/projects/atm" newTab />
               </TabsContent>
             </div>
 

@@ -1,6 +1,8 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 export const HeroSection = () => {
+  const { t } = useTranslation("explorer");
   return (
     <div className="max-w-[1400px] mx-auto flex flex-col items-center justify-center overflow-hidden px-4 lg:flex-row large:items-center large:justify-center large:gap-10">
       {/* Image Section */}
@@ -20,9 +22,9 @@ export const HeroSection = () => {
       {/* Text Section */}
       <div className="md:max-w-[370px] lg:max-w-[512px] large:w-[1400px] md:absolute md:top-52 md:right-[10px] lg:right-[100px] large:static large:text-left">
         <h1 className="text-[26px] md:text-[24px] lg:text-[32px] leading-[32px] lg:leading-10 font-light text-start lg:text-left text-foreground mb-2 font-space-grotesk">
-          Discover the Power of <br /> LUCA{" "}
+          {t("heroSection.title")} <br /> {t("heroSection.subtitle")} {" "}
           <span className="bg-gradient-to-tr from-[#AADA5D] to-[#0DAEB9] bg-clip-text text-transparent font-bold">
-            Building Stability Through Consensus
+            {t("heroSection.highlightedText")}
           </span>
         </h1>
       </div>

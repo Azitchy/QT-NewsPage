@@ -10,6 +10,7 @@ import {
   CoinCurrency,
   PriceTrendData,
 } from "../../../../lib/webApi";
+import { useTranslation } from "react-i18next";
 
 type TimeFrame = "day" | "week" | "month";
 
@@ -35,13 +36,6 @@ interface CryptoCurrency {
   };
 }
 
-const timeFrameOptions: TimeFrameOption[] = [
-  { label: "Day", value: "day" },
-  { label: "Week", value: "week" },
-  { label: "Month", value: "month" },
-];
-
-// Helper function to ensure values are numbers
 const ensureNumber = (value: any): number => {
   if (value === null || value === undefined) return 0;
   const num = typeof value === "string" ? parseFloat(value) : Number(value);
@@ -49,10 +43,17 @@ const ensureNumber = (value: any): number => {
 };
 
 export const ChartSection = () => {
+  const { t } = useTranslation('explorer');
   const [timeFrame, setTimeFrame] = useState<TimeFrame>("day");
   const [cryptoData, setCryptoData] = useState<CryptoCurrency[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const timeFrameOptions: TimeFrameOption[] = [
+    { label: t('chart.day'), value: "day" },
+    { label: t('chart.week'), value: "week" },
+    { label: t('chart.month'), value: "month" },
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,13 +61,12 @@ export const ChartSection = () => {
         setLoading(true);
         const coinData: CoinCurrency[] = await getCoinCurrency();
 
-        // Filter out coins that don't have valid price data
         const validCoins = coinData.filter(
           (coin) => coin.nowPrice && coin.nowPrice > 0 && coin.baseCurrency
         );
 
         if (validCoins.length === 0) {
-          setError("No valid cryptocurrency data available");
+          setError(t('chart.error'));
           setCryptoData([]);
           return;
         }
@@ -80,7 +80,6 @@ export const ChartSection = () => {
             };
 
             try {
-              // Fetch price trend data for each timeframe
               const currencyName =
                 coin.baseCurrency ||
                 coin.linkCurrency ||
@@ -91,7 +90,6 @@ export const ChartSection = () => {
               const weekData = await fetchCoinPriceTrend(currencyName, "2");
               const monthData = await fetchCoinPriceTrend(currencyName, "3");
 
-              // Only use chart data if we have valid data, otherwise skip fallback
               if (
                 dayData.x &&
                 dayData.y &&
@@ -103,7 +101,7 @@ export const ChartSection = () => {
                     date: date,
                     price: ensureNumber(dayData.y?.[index]),
                   }))
-                  .filter((point) => point.price > 0); // Filter out invalid price points
+                  .filter((point) => point.price > 0);
               }
 
               if (
@@ -138,15 +136,12 @@ export const ChartSection = () => {
                 `Failed to fetch chart data for ${coin.baseCurrency}:`,
                 chartError
               );
-              // Don't use fallback data - leave arrays empty if API fails
             }
 
-            // Calculate price change from trend data if available
             let changeValue = 0;
             let changeType: "positive" | "negative" = "positive";
             let formattedChange = "0.00%";
 
-            // Try to calculate change from day data
             if (chartData.day.length >= 2) {
               const firstPrice = chartData.day[0].price;
               const lastPrice = chartData.day[chartData.day.length - 1].price;
@@ -157,7 +152,6 @@ export const ChartSection = () => {
                   ? `+${changeValue.toFixed(2)}%`
                   : `${changeValue.toFixed(2)}%`;
             } else if (coin.pre) {
-              // Fallback to API's pre field if it exists
               changeValue = ensureNumber(coin.pre);
               changeType = changeValue >= 0 ? "positive" : "negative";
               formattedChange =
@@ -188,7 +182,6 @@ export const ChartSection = () => {
           })
         );
 
-        // Filter out currencies that don't have any chart data
         const validCryptoCurrencies = cryptoCurrencies.filter(
           (crypto) =>
             crypto.chartData.day.length > 0 ||
@@ -197,7 +190,7 @@ export const ChartSection = () => {
         );
 
         if (validCryptoCurrencies.length === 0) {
-          setError("No chart data available for any cryptocurrencies");
+          setError(t('chart.noData'));
           setCryptoData([]);
         } else {
           setCryptoData(validCryptoCurrencies);
@@ -205,7 +198,7 @@ export const ChartSection = () => {
         }
       } catch (err) {
         console.error("Error fetching crypto data:", err);
-        setError("Failed to load cryptocurrency data");
+        setError(t('chart.error'));
         setCryptoData([]);
       } finally {
         setLoading(false);
@@ -213,11 +206,11 @@ export const ChartSection = () => {
     };
 
     fetchData();
-  }, []);
+  }, [t]);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
-      alert("Copied!");
+      alert(t('common.copied'));
     });
   };
 
@@ -228,7 +221,7 @@ export const ChartSection = () => {
           <CardContent className="p-0">
             <div className="h-full flex items-center justify-center">
               <div className="text-card-foreground">
-                Loading cryptocurrency data...
+                {t('chart.loading')}
               </div>
             </div>
           </CardContent>
@@ -258,7 +251,7 @@ export const ChartSection = () => {
           <CardContent className="p-0">
             <div className="h-full flex items-center justify-center">
               <div className="text-card-foreground">
-                No valid cryptocurrency data with charts available
+                {t('chart.noData')}
               </div>
             </div>
           </CardContent>
@@ -294,7 +287,7 @@ export const ChartSection = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-6 mx-6 pb-6 md:border-b border-border dark:border-primary-foreground">
               <div className="flex flex-col gap-2">
                 <span className="hidden md:block text-[12px] leading-[17px] text-card-foreground font-normal">
-                  {crypto.name} Price
+                  {crypto.name} {t('chart.price')}
                 </span>
                 <div className="relative -top-9 md:-top-0 flex justify-end md:justify-start md:items-center gap-2">
                   <span className="text-sm font-normal text-foreground">
@@ -319,7 +312,7 @@ export const ChartSection = () => {
 
               <div className="flex flex-col gap-2 border-b pb-[15px] md:border-b-0 lg:border-l lg:border-border dark:lg:border-primary-foreground lg:pl-6">
                 <span className="text-[12px] leading-[17px] text-card-foreground font-normal">
-                  {crypto.name} staked in Consensus Connections
+                  {crypto.name} {t('chart.stakedConsensus')}
                 </span>
                 <span className="text-sm font-normal text-foreground">
                   {crypto.staked}
@@ -328,7 +321,7 @@ export const ChartSection = () => {
 
               <div className="flex md:flex-col justify-between gap-2 border-b pb-[15px] md:border-b-0 lg:border-l lg:border-border dark:lg:border-primary-foreground lg:pl-6">
                 <span className="text-[12px] leading-[17px] text-card-foreground font-normal">
-                  Number of {crypto.name} Connections
+                  {t('chart.numberConnections')} {crypto.name} {t('chart.connections')}
                 </span>
                 <span className="text-sm font-normal text-foreground">
                   {crypto.connections}
@@ -337,7 +330,7 @@ export const ChartSection = () => {
 
               <div className="flex flex-col gap-2 lg:border-l lg:border-border dark:lg:border-primary-foreground lg:pl-6">
                 <span className="text-[12px] leading-[17px] text-card-foreground font-normal">
-                  {crypto.name} contract address
+                  {crypto.name} {t('chart.contractAddress')}
                 </span>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-card-foreground font-mono truncate">
@@ -371,9 +364,9 @@ export const ChartSection = () => {
               ) : (
                 <div className="h-full flex items-center justify-center bg-gray-50 dark:bg-gray-800 rounded-xl">
                   <div className="text-center text-gray-500 dark:text-gray-400">
-                    <p>No chart data available for {timeFrame} timeframe</p>
+                    <p>{t('chart.noChartData', { timeframe: timeFrame })}</p>
                     <p className="text-sm mt-1">
-                      Try selecting a different time period
+                      {t('chart.tryDifferent')}
                     </p>
                   </div>
                 </div>

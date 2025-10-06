@@ -9,70 +9,64 @@ import {
 } from "@/components/ui/carousel";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { StyledLink } from "@/components/StyledLink";
-
-export const contractCards = [
-  {
-    id: 1,
-    image: "/contract-1.svg",
-    title: "LUCA Contract",
-    description:
-      "This refers to the LUCA token contract. LUCA is the native token of the ATM community and also gives a user the right to vote on proposals for the project.",
-  },
-  {
-    id: 2,
-    image: "/contract-2.svg",
-    title: "Factory Contract",
-    description:
-      "The factory contract is used to create a connection and then call related smart contracts to help users obtain the respective community incentives.",
-  },
-  {
-    id: 3,
-    image: "/contract-3.svg",
-    title: "Stake Contract",
-    description:
-      "The stake contract is used for voting in ATMRank server operation nodes, when exercising users' votes.",
-  },
-  {
-    id: 4,
-    image: "/contract-4.svg",
-    title: "Incentive Distribution Contract",
-    description:
-      "This contract is responsible for the distribution of rewards in the ATM community such as ATMRank rewards, token stake rewards and more.",
-  },
-  {
-    id: 5,
-    image: "/contract-5.svg",
-    title: "Investment LUCA Contract",
-    description:
-      "The official LUCA contract, from which 5 million tokens will be distributed. LUCA will be released by deploying this contract.",
-  },
-  {
-    id: 6,
-    image: "/contract-6.svg",
-    title: "LUCA Promotion Reward Contract",
-    description:
-      "This is the reward contract for referrals to 'Monkey', ATM's official partner social network. This contract is called if any user invites others to join via 'Monkey'.",
-  },
-  {
-    id: 7,
-    image: "/contract-7.svg",
-    title: "Cross-chain Contract",
-    description:
-      "Users can release cross-chain currency transfers via several public chains that are officially supported by ATM.",
-  },
-  {
-    id: 8,
-    image: "/contract-8.svg",
-    title: "Wormhole Contract",
-    description:
-      "The Wormhole Contract synchronises ATM users' information across multiple chains, in the attempt to achieve a multi-chain relative consensus network.",
-  },
-];
+import { useTranslation } from "react-i18next";
 
 export const ContractsCarousel = (): JSX.Element => {
+  const { t } = useTranslation('technology');
   const [api, setApi] = useState<CarouselApi>();
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
+
+  const contractCards = [
+    {
+      id: 1,
+      image: "/contract-1.svg",
+      title: t('contractsCarousel.contracts.luca.title'),
+      description: t('contractsCarousel.contracts.luca.description'),
+    },
+    {
+      id: 2,
+      image: "/contract-2.svg",
+      title: t('contractsCarousel.contracts.factory.title'),
+      description: t('contractsCarousel.contracts.factory.description'),
+    },
+    {
+      id: 3,
+      image: "/contract-3.svg",
+      title: t('contractsCarousel.contracts.stake.title'),
+      description: t('contractsCarousel.contracts.stake.description'),
+    },
+    {
+      id: 4,
+      image: "/contract-4.svg",
+      title: t('contractsCarousel.contracts.incentive.title'),
+      description: t('contractsCarousel.contracts.incentive.description'),
+    },
+    {
+      id: 5,
+      image: "/contract-5.svg",
+      title: t('contractsCarousel.contracts.investment.title'),
+      description: t('contractsCarousel.contracts.investment.description'),
+    },
+    {
+      id: 6,
+      image: "/contract-6.svg",
+      title: t('contractsCarousel.contracts.promotion.title'),
+      description: t('contractsCarousel.contracts.promotion.description'),
+    },
+    {
+      id: 7,
+      image: "/contract-7.svg",
+      title: t('contractsCarousel.contracts.crossChain.title'),
+      description: t('contractsCarousel.contracts.crossChain.description'),
+    },
+    {
+      id: 8,
+      image: "/contract-8.svg",
+      title: t('contractsCarousel.contracts.wormhole.title'),
+      description: t('contractsCarousel.contracts.wormhole.description'),
+    },
+  ];
 
   useEffect(() => {
     if (!api) return;
@@ -174,7 +168,7 @@ export const ContractsCarousel = (): JSX.Element => {
 
         {/* Learn More Button */}
         <div className="mt-[20px]">
-          <StyledLink text="Learn more" link="https://github.com/ATM-Developer/atm-contract" newTab />
+          <StyledLink text={t('contractsCarousel.learnMore')} link="https://github.com/ATM-Developer/atm-contract" newTab />
         </div>
       </div>
     </div>

@@ -12,11 +12,15 @@ import {
 import { useFetchNewsList } from "@/hooks/useApi";
 import { showDefaultImageIfEmpty } from "@/lib/webApi";
 import { NewsModal } from "./NewsModal";
+import { useTranslation } from "react-i18next";
 
 export const NewsSection = (): JSX.Element => {
+  const { t } = useTranslation("news");
+
   const [activeTab, setActiveTab] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
+
   const [allNews, setAllNews] = useState<any[]>([]);
   const [selectedNews, setSelectedNews] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,27 +52,18 @@ export const NewsSection = (): JSX.Element => {
           image: newsItem.coverImg || "/news-agf-magic.png",
         };
       });
-
       setAllNews(processedNews);
     }
   }, [newsList]);
 
   const checkUrlAndOpenModal = () => {
-    if (!allNews || allNews.length === 0) {
-      console.log("[checkUrlAndOpenModal] No news loaded yet");
-      return;
-    }
+    if (!allNews || allNews.length === 0) return;
 
     const pathParts = window.location.pathname.split("/").filter(Boolean);
-
     if (pathParts.length >= 2 && pathParts[0] === "news") {
       const idFromUrl = pathParts[1];
-      console.log("[checkUrlAndOpenModal] idFromUrl:", idFromUrl);
-
       const matched = allNews.find((item) => item.id?.toString() === idFromUrl);
-
       if (matched) {
-        console.log("[checkUrlAndOpenModal] matched news:", matched);
         setSelectedNews(matched);
         setIsModalOpen(true);
         return;
@@ -90,7 +85,12 @@ export const NewsSection = (): JSX.Element => {
     };
   }, [allNews]);
 
-  const filterTabs = ["All", "Updates", "Notice", "Community"];
+  const filterTabs = [
+    { id: "All", label: t("tabs.all") },
+    { id: "Updates", label: t("tabs.updates") },
+    { id: "Notice", label: t("tabs.notice") },
+    { id: "Community", label: t("tabs.community") },
+  ];
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
@@ -104,33 +104,26 @@ export const NewsSection = (): JSX.Element => {
 
   const getFilteredNews = () => {
     if (activeTab === "All") return allNews;
-
     return allNews.filter((news) => news.category === activeTab);
   };
 
   const filteredNews = getFilteredNews();
   const totalPages = Math.ceil(filteredNews.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedNews = filteredNews.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  const paginatedNews = filteredNews.slice(startIndex, startIndex + itemsPerPage);
 
-  const handleTabClick = (tab: string) => {
-    setActiveTab(tab);
+  const handleTabClick = (tabId: string) => {
+    setActiveTab(tabId);
     setCurrentPage(1);
   };
 
   const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
+    if (page >= 1 && page <= totalPages) setCurrentPage(page);
   };
 
   const handleReadNews = (newsItem: any) => {
     setSelectedNews(newsItem);
     setIsModalOpen(true);
-
     const slug = newsItem.slug || "";
     window.history.pushState({}, "", `/news/${newsItem.id}/${slug}`);
   };
@@ -138,7 +131,6 @@ export const NewsSection = (): JSX.Element => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedNews(null);
-
     window.history.pushState({}, "", `/news`);
   };
 
@@ -156,14 +148,14 @@ export const NewsSection = (): JSX.Element => {
           <div className="inline-flex items-center gap-2.5 p-[5px] rounded-[40px] border border-solid border-border dark:border-primary-foreground max-w-fit">
             {filterTabs.map((tab) => (
               <div
-                key={tab}
-                onClick={() => handleTabClick(tab)}
+                key={tab.id}
+                onClick={() => handleTabClick(tab.id)}
                 className={`inline-flex items-center justify-center gap-2.5 px-[12px] md:px-[15px] py-2.5 cursor-pointer relative flex-[0_0_auto] rounded-[100px] overflow-hidden transition-colors duration-200 ${
-                  activeTab === tab ? "bg-primary-foreground" : "hover:bg-card"
+                  activeTab === tab.id ? "bg-primary-foreground" : "hover:bg-card"
                 }`}
               >
                 <div className="text-primary text-[12px] md:text-[14px] whitespace-nowrap">
-                  {tab}
+                  {tab.label}
                 </div>
               </div>
             ))}
@@ -173,14 +165,14 @@ export const NewsSection = (): JSX.Element => {
         {/* Loading State */}
         {loading && (
           <div className="flex justify-center items-center py-10">
-            <div className="text-gray-500">Loading news...</div>
+            <div className="text-gray-500">{t("loading.news")}</div>
           </div>
         )}
 
         {/* Error State */}
         {error && !loading && (
           <div className="flex justify-center items-center py-10">
-            <div className="text-destructive">Failed to fetch news data</div>
+            <div className="text-destructive">{t("error.news")}</div>
           </div>
         )}
 
@@ -199,18 +191,15 @@ export const NewsSection = (): JSX.Element => {
                       alt="News image"
                       src={news.image || news.coverImg || "/news-agf-magic.png"}
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                          "/news-agf-magic.png";
+                        (e.target as HTMLImageElement).src = "/news-agf-magic.png";
                       }}
                     />
                   </div>
-
                   <div className="flex flex-col items-start gap-2.5 pt-0 pb-2.5 px-[20px] md:px-[30px] flex-1">
                     <h3 className="font-titles-h5-large-text-400 text-foreground text-[26px] md:text-[20px] lg:text-[20px] xl:text-[26px] line-clamp-3 leading-[34px] md:leading-[27px] lg:leading-[34px]">
                       {decodeHTML(news.title)}
                     </h3>
                   </div>
-
                   <div className="flex flex-col items-start px-[20px] md:px-[30px] py-[15px] mt-auto">
                     <div className="flex items-center justify-between w-full gap-4">
                       <time className="text-[#4f5555] dark:text-card-foreground text-[14px]">
@@ -224,9 +213,9 @@ export const NewsSection = (): JSX.Element => {
                           handleReadNews(news);
                         }}
                       >
-                        <span>Read news</span>
+                        <span>{t("buttons.readNews")}</span>
                         <img
-                          className="w-[30px] h-[30px] md:w-[20px] md:h-[20px] lg:w-[30px] lg:h-[30px]  hover:bg-primary-foreground rounded-full transition-all duration-700 ease-in-out hover:scale-110 hover:rotate-[-12deg]"
+                          className="w-[30px] h-[30px] md:w-[20px] md:h-[20px] lg:w-[30px] lg:h-[30px] hover:bg-primary-foreground rounded-full transition-all duration-700 ease-in-out hover:scale-110 hover:rotate-[-12deg]"
                           alt="Arrow right icon"
                           src="/arrow-right-icon.svg"
                         />
@@ -242,7 +231,7 @@ export const NewsSection = (): JSX.Element => {
         {/* Empty State */}
         {!loading && !error && paginatedNews.length === 0 && (
           <div className="flex justify-center items-center py-10">
-            <div className="text-gray-500">No news articles found</div>
+            <div className="text-gray-500">{t("messages.noNews")}</div>
           </div>
         )}
 
@@ -253,40 +242,27 @@ export const NewsSection = (): JSX.Element => {
               <PaginationContent className="inline-flex items-center gap-[10px] md:gap-[35px] px-[9px] py-[10px] rounded-[40px] border border-solid border-border dark:border-primary-foreground">
                 <PaginationLink
                   onClick={() => handlePageChange(currentPage - 1)}
-                  className={
-                    currentPage === 1 ? "opacity-50 pointer-events-none" : ""
-                  }
+                  className={currentPage === 1 ? "opacity-50 pointer-events-none" : ""}
                 >
-                  <img
-                    src="/arrow-left-icon.svg"
-                    className="w-5 h-5 cursor-pointer"
-                  />
+                  <img src="/arrow-left-icon.svg" className="w-5 h-5 cursor-pointer" />
                 </PaginationLink>
 
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  (page) => (
-                    <PaginationItem key={page}>
-                      <div
-                        onClick={() => handlePageChange(page)}
-                        className={`flex w-[30px] md:w-[35px] items-center justify-center text-[12px] md:text-[14px] cursor-pointer ${
-                          page === currentPage
-                            ? "text-primary"
-                            : "text-foreground"
-                        }`}
-                      >
-                        {page}
-                      </div>
-                    </PaginationItem>
-                  )
-                )}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <PaginationItem key={page}>
+                    <div
+                      onClick={() => handlePageChange(page)}
+                      className={`flex w-[30px] md:w-[35px] items-center justify-center text-[12px] md:text-[14px] cursor-pointer ${
+                        page === currentPage ? "text-primary" : "text-foreground"
+                      }`}
+                    >
+                      {page}
+                    </div>
+                  </PaginationItem>
+                ))}
 
                 <PaginationLink
                   onClick={() => handlePageChange(currentPage + 1)}
-                  className={
-                    currentPage === totalPages
-                      ? "opacity-50 pointer-events-none"
-                      : ""
-                  }
+                  className={currentPage === totalPages ? "opacity-50 pointer-events-none" : ""}
                 >
                   <img
                     src="/arrow-right-icon-3.svg"

@@ -1,3 +1,153 @@
 {
-    "test": "hi"
+  "heroSection": {
+    "text": "ATM 带来更加",
+    "highlightedText": "稳定且强大的去中心化共识！"
+  },
+  "resourcesSection": {
+    "tabs": {
+      "whitePaper": "白皮书",
+      "auditReport": "审计报告"
+    },
+    "whitePaper": {
+      "description": "如果您对项目的幕后原理和技术感兴趣，请探索我们的白皮书 - 它概述了我们的目标、愿景和技术解决方案。",
+      "link": "查看白皮书"
+    },
+    "auditReport": {
+      "description": "深入了解我们项目的详细文档，全面了解其复杂性和坚实基础。",
+      "link": "查看审计报告"
+    }
+  },
+  "communitySection": {
+    "heading": "社区",
+    "whatIsConsensus": {
+      "title": "共识连接到底是什么？",
+      "description": "ATM 提供一种称为共识合约的智能合约，允许用户在支持智能合约的多个公共区块链上相互连接"
+    },
+    "howToCreate": {
+      "title": "如何创建共识连接",
+      "description": "用户 A 设置一个共识合约，该合约会发起与用户 B 建立连接的请求。如果 B 同意，合约将被执行，共识连接将成功建立。"
+    },
+    "consensusItems": {
+      "lockedToken": {
+        "title": "锁定代币",
+        "description": "只需几个简单步骤，即可轻松访问包括房东和开发商在内的大型国际房地产投资者市场"
+      },
+      "investmentAmount": {
+        "title": "投资金额",
+        "description": "双方同意的价值 - 两个用户的金额不必相等"
+      },
+      "lockUpTime": {
+        "title": "锁定期",
+        "description": "投资金额将被锁定的时间长度"
+      },
+      "contractCancellation": {
+        "title": "合约取消",
+        "description": "在锁定期内，任何一方用户都无法单独取消合约。他们必须等到合约结束或彼此达成协议提前终止。到期后，如果双方都未决定取消，合约将保持有效"
+      }
+    },
+    "viewConnections": "查看我的连接",
+    "consensusIncome": {
+      "title": "共识连接收益",
+      "description1": "通过共识连接，用户可以根据其 PR 值获得奖励。每个公链上持有的 LUCA 将被发送到公共存款智能合约，用户可以随时提取。",
+      "description2": "为此，用户发起申请，合约向 ATMRank 计算组接口发起请求，PR 服务器集群计算应获得的奖励价值并将其写入合约。记录写入后，用户发起提取收益的请求，合约等待超过一半 PR 服务器节点的确认。然后评估是否有足够的余额并处理用户的提取申请。",
+      "viewIncome": "查看我的收益"
+    }
+  },
+  "prAlgorithmSection": {
+    "heading": "Pr 算法",
+    "tabs": {
+      "pr": "PR",
+      "strengths": "优势",
+      "create": "创建",
+      "income": "收益"
+    },
+    "pr": {
+      "title": "什么是 PageRank？",
+      "description": "PageRank 是指谷歌搜索引擎的核心算法，它是一种用于对互联网上网页重要性进行排名的算法。之所以称为\"PageRank\"，是因为该算法用于对网页进行排名，并由谷歌联合创始人拉里·佩奇（Larry Page）首次提出。等效地，我们使用用户之间的共识连接来替代原始 PageRank 算法中网页之间的链接，并计算 ATM 网络中每个用户节点的 PR 值，以代表用户在社区中的影响力。"
+    },
+    "strengths": {
+      "title": "PageRank 的优势",
+      "description1": "谷歌刚成立时，网站是按流量排名的，而不是通过智能算法。这种方法不稳定且容易被利用 - 这意味着重要的网站经常会丢失。",
+      "description2": "通过查看网站之间的关系，而不是其网络流量，PageRank 旨在解决这个问题。该算法天然抵抗各种作弊网站，只有那些有影响力的网站才能被找到。"
+    },
+    "create": {
+      "title": "如何创建 PR 节点",
+      "description": "任何用户都可以构建 ATM 的 PageRank 计算服务器，并通过质押 ATM 的原生货币（LUCA）选出质押最高的前 11 个服务器。这些服务器共同执行 PageRank 算法，计算并同步 ATM 网络上所有用户的每日 PR 值。",
+      "createNode": "创建节点"
+    },
+    "income": {
+      "title": "PR 节点收益",
+      "operationRewards": {
+        "title": "运营奖励",
+        "description": "参与 PageRank 计算服务器质押的用户和服务器运营商将获得相应的节点运营奖励。"
+      },
+      "stakeRewards": {
+        "title": "质押奖励",
+        "description": "在服务器节点中质押比例较高的用户可以获得更多奖励。"
+      },
+      "consensusRewards": {
+        "title": "共识奖励",
+        "description": "用户之间共识连接的强度越大，PR 算力分配的收益就越高。"
+      }
+    }
+  },
+  "autonomySection": {
+    "heading": "自治",
+    "title": "开启通信新时代",
+    "highlightedText": "体验真正拥有数据的所有权和沟通的力量",
+    "description1": "告别集中式控制，迎接安全。",
+    "description2": "无需担心审查或监视。",
+    "cta": "立即试用我们的平台，拥抱消息传递的未来！"
+  },
+  "technologySection": {
+    "heading": "技术",
+    "systemIntegration": {
+      "title": "系统集成",
+      "description1": "通过系统集成，我们的平台利用革命性的 ATMRank 算法，其灵感来自开创性的 PageRank。Lucy AI 系统和 ATMRank 共同构成了我们生态系统的支柱。",
+      "description2": "每种加密货币都可以在通过民主投票获得社区认可后加入我们的平台。一旦集成，ATMRank 算法会实时处理数据并将估值结果写入智能合约。每种加密货币还可以定制自己的奖励系统算法，由 Lucy 无缝促进。这种集成确保 ATMRank 系统的持续完善和提升，使其始终处于加密货币估值的前沿。",
+      "learnMore": "了解更多"
+    },
+    "smartContracts": {
+      "title": "我们的智能合约",
+      "description": "共识合约是 ATM 的底层技术特征。通过使用这些合约，可以在用户之间建立连接，并且可以出现相对共识网络。",
+      "subtitle": "ATM 还包括以下智能合约："
+    }
+  },
+  "contractsCarousel": {
+    "contracts": {
+      "luca": {
+        "title": "LUCA 合约",
+        "description": "这是指 LUCA 代币合约。LUCA 是 ATM 社区的原生代币，也赋予用户对项目提案的投票权。"
+      },
+      "factory": {
+        "title": "工厂合约",
+        "description": "工厂合约用于创建连接，然后调用相关智能合约，帮助用户获得各自的社区激励。"
+      },
+      "stake": {
+        "title": "质押合约",
+        "description": "质押合约用于在行使用户投票权时对 ATMRank 服务器运营节点进行投票。"
+      },
+      "incentive": {
+        "title": "激励分配合约",
+        "description": "该合约负责分配 ATM 社区中的奖励，例如 ATMRank 奖励、代币质押奖励等。"
+      },
+      "investment": {
+        "title": "投资 LUCA 合约",
+        "description": "官方 LUCA 合约，将从中分发 500 万个代币。LUCA 将通过部署此合约发布。"
+      },
+      "promotion": {
+        "title": "LUCA 推广奖励合约",
+        "description": "这是推荐 ATM 官方合作伙伴社交网络\"Monkey\"的奖励合约。如果任何用户通过\"Monkey\"邀请他人加入，则会调用此合约。"
+      },
+      "crossChain": {
+        "title": "跨链合约",
+        "description": "用户可以通过 ATM 官方支持的多个公链发布跨链货币转账。"
+      },
+      "wormhole": {
+        "title": "虫洞合约",
+        "description": "虫洞合约在多个链上同步 ATM 用户的信息，试图实现多链相对共识网络。"
+      }
+    },
+    "learnMore": "了解更多"
+  }
 }

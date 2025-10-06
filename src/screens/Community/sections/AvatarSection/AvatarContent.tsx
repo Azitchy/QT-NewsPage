@@ -1,21 +1,21 @@
 import { HeadingWithDots } from "@/components/HeadingWithDots";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 export const AvatarContent = (): JSX.Element => {
+  const { t } = useTranslation("community");
+
   return (
     <section>
-      <HeadingWithDots text="ai avatars" />
+      <HeadingWithDots text={t("aiAvatarContent.heading")} />
       <div className="px-0 tablet:px-[77px] xl:px-[134px] large:px-[203px]">
         <p
           className="pt-[20px] pb-[40px] font-light text-[18px] leading-[24px] 
             xl:text-[20px] xl:leading-[27px] tablet:max-w-[516px] xl:max-w-[782px]"
         >
-          In our ATM community, we're transforming the way we interact with AI.
-          Imagine a world where humans and AI coexist seamlessly,{" "}
+          {t("aiAvatarContent.para1.text")}{" "}
           <span className="font-medium">
-            blurring boundaries and enriching every interaction. Our innovative
-            AI technology brings this vision to life, creating a vibrant and
-            dynamic community where the possibilities are endless.
+            {t("aiAvatarContent.para1.boldText")}
           </span>
         </p>
 
@@ -28,27 +28,22 @@ export const AvatarContent = (): JSX.Element => {
                 alt="Face icon"
                 src="/face_icon.svg"
               />
-              <span className="text-[#8E1BF4] font-inter text-[12px] font-normal leading-[17px]">
-                AVATARS
+              <span className="text-[#8E1BF4] font-inter text-[12px] font-normal leading-[17px] uppercase">
+                {t("aiAvatarContent.avatarBadge")}
               </span>
             </div>
 
             {/* Content */}
             <p className="font-normal text-[16px] leading-[22px] xl:text-[18px] xl:leading-[24px]">
-              Meet Lucy, your next-generation conversational agent, expertly
-              trained to respond to your queries with ease. Curious about LUCA,
-              ATM-Rank, or Consensus Connections?
+              {t("aiAvatarContent.para2")}
               <br />
               <br />
-              Lucy has you covered. With advanced natural language processing,
-              she recognises your intent and delivers accurate information.
-              Experience the convenience of Lucy as she expertly guides you
-              through ATM.
+              {t("aiAvatarContent.para3")}
             </p>
 
             <Button className="inline-flex items-center justify-center gap-[5px] px-5 py-3 bg-primary rounded-[30px] hover:bg-[#A2DEE2]">
               <span className="text-white font-sans text-[14px] leading-[19px] font-normal xl:text-[16px] xl:leading-[24px]">
-                Chat with Lucy
+                {t("aiAvatarContent.lucyButton")}
               </span>
             </Button>
           </div>

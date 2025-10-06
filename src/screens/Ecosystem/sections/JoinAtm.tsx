@@ -1,11 +1,13 @@
 import * as React from "react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ArrowLeft, ChevronDown, PlusIcon, X, Loader2, CheckCircle2 } from "lucide-react";
 import { FooterSection } from "@/components/FooterSection";
 import { useApi } from "@/contexts/ApiContext";
 import { useWeb3Auth } from "@/contexts/Web3AuthContext";
 
 export default function JoinATMForm() {
+  const { t } = useTranslation('ecosystem');
   const { gameApi } = useApi();
   const { isAuthenticated } = useWeb3Auth();
 
@@ -39,7 +41,6 @@ export default function JoinATMForm() {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: "" }));
     }
@@ -48,16 +49,14 @@ export default function JoinATMForm() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      // Validate file size (30MB max)
-      const maxSize = 30 * 1024 * 1024; // 30MB in bytes
+      const maxSize = 30 * 1024 * 1024;
       if (selectedFile.size > maxSize) {
-        setErrors(prev => ({ ...prev, file: "File size must be less than 30MB" }));
+        setErrors(prev => ({ ...prev, file: t('joinATM.form.errorFile') }));
         return;
       }
 
-      // Validate file type (PDF only)
       if (selectedFile.type !== "application/pdf") {
-        setErrors(prev => ({ ...prev, file: "Only PDF files are allowed" }));
+        setErrors(prev => ({ ...prev, file: t('joinATM.form.errorFileType') }));
         return;
       }
 
@@ -74,38 +73,36 @@ export default function JoinATMForm() {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    // Required fields validation
     if (!formData.projectName.trim()) {
-      newErrors.projectName = "Project name is required";
+      newErrors.projectName = t('joinATM.form.errorRequired');
     }
 
     if (!formData.projectLink.trim()) {
-      newErrors.projectLink = "Project link is required";
+      newErrors.projectLink = t('joinATM.form.errorRequired');
     } else if (!isValidUrl(formData.projectLink)) {
-      newErrors.projectLink = "Please enter a valid URL";
+      newErrors.projectLink = t('joinATM.form.errorRequired');
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = t('joinATM.form.errorRequired');
     } else if (!isValidEmail(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
+      newErrors.email = t('joinATM.form.errorRequired');
     }
 
     if (!formData.teamSupport.trim()) {
-      newErrors.teamSupport = "Team and supporter information is required";
+      newErrors.teamSupport = t('joinATM.form.errorRequired');
     }
 
     if (!formData.contractPlatform.trim()) {
-      newErrors.contractPlatform = "Contract platform information is required";
+      newErrors.contractPlatform = t('joinATM.form.errorRequired');
     }
 
     if (!formData.projectIntroduction.trim()) {
-      newErrors.projectIntroduction = "Project introduction is required";
+      newErrors.projectIntroduction = t('joinATM.form.errorRequired');
     }
 
-    // Conditional validation for LUCA candy value
     if (formData.lucaCommunity === "YES" && !formData.lucaCandyValue.trim()) {
-      newErrors.lucaCandyValue = "LUCA candy value is required when selecting YES";
+      newErrors.lucaCandyValue = t('joinATM.form.errorRequired');
     }
 
     setErrors(newErrors);
@@ -127,19 +124,16 @@ export default function JoinATMForm() {
   };
 
   const handleSubmit = async () => {
-    // Clear previous errors and success states
     setSubmitError(null);
     setSubmitSuccess(false);
 
-    // Check authentication
     if (!isAuthenticated) {
-      setSubmitError("Please connect your wallet to submit the application");
+      setSubmitError(t('joinATM.form.connectNote'));
       return;
     }
 
-    // Validate form
     if (!validateForm()) {
-      setSubmitError("Please fill in all required fields correctly");
+      setSubmitError(t('joinATM.form.errorRequired'));
       return;
     }
 
@@ -161,18 +155,18 @@ export default function JoinATMForm() {
         attachment: file || undefined,
       };
 
-          const response = await gameApi.submitJoinATMApplication(applicationData);
-    
-          if (response.isSuccess) {
-            setSubmitSuccess(true);
-            resetForm();
-          }
-        } catch (error) {
-          setSubmitError("Failed to submit application. Please try again.");
-        } finally {
-          setIsSubmitting(false);
-        }
-      };
+      const response = await gameApi.submitJoinATMApplication(applicationData);
+
+      if (response.isSuccess) {
+        setSubmitSuccess(true);
+        resetForm();
+      }
+    } catch (error) {
+      setSubmitError(t('joinATM.form.errorMessage'));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const resetForm = () => {
     setFormData({
@@ -200,7 +194,7 @@ export default function JoinATMForm() {
           <a href="/ecosystem">
             <button className="text-md text-primary flex items-center gap-2 hover:opacity-80 transition-opacity">
               <ArrowLeft />
-              <span>Back</span>
+              <span>{t('joinATM.back')}</span>
             </button>
           </a>
         </div>
@@ -209,7 +203,7 @@ export default function JoinATMForm() {
         {submitSuccess && (
           <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3 text-green-800">
             <CheckCircle2 className="w-5 h-5" />
-            <p>Application submitted successfully! We'll review it and get back to you soon.</p>
+            <p>{t('joinATM.form.successMessage')}</p>
           </div>
         )}
 
@@ -218,7 +212,7 @@ export default function JoinATMForm() {
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3 text-red-800">
             <X className="w-5 h-5 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="font-medium">Error submitting application</p>
+              <p className="font-medium">{t('joinATM.form.errorMessage')}</p>
               <p className="text-sm mt-1">{submitError}</p>
             </div>
           </div>
@@ -228,20 +222,17 @@ export default function JoinATMForm() {
           <div className="max-w-[640px]">
             {/* Title */}
             <h1 className="text-2xl font-bold mb-2 text-foreground">
-              JOIN ATM APPLICATION
+              {t('joinATM.title')}
             </h1>
             <p className="text-foreground max-w-3xl text-[16px] leading-[26px]">
-              Any third-party developer or platform that wants to join the ATM
-              ecosystem community/the ATM official team will give priority to
-              applicants whose forms provide good actionable content and
-              complete information.
+              {t('joinATM.description')}
             </p>
 
             <div
               onClick={() => setModalOpen(true)}
               className="lg:hidden text-primary underline text-sm w-fit my-4 cursor-pointer"
             >
-              Vote and Proposal Statement
+              {t('joinATM.voteStatement')}
             </div>
 
             {/* Form */}
@@ -261,7 +252,7 @@ export default function JoinATMForm() {
                     htmlFor="projectName"
                     className="absolute left-0 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-4 peer-focus:top-2"
                   >
-                    *Project Name (e.g. ATM)
+                    {t('joinATM.form.projectName')}
                   </label>
                   {errors.projectName && (
                     <p className="text-red-500 text-xs mt-1">{errors.projectName}</p>
@@ -282,14 +273,14 @@ export default function JoinATMForm() {
                     htmlFor="projectToken"
                     className="absolute left-0 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-4 peer-focus:top-2"
                   >
-                    *Project Token (if any) (e.g., LUCA)
+                    {t('joinATM.form.projectToken')}
                   </label>
                 </div>
 
                 {/* LUCA Community Dropdown */}
                 <div className="flex items-center justify-between border-b border-gray-100 pb-5 relative">
                   <label className="text-gray-400 text-sm">
-                    *Whether To LUCA Candies In The ATM Community
+                    {t('joinATM.form.lucaCommunity')}
                   </label>
                   <div className="relative inline-block text-left">
                     <button
@@ -333,7 +324,7 @@ export default function JoinATMForm() {
                     htmlFor="lucaCandyValue"
                     className="absolute left-0 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-4 peer-focus:top-2"
                   >
-                    *LUCA Candy Value (unit: US dollars)
+                    {t('joinATM.form.lucaCandyValue')}
                   </label>
                   {errors.lucaCandyValue && (
                     <p className="text-red-500 text-xs mt-1">{errors.lucaCandyValue}</p>
@@ -341,14 +332,13 @@ export default function JoinATMForm() {
                 </div>
 
                 <p className="text-gray-400 text-sm pb-5">
-                  The value of candy affects the currency coefficient of token
-                  in ATM community
+                  {t('joinATM.form.lucaCandyNote')}
                   <br />
                   <span
                     onClick={() => setCurrencyModalOpen(true)}
                     className="text-primary underline ml-1 cursor-pointer hover:opacity-80"
                   >
-                    Learn About Currency Coefficient
+                    {t('joinATM.form.learnCurrency')}
                   </span>
                 </p>
 
@@ -368,7 +358,7 @@ export default function JoinATMForm() {
                     htmlFor="projectLink"
                     className="absolute left-0 top-2 pt-5 text-gray-500 text-sm transition-all peer-placeholder-shown:top-4 peer-focus:top-2"
                   >
-                    *Project Link (web link or project application link)
+                    {t('joinATM.form.projectLink')}
                   </label>
                   {errors.projectLink && (
                     <p className="text-red-500 text-xs mt-1">{errors.projectLink}</p>
@@ -389,7 +379,7 @@ export default function JoinATMForm() {
                     htmlFor="email"
                     className="absolute left-0 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-4 peer-focus:top-2"
                   >
-                    *E-MAIL
+                    {t('joinATM.form.email')}
                   </label>
                   {errors.email && (
                     <p className="text-red-500 text-xs mt-1">{errors.email}</p>
@@ -410,8 +400,7 @@ export default function JoinATMForm() {
                     htmlFor="teamSupport"
                     className="absolute left-0 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-4 peer-focus:top-2"
                   >
-                    *Team and Supporter (please briefly describe your team or
-                    supporter)
+                    {t('joinATM.form.teamSupport')}
                   </label>
                   {errors.teamSupport && (
                     <p className="text-red-500 text-xs mt-1">{errors.teamSupport}</p>
@@ -432,8 +421,7 @@ export default function JoinATMForm() {
                     htmlFor="contractPlatform"
                     className="absolute left-0 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-4 peer-focus:top-2"
                   >
-                    *Contract Platform (What platform is your project deployed
-                    on and whether it supports smart contracts)
+                    {t('joinATM.form.contractPlatform')}
                   </label>
                   {errors.contractPlatform && (
                     <p className="text-red-500 text-xs mt-1">{errors.contractPlatform}</p>
@@ -454,7 +442,7 @@ export default function JoinATMForm() {
                     htmlFor="whiteBookLink"
                     className="absolute left-0 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-4 peer-focus:top-2"
                   >
-                    Project link to white book (optional)
+                    {t('joinATM.form.whiteBookLink')}
                   </label>
                 </div>
 
@@ -472,7 +460,7 @@ export default function JoinATMForm() {
                     htmlFor="projectMedia"
                     className="absolute left-0 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-4 peer-focus:top-2"
                   >
-                    Project Media/Blog (optional)
+                    {t('joinATM.form.projectMedia')}
                   </label>
                 </div>
 
@@ -482,7 +470,7 @@ export default function JoinATMForm() {
                     htmlFor="projectIntroduction"
                     className="text-gray-400 text-sm"
                   >
-                    *Project Introduction (Briefly Introduce Your Project)
+                    {t('joinATM.form.projectIntroduction')}
                   </label>
                   <textarea
                     id="projectIntroduction"
@@ -500,10 +488,10 @@ export default function JoinATMForm() {
                 {/* File Upload */}
                 <div>
                   <div className="text-sm">
-                    Attachment (in case of other documents, Please upload here.)
+                    {t('joinATM.form.attachment')}
                   </div>
                   <div className="text-destructive my-2 text-sm">
-                    *Please upload PDF files no more than 30MB
+                    {t('joinATM.form.fileNote')}
                   </div>
 
                   <div className="relative pb-20">
@@ -524,7 +512,7 @@ export default function JoinATMForm() {
                       {file ? (
                         <span className="text-green-600">{file.name}</span>
                       ) : (
-                        <span>Upload</span>
+                        <span>{t('joinATM.form.upload')}</span>
                       )}
                     </label>
                     {errors.file && (
@@ -542,18 +530,18 @@ export default function JoinATMForm() {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Submitting...
+                      {t('joinATM.form.submitting')}
                     </>
                   ) : !isAuthenticated ? (
-                    "Connect Wallet to Submit"
+                    t('joinATM.form.connectWallet')
                   ) : (
-                    "Submit Community Proposal"
+                    t('joinATM.form.submit')
                   )}
                 </button>
 
                 {!isAuthenticated && (
                   <p className="text-sm text-amber-600 text-center">
-                    Please connect your wallet to submit the application
+                    {t('joinATM.form.connectNote')}
                   </p>
                 )}
               </div>
@@ -571,13 +559,10 @@ export default function JoinATMForm() {
                   <X className="w-5 h-5" />
                 </button>
                 <h2 className="text-[16px] text-gray-700 mb-3">
-                  Currency Coefficient Table
+                  {t('joinATM.currencyModal.title')}
                 </h2>
                 <p className="text-sm text-gray-700 leading-relaxed my-10">
-                  Linked to the number of LUCA, the higher the coefficient, the
-                  higher the connection strength of the Token in the ATM
-                  community, and the higher the enthusiasm of users to use and
-                  hold the Token.
+                  {t('joinATM.currencyModal.description')}
                 </p>
 
                 {/* Table */}
@@ -585,10 +570,10 @@ export default function JoinATMForm() {
                   <thead>
                     <tr>
                       <th className="border font-normal text-sm border-gray-200 w-1/2 p-4 text-left">
-                        Total LUCA (U)
+                        {t('joinATM.currencyModal.tableHeaders.luca')}
                       </th>
                       <th className="border font-normal text-sm border-gray-200 w-1/2 p-4 text-left">
-                        Currency coefficient (C)
+                        {t('joinATM.currencyModal.tableHeaders.coefficient')}
                       </th>
                     </tr>
                   </thead>
@@ -637,26 +622,10 @@ export default function JoinATMForm() {
                   <X className="w-5 h-5" />
                 </button>
                 <h2 className="text-[16px] text-gray-700 mb-2">
-                  Vote and Proposal Statement
+                  {t('joinATM.voteModal.title')}
                 </h2>
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  Once the information is submitted to ATM's official mailbox,
-                  all contents of the Statement are deemed to be agreed:
-                  <br />
-                  <br />
-                  As a third-party platform, you need to submit an application
-                  proposal to join the ATM community. Currently, the proposal is
-                  handled and released by the ATM official team.
-                  <br />
-                  <br />
-                  It is a general proposal for the third-party platform to join
-                  the ATM ecosystem community. In terms of general proposals,
-                  community members can vote "for" and "against" the proposal,
-                  the proposal will be valid if the total votes exceed 2% of the
-                  total AGT circulation; the proposal is passed with more than
-                  2/3 votes "for" the proposal, and the proposal will be
-                  executed, otherwise the proposal should be deemed as failed,
-                  and will not executed.
+                <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+                  {t('joinATM.voteModal.content')}
                 </p>
               </div>
             </div>
@@ -665,24 +634,10 @@ export default function JoinATMForm() {
           {/* Right Section - Vote Statement */}
           <div className="hidden lg:block bg-gray-50 border border-dashed border-gray-200 rounded-lg p-5 text-sm text-gray-700 max-w-[340px] h-fit">
             <h2 className="font-semibold text-green-600 mb-2">
-              Vote and Proposal Statement
+              {t('joinATM.voteStatement')}
             </h2>
-            <p className="leading-relaxed">
-              Once the information is submitted to ATM's official team, we will
-              assess the situation and determine its speed.
-              <br />
-              <br />
-              As a third-party platform, you need to follow strict regulations,
-              processes in the ATM ecosystem community. The official's feedback
-              and reasoning will be final.
-              <br />
-              It is a general proposal for the third-party platform to join the
-              ATM ecosystem community. In terms of general proposals, community
-              members can vote "for" and "against" the proposal, the proposal
-              will be valid if the total votes exceed 2% of the total AGT
-              circulation; the proposal is passed with more than 2/3 votes "for"
-              the proposal, and the proposal will be executed, otherwise the
-              proposal should be deemed as failed, and will not executed.
+            <p className="leading-relaxed whitespace-pre-line">
+              {t('joinATM.voteModal.content')}
             </p>
           </div>
         </div>

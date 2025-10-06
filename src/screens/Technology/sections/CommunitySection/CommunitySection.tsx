@@ -3,34 +3,31 @@ import { StyledLink } from "@/components/StyledLink";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export const CommunitySection = (): JSX.Element => {
-  // Initialize with first item expanded
+  const { t } = useTranslation('technology');
   const [expandedIndex, setExpandedIndex] = useState<number>(0);
 
   const consensusItems = [
     {
-      title: "Locked Token",
-      description:
-        "Gain easy access to a large international market of property investors, including landlords and developers, with just a few simple steps",
+      title: t('communitySection.consensusItems.lockedToken.title'),
+      description: t('communitySection.consensusItems.lockedToken.description'),
       icon: "/lock-svgrepo-com-1.png",
     },
     {
-      title: "Investment amount",
-      description:
-        "The value that both parties agree upon - It does not have to be equal for both users",
+      title: t('communitySection.consensusItems.investmentAmount.title'),
+      description: t('communitySection.consensusItems.investmentAmount.description'),
       icon: "/investment-amount-icon-1.png",
     },
     {
-      title: "Lock-up time",
-      description:
-        "The length of time for which the investment amount will be locked",
+      title: t('communitySection.consensusItems.lockUpTime.title'),
+      description: t('communitySection.consensusItems.lockUpTime.description'),
       icon: "/lock-up-time-1.png",
     },
     {
-      title: "Contract cancellation",
-      description:
-        "During the lock-up time, either user cannot cancel the contract on their own. They must wait until the end of the contract or reach agreement with one another to terminate it early. Upon expiration, the contract will remain valid if neither party has decided to cancel",
+      title: t('communitySection.consensusItems.contractCancellation.title'),
+      description: t('communitySection.consensusItems.contractCancellation.description'),
       icon: "/contract-cancellation-1.png",
     },
   ];
@@ -45,7 +42,7 @@ export const CommunitySection = (): JSX.Element => {
 
   return (
     <section className="px-[16px] md:px-[70px] large:px-[120px] pt-[60px] xl:pt-[100px]">
-      <HeadingWithDots text="community" />
+      <HeadingWithDots text={t('communitySection.heading')} />
       
       <div className="pt-[20px] px-0 tablet:px-[77px] xl:px-[134px] large:px-[203px]">
         <div className="flex flex-col justify-center mx-auto gap-[40px] xl:gap-[80px]">
@@ -53,12 +50,10 @@ export const CommunitySection = (): JSX.Element => {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
             <div className="flex flex-col max-w-[784px] gap-5 flex-1">
               <h2 className="text-[20px] leading-[27px] font-normal xl:text-[26px] xl:leading-[34px]">
-                What on earth is a consensus connection?
+                {t('communitySection.whatIsConsensus.title')}
               </h2>
               <p className="text-[16px] leading-[22px] font-light xl:text-[18px] xl:leading-[24px] xl:font-normal">
-                ATM provides a smart contract known as a Consensus Contract, which
-                allows users to connect with each other on the multiple public
-                blockchains that support smart contracts
+                {t('communitySection.whatIsConsensus.description')}
               </p>
             </div>
 
@@ -75,12 +70,10 @@ export const CommunitySection = (): JSX.Element => {
           <div className="max-w-[874px] mx-auto">
             <div className="flex flex-col gap-5 mb-8">
               <h2 className="text-[20px] leading-[27px] font-normal xl:text-[26px] xl:leading-[34px]">
-                How to create consensus connection
+                {t('communitySection.howToCreate.title')}
               </h2>
               <p className="text-[16px] leading-[22px] font-light xl:text-[18px] xl:leading-[24px] xl:font-normal">
-                User A sets up a consensus contract which initiates a request to
-                establish a connection to user B. If B agrees, the contract will be
-                executed, and the consensus connection will be successful.
+                {t('communitySection.howToCreate.description')}
               </p>
             </div>
 
@@ -136,14 +129,14 @@ export const CommunitySection = (): JSX.Element => {
                       </div>
                     </div>
                     {index < consensusItems.length - 1 && (
-                      <Separator className="w-full h-px bg-card-foreground" />
+                      <Separator decorative orientation="horizontal" />
                     )}
                   </React.Fragment>
                 ))}
               </CardContent>
             </Card>
 
-            <StyledLink text="View my connections" link="/webapp" />
+            <StyledLink text={t('communitySection.viewConnections')} link="/webapp" />
           </div>
 
           {/* Consensus connection income */}
@@ -151,25 +144,16 @@ export const CommunitySection = (): JSX.Element => {
             {/* Text first on mobile, image second */}
             <div className="flex flex-col max-w-[783px] gap-5 order-1 md:order-2 flex-1">
               <h2 className="text-[20px] leading-[27px] font-normal xl:text-[26px] xl:leading-[34px]">
-                Consensus connection income
+                {t('communitySection.consensusIncome.title')}
               </h2>
               <p className="text-[16px] leading-[22px] font-light xl:text-[18px] xl:leading-[24px] xl:font-normal">
-                Through consensus connection, users can receive rewards according to
-                their PR value. The LUCA held on each public chain will be sent to a
-                public deposit smart contract where users can withdraw at any time.
+                {t('communitySection.consensusIncome.description1')}
               </p>
               <p className="text-[16px] leading-[22px] font-light xl:text-[18px] xl:leading-[24px] xl:font-normal">
-                To do so the user initiates an application, the contract initiates a
-                request to the ATMRank computing group interface, and the PR server
-                cluster calculates the value of rewards to be received and writes it
-                into the contract. After the record is written, the user initiates a
-                request to withdraw revenue, and the contract waits for confirmation
-                from more than half of the PR server nodes. It then evaluates whether
-                there is enough balance and processes the user's application for
-                withdrawal.
+                {t('communitySection.consensusIncome.description2')}
               </p>
               
-              <StyledLink text="View my income" link="/webapp" />
+              <StyledLink text={t('communitySection.consensusIncome.viewIncome')} link="/webapp" />
             </div>
 
             {/* Image second on mobile, first on xl */}

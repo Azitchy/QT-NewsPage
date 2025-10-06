@@ -5,8 +5,11 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useFetchNewsList } from "@/hooks/useApi";
 import { NewsModal } from "./NewsModal";
+import { useTranslation } from "react-i18next";
 
 export const HeroSection = (): JSX.Element => {
+  const { t } = useTranslation("news");
+  
   const [featuredNews, setFeaturedNews] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -88,7 +91,7 @@ export const HeroSection = (): JSX.Element => {
       <section className="w-full flex justify-center py-8 md:py-12 px-4 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
         <Card className="max-w-[1400px] w-full border border-border rounded-[10px] md:rounded-[20px] overflow-hidden mx-auto">
           <CardContent className="flex items-center justify-center p-[60px]">
-            <div className="text-card-foreground">Loading featured news...</div>
+            <div className="text-card-foreground"> {t("loading.featuredNews")} </div>
           </CardContent>
         </Card>
       </section>
@@ -100,7 +103,7 @@ export const HeroSection = (): JSX.Element => {
       <section className="w-full flex justify-center py-8 md:py-12 px-4 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
         <Card className="max-w-[1400px] w-full border border-border dark:border-primary-foreground rounded-[10px] md:rounded-[20px] overflow-hidden mx-auto">
           <CardContent className="flex items-center justify-center p-[60px]">
-            <div className="text-destructive">Failed to fetch news data</div>
+            <div className="text-destructive"> {t("error.news")} </div>
           </CardContent>
         </Card>
       </section>
@@ -157,7 +160,7 @@ export const HeroSection = (): JSX.Element => {
                     handleReadNews();
                   }}
                 >
-                  <span>Read news</span>
+                  <span> {t("buttons.readNews")} </span>
                   <img
                     className="w-[30px] h-[30px] md:w-[20px] md:h-[20px] lg:w-[30px] lg:h-[30px] rounded-full transition-all duration-700 ease-in-out hover:bg-primary-foreground hover:scale-110 hover:rotate-[-12deg]"
                     alt="Arrow right icon"

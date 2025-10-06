@@ -4,26 +4,28 @@ import { Tabs, TabsList, TabsTrigger } from "../../components/ui/tabs";
 import { FooterSection } from "../../components/FooterSection";
 import { HeroSection } from "./sections/HeroSection";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export const Explorer = () => {
+  const { t } = useTranslation("explorer");
   const navigate = useNavigate();
   const location = useLocation();
 
   const navigationTabs = [
-    { id: "overview", label: "Overview", path: "/explorer" },
-    { id: "galaxy", label: "Galaxy", path: "/explorer/galaxy" },
-    { id: "ranking", label: "Overall ranking", path: "/explorer/ranking" },
+    { id: "overview", label: t("navigation.overview"), path: "/explorer" },
+    { id: "galaxy", label: t("navigation.galaxy"), path: "/explorer/galaxy" },
+    { id: "ranking", label: t("navigation.ranking"), path: "/explorer/ranking" },
     {
       id: "consensus",
-      label: "Consensus Connection",
+      label: t("navigation.consensus"),
       path: "/explorer/consensus",
     },
-    { id: "pr-node", label: "PR Node", path: "/explorer/pr-node" },
-    { id: "stake", label: "Stake Transaction", path: "/explorer/stake" },
-    { id: "user", label: "User Information", path: "/explorer/user" },
+    { id: "pr-node", label: t("navigation.prNode"), path: "/explorer/pr-node" },
+    { id: "stake", label: t("navigation.stake"), path: "/explorer/stake" },
+    { id: "user", label: t("navigation.user"), path: "/explorer/user" },
     {
       id: "contract",
-      label: "Contract Information",
+      label: t("navigation.contract"),
       path: "/explorer/contract",
     },
   ];
@@ -72,9 +74,9 @@ export const Explorer = () => {
                   className="h-10 px-2 py-2 pr-10 rounded-lg border border-border dark:border-[#454545] bg-transparent hover:bg-gray-50 flex items-center gap-3 appearance-none text-sm text-[#858585] focus:outline-none focus:ring-0"
                   defaultValue="Address"
                 >
-                  <option value="Address">Address</option>
-                  <option value="Test">Contract</option>
-                  <option value="Test1">Hash</option>
+                  <option value="Address"> {t("search.addressType")} </option>
+                  <option value="Test"> {t("search.contractType")} </option>
+                  <option value="Test1"> {t("search.hashType")} </option>
                 </select>
                 <img
                   className="w-3.5 h-3.5 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
@@ -85,7 +87,7 @@ export const Explorer = () => {
 
               <div className="relative w-full sm:w-[200px]">
                 <Input
-                  placeholder="Search..."
+                  placeholder={t("search.placeholder")} 
                   className="h-10 pl-4 pr-12 py-2 rounded-lg border border-border dark:border-[#454545] bg-transparent text-sm text-[#858585] placeholder:text-[#858585] focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
                 <img

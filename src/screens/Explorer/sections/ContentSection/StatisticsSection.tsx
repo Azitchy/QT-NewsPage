@@ -10,8 +10,11 @@ import {
   YAxis,
 } from "recharts";
 import { getUserLinkData, UserLinkData } from "../../../../lib/webApi";
+import { useTranslation } from "react-i18next";
 
 export const StatisticsSection = () => {
+  const { t } = useTranslation("explorer")
+
   const [showMore, setShowMore] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -87,11 +90,11 @@ export const StatisticsSection = () => {
           <div className="p-2 md:p-4">
             <div className="flex justify-between items-center mb-4 border-b border-border dark:border-primary-foreground pb-4">
               <h3 className="text-[16px] leading-[24px] font-normal text-foreground">
-                Statistics
+                {t("statistics.title")}
               </h3>
             </div>
             <div className="h-96 flex items-center justify-center">
-              <div className="text-card-foreground">Loading statistics...</div>
+              <div className="text-card-foreground"> {t("common.loading")} </div>
             </div>
           </div>
         </CardContent>
@@ -106,7 +109,7 @@ export const StatisticsSection = () => {
           <div className="p-2 md:p-4">
             <div className="flex justify-between items-center mb-4 border-b border-border dark:border-primary-foreground pb-4">
               <h3 className="text-[16px] leading-[24px] font-normal text-foreground">
-                Statistics
+                {t("statistics.title")}
               </h3>
             </div>
             <div className="h-96 flex items-center justify-center">
@@ -124,14 +127,14 @@ export const StatisticsSection = () => {
         <div className="p-2 md:p-4">
           <div className="flex justify-between items-center mb-4 border-b border-border dark:border-primary-foreground pb-4">
             <h3 className="text-[16px] leading-[24px] font-normal text-foreground">
-              Statistics
+              {t("statistics.title")}
             </h3>
             {data.length > 5 && (
               <button
                 className="text-primary font-normal text-[14px] leading-[19px] hover:underline"
                 onClick={() => setShowMore(!showMore)}
               >
-                {showMore ? "Less >" : "More >"}
+                {showMore ? t("statistics.less") : t("statistics.more")}
               </button>
             )}
           </div>
@@ -140,11 +143,11 @@ export const StatisticsSection = () => {
             <div className="flex flex-col mb-2 text-sm font-medium text-card-foreground px-2">
               <div className="flex items-center gap-1">
                 <span className="w-[20px] h-3 bg-[#FBC02D] rounded-sm inline-block"></span>
-                User
+                {t("statistics.user")}
               </div>
               <div className="flex items-center gap-1">
                 <span className="w-[20px] h-3 bg-[#26C6DA] rounded-sm inline-block"></span>
-                Connections
+                {t("statistics.connections")}
               </div>
             </div>
           </div>
