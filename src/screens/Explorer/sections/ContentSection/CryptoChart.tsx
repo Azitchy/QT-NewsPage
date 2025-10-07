@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   AreaChart,
   Area,
@@ -58,6 +58,13 @@ const CryptoChart: React.FC<CryptoChartProps> = ({
       lastY.current = e.chartY;
     }
   };
+
+   useEffect(() => {
+    if (data.length > 0) {
+      setStartIndex(Math.max(data.length - 30, 0));
+      setEndIndex(data.length - 1);
+    }
+  }, [data]);
 
   return (
     <div className="w-full rounded-xl bg-card">

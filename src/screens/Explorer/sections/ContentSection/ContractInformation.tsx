@@ -85,6 +85,12 @@ const ContractCard: React.FC<{
     return contract.name || contract.nameEn || "Unknown Contract";
   };
 
+   const hideAddress = (address: string) => {
+    return address
+      ? `${address.substring(0, 4)}...${address.substring(address.length - 4)}`
+      : "";
+  };
+
   return (
     <div className="dark:bg-card rounded-[10px] w-full font-inter p-4 lg:p-6 flex flex-col gap-1">
       <div className="flex justify-between items-center mb-[4px]">
@@ -103,7 +109,7 @@ const ContractCard: React.FC<{
         className="text-[14px] max-w-[300px] md:max-w-full truncate leading-[19px] font-normal text-card-foreground mb-[40px]"
         title={contract.address}
       >
-        {contract.address}
+        {hideAddress(contract.address)}
       </p>
 
       <div className="mb-[40px]">

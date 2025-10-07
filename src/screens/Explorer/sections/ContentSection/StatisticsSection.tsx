@@ -162,6 +162,7 @@ export const StatisticsSection = () => {
                   tick={{ fontSize: 12 }}
                   axisLine={true}
                   tickLine={true}
+                  interval={0}
                 />
 
                 <YAxis

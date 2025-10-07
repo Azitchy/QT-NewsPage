@@ -77,7 +77,7 @@ const TableComponent = ({
         <div className="grid md:grid-cols-[180px_1fr] gap-y-1 md:gap-y-4 text-[14px] leading-[19px] text-foreground">
           <div className="text-card-foreground md:text-foreground">{t('consensus.details.hash')}</div>
           <div className="truncate max-w-[300px] md:max-w-full">
-            {selectedRow.createHash}
+            {hideAddress(selectedRow.createHash)}
           </div>
 
           <hr className="md:hidden my-2 dark:border-[#454545]" />
@@ -112,7 +112,7 @@ const TableComponent = ({
           </div>
           <div className="flex gap-2 items-center">
             <span className="truncate  max-w-[300px] md:max-w-full">
-              {selectedRow.createAddress}
+              {hideAddress(selectedRow.createAddress)}
             </span>
             <img
               src="/copy.svg"
@@ -127,7 +127,7 @@ const TableComponent = ({
           </div>
           <div className="flex gap-2 items-center">
             <span className="truncate  max-w-[300px] md:max-w-full">
-              {selectedRow.targetAddress}
+              {hideAddress(selectedRow.targetAddress)}
             </span>{" "}
             <img
               src="/copy.svg"
@@ -142,7 +142,7 @@ const TableComponent = ({
           </div>
           <div className="flex gap-2 items-center">
             <span className="truncate  max-w-[300px] md:max-w-full">
-              {selectedRow.linkAddress}{" "}
+              {hideAddress(selectedRow.linkAddress)}{" "}
             </span>
             <img
               src="/copy.svg"

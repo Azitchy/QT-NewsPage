@@ -42,7 +42,7 @@ const TableComponent = ({
         </div>
         <div className="grid md:grid-cols-[180px_1fr] gap-y-1 md:gap-y-4 text-[14px] leading-[19px] text-foreground">
           <div className="text-card-foreground md:text-foreground">{t("prNode.details.prNode")}</div>
-          <div className="truncate max-w-full">{selectedRow.serverAddress}</div>
+          <div className="truncate max-w-full">{hideAddress(selectedRow.serverAddress)}</div>
 
           <hr className="md:hidden my-2 dark:border-[#454545]" />
 

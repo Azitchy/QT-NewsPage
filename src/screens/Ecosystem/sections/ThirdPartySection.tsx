@@ -11,7 +11,7 @@ import {
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 
 export const ThirdPartySection = () => {
-  const { t } = useTranslation('ecosystem');
+  const { t } = useTranslation("ecosystem");
   const [api, setApi] = useState<CarouselApi>();
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
@@ -20,28 +20,28 @@ export const ThirdPartySection = () => {
   const partners = [
     {
       icon: "/binance.svg",
-      name: t('thirdPartySection.partners.binance.name'),
-      description: t('thirdPartySection.partners.binance.description'),
+      name: t("thirdPartySection.partners.binance.name"),
+      description: t("thirdPartySection.partners.binance.description"),
     },
     {
       icon: "/bit-go.svg",
-      name: t('thirdPartySection.partners.bitgo.name'),
-      description: t('thirdPartySection.partners.bitgo.description'),
+      name: t("thirdPartySection.partners.bitgo.name"),
+      description: t("thirdPartySection.partners.bitgo.description"),
     },
     {
       icon: "/chain-link.svg",
-      name: t('thirdPartySection.partners.chainlink.name'),
-      description: t('thirdPartySection.partners.chainlink.description'),
+      name: t("thirdPartySection.partners.chainlink.name"),
+      description: t("thirdPartySection.partners.chainlink.description"),
     },
     {
       icon: "/eth.svg",
-      name: t('thirdPartySection.partners.eth.name'),
-      description: t('thirdPartySection.partners.eth.description'),
+      name: t("thirdPartySection.partners.eth.name"),
+      description: t("thirdPartySection.partners.eth.description"),
     },
     {
       icon: "/pancake.svg",
-      name: t('thirdPartySection.partners.pancake.name'),
-      description: t('thirdPartySection.partners.pancake.description'),
+      name: t("thirdPartySection.partners.pancake.name"),
+      description: t("thirdPartySection.partners.pancake.description"),
     },
   ];
 
@@ -81,7 +81,7 @@ export const ThirdPartySection = () => {
       <div className="flex items-start mb-12">
         <div className="relative ml-0 lg:ml-[30px]">
           <div className="font-titles-h2-sectionheading-400 text-primary-colour text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] ml-12 mt-7 uppercase">
-            {t('thirdPartySection.title')}
+            {t("thirdPartySection.title")}
           </div>
           <img
             className="absolute w-[99px] h-[99px] top-0 left-0"
@@ -93,9 +93,9 @@ export const ThirdPartySection = () => {
 
       <div className="w-full mb-[40px] md:pl-[135px] 2xl:pl-[260px]">
         <p className="max-w-[784px] font-inter font-light text-foreground text-[18px] lg:text-[20px] leading-[24px] lg:leading-[27px] text-left">
-          {t('thirdPartySection.description')}{" "}
+          {t("thirdPartySection.description")}{" "}
           <span className="font-medium">
-            {t('thirdPartySection.descriptionHighlight')}
+            {t("thirdPartySection.descriptionHighlight")}
           </span>
         </p>
       </div>
@@ -154,7 +154,10 @@ export const ThirdPartySection = () => {
                   className="basis-full flex-shrink-0 flex flex-col gap-[10px]"
                 >
                   {pair.map((partner, i) => (
-                    <div key={i} className="relative w-full h-[320px] rounded-[20px]">
+                    <div
+                      key={i}
+                      className="relative w-full h-[320px] rounded-[20px]"
+                    >
                       <div className="absolute inset-0 rounded-[20px] p-[1px] bg-border dark:bg-[linear-gradient(96deg,#C6C6C6_69.03%,#2B2B2B_102.49%)]">
                         <div className="w-full h-full rounded-[20px] bg-card dark:bg-card" />
                       </div>
@@ -185,9 +188,9 @@ export const ThirdPartySection = () => {
                 //  For Desktop
                 <CarouselItem
                   key={idx}
-                  className="basis-auto flex-shrink-0 w-[330px] md:w-[280px] 2xl:w-[330px] py-2 pb-5 ml-2"
+                  className="basis-auto flex-shrink-0 w-[330px]   py-2 pb-5 ml-2"
                 >
-                  <div className="relative rounded-[20px] w-full h-full lg:h-[350px] transform transition-all duration-700 ease-in-out delay-150 hover:scale-105 hover:shadow-lg">
+                  <div className="relative rounded-[20px] w-full h-full lg:h-[310px] transform transition-all duration-700 ease-in-out delay-150 hover:scale-105 hover:shadow-lg">
                     {/* Gradient border layer */}
                     <div className="absolute inset-0 rounded-[20px] p-[1px] bg-border dark:bg-[linear-gradient(96deg,#C6C6C6_69.03%,#2B2B2B_102.49%)]">
                       <div className="w-full h-full rounded-[20px] bg-card dark:bg-card" />
@@ -205,7 +208,7 @@ export const ThirdPartySection = () => {
                           <h3 className="font-medium text-primary text-[20px] leading-[27px] transition-all duration-500 ease-in-out">
                             {partner.name}
                           </h3>
-                          <p className="text-foreground text-[14px] lg:text-[16px] leading-[19px] lg:leading-[24px] flex-1 transition-all duration-500 ease-in-out">
+                          <p className="text-foreground text-[14px] lg:text-[14px] leading-[19px] lg:leading-[24px] flex-1 transition-all duration-500 ease-in-out">
                             {partner.description}
                           </p>
                         </div>

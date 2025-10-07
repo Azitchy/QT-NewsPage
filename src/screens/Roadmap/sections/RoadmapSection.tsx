@@ -14,60 +14,95 @@ interface RoadmapSection {
   items: RoadmapItemType[];
 }
 
- 
 // Main Roadmap Section
 export const RoadmapSection: React.FC = () => {
-   const { t } = useTranslation("roadmap");
+  const { t } = useTranslation("roadmap");
 
   // Build roadmap data from translations with alternating sides
   const roadmapData: RoadmapSection[] = [
     {
       year: t("future.futureHeading"),
-      items: (t("future.items", { returnObjects: true }) as any[]).map((_, idx) => ({
-        title: t(`future.items.${idx}.title`),
-        description: t(`future.items.${idx}.description`),
-        side: (idx === 0 ? "right" : idx % 2 === 0 ? "right" : "left") as Side,
-      })),
+      items: (t("future.items", { returnObjects: true }) as any[]).map(
+        (_, idx) => ({
+          title: t(`future.items.${idx}.title`),
+          description: t(`future.items.${idx}.description`),
+          side: (idx === 0
+            ? "right"
+            : idx % 2 === 0
+            ? "right"
+            : "left") as Side,
+        })
+      ),
     },
     {
       year: "2025",
-      items: (t("year_2025.items", { returnObjects: true }) as any[]).map((_, idx) => ({
-        title: t(`year_2025.items.${idx}.title`),
-        description: t(`year_2025.items.${idx}.description`),
-        side: (idx === 0 ? "right" : idx % 2 === 0 ? "right" : "left") as Side,
-      })),
+      items: (t("year_2025.items", { returnObjects: true }) as any[]).map(
+        (_, idx) => ({
+          title: t(`year_2025.items.${idx}.title`),
+          description: t(`year_2025.items.${idx}.description`),
+          side: (idx === 0
+            ? "right"
+            : idx % 2 === 0
+            ? "right"
+            : "left") as Side,
+        })
+      ),
     },
     {
       year: "2024",
-      items: (t("year_2024.items", { returnObjects: true }) as any[]).map((_, idx) => ({
-        title: t(`year_2024.items.${idx}.title`),
-        description: t(`year_2024.items.${idx}.description`),
-        side: (idx === 0 ? "right" : idx % 2 === 0 ? "right" : "left") as Side,
-      })),
+      items: (t("year_2024.items", { returnObjects: true }) as any[]).map(
+        (_, idx) => ({
+          title: t(`year_2024.items.${idx}.title`),
+          description: t(`year_2024.items.${idx}.description`),
+          side: (idx === 0
+            ? "right"
+            : idx % 2 === 0
+            ? "right"
+            : "left") as Side,
+        })
+      ),
     },
     {
       year: "2023",
-      items: (t("year_2023.items", { returnObjects: true }) as any[]).map((_, idx) => ({
-        title: t(`year_2023.items.${idx}.title`),
-        description: t(`year_2023.items.${idx}.description`),
-        side: (idx === 0 ? "right" : idx % 2 === 0 ? "right" : "left") as Side,
-      })),
+      items: (t("year_2023.items", { returnObjects: true }) as any[]).map(
+        (_, idx) => ({
+          title: t(`year_2023.items.${idx}.title`),
+          description: t(`year_2023.items.${idx}.description`),
+          side: (idx === 0
+            ? "right"
+            : idx % 2 === 0
+            ? "right"
+            : "left") as Side,
+        })
+      ),
     },
     {
       year: "2022",
-      items: (t("year_2022.items", { returnObjects: true }) as any[]).map((_, idx) => ({
-        title: t(`year_2022.items.${idx}.title`),
-        description: t(`year_2022.items.${idx}.description`),
-        side: (idx === 0 ? "right" : idx % 2 === 0 ? "right" : "left") as Side,
-      })),
+      items: (t("year_2022.items", { returnObjects: true }) as any[]).map(
+        (_, idx) => ({
+          title: t(`year_2022.items.${idx}.title`),
+          description: t(`year_2022.items.${idx}.description`),
+          side: (idx === 0
+            ? "right"
+            : idx % 2 === 0
+            ? "right"
+            : "left") as Side,
+        })
+      ),
     },
     {
       year: "2021",
-      items: (t("year_2021.items", { returnObjects: true }) as any[]).map((_, idx) => ({
-        title: t(`year_2021.items.${idx}.title`),
-        description: t(`year_2021.items.${idx}.description`),
-        side: (idx === 0 ? "right" : idx % 2 === 0 ? "right" : "left") as Side,
-      })),
+      items: (t("year_2021.items", { returnObjects: true }) as any[]).map(
+        (_, idx) => ({
+          title: t(`year_2021.items.${idx}.title`),
+          description: t(`year_2021.items.${idx}.description`),
+          side: (idx === 0
+            ? "right"
+            : idx % 2 === 0
+            ? "right"
+            : "left") as Side,
+        })
+      ),
     },
   ];
   const [visibleYears, setVisibleYears] = useState<Set<string>>(new Set());
@@ -126,6 +161,7 @@ export const RoadmapSection: React.FC = () => {
                   title={section.items[0].title}
                   description={section.items[0].description}
                   visible={visibleYears.has(section.year)}
+                  delay={1200}
                 />
               )}
             </div>
@@ -148,6 +184,7 @@ export const RoadmapSection: React.FC = () => {
                     title={item.title}
                     description={item.description}
                     visible={visibleYears.has(section.year)}
+                    delay={1200}
                   />
                 </div>
               ))}
@@ -164,18 +201,23 @@ interface RoadmapItemProps {
   title: string;
   description: string;
   visible: boolean;
+  delay?: number;
 }
 
 const RoadmapItem: React.FC<RoadmapItemProps> = ({
   title,
   description,
   visible,
+  delay = 0,
 }) => {
   return (
     <div
       className={`p-4 rounded-xl w-[280px] md:w-[400px] transition-all duration-700 ease-out transform ${
         visible ? "translate-y-0 opacity-100" : "translate-y-40 opacity-0"
       }`}
+      style={{
+        transitionDelay: `${delay}ms`,
+      }}
     >
       <h2 className="text-[18px] leading-[24px] text-[#DCDCDC] font-normal mb-2">
         {title}

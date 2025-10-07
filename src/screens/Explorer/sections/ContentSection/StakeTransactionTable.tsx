@@ -71,7 +71,7 @@ const TableComponent = ({
         <div className="grid md:grid-cols-[180px_1fr] gap-y-1 md:gap-y-4 text-[14px] leading-[19px] text-foreground">
           <div className="text-card-foreground md:text-foreground"> {t("stake.details.hash")} </div>
           <div className="truncate max-w-[300px] md:max-w-full">
-            {selectedRow.hash}
+            {hideAddress(selectedRow.hash)}
           </div>
 
           <hr className="md:hidden my-1" />
@@ -106,7 +106,7 @@ const TableComponent = ({
           </div>
           <div className="flex gap-2 items-center">
             <span className="truncate  max-w-[300px] md:max-w-full">
-              {selectedRow.userAddress}
+              {hideAddress(selectedRow.userAddress)}
             </span>
             <img
               src="/copy.svg"
@@ -121,7 +121,7 @@ const TableComponent = ({
           </div>
           <div className="flex gap-2 items-center">
             <span className="truncate  max-w-[300px] md:max-w-full">
-              {selectedRow.serverAddress}
+              {hideAddress(selectedRow.serverAddress)}
             </span>{" "}
             <img
               src="/copy.svg"
