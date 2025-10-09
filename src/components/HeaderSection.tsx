@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Wallet, LogOut, User, Shield, Sun, Moon, Globe, ChevronDown } from "lucide-react";
+import { Menu, X, Sun, Moon, Globe, ArrowRight } from "lucide-react";
 
 import { Button } from "./ui/button";
 import {
@@ -16,25 +16,38 @@ import {
 import { useWeb3Auth, WalletType } from "../contexts/Web3AuthContext";
 import { useTheme } from "@/components/theme-provider";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { WalletModal } from "./WalletModal";
 import { useTranslation } from "react-i18next";
+
+type MenuType = "main" | "submenu" | "language";
+
+interface Language {
+  code: string;
+  label: string;
+  icon: string;
+}
+
+const LANGUAGES: Language[] = [
+  { code: 'en', label: 'EN', icon: '/lang-en.svg' },
+  { code: 'zh', label: 'CN', icon: '/lang-zh.svg' },
+];
+
+const WALLET_OPTIONS: Array<{type: WalletType; name: string; icon: string}> = [
+  { type: 'metamask', name: 'MetaMask', icon: '/webapp/MetaMask-icon-fox.svg' },
+  { type: 'walletconnect', name: 'WalletConnect', icon: 'https://avatars.githubusercontent.com/u/37784886' },
+  { type: 'coinbase', name: 'Coinbase Wallet', icon: 'https://www.coinbase.com/img/favicon/favicon-32x32.png' },
+];
 
 export const HeaderSection = (): JSX.Element => {
   const { t, i18n } = useTranslation("common");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [currentMenu, setCurrentMenu] = useState<"main" | "submenu" | "language">("main");
+  const [currentMenu, setCurrentMenu] = useState<MenuType>("main");
   const [activeSubMenu, setActiveSubMenu] = useState<any>(null);
-  const [showUserMenu, setShowUserMenu] = useState(false);
-  const [showWalletSelector, setShowWalletSelector] = useState(false);
+  const [showWalletModal, setShowWalletModal] = useState(false);
+  
   const location = useLocation();
   const navigate = useNavigate();
-  const {
-    isAuthenticated,
-    wallet,
-    connectWallet,
-    disconnectWallet,
-    isConnecting,
-    session,
-  } = useWeb3Auth();
+  const { isAuthenticated, wallet, disconnectWallet, isConnecting } = useWeb3Auth();
   const { setTheme, theme } = useTheme();
 
   const navItems = [
@@ -85,52 +98,31 @@ export const HeaderSection = (): JSX.Element => {
     { label: t("navbar.navigation.help"), path: "/help" },
   ];
 
-  const walletOptions: Array<{type: WalletType; name: string; icon: string}> = [
-    { type: 'metamask', name: 'MetaMask', icon: '/webapp/MetaMask-icon-fox.svg' },
-    { type: 'walletconnect', name: 'WalletConnect', icon: 'https://avatars.githubusercontent.com/u/37784886' },
-    { type: 'coinbase', name: 'Coinbase Wallet', icon: 'https://www.coinbase.com/img/favicon/favicon-32x32.png' },
-  ];
+  // Helper functions
+  const formatAddress = (address: string) => `${address.slice(0, 6)}...${address.slice(-4)}`;
 
-  const formatAddress = (address: string) =>
-    `${address.slice(0, 6)}...${address.slice(-4)}`;
-
-  const getWalletDisplayName = () => {
-    if (!wallet) return '';
-    const walletInfo = walletOptions.find(w => w.type === wallet.type);
-    return walletInfo?.name || 'Unknown Wallet';
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+    setCurrentMenu("main");
   };
 
-  const getWalletIcon = () => {
-    if (!wallet) return '/webapp/MetaMask-icon-fox.svg';
-    const walletInfo = walletOptions.find(w => w.type === wallet.type);
-    return walletInfo?.icon || '/webapp/MetaMask-icon-fox.svg';
+  const handleLanguageChange = (langCode: string) => {
+    i18n.changeLanguage(langCode);
+    closeMobileMenu();
   };
 
-  const handleWebAppClick = () => {
+  // Event handlers
+  const handleWalletButtonClick = () => {
     if (isAuthenticated) {
       navigate("/webapp");
     } else {
-      setShowWalletSelector(true);
+      setShowWalletModal(true);
     }
-  };
-
-  const handleWalletConnect = async (walletType: WalletType) => {
-    setShowWalletSelector(false);
-    try {
-      await connectWallet(walletType);
-    } catch (error) {
-      console.error("Failed to connect wallet:", error);
-    }
-  };
-
-  const handleDisconnect = async () => {
-    await disconnectWallet();
-    setShowUserMenu(false);
-    if (location.pathname === "/webapp") navigate("/");
   };
 
   const handleThemeToggle = () => setTheme(theme === "dark" ? "light" : "dark");
 
+  // Effects
   useEffect(() => {
     if (isAuthenticated && !location.pathname.includes("/webapp")) {
       const wasConnecting = sessionStorage.getItem("wasConnecting");
@@ -146,159 +138,73 @@ export const HeaderSection = (): JSX.Element => {
   }, [isConnecting]);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (showUserMenu && !(event.target as Element).closest(".user-menu-container")) {
-        setShowUserMenu(false);
-      }
-      if (showWalletSelector && !(event.target as Element).closest(".wallet-selector-container")) {
-        setShowWalletSelector(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showUserMenu, showWalletSelector]);
-
-  useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024 && isMobileMenuOpen) setIsMobileMenuOpen(false);
+      if (window.innerWidth >= 1024 && isMobileMenuOpen) {
+        closeMobileMenu();
+      }
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [isMobileMenuOpen]);
 
-  const WalletButton = ({ className, isMobile = false }: { className: string; isMobile?: boolean }) => {
+  // Components
+  const WalletButton = ({ className }: { className: string }) => {
     if (isAuthenticated && wallet) {
       return (
-        <div className="relative user-menu-container">
-          <Button className={`${className} flex items-center gap-1.5 sm:gap-2`} onClick={() => setShowUserMenu(!showUserMenu)}>
-            <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
-              <img src={getWalletIcon()} alt={getWalletDisplayName()} className="w-full h-full object-contain" />
-            </div>
-            <span className="truncate min-w-0">{formatAddress(wallet.address)}</span>
-          </Button>
-
-          {showUserMenu && (
-            <div
-              className={`absolute ${
-                isMobile ? "right-0" : "right-0"
-              } mt-2 w-64 bg-background dark:bg-card rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50 p-4`}
-            >
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 pb-3 border-b border-gray-100 dark:border-gray-700">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden bg-gray-100 dark:bg-gray-800">
-                    <img src={getWalletIcon()} alt={getWalletDisplayName()} className="w-8 h-8 object-contain" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="font-medium text-gray-900 dark:text-gray-100 text-xs">
-                      {getWalletDisplayName()}
-                    </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                      {formatAddress(wallet.address)}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-3 py-2 rounded-lg">
-                    <Shield className="w-4 h-4 flex-shrink-0" />
-                    <span>Authenticated via SIWE</span>
-                  </div>
-
-                  {session && (
-                    <div className="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 px-3 py-2 rounded-lg">
-                      <div>
-                        Session expires: {new Date(session.expiresAt).toLocaleTimeString()}
-                      </div>
-                    </div>
-                  )}
-
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(wallet.address);
-                      setShowUserMenu(false);
-                    }}
-                    className="w-full flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 px-3 py-2 rounded-lg transition-colors"
-                  >
-                    <Wallet className="w-4 h-4" />
-                    <span>Copy Address</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      navigate("/webapp");
-                      setShowUserMenu(false);
-                    }}
-                    className="w-full flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 px-3 py-2 rounded-lg transition-colors"
-                  >
-                    <Shield className="w-4 h-4" />
-                    <span>Go to WebApp</span>
-                  </button>
-                </div>
-
-                <div className="border-t border-gray-100 dark:border-gray-700 pt-3">
-                  <button
-                    onClick={handleDisconnect}
-                    className="w-full flex items-center gap-2 text-sm text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2 rounded-lg transition-colors"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    <span>Disconnect Wallet</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+        <Button 
+          className={`${className} flex items-center gap-1.5 sm:gap-2`} 
+          onClick={handleWalletButtonClick}
+        >
+          <span className="truncate min-w-0">{formatAddress(wallet.address)}</span>
+        </Button>
       );
     }
 
     return (
-      <div className="relative wallet-selector-container">
-        <Button className={className} onClick={handleWebAppClick} disabled={isConnecting}>
-          {isConnecting ? (
-            <>
-              <div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin mr-2 flex-shrink-0"></div>
-              <span className="truncate">Connecting...</span>
-            </>
-          ) : (
-            <>
-              <Wallet className="w-4 h-4 mr-2 flex-shrink-0" />
-              <span className="truncate">Connect</span>
-              <ChevronDown className="w-3 h-3 ml-1" />
-            </>
-          )}
-        </Button>
-
-        {showWalletSelector && !isConnecting && (
-          <div className="absolute right-0 mt-2 w-56 bg-background dark:bg-card rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50 p-2">
-            <div className="text-xs text-gray-500 dark:text-gray-400 px-3 py-2 font-medium">
-              Choose Wallet
-            </div>
-            {walletOptions.map((option) => (
-              <button
-                key={option.type}
-                onClick={() => handleWalletConnect(option.type)}
-                className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
-              >
-                <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
-                  <img 
-                    src={option.icon} 
-                    alt={option.name} 
-                    className="w-6 h-6 object-contain"
-                    onError={(e) => {
-                      e.currentTarget.src = '/webapp/default-wallet-icon.svg';
-                    }}
-                  />
-                </div>
-                <span className="text-sm text-gray-900 dark:text-gray-100">
-                  {option.name}
-                </span>
-              </button>
-            ))}
-          </div>
+      <Button 
+        className={className} 
+        onClick={handleWalletButtonClick} 
+        disabled={isConnecting}
+      >
+        {isConnecting ? (
+          <>
+            <div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin mr-2 flex-shrink-0"></div>
+            <span className="truncate">Connecting...</span>
+          </>
+        ) : (
+          <span className="text-white truncate">Connect</span>
         )}
-      </div>
+      </Button>
     );
   };
+
+  const MobileMenuItem = ({ item, index }: { item: any; index: number }) => (
+    <div key={index}>
+      {item.subItems ? (
+        <button
+          onClick={() => {
+            setActiveSubMenu(item);
+            setCurrentMenu("submenu");
+          }}
+          className="w-full flex items-center justify-between h-[50px] rounded-lg text-left text-[14px] text-foreground dark:text-foreground hover:text-primary transition-colors"
+        >
+          {item.label}
+          <ArrowRight className="text-primary" />
+        </button>
+      ) : (
+        <Link
+          to={item.path}
+          className={`block h-[50px] rounded-lg text-[14px] font-normal transition-colors ${
+            location.pathname === item.path ? "text-primary" : "text-foreground dark:text-foreground"
+          } hover:text-primary flex items-center`}
+          onClick={closeMobileMenu}
+        >
+          {item.label}
+        </Link>
+      )}
+      <hr className="border-border my-2" />
+    </div>
+  );
 
   return (
     <header className="sticky top-0 w-full h-[70px] sm:h-[90px] bg-background dark:bg-background shadow-[0px_4px_30px_#0000000f] z-50">
@@ -404,7 +310,6 @@ export const HeaderSection = (): JSX.Element => {
         <div className="flex items-center gap-1 sm:gap-2 lg:gap-[10px] flex-shrink-0 min-w-0">
           <WalletButton
             className="flex h-[32px] sm:h-[36px] lg:h-[38px] px-2 sm:px-3 lg:px-[15px] py-1.5 sm:py-2 lg:py-2.5 rounded-full bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] hover:opacity-90 transition-opacity text-background font-normal text-[11px] sm:text-[13px] lg:text-[14px] min-w-0 max-w-[140px] sm:max-w-[160px] lg:max-w-none"
-            isMobile={false}
           />
 
           <div className="hidden lg:flex items-center px-2 gap-2">
@@ -430,11 +335,123 @@ export const HeaderSection = (): JSX.Element => {
         </div>
       </div>
 
+      {/* Mobile menu */}
       {isMobileMenuOpen && (
         <div className="lg:hidden bg-background dark:bg-background rounded-b-[20px] border-t dark:border-gray-700 shadow-lg">
-          {/* Mobile menu content - keeping existing structure */}
+          <div className="flex flex-col h-[535px]">
+            <div className="flex-1 overflow-y-auto px-[40px] mt-2">
+              {/* Main Menu */}
+              {currentMenu === "main" && (
+                <>
+                  {navItems.map((item, index) => (
+                    <MobileMenuItem key={index} item={item} index={index} />
+                  ))}
+
+                  {/* Language Menu Button */}
+                  <button
+                    onClick={() => {
+                      setActiveSubMenu({ label: t("navbar.language"), subItems: LANGUAGES });
+                      setCurrentMenu("language");
+                    }}
+                    className="w-full flex items-center justify-between h-[50px] rounded-lg text-left text-[14px] text-foreground dark:text-foreground hover:text-primary transition-colors"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Globe className="w-5 h-5 text-card-foreground" />
+                      {t("navbar.language")}
+                    </div>
+                    <ArrowRight className="text-primary" />
+                  </button>
+                </>
+              )}
+
+              {/* Submenu */}
+              {currentMenu === "submenu" && activeSubMenu && (
+                <>
+                  <button
+                    onClick={() => setCurrentMenu("main")}
+                    className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-primary transition-colors px-4 h-[50px]"
+                  >
+                    <span className="text-primary">← </span> {t("navbar.mobileMenu.back")}
+                  </button>
+
+                  <div className="px-4 h-[50px] rounded-lg text-[14px] font-normal text-foreground dark:text-foreground flex items-center">
+                    {activeSubMenu.label}
+                  </div>
+                  <hr className="border-border my-2" />
+
+                  {activeSubMenu.subItems.map((sub: any, idx: number) => (
+                    <div key={idx}>
+                      {sub.subLabel.map((label: string, labelIdx: number) => (
+                        <div key={labelIdx}>
+                          <a
+                            href={sub.href?.[labelIdx] || "#"}
+                            target={sub.href?.[labelIdx]?.startsWith("http") ? "_blank" : "_self"}
+                            rel="noopener noreferrer"
+                            className="block px-8 h-[50px] rounded-lg text-[14px] text-foreground dark:text-foreground hover:text-primary flex items-center"
+                            onClick={closeMobileMenu}
+                          >
+                            {label}
+                          </a>
+                          <hr className="border-border my-2" />
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* Language submenu */}
+              {currentMenu === "language" && (
+                <>
+                  <button
+                    onClick={() => setCurrentMenu("main")}
+                    className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-primary transition-colors h-[50px]"
+                  >
+                    <span className="text-primary">← </span> {t("navbar.mobileMenu.back")}
+                  </button>
+
+                  {LANGUAGES.map((lang, idx) => (
+                    <div key={lang.code}>
+                      <button
+                        onClick={() => handleLanguageChange(lang.code)}
+                        className={`flex items-center gap-3 w-full h-[50px] rounded-lg text-[14px] transition-colors ${
+                          i18n.language === lang.code 
+                            ? "text-primary font-medium" 
+                            : "text-foreground dark:text-foreground hover:text-primary"
+                        }`}
+                      >
+                        <img src={lang.icon} alt={lang.label} className="w-5 h-5" />
+                        {lang.label}
+                      </button>
+                      {idx !== LANGUAGES.length - 1 && <hr className="border-border my-2" />}
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
+
+            {/* Theme Toggle */}
+            <div className="px-[40px] py-4 flex justify-end">
+              <button
+                className="p-2 rounded-full hover:bg-card-foreground dark:hover:bg-slate-700 cursor-pointer flex-shrink-0"
+                onClick={handleThemeToggle}
+              >
+                {theme === "dark" ? (
+                  <Sun className="text-foreground" />
+                ) : (
+                  <Moon className="-scale-x-100" />
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       )}
+
+      {/* Wallet Modal */}
+      <WalletModal 
+        isOpen={showWalletModal} 
+        onClose={() => setShowWalletModal(false)} 
+      />
     </header>
   );
 };

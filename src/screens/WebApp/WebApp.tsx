@@ -210,45 +210,6 @@ export const WebApp = (): JSX.Element => {
                 <div className={`w-5 h-5 h-0.5 bg-current transition-all duration-300 ${showMobileMenu ? '-rotate-45 -translate-y-1.5' : ''}`}></div>
               </div>
             </button>
-
-
-            {/* Session Status - hidden on mobile */}
-            {session && (
-              <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg">
-                <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                <div className="text-xs">
-                  <div className="text-blue-800 dark:text-blue-300 font-medium">Session expires in</div>
-                  <div className="text-blue-600 dark:text-blue-400 font-mono">{sessionTimeLeft}</div>
-                </div>
-                <button
-                  onClick={handleRefreshSession}
-                  className="p-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
-                  title="Refresh session"
-                >
-                  <RefreshCw className="w-3 h-3" />
-                </button>
-              </div>
-            )}
-
-            {/* Wallet Info */}
-            {wallet && (
-              <div className="hidden sm:flex items-center gap-3 px-4 py-2 bg-gray-50 dark:bg-card rounded-lg border border-gray-200 dark:border-border">
-                <Wallet className="w-4 h-4 text-gray-600 dark:text-card-foreground" />
-                <div className="text-xs">
-                  <div className="font-medium text-gray-900 dark:text-foreground">
-                    {formatAddress(wallet.address)}
-                  </div>
-                  {session && (
-                    <div className="text-gray-500 dark:text-card-foreground font-mono">
-                      Token: {formatSessionToken(session.token)}
-                    </div>
-                  )}
-                  <div className="text-gray-500 dark:text-card-foreground">
-                    Chain: {wallet.chainId === '0x38' ? 'BSC' : wallet.chainId === '0x61' ? 'BSC Testnet' : 'Unknown'}
-                  </div>
-                </div>
-              </div>
-            )}
             
             <button className="hidden sm:flex items-center gap-2 px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-colors">
               <Plus className="w-4 h-4" />

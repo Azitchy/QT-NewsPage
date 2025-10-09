@@ -105,7 +105,9 @@ export const RoadmapSection: React.FC = () => {
       ),
     },
   ];
+
   const [visibleYears, setVisibleYears] = useState<Set<string>>(new Set());
+  const [scrollProgress, setScrollProgress] = useState(0);
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   useEffect(() => {
@@ -118,20 +120,25 @@ export const RoadmapSection: React.FC = () => {
           }
         });
       },
-      {
-        threshold: 0.3,
-      }
+      { threshold: 0.3 }
     );
 
-    Object.entries(sectionRefs.current).forEach(([_, el]) => {
-      if (el) observer.observe(el);
-    });
+    Object.values(sectionRefs.current).forEach(
+      (el) => el && observer.observe(el)
+    );
+    return () => observer.disconnect();
+  }, []);
 
-    return () => {
-      Object.entries(sectionRefs.current).forEach(([_, el]) => {
-        if (el) observer.unobserve(el);
-      });
+  // Track scroll to control star growth
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const docHeight = document.body.scrollHeight - window.innerHeight;
+      const progress = Math.min(scrollY / docHeight, 1);
+      setScrollProgress(progress);
     };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -143,10 +150,34 @@ export const RoadmapSection: React.FC = () => {
           data-year={section.year}
           className="relative py-10 flex flex-col items-center gap-0 min-h-[800px]"
         >
-          {/* Year + First Item Row */}
+          {/* Year + First Item */}
           <div className="relative w-full flex items-center justify-between">
             <div className="flex-1"></div>
-            <div className="flex flex-col items-center mx-4">
+
+            {/* Center Column with Year + Line + Star */}
+            <div className="flex flex-col items-center mx-4 relative">
+              {/* Glowing Star */}
+              <img
+                src="/roadmap-star.svg"
+                alt="glowing star"
+                className={`relative top-[215px] left-[12px] transition-all duration-700 ease-out drop-shadow-[0_0_15px_rgba(255,255,150,0.8)] transform
+                ${
+                  visibleYears.has(section.year)
+                    ? "opacity-100 translate-y-0 scale-100"
+                    : "opacity-0 translate-y-20 scale-0"
+                }`}
+                style={{
+                  transitionDelay: "100ms",
+                  transform: visibleYears.has(section.year)
+                    ? `translateY(0px) scale(${1 + scrollProgress * 2})`
+                    : "translateY(-180px) scale(0)",
+                  filter: `drop-shadow(0 0 ${
+                    10 + scrollProgress * 30
+                  }px rgba(255,255,150,0.9))`,
+                }}
+              />
+
+              {/* Year Text */}
               <h1
                 className="uppercase text-[40px] md:text-[150px] leading-[160px] font-bold text-transparent"
                 style={{ WebkitTextStroke: "2px white" }}
@@ -155,13 +186,15 @@ export const RoadmapSection: React.FC = () => {
               </h1>
               <div className="w-[2px] h-full bg-white/40 mt-2"></div>
             </div>
+
+            {/* Right Side First Item */}
             <div className="flex-1 flex justify-start pl-6">
               {section.items[0] && (
                 <RoadmapItem
                   title={section.items[0].title}
                   description={section.items[0].description}
                   visible={visibleYears.has(section.year)}
-                  delay={1200}
+                  delay={800}
                 />
               )}
             </div>
@@ -184,7 +217,7 @@ export const RoadmapSection: React.FC = () => {
                     title={item.title}
                     description={item.description}
                     visible={visibleYears.has(section.year)}
-                    delay={1200}
+                    delay={800}
                   />
                 </div>
               ))}
@@ -213,10 +246,10 @@ const RoadmapItem: React.FC<RoadmapItemProps> = ({
   return (
     <div
       className={`p-4 rounded-xl w-[280px] md:w-[400px] transition-all duration-700 ease-out transform ${
-        visible ? "translate-y-0 opacity-100" : "translate-y-40 opacity-0"
+        visible ? "translate-y-0 opacity-100" : "translate-y-60 opacity-0"
       }`}
       style={{
-        transitionDelay: `${delay}ms`,
+        transitionDelay: visible ? `${delay + 800}ms` : "0ms",
       }}
     >
       <h2 className="text-[18px] leading-[24px] text-[#DCDCDC] font-normal mb-2">

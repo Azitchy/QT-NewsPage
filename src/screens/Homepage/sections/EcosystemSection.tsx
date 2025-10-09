@@ -59,7 +59,7 @@ export const EcosystemSection = () => {
       <div className="mt-[20px] md:px-10 lg:px-28 2xl:px-0 lg:mt-[80px] mx-auto max-w-[1414px]">
         <div className="relative">
           {/* Gradient border wrapper */}
-          <div className="relative w-fit mx-auto lg:absolute right-0 top-[-72px] rounded-[40px] p-[1px] bg-border dark:bg-[linear-gradient(96deg,#C6C6C6_69.03%,#2B2B2B_102.49%)]">
+          <div className="relative w-fit mx-auto lg:absolute right-0 lg:top-[-72px] rounded-[40px] p-[1px] bg-border dark:bg-[linear-gradient(96deg,#C6C6C6_69.03%,#2B2B2B_102.49%)]">
             <div className="flex items-center justify-center gap-[10px] rounded-[40px] bg-background p-[5px]">
               <button
                 onClick={() => setActiveEcosystemTab("gaming")}
