@@ -48,6 +48,7 @@ export const SocialPlatformSection = (): JSX.Element => {
             src="/socialplatform-img.png"
             alt="Social Platform"
             className="w-full h-[300px] xl:h-[370px] object-cover rounded-3xl"
+            loading="lazy"
           />
         </div>
       </div>

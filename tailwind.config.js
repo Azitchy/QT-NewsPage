@@ -16,7 +16,7 @@ module.exports = {
         "primary-colour": "var(--primary-colour)",
         stroke: "var(--stroke)",
         "white-colour": "var(--white-colour)",
-        
+
         border: "var(--border)",
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -35,10 +35,10 @@ module.exports = {
       },
 
       fontFamily: {
-        "inter": ["Inter", "sans-serif"],
+        inter: ["Inter", "sans-serif"],
         "space-grotesk": ["Space Grotesk", "sans-serif"],
         "bebas-neue": ["Bebas Neue", "sans-serif"],
-        
+
         // Default sans font stack
         sans: [
           "Inter",
@@ -50,7 +50,7 @@ module.exports = {
           '"Segoe UI Symbol"',
           '"Noto Color Emoji"',
         ],
-        
+
         // Legacy CSS variable support
         "body-body-4-400": "var(--body-body-4-400-font-family)",
         "body-body1-300": "var(--body-body1-300-font-family)",
@@ -61,10 +61,11 @@ module.exports = {
         "body-body3-500": "var(--body-body3-500-font-family)",
         "body-body3-mob-400": "var(--body-body3-mob-400-font-family)",
         "body-labeltext-400": "var(--body-labeltext-400-font-family)",
-        "titles-h2-sectionheading-400": "var(--titles-h2-sectionheading-400-font-family)",
+        "titles-h2-sectionheading-400":
+          "var(--titles-h2-sectionheading-400-font-family)",
         "titles-h3-caption-400": "var(--titles-h3-caption-400-font-family)",
-        "titles-h5-large-text-400": "var(--titles-h5-large-text-400-font-family)",
-      
+        "titles-h5-large-text-400":
+          "var(--titles-h5-large-text-400-font-family)",
       },
       boxShadow: {
         "chat-shadow": "var(--chat-shadow)",
@@ -90,11 +91,14 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      backgroundImage: {
+        "green-gradient": "linear-gradient(136deg, #AADA5D 0%, #0DAEB9 98.28%)",
+      },
     },
-    container: { 
-      center: true, 
-      padding: "2rem", 
-      screens: { "2xl": "1400px" } 
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: { "2xl": "1400px" },
     },
   },
   plugins: [],

@@ -31,6 +31,7 @@ export const ATeamSection = (): JSX.Element => {
               className="w-[18px] h-[18px]"
               alt="Face icon"
               src="/face_icon.svg"
+              loading="lazy"
             />
             <span className="text-[#8E1BF4] font-inter text-[12px] font-normal leading-[17px] uppercase">
               {t("aTeamSection.avatarBadge")}
@@ -57,6 +58,7 @@ export const ATeamSection = (): JSX.Element => {
             src="/ateam-img.png"
             alt="A-Team"
             className="w-full h-[300px] xl:h-[370px] object-cover rounded-3xl"
+            loading="lazy"
           />
         </div>
       </div>

@@ -159,6 +159,7 @@ export function FundWalletCard({ className = "" }: { className?: string }) {
             className="w-[184px] h-[35px] object-contain"
             alt="MoonPay"
             src="/moonpay.svg"
+            loading="lazy"
           />
           <p className="text-[#1C1C1C] font-medium text-[18px] leading-[24px] 2xl:text-[20px] 2xl:leading-[27px]">
             {t("connectCardsSection.fundWalletCard.moonpayHeading")}

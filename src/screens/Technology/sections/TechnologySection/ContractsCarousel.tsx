@@ -12,7 +12,7 @@ import { StyledLink } from "@/components/StyledLink";
 import { useTranslation } from "react-i18next";
 
 export const ContractsCarousel = (): JSX.Element => {
-  const { t } = useTranslation('technology');
+  const { t } = useTranslation("technology");
   const [api, setApi] = useState<CarouselApi>();
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
@@ -21,50 +21,50 @@ export const ContractsCarousel = (): JSX.Element => {
     {
       id: 1,
       image: "/contract-1.svg",
-      title: t('contractsCarousel.contracts.luca.title'),
-      description: t('contractsCarousel.contracts.luca.description'),
+      title: t("contractsCarousel.contracts.luca.title"),
+      description: t("contractsCarousel.contracts.luca.description"),
     },
     {
       id: 2,
       image: "/contract-2.svg",
-      title: t('contractsCarousel.contracts.factory.title'),
-      description: t('contractsCarousel.contracts.factory.description'),
+      title: t("contractsCarousel.contracts.factory.title"),
+      description: t("contractsCarousel.contracts.factory.description"),
     },
     {
       id: 3,
       image: "/contract-3.svg",
-      title: t('contractsCarousel.contracts.stake.title'),
-      description: t('contractsCarousel.contracts.stake.description'),
+      title: t("contractsCarousel.contracts.stake.title"),
+      description: t("contractsCarousel.contracts.stake.description"),
     },
     {
       id: 4,
       image: "/contract-4.svg",
-      title: t('contractsCarousel.contracts.incentive.title'),
-      description: t('contractsCarousel.contracts.incentive.description'),
+      title: t("contractsCarousel.contracts.incentive.title"),
+      description: t("contractsCarousel.contracts.incentive.description"),
     },
     {
       id: 5,
       image: "/contract-5.svg",
-      title: t('contractsCarousel.contracts.investment.title'),
-      description: t('contractsCarousel.contracts.investment.description'),
+      title: t("contractsCarousel.contracts.investment.title"),
+      description: t("contractsCarousel.contracts.investment.description"),
     },
     {
       id: 6,
       image: "/contract-6.svg",
-      title: t('contractsCarousel.contracts.promotion.title'),
-      description: t('contractsCarousel.contracts.promotion.description'),
+      title: t("contractsCarousel.contracts.promotion.title"),
+      description: t("contractsCarousel.contracts.promotion.description"),
     },
     {
       id: 7,
       image: "/contract-7.svg",
-      title: t('contractsCarousel.contracts.crossChain.title'),
-      description: t('contractsCarousel.contracts.crossChain.description'),
+      title: t("contractsCarousel.contracts.crossChain.title"),
+      description: t("contractsCarousel.contracts.crossChain.description"),
     },
     {
       id: 8,
       image: "/contract-8.svg",
-      title: t('contractsCarousel.contracts.wormhole.title'),
-      description: t('contractsCarousel.contracts.wormhole.description'),
+      title: t("contractsCarousel.contracts.wormhole.title"),
+      description: t("contractsCarousel.contracts.wormhole.description"),
     },
   ];
 
@@ -106,7 +106,9 @@ export const ContractsCarousel = (): JSX.Element => {
             disabled={!canPrev}
           >
             <ArrowLeftIcon
-              className={`w-5 h-5 ${canPrev ? "text-primary" : "text-gray-400"}`}
+              className={`w-5 h-5 ${
+                canPrev ? "text-primary" : "text-gray-400"
+              }`}
             />
           </Button>
           <Button
@@ -118,7 +120,9 @@ export const ContractsCarousel = (): JSX.Element => {
             disabled={!canNext}
           >
             <ArrowRightIcon
-              className={`w-6 h-6 ${canNext ? "text-primary" : "text-gray-400"}`}
+              className={`w-6 h-6 ${
+                canNext ? "text-primary" : "text-gray-400"
+              }`}
             />
           </Button>
         </div>
@@ -149,6 +153,7 @@ export const ContractsCarousel = (): JSX.Element => {
                             className="w-[81px] h-[81px] flex-shrink-0"
                             alt={card.title}
                             src={card.image}
+                            loading="lazy"
                           />
                           <h3 className="text-primary font-[family:var(--typography-family-body,Inter)] text-lg font-medium leading-tight">
                             {card.title}
@@ -168,7 +173,11 @@ export const ContractsCarousel = (): JSX.Element => {
 
         {/* Learn More Button */}
         <div className="mt-[20px]">
-          <StyledLink text={t('contractsCarousel.learnMore')} link="https://github.com/ATM-Developer/atm-contract" newTab />
+          <StyledLink
+            text={t("contractsCarousel.learnMore")}
+            link="https://github.com/ATM-Developer/atm-contract"
+            newTab
+          />
         </div>
       </div>
     </div>

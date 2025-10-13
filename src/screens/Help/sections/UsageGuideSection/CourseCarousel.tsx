@@ -109,7 +109,9 @@ export const CourseCarousel = (): JSX.Element => {
             disabled={!canPrev}
           >
             <ArrowLeftIcon
-              className={`w-5 h-5 ${canPrev ? "text-[#2EA8AF]" : "text-gray-400"}`}
+              className={`w-5 h-5 ${
+                canPrev ? "text-[#2EA8AF]" : "text-gray-400"
+              }`}
             />
           </Button>
           <Button
@@ -121,7 +123,9 @@ export const CourseCarousel = (): JSX.Element => {
             disabled={!canNext}
           >
             <ArrowRightIcon
-              className={`w-6 h-6 ${canNext ? "text-[#2EA8AF]" : "text-gray-400"}`}
+              className={`w-6 h-6 ${
+                canNext ? "text-[#2EA8AF]" : "text-gray-400"
+              }`}
             />
           </Button>
         </div>
@@ -146,6 +150,7 @@ export const CourseCarousel = (): JSX.Element => {
                       className="w-full h-[122px] xl:h-[164px] rounded-[10px] object-cover"
                       alt="Tutorial thumbnail"
                       src={card.image}
+                      loading="lazy"
                     />
                     <div className="flex items-center justify-center w-full mt-[15px]">
                       <div className="text-foreground flex-1 font-sans text-[26px] font-normal leading-[34px]">
@@ -164,8 +169,12 @@ export const CourseCarousel = (): JSX.Element => {
                       >
                         {card.date}
                       </div>
-                      
-                      <StyledLink text={t("courseCarousel.viewPdf")} link={card.link} newTab />
+
+                      <StyledLink
+                        text={t("courseCarousel.viewPdf")}
+                        link={card.link}
+                        newTab
+                      />
                     </div>
                   </div>
                 </Card>

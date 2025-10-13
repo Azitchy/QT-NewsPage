@@ -27,6 +27,7 @@ export const AvatarContent = (): JSX.Element => {
                 className="w-[18px] h-[18px]"
                 alt="Face icon"
                 src="/face_icon.svg"
+                loading="lazy"
               />
               <span className="text-[#8E1BF4] font-inter text-[12px] font-normal leading-[17px] uppercase">
                 {t("aiAvatarContent.avatarBadge")}
@@ -54,6 +55,7 @@ export const AvatarContent = (): JSX.Element => {
               className="w-full h-full object-contain"
               alt="Lucy Logo"
               src="/lucy-logo.png"
+              loading="lazy"
             />
 
             {/* Hi Lucy GIF */}
@@ -61,6 +63,7 @@ export const AvatarContent = (): JSX.Element => {
               className="absolute top-1 -right-[80px] sm:top-4 sm:-right-[140px] object-contain"
               alt="Hi Lucy GIF"
               src="/hi-lucy.gif"
+              loading="lazy"
             />
           </div>
         </div>

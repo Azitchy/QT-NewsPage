@@ -11,7 +11,6 @@ import {
 } from "../../../../lib/webApi";
 import { useTranslation } from "react-i18next";
 
-
 const TableComponent = ({
   columns,
   data,
@@ -52,7 +51,9 @@ const TableComponent = ({
   };
 
   const getStakeMethod = (ledgeType: number) => {
-    return ledgeType === 1 ? t("stake.stakeMethod.lucaStake") : t("stake.stakeMethod.consensusContract");
+    return ledgeType === 1
+      ? t("stake.stakeMethod.lucaStake")
+      : t("stake.stakeMethod.consensusContract");
   };
 
   if (selectedRow) {
@@ -63,20 +64,27 @@ const TableComponent = ({
             src="/arrow-left-icon.svg"
             className="h-[20px] w-[20px] cursor-pointer"
             onClick={() => onRowSelect(null)}
+            loading="lazy"
           />
           <h2 className="text-[14px] leading-[19px] font-normal">
             {t("stake.details.title")}
           </h2>
         </div>
         <div className="grid md:grid-cols-[180px_1fr] gap-y-1 md:gap-y-4 text-[14px] leading-[19px] text-foreground">
-          <div className="text-card-foreground md:text-foreground"> {t("stake.details.hash")} </div>
+          <div className="text-card-foreground md:text-foreground">
+            {" "}
+            {t("stake.details.hash")}{" "}
+          </div>
           <div className="truncate max-w-[300px] md:max-w-full">
             {hideAddress(selectedRow.hash)}
           </div>
 
           <hr className="md:hidden my-1" />
 
-          <div className="text-card-foreground md:text-foreground"> {t("stake.details.network")} </div>
+          <div className="text-card-foreground md:text-foreground">
+            {" "}
+            {t("stake.details.network")}{" "}
+          </div>
           <div>{selectedRow.chainNetWork}</div>
 
           <hr className="md:hidden my-1" />
@@ -112,6 +120,7 @@ const TableComponent = ({
               src="/copy.svg"
               onClick={() => copyToClipboard(selectedRow.userAddress)}
               className="cursor-pointer"
+              loading="lazy"
             />
           </div>
           <hr className="md:hidden my-1" />
@@ -127,6 +136,7 @@ const TableComponent = ({
               src="/copy.svg"
               onClick={() => copyToClipboard(selectedRow.serverAddress)}
               className="cursor-pointer"
+              loading="lazy"
             />
           </div>
           <hr className="md:hidden my-1" />
@@ -172,6 +182,7 @@ const TableComponent = ({
                         src="/table-arrow.svg"
                         onClick={() => onRowSelect(row)}
                         className="cursor-pointer"
+                        loading="lazy"
                       />
                     </div>
                   </div>
@@ -214,13 +225,19 @@ const TableComponent = ({
               </span>
             </div>
             <div className="flex justify-between text-sm font-normal mt-2">
-              <span className="text-card-foreground"> {t("stake.initiator")}: </span>
+              <span className="text-card-foreground">
+                {" "}
+                {t("stake.initiator")}:{" "}
+              </span>
               <span className="truncate max-w-[250px]">
                 {hideAddress(row.userAddress)}
               </span>
             </div>
             <div className="flex justify-between text-sm font-normal mt-2">
-              <span className="text-card-foreground"> {t("stake.receiver")}:</span>
+              <span className="text-card-foreground">
+                {" "}
+                {t("stake.receiver")}:
+              </span>
               <span className="truncate max-w-[250px]">
                 {hideAddress(row.serverAddress)}
               </span>
@@ -235,13 +252,13 @@ const TableComponent = ({
 const StakeTransactionTable = () => {
   const { t } = useTranslation("explorer");
   const columns = [
-  t("stake.columns.hash"),
-  t("stake.columns.initiator"),
-  t("stake.columns.receiver"),
-  t("stake.columns.connectionQuantity"),
-  t("stake.columns.time"),
-  t("stake.columns.action"),
-];
+    t("stake.columns.hash"),
+    t("stake.columns.initiator"),
+    t("stake.columns.receiver"),
+    t("stake.columns.connectionQuantity"),
+    t("stake.columns.time"),
+    t("stake.columns.action"),
+  ];
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [data, setData] = useState<StakeTransactionItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -303,9 +320,7 @@ const StakeTransactionTable = () => {
           </div>
         </div>
         <div className="h-96 flex items-center justify-center dark:bg-card">
-          <div className="text-card-foreground">
-            {t("stake.loading")}
-          </div>
+          <div className="text-card-foreground">{t("stake.loading")}</div>
         </div>
       </div>
     );
@@ -370,6 +385,7 @@ const StakeTransactionTable = () => {
                 src="/arrow-left-icon.svg"
                 onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                 className="w-5 h-5 cursor-pointer"
+                loading="lazy"
               />
               {Array.from(
                 { length: Math.min(5, Math.ceil(total / 10)) },
@@ -399,6 +415,7 @@ const StakeTransactionTable = () => {
                   )
                 }
                 className="w-7 h-7 bg-[#e9f6f7] rounded-full cursor-pointer p-1"
+                loading="lazy"
               />
             </PaginationContent>
           </Pagination>

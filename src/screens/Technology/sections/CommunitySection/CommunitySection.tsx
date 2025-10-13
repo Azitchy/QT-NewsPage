@@ -6,28 +6,32 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export const CommunitySection = (): JSX.Element => {
-  const { t } = useTranslation('technology');
+  const { t } = useTranslation("technology");
   const [expandedIndex, setExpandedIndex] = useState<number>(0);
 
   const consensusItems = [
     {
-      title: t('communitySection.consensusItems.lockedToken.title'),
-      description: t('communitySection.consensusItems.lockedToken.description'),
+      title: t("communitySection.consensusItems.lockedToken.title"),
+      description: t("communitySection.consensusItems.lockedToken.description"),
       icon: "/lock-svgrepo-com-1.png",
     },
     {
-      title: t('communitySection.consensusItems.investmentAmount.title'),
-      description: t('communitySection.consensusItems.investmentAmount.description'),
+      title: t("communitySection.consensusItems.investmentAmount.title"),
+      description: t(
+        "communitySection.consensusItems.investmentAmount.description"
+      ),
       icon: "/investment-amount-icon-1.png",
     },
     {
-      title: t('communitySection.consensusItems.lockUpTime.title'),
-      description: t('communitySection.consensusItems.lockUpTime.description'),
+      title: t("communitySection.consensusItems.lockUpTime.title"),
+      description: t("communitySection.consensusItems.lockUpTime.description"),
       icon: "/lock-up-time-1.png",
     },
     {
-      title: t('communitySection.consensusItems.contractCancellation.title'),
-      description: t('communitySection.consensusItems.contractCancellation.description'),
+      title: t("communitySection.consensusItems.contractCancellation.title"),
+      description: t(
+        "communitySection.consensusItems.contractCancellation.description"
+      ),
       icon: "/contract-cancellation-1.png",
     },
   ];
@@ -42,18 +46,18 @@ export const CommunitySection = (): JSX.Element => {
 
   return (
     <section className="px-[16px] md:px-[70px] large:px-[120px] pt-[60px] xl:pt-[100px]">
-      <HeadingWithDots text={t('communitySection.heading')} />
-      
+      <HeadingWithDots text={t("communitySection.heading")} />
+
       <div className="pt-[20px] px-0 tablet:px-[77px] xl:px-[134px] large:px-[203px]">
         <div className="flex flex-col justify-center mx-auto gap-[40px] xl:gap-[80px]">
           {/* First section */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
             <div className="flex flex-col max-w-[784px] gap-5 flex-1">
               <h2 className="text-[20px] leading-[27px] font-normal xl:text-[26px] xl:leading-[34px]">
-                {t('communitySection.whatIsConsensus.title')}
+                {t("communitySection.whatIsConsensus.title")}
               </h2>
               <p className="text-[16px] leading-[22px] font-light xl:text-[18px] xl:leading-[24px] xl:font-normal">
-                {t('communitySection.whatIsConsensus.description')}
+                {t("communitySection.whatIsConsensus.description")}
               </p>
             </div>
 
@@ -62,6 +66,7 @@ export const CommunitySection = (): JSX.Element => {
                 src="../consensus-img.png"
                 alt="Consensus"
                 className="object-contain"
+                loading="lazy"
               />
             </div>
           </div>
@@ -70,10 +75,10 @@ export const CommunitySection = (): JSX.Element => {
           <div className="max-w-[874px] mx-auto">
             <div className="flex flex-col gap-5 mb-8">
               <h2 className="text-[20px] leading-[27px] font-normal xl:text-[26px] xl:leading-[34px]">
-                {t('communitySection.howToCreate.title')}
+                {t("communitySection.howToCreate.title")}
               </h2>
               <p className="text-[16px] leading-[22px] font-light xl:text-[18px] xl:leading-[24px] xl:font-normal">
-                {t('communitySection.howToCreate.description')}
+                {t("communitySection.howToCreate.description")}
               </p>
             </div>
 
@@ -92,7 +97,7 @@ export const CommunitySection = (): JSX.Element => {
                           <h3 className="text-[20px] leading-[27px] font-normal xl:text-[26px] xl:leading-[34px] text-left">
                             {item.title}
                           </h3>
-                          
+
                           <div
                             className={`overflow-hidden transition-all duration-500 ease-in-out w-full ${
                               expandedIndex === index
@@ -122,6 +127,7 @@ export const CommunitySection = (): JSX.Element => {
                                 className="w-[70px] h-[70px] object-contain transition-transform duration-300 hover:scale-105"
                                 alt="Lock icon"
                                 src={item.icon}
+                                loading="lazy"
                               />
                             </div>
                           )}
@@ -136,7 +142,10 @@ export const CommunitySection = (): JSX.Element => {
               </CardContent>
             </Card>
 
-            <StyledLink text={t('communitySection.viewConnections')} link="/webapp" />
+            <StyledLink
+              text={t("communitySection.viewConnections")}
+              link="/webapp"
+            />
           </div>
 
           {/* Consensus connection income */}
@@ -144,16 +153,19 @@ export const CommunitySection = (): JSX.Element => {
             {/* Text first on mobile, image second */}
             <div className="flex flex-col max-w-[783px] gap-5 order-1 md:order-2 flex-1">
               <h2 className="text-[20px] leading-[27px] font-normal xl:text-[26px] xl:leading-[34px]">
-                {t('communitySection.consensusIncome.title')}
+                {t("communitySection.consensusIncome.title")}
               </h2>
               <p className="text-[16px] leading-[22px] font-light xl:text-[18px] xl:leading-[24px] xl:font-normal">
-                {t('communitySection.consensusIncome.description1')}
+                {t("communitySection.consensusIncome.description1")}
               </p>
               <p className="text-[16px] leading-[22px] font-light xl:text-[18px] xl:leading-[24px] xl:font-normal">
-                {t('communitySection.consensusIncome.description2')}
+                {t("communitySection.consensusIncome.description2")}
               </p>
-              
-              <StyledLink text={t('communitySection.consensusIncome.viewIncome')} link="/webapp" />
+
+              <StyledLink
+                text={t("communitySection.consensusIncome.viewIncome")}
+                link="/webapp"
+              />
             </div>
 
             {/* Image second on mobile, first on xl */}
@@ -162,6 +174,7 @@ export const CommunitySection = (): JSX.Element => {
                 src="../connection-img.png"
                 alt="Connection"
                 className="object-contain"
+                loading="lazy"
               />
             </div>
           </div>

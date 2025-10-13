@@ -9,38 +9,39 @@ import {
 } from "@/components/ui/carousel";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { HeadingWithDots } from "@/components/HeadingWithDots";
 
 export const RewardsSection = () => {
-  const { t } = useTranslation('games');
+  const { t } = useTranslation("games");
   const [api, setApi] = useState<CarouselApi>();
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
 
   const rewardsData = [
     {
-      title: t('rewardsSection.rewards.connectGames.title'),
-      description: t('rewardsSection.rewards.connectGames.description'),
+      title: t("rewardsSection.rewards.connectGames.title"),
+      description: t("rewardsSection.rewards.connectGames.description"),
       image: "/connect-to-games.png",
       gradientClass:
         "bg-[linear-gradient(0deg,rgba(30,181,191,1)_5.65%,rgba(129,214,219,1)_31.58%,rgba(226,246,247,1)_59.56%,rgba(232,248,249,1)_77.74%)]",
     },
     {
-      title: t('rewardsSection.rewards.playToWin.title'),
-      description: t('rewardsSection.rewards.playToWin.description'),
+      title: t("rewardsSection.rewards.playToWin.title"),
+      description: t("rewardsSection.rewards.playToWin.description"),
       image: "/play-to-win.png",
       gradientClass:
         "bg-[linear-gradient(0deg,rgba(255,191,25,1)_5.65%,rgba(255,219,127,1)_31.58%,rgba(255,247,224,1)_59.56%,rgba(255,247,224,1)_77.74%)]",
     },
     {
-      title: t('rewardsSection.rewards.investGames.title'),
-      description: t('rewardsSection.rewards.investGames.description'),
+      title: t("rewardsSection.rewards.investGames.title"),
+      description: t("rewardsSection.rewards.investGames.description"),
       image: "/invest-in-games.png",
       gradientClass:
         "bg-[linear-gradient(0deg,rgba(13,110,255,1)_5.65%,rgba(136,191,255,1)_31.58%,rgba(213,232,255,1)_59.56%,rgba(235,244,255,1)_77.74%)]",
     },
     {
-      title: t('rewardsSection.rewards.dailyStarPool.title'),
-      description: t('rewardsSection.rewards.dailyStarPool.description'),
+      title: t("rewardsSection.rewards.dailyStarPool.title"),
+      description: t("rewardsSection.rewards.dailyStarPool.description"),
       image: "/daily-star-pool.png",
       gradientClass:
         "bg-[linear-gradient(0deg,rgba(255,191,25,1)_5.65%,rgba(255,219,127,1)_31.58%,rgba(255,247,224,1)_59.56%,rgba(255,247,224,1)_77.74%)]",
@@ -66,19 +67,12 @@ export const RewardsSection = () => {
     <div className="relative w-full px-4 lg:px-0">
       {/* Section Title */}
       <div className="relative h-[99px] ml-0 lg:ml-[71px]">
-        <div className="left-10 absolute w-auto lg:w-[148px] h-11 top-[27px] lg:left-[51px] font-titles-h2-sectionheading-400 text-primary text-[length:var(--titles-h2-sectionheading-400-font-size)] leading-[var(--titles-h2-sectionheading-400-line-height)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)]">
-          {t('rewardsSection.title')}
-        </div>
-        <img
-          className="w-[102px] h-[99px] absolute top-0 left-0"
-          alt="Dots"
-          src="/dots-3.svg"
-        />
+        <HeadingWithDots text={t("rewardsSection.title")} />
       </div>
 
       {/* Subtitle */}
       <div className="text-center text-[#4F5555] dark:text-card-foreground text-[16px] leading-[22px] lg:text-[18px] lg:leading-[24px] mt-10 md:mt-0">
-        {t('rewardsSection.subtitle')}
+        {t("rewardsSection.subtitle")}
       </div>
 
       {/* Navigation */}
@@ -145,7 +139,7 @@ export const RewardsSection = () => {
                       />
 
                       {/* Title */}
-                      <div className="relative self-stretch font-titles-h3-caption-400 text-foreground dark:text-foreground text-[26px] xl:text-[30px] leading-[32px] lg:leading-[40px] min-h-[80px] flex">
+                      <div className="relative self-stretch font-space-grotesk text-foreground dark:text-foreground text-[26px] xl:text-[30px] leading-[32px] lg:leading-[40px] min-h-[80px] flex">
                         {reward.title}
                       </div>
 
@@ -165,6 +159,7 @@ export const RewardsSection = () => {
                           className="w-full h-full object-contain"
                           alt={reward.title}
                           src={reward.image}
+                          loading="lazy"
                         />
                       </div>
                     </CardContent>
