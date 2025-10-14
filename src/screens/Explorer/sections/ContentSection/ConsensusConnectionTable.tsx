@@ -28,7 +28,7 @@ const TableComponent = ({
 }) => {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
-      alert(t("common.copied"));
+      alert(t('common.copied'));
     });
   };
 
@@ -52,11 +52,11 @@ const TableComponent = ({
 
   const getStatusText = (status: number) => {
     const statusMap: { [key: number]: string } = {
-      1: t("consensus.status.pending"),
-      2: t("consensus.status.connected"),
-      3: t("consensus.status.waiting"),
-      4: t("consensus.status.cancelled"),
-      5: t("consensus.status.disconnected"),
+      1: t('consensus.status.pending'),
+      2: t('consensus.status.connected'),
+      3: t('consensus.status.waiting'),
+      4: t('consensus.status.cancelled'),
+      5: t('consensus.status.disconnected'),
     };
     return statusMap[status] || "Unknown";
   };
@@ -71,42 +71,36 @@ const TableComponent = ({
             onClick={() => onRowSelect(null)}
           />
           <h2 className="text-[14px] leading-[19px] font-normal">
-            {t("consensus.title")}
+            {t('consensus.title')}
           </h2>
         </div>
         <div className="grid md:grid-cols-[180px_1fr] gap-y-1 md:gap-y-4 text-[14px] leading-[19px] text-foreground">
-          <div className="text-card-foreground md:text-foreground">
-            {t("consensus.details.hash")}
-          </div>
+          <div className="text-card-foreground md:text-foreground">{t('consensus.details.hash')}</div>
           <div className="truncate max-w-[300px] md:max-w-full">
             {hideAddress(selectedRow.createHash)}
           </div>
 
           <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-          <div className="text-card-foreground md:text-foreground">
-            {t("consensus.details.network")}
-          </div>
+          <div className="text-card-foreground md:text-foreground">{t('consensus.details.network')}</div>
           <div>{selectedRow.chainNetWork}</div>
 
           <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-          <div className="text-card-foreground md:text-foreground">
-            {t("consensus.details.status")}
-          </div>
+          <div className="text-card-foreground md:text-foreground">{t('consensus.details.status')}</div>
           <div>{getStatusText(selectedRow.linkStatus)}</div>
 
           <hr className="md:hidden my-2 dark:border-[#454545]" />
 
           <div className="text-card-foreground] md:text-foreground">
-            {t("consensus.details.creationTime")}
+            {t('consensus.details.creationTime')}
           </div>
           <div>{formatTime(selectedRow.createTime)}</div>
 
           <hr className="md:hidden my-2 dark:border-[#454545]" />
 
           <div className="text-card-foreground md:text-foreground">
-            {t("consensus.details.connectionQuantity")}
+            {t('consensus.details.connectionQuantity')}
           </div>
           <div>
             {selectedRow.amount} {selectedRow.linkCurrency}
@@ -114,7 +108,7 @@ const TableComponent = ({
           <hr className="md:hidden my-2 dark:border-[#454545]" />
 
           <div className="text-card-foreground md:text-foreground">
-            {t("consensus.details.initiator")}
+            {t('consensus.details.initiator')}
           </div>
           <div className="flex gap-2 items-center">
             <span className="truncate  max-w-[300px] md:max-w-full">
@@ -129,7 +123,7 @@ const TableComponent = ({
           <hr className="md:hidden my-2 dark:border-[#454545]" />
 
           <div className="text-card-foreground md:text-foreground">
-            {t("consensus.details.receiver")}
+            {t('consensus.details.receiver')}
           </div>
           <div className="flex gap-2 items-center">
             <span className="truncate  max-w-[300px] md:max-w-full">
@@ -144,7 +138,7 @@ const TableComponent = ({
           <hr className="md:hidden my-2 dark:border-[#454545]" />
 
           <div className="text-card-foreground md:text-foreground">
-            {t("consensus.details.connectionContract")}
+            {t('consensus.details.connectionContract')}
           </div>
           <div className="flex gap-2 items-center">
             <span className="truncate  max-w-[300px] md:max-w-full">
@@ -159,11 +153,9 @@ const TableComponent = ({
           <hr className="md:hidden my-2 dark:border-[#454545]" />
 
           <div className="text-card-foreground md:text-foreground">
-            {t("consensus.details.lockTime")}
+            {t('consensus.details.lockTime')}
           </div>
-          <div>
-            {selectedRow.lockedDay} {t("consensus.details.days")}
-          </div>
+          <div>{selectedRow.lockedDay} {t('consensus.details.days')}</div>
         </div>
       </div>
     );
@@ -220,7 +212,7 @@ const TableComponent = ({
                       className="text-primary hover:underline"
                       onClick={() => onRowSelect(row)}
                     >
-                      {t("consensus.more")}
+                      {t('consensus.more')}
                     </button>
                   </td>
                 )}
@@ -242,17 +234,13 @@ const TableComponent = ({
               </span>
             </div>
             <div className="flex justify-between text-sm font-normal mt-2">
-              <span className="text-card-foreground">
-                {t("consensus.columns.initiator")}:
-              </span>
+              <span className="text-card-foreground">{t('consensus.columns.initiator')}:</span>
               <span className="truncate max-w-[250px]">
                 {hideAddress(row.createAddress)}
               </span>
             </div>
             <div className="flex justify-between text-sm font-normal mt-2">
-              <span className="text-card-foreground">
-                {t("consensus.columns.receiver")}:
-              </span>
+              <span className="text-card-foreground">{t('consensus.columns.receiver')}:</span>
               <span className="truncate max-w-[250px]">
                 {hideAddress(row.targetAddress)}
               </span>
@@ -265,7 +253,7 @@ const TableComponent = ({
 };
 
 const ConsensusConnectionTable = () => {
-  const { t } = useTranslation("explorer");
+  const { t } = useTranslation('explorer');
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [data, setData] = useState<ConsensusConnectionItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -274,17 +262,17 @@ const ConsensusConnectionTable = () => {
   const [total, setTotal] = useState(0);
   const [filters, setFilters] = useState({
     token: "LUCA",
-    network: t("consensus.allNetwork"),
+    network: t('consensus.allNetwork'),
     currency: "LUCA",
   });
 
   const columns = [
-    t("consensus.columns.hash"),
-    t("consensus.columns.initiator"),
-    t("consensus.columns.receiver"),
-    t("consensus.columns.connectionQuantity"),
-    t("consensus.columns.time"),
-    t("consensus.columns.action"),
+    t('consensus.columns.hash'),
+    t('consensus.columns.initiator'),
+    t('consensus.columns.receiver'),
+    t('consensus.columns.connectionQuantity'),
+    t('consensus.columns.time'),
+    t('consensus.columns.action'),
   ];
 
   const fetchData = async (pageNo = 1) => {
@@ -294,10 +282,7 @@ const ConsensusConnectionTable = () => {
         pageNo,
         pageSize: 10,
         linkCurrency: filters.currency,
-        chainId:
-          filters.network === t("consensus.allNetwork")
-            ? null
-            : filters.network,
+        chainId: filters.network === t('consensus.allNetwork') ? null : filters.network,
         consensusType: "1",
       });
 
@@ -311,7 +296,7 @@ const ConsensusConnectionTable = () => {
       setError(null);
     } catch (err) {
       console.error("Error fetching consensus connections:", err);
-      setError(t("consensus.error"));
+      setError(t('consensus.error'));
       setData([]);
     } finally {
       setLoading(false);
@@ -338,7 +323,9 @@ const ConsensusConnectionTable = () => {
     return (
       <div className="dark:bg-card rounded-[10px] p-4 md:p-5 w-full">
         <div className="h-96 flex items-center justify-center">
-          <div className="text-card-foreground">{t("consensus.loading")}</div>
+          <div className="text-card-foreground">
+            {t('consensus.loading')}
+          </div>
         </div>
       </div>
     );
@@ -359,12 +346,12 @@ const ConsensusConnectionTable = () => {
       {!selectedRow && (
         <div className="flex flex-col md:flex-row md:items-center dark:bg-card rounded-t-[10px] justify-between pb-5 p-2">
           <div className="px-0 py-4 md:px-4 md:py-0 text-[14px] leading-[19px] font-normal text-foreground">
-            {t("consensus.title")}
+            {t('consensus.title')}
           </div>
           <div className="flex gap-2">
             {Object.entries({
-              [t("consensus.token")]: filters.token,
-              [t("consensus.allNetwork")]: filters.network,
+              [t('consensus.token')]: filters.token,
+              [t('consensus.allNetwork')]: filters.network,
               [filters.currency]: filters.currency,
             }).map(([label, value]) => (
               <div key={label} className="relative inline-block">
@@ -379,14 +366,14 @@ const ConsensusConnectionTable = () => {
                   }
                 >
                   <option value={value}>{value}</option>
-                  {label === t("consensus.token") && (
+                  {label === t('consensus.token') && (
                     <>
                       <option value="LUCA">LUCA</option>
                       <option value="BTCB">BTCB</option>
                       <option value="ETH">ETH</option>
                     </>
                   )}
-                  {label === t("consensus.allNetwork") && (
+                  {label === t('consensus.allNetwork') && (
                     <>
                       <option value="BSC">BSC</option>
                       <option value="ETH">Ethereum</option>
@@ -421,7 +408,6 @@ const ConsensusConnectionTable = () => {
                 src="/arrow-left-icon.svg"
                 onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                 className="w-5 h-5 cursor-pointer"
-                loading="lazy"
               />
               {Array.from(
                 { length: Math.min(5, Math.ceil(total / 10)) },
@@ -451,7 +437,6 @@ const ConsensusConnectionTable = () => {
                   )
                 }
                 className="w-7 h-7 bg-[#e9f6f7] rounded-full cursor-pointer p-1"
-                loading="lazy"
               />
             </PaginationContent>
           </Pagination>

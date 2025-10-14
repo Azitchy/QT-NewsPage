@@ -24,9 +24,7 @@ const TableComponent = ({
   const { t } = useTranslation("explorer");
 
   const hideAddress = (address: string) => {
-    return address
-      ? `${address.substring(0, 4)}...${address.substring(address.length - 4)}`
-      : "";
+    return address ? `${address.substring(0, 4)}...${address.substring(address.length - 4)}` : '';
   };
 
   if (selectedRow) {
@@ -43,12 +41,8 @@ const TableComponent = ({
           </h2>
         </div>
         <div className="grid md:grid-cols-[180px_1fr] gap-y-1 md:gap-y-4 text-[14px] leading-[19px] text-foreground">
-          <div className="text-card-foreground md:text-foreground">
-            {t("prNode.details.prNode")}
-          </div>
-          <div className="truncate max-w-full">
-            {hideAddress(selectedRow.serverAddress)}
-          </div>
+          <div className="text-card-foreground md:text-foreground">{t("prNode.details.prNode")}</div>
+          <div className="truncate max-w-full">{hideAddress(selectedRow.serverAddress)}</div>
 
           <hr className="md:hidden my-2 dark:border-[#454545]" />
 
@@ -144,9 +138,7 @@ const TableComponent = ({
               <span>IP {row.serverIp}</span>
             </div>
             <div className="flex justify-between gap-10 text-sm font-normal mt-2">
-              <span className="truncate max-w-[100px]">
-                {hideAddress(row.serverAddress)}
-              </span>
+              <span className="truncate max-w-[100px]">{hideAddress(row.serverAddress)}</span>
               <span
                 onClick={() => onRowSelect(row)}
                 className="truncate max-w-full text-primary cursor-pointer"
@@ -183,7 +175,7 @@ const PRNodeTable = () => {
     try {
       setLoading(true);
       const response = await fetchPRNodes(pageNo, 10);
-
+      
       if (response.data && Array.isArray(response.data)) {
         setData(response.data);
         setTotal(response.total || response.data.length);
@@ -255,37 +247,26 @@ const PRNodeTable = () => {
                 src="/arrow-left-icon.svg"
                 onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                 className="w-5 h-5 cursor-pointer"
-                loading="lazy"
               />
-              {Array.from(
-                { length: Math.min(5, Math.ceil(total / 10)) },
-                (_, i) => {
-                  const page = currentPage <= 3 ? i + 1 : currentPage - 2 + i;
-                  return page <= Math.ceil(total / 10) ? (
-                    <PaginationItem key={page}>
-                      <div
-                        onClick={() => handlePageChange(page)}
-                        className={`flex w-[30px] items-center justify-center cursor-pointer ${
-                          page === currentPage
-                            ? "text-primary"
-                            : "text-foreground"
-                        }`}
-                      >
-                        {page}
-                      </div>
-                    </PaginationItem>
-                  ) : null;
-                }
-              )}
+              {Array.from({ length: Math.min(5, Math.ceil(total / 10)) }, (_, i) => {
+                const page = currentPage <= 3 ? i + 1 : currentPage - 2 + i;
+                return page <= Math.ceil(total / 10) ? (
+                  <PaginationItem key={page}>
+                    <div
+                      onClick={() => handlePageChange(page)}
+                      className={`flex w-[30px] items-center justify-center cursor-pointer ${
+                        page === currentPage ? "text-primary" : "text-foreground"
+                      }`}
+                    >
+                      {page}
+                    </div>
+                  </PaginationItem>
+                ) : null;
+              })}
               <img
                 src="/arrow-right-icon-3.svg"
-                onClick={() =>
-                  handlePageChange(
-                    Math.min(Math.ceil(total / 10), currentPage + 1)
-                  )
-                }
+                onClick={() => handlePageChange(Math.min(Math.ceil(total / 10), currentPage + 1))}
                 className="w-7 h-7 bg-[#e9f6f7] rounded-full cursor-pointer p-1"
-                loading="lazy"
               />
             </PaginationContent>
           </Pagination>

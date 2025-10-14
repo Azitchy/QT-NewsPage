@@ -8,53 +8,52 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
-import { HeadingWithDots } from "@/components/HeadingWithDots";
 
 export const FeaturesSection = () => {
-  const { t } = useTranslation("home");
+  const { t } = useTranslation('home');
   const [api, setApi] = useState<CarouselApi>();
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
 
   const featuresData = [
     {
-      title: t("featuresSection.features.digitalSelf.title"),
-      description: t("featuresSection.features.digitalSelf.description"),
+      title: t('featuresSection.features.digitalSelf.title'),
+      description: t('featuresSection.features.digitalSelf.description'),
       image: "/feature-create-digital-self.png",
       gradientClass:
         "bg-[linear-gradient(0deg,rgba(126,80,255,1)_11%,rgba(194,172,255,1)_37%,rgba(235,227,255,1)_66%,rgba(241,236,255,1)_84%)]",
     },
     {
-      title: t("featuresSection.features.prValue.title"),
-      description: t("featuresSection.features.prValue.description"),
+      title: t('featuresSection.features.prValue.title'),
+      description: t('featuresSection.features.prValue.description'),
       image: "/feature-higher-pr-value.png",
       gradientClass:
         "bg-[linear-gradient(0deg,rgba(255,191,25,1)_11%,rgba(255,219,127,1)_37%,rgba(255,247,224,1)_66%,rgba(255,247,224,1)_84%)]",
     },
     {
-      title: t("featuresSection.features.connectFriend.title"),
-      description: t("featuresSection.features.connectFriend.description"),
+      title: t('featuresSection.features.connectFriend.title'),
+      description: t('featuresSection.features.connectFriend.description'),
       image: "/feature-connect-with-friend.png",
       gradientClass:
         "bg-[linear-gradient(0deg,rgba(30,181,191,1)_11%,rgba(129,214,219,1)_37%,rgba(226,246,247,1)_66%,rgba(232,248,249,1)_84%)]",
     },
     {
-      title: t("featuresSection.features.aiSupport.title"),
-      description: t("featuresSection.features.aiSupport.description"),
+      title: t('featuresSection.features.aiSupport.title'),
+      description: t('featuresSection.features.aiSupport.description'),
       image: "/feature-ai-powered-support.png",
       gradientClass:
         "bg-[linear-gradient(0deg,rgba(126,80,255,1)_11%,rgba(194,172,255,1)_37%,rgba(235,227,255,1)_66%,rgba(241,236,255,1)_84%)]",
     },
     {
-      title: t("featuresSection.features.messaging.title"),
-      description: t("featuresSection.features.messaging.description"),
+      title: t('featuresSection.features.messaging.title'),
+      description: t('featuresSection.features.messaging.description'),
       image: "/feature-decentralised-messaging.png",
       gradientClass:
         "bg-[linear-gradient(0deg,rgba(30,181,191,1)_11%,rgba(129,214,219,1)_37%,rgba(226,246,247,1)_66%,rgba(232,248,249,1)_84%)]",
     },
     {
-      title: t("featuresSection.features.socialPlatform.title"),
-      description: t("featuresSection.features.socialPlatform.description"),
+      title: t('featuresSection.features.socialPlatform.title'),
+      description: t('featuresSection.features.socialPlatform.description'),
       image: "/feature-engage-social-platform.png",
       gradientClass:
         "bg-[linear-gradient(0deg,rgba(30,181,191,1)_11%,rgba(129,214,219,1)_37%,rgba(226,246,247,1)_66%,rgba(232,248,249,1)_84%)]",
@@ -80,7 +79,14 @@ export const FeaturesSection = () => {
     <div className="relative w-full px-4 lg:px-0">
       {/* Title Section */}
       <div className="relative h-[99px] ml-0 lg:ml-[71px]">
-        <HeadingWithDots text={t("featuresSection.title")} />
+        <div className="left-10 absolute w-auto lg:w-[148px] h-11 top-[27px] lg:left-[51px] font-titles-h2-sectionheading-400 font-[number:var(--titles-h2-sectionheading-400-font-weight)] text-primary-colour text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] [font-style:var(--titles-h2-sectionheading-400-font-style)]">
+          {t('featuresSection.title')}
+        </div>
+        <img
+          className="w-[102px] h-[99px] absolute top-0 left-0"
+          alt="Dots"
+          src="/dots-3.svg"
+        />
       </div>
 
       {/* Navigation */}
@@ -146,7 +152,7 @@ export const FeaturesSection = () => {
                     />
 
                     {/* Title */}
-                    <div className="relative self-stretch font-space-grotesk text-foreground text-[26px] xl:text-[30px] leading-[32px] lg:leading-[40px] min-h-[80px] flex">
+                    <div className="relative self-stretch font-titles-h3-caption-400 text-foreground text-[26px] xl:text-[30px] leading-[32px] lg:leading-[40px] min-h-[80px] flex">
                       {feature.title}
                     </div>
 
@@ -166,7 +172,6 @@ export const FeaturesSection = () => {
                         className="w-full h-full object-contain"
                         alt={feature.title}
                         src={feature.image}
-                        loading="lazy"
                       />
                     </div>
                   </div>

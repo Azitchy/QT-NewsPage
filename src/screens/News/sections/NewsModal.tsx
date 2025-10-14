@@ -20,7 +20,7 @@ export const NewsModal = ({
   setNewsItem,
 }: NewsModalProps): JSX.Element | null => {
   const { t } = useTranslation("news");
-
+  
   if (!isOpen || !newsItem) return null;
 
   const formatDate = (dateString: string) => {
@@ -104,10 +104,7 @@ export const NewsModal = ({
 
             {/* Meta info */}
             <div className="flex items-center gap-4 mb-6 text-sm text-foreground">
-              <span className="font-medium uppercase">
-                {" "}
-                {t("labels.news")}{" "}
-              </span>
+              <span className="font-medium uppercase"> {t("labels.news")} </span>
               <span>{formatDate(newsItem.createTime)}</span>
               <button
                 className="ml-auto p-2 hover:bg-gray-100 rounded-full"
@@ -137,7 +134,6 @@ export const NewsModal = ({
                   src={newsItem.coverImg || "/placeholder.svg"}
                   alt={newsItem.title}
                   className="w-full h-64 object-cover"
-                  loading="lazy"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = "/img.png";
                   }}
@@ -158,10 +154,7 @@ export const NewsModal = ({
             <div className="space-y-6">
               {/* Notice Section */}
               <div>
-                <h3 className="text-xl font-bold text-primary mb-4 uppercase">
-                  {" "}
-                  {t("labels.notice")}{" "}
-                </h3>
+                <h3 className="text-xl font-bold text-primary mb-4 uppercase"> {t("labels.notice")} </h3>
                 <div className="space-y-4">
                   {notices.map((item) => (
                     <div key={item.id} className="p-2">
@@ -198,7 +191,6 @@ export const NewsModal = ({
                         src={hotNews.coverImg || "/placeholder.svg"}
                         alt={hotNews.title}
                         className="w-full h-20 object-cover mb-2"
-                        loading="lazy"
                       />
                     )}
 

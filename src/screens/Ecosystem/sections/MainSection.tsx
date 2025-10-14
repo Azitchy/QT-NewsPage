@@ -3,34 +3,33 @@ import { useTranslation } from "react-i18next";
 import { Button } from "../../../components/ui/button";
 import { VideoPlayer } from "./VideoPlayer";
 import { motion } from "framer-motion";
-import { HeadingWithDots } from "@/components/HeadingWithDots";
 
 export const MainSection = () => {
-  const { t } = useTranslation("ecosystem");
+  const { t } = useTranslation('ecosystem');
 
   const sections = [
     {
       id: "agf",
-      title: t("mainSection.agf.title"),
+      title: t('mainSection.agf.title'),
       badge: {
         icon: "/game-launcher.svg",
-        text: t("mainSection.agf.badge"),
+        text: t('mainSection.agf.badge'),
         bgColor: "bg-[#effffa]",
         textColor: "text-[#01cc90]",
         borderColor: "border-[#01cc90]",
       },
       paragraphs: [
-        t("mainSection.agf.paragraph1"),
-        t("mainSection.agf.paragraph2"),
+        t('mainSection.agf.paragraph1'),
+        t('mainSection.agf.paragraph2'),
       ],
       buttons: [
         {
-          text: t("mainSection.agf.buttons.submit"),
+          text: t('mainSection.agf.buttons.submit'),
           primary: true,
           href: "/webapp",
         },
         {
-          text: t("mainSection.agf.buttons.learn"),
+          text: t('mainSection.agf.buttons.learn'),
           primary: false,
           href: "/games",
         },
@@ -39,38 +38,38 @@ export const MainSection = () => {
     },
     {
       id: "ecology",
-      title: t("mainSection.ecology.title"),
+      title: t('mainSection.ecology.title'),
       badge: {
         icon: "/plant.svg",
-        text: t("mainSection.ecology.badge"),
+        text: t('mainSection.ecology.badge'),
         bgColor: "bg-[#f0fcf7]",
         textColor: "text-[#119b56]",
         borderColor: "border-[#119b56]",
       },
-      content: t("mainSection.ecology.content"),
+      content: t('mainSection.ecology.content'),
       walletInfo: {
-        label: t("mainSection.ecology.walletLabel"),
+        label: t('mainSection.ecology.walletLabel'),
         address: "0xb6c83fA7Bb9B5C23e96130CDEFD70977460031B9",
       },
       mediaUrl: "/ecosystem.png",
     },
     {
       id: "luca-travel",
-      title: t("mainSection.travel.title"),
+      title: t('mainSection.travel.title'),
       badge: {
         icon: "/travel-holidays.svg",
-        text: t("mainSection.travel.badge"),
+        text: t('mainSection.travel.badge'),
         bgColor: "bg-[#f1fdff]",
         textColor: "text-[#6bb0d0]",
         borderColor: "border-[#6bb0d0]",
       },
       paragraphs: [
-        t("mainSection.travel.paragraph1"),
-        t("mainSection.travel.paragraph2"),
+        t('mainSection.travel.paragraph1'),
+        t('mainSection.travel.paragraph2'),
       ],
       buttons: [
         {
-          text: t("mainSection.travel.buttons.learn"),
+          text: t('mainSection.travel.buttons.learn'),
           primary: false,
           href: "/ecosystem/travel",
         },
@@ -102,7 +101,14 @@ export const MainSection = () => {
         <div key={section.id} className="w-full">
           <div className="flex items-start mb-12">
             <div className="relative ml-0 lg:ml-[30px]">
-              <HeadingWithDots text={section.title} />
+              <div className="font-titles-h2-sectionheading-400 text-primary-colour text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] ml-12 mt-7 uppercase">
+                {section.title}
+              </div>
+              <img
+                className="absolute w-[99px] h-[99px] top-0 left-0"
+                alt="Dots"
+                src="/dots.svg"
+              />
             </div>
           </div>
 
@@ -130,7 +136,7 @@ export const MainSection = () => {
                       alt={section.badge.text}
                       src={section.badge.icon}
                     />
-                    <span className="font-normal text-[12px] tracking-[0px] font-inter leading-[17px]">
+                    <span className="font-normal text-[12px] tracking-[var(--body-labeltext-400-letter-spacing)] [font-family:'Inter',Helvetica] leading-[var(--body-labeltext-400-line-height)]">
                       {section.badge.text}
                     </span>
                   </div>
@@ -159,7 +165,7 @@ export const MainSection = () => {
                           className="flex items-center gap-2 cursor-pointer"
                         >
                           <a href={button.href}>
-                            <span className="font-inter text-primary-colour text-[12px] md:text-[14px] tracking-[0px] leading-[19px]">
+                            <span className="font-body-body-4-400 text-primary-colour text-[12px] md:text-[14px] tracking-[var(--body-body-4-400-letter-spacing)] leading-[var(--body-body-4-400-line-height)]">
                               {button.text}
                             </span>
                           </a>
@@ -199,13 +205,13 @@ export const MainSection = () => {
                       alt={section.badge.text}
                       src={section.badge.icon}
                     />
-                    <span className="font-inter text-[12px] tracking-[0px] leading-[17px]">
+                    <span className="font-body-labeltext-400 text-[length:var(--body-labeltext-400-font-size)] tracking-[var(--body-labeltext-400-letter-spacing)] leading-[var(--body-labeltext-400-line-height)]">
                       {section.badge.text}
                     </span>
                   </div>
 
                   <div
-                    className="font-normal text-foreground dark:text-foreground font-inter text-[14px] lg:text-[16px] tracking-[0px] leading-[22px] lg:leading-6 text-left"
+                    className="font-normal text-foreground dark:text-foreground font-inter text-[14px] lg:text-[16px] tracking-[var(--body-body2-400-letter-spacing)] leading-[22px] lg:leading-6 text-left"
                     dangerouslySetInnerHTML={{ __html: section.content ?? "" }}
                   />
 
@@ -214,7 +220,7 @@ export const MainSection = () => {
                       <span className="font-medium leading-[22px] lg:leading-6">
                         {section.walletInfo?.label}{" "}
                       </span>
-                      <span className="font-normal text-[14px] lg:text-[16px] tracking-[0px] leading-[22px] lg:leading-6">
+                      <span className="font-normal text-[14px] lg:text-[16px] tracking-[var(--body-body3-400-letter-spacing)] leading-[22px] lg:leading-6">
                         {hideAddress(section.walletInfo?.address as string)}
                       </span>
                     </div>

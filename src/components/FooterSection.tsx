@@ -52,13 +52,12 @@ export const FooterSection = (): JSX.Element => {
 
   return (
     <footer className="mt-16 tablet:mt-[100px]">
-      <div className="relative w-full xl:min-h-[225px] overflow-hidden tablet:overflow-visible bg-green-gradient">
+      <div className="relative w-full xl:min-h-[225px] overflow-hidden tablet:overflow-visible bg-[linear-gradient(136deg,rgba(170,218,93,1)_0%,rgba(13,174,185,1)_100%)]">
         {/* Background Wallet Image - visible only on small screens */}
         <img
           className="absolute w-[347px] h-[275px] bottom-0 inset-x-[124px] m-auto opacity-20 object-contain tablet:hidden"
           alt="Wallet promotion"
           src="/walletpromo.svg"
-          loading="lazy"
         />
 
         <div className="relative w-fit tablet:mx-auto tablet:translate-x-[50%] px-[26px] py-[20px]">
@@ -67,7 +66,6 @@ export const FooterSection = (): JSX.Element => {
             className="absolute w-[443px] h-[351px] -left-[440px] xl:-left-[560px] -bottom-[62px] object-contain hidden tablet:block"
             alt="Wallet promotion xl"
             src="/walletpromo.svg"
-            loading="lazy"
           />
 
           <div className="min-h-[50px]">
@@ -93,7 +91,6 @@ export const FooterSection = (): JSX.Element => {
                 className="w-[174px] h-[51px]"
                 alt="Google Play Store"
                 src="/google-play-badge.png"
-                loading="lazy"
               />
             </a>
             <a
@@ -105,7 +102,6 @@ export const FooterSection = (): JSX.Element => {
                 className="w-[150px] h-[51px]"
                 alt="App Store"
                 src="/apple-store-badge.png"
-                loading="lazy"
               />
             </a>
           </div>
@@ -118,13 +114,11 @@ export const FooterSection = (): JSX.Element => {
           className="absolute w-[550px] h-[202px] bottom-0 left-0 right-0 mx-auto m-auto block dark:hidden"
           alt="Logo img"
           src="/footer-img.svg"
-          loading="lazy"
         />
         <img
           className="absolute w-[550px] h-[202px] bottom-0 left-0 right-0 mx-auto m-auto hidden dark:block"
           alt="Logo img"
           src="/footer-img-dark.svg"
-          loading="lazy"
         />
 
         {/* Mobile/Tablet Layout (below xl breakpoint) */}
@@ -147,7 +141,6 @@ export const FooterSection = (): JSX.Element => {
                     className="w-[15px] h-[15px]"
                     alt="Icon"
                     src={button.icon}
-                    loading="lazy"
                   />
                   <span className="font-semibold text-primary text-[12.5px] leading-[20.5px]">
                     {button.text}
@@ -158,12 +151,12 @@ export const FooterSection = (): JSX.Element => {
           </div>
 
           {/* Email */}
-          <p className="font-inter ... text-center">
+          <p className="font-body-body3-mob-400 ... text-center">
             Email: autonomoustrustmomentum@gmail.com
           </p>
 
           {/* Copyright */}
-          <p className="font-inter text-card-primary text-center">
+          <p className="font-body-labeltext-400 text-card-primary text-center">
             © 2020 - 2024 Autonomous Trust Momentum All Rights Reserved
           </p>
 
@@ -180,7 +173,6 @@ export const FooterSection = (): JSX.Element => {
                   className="w-[24px] h-[24px]"
                   alt={social.alt}
                   src={social.src}
-                  loading="lazy"
                 />
               </a>
             ))}
@@ -188,7 +180,9 @@ export const FooterSection = (): JSX.Element => {
 
           {/* Discover us on Row */}
           <div className="flex items-center gap-[15px]">
-            <p className="font-inter ... text-center">Discover us on:</p>
+            <p className="font-body-body3-mob-400 ... text-center">
+              Discover us on:
+            </p>
 
             <div className="flex items-center gap-[15px]">
               <a
@@ -200,7 +194,6 @@ export const FooterSection = (): JSX.Element => {
                   className="w-[108px] h-[18px]"
                   alt="Brand Coin Market Cap"
                   src="/vector-4.svg"
-                  loading="lazy"
                 />
               </a>
               <a
@@ -212,14 +205,15 @@ export const FooterSection = (): JSX.Element => {
                   className="w-[64px] h-[18px]"
                   alt="Brand dextools light"
                   src="/dex-logo.png"
-                  loading="lazy"
                 />
               </a>
             </div>
           </div>
 
           {/* Version Number */}
-          <p className="font-inter text-[#858585]">Version 2.0.0</p>
+          <p className="font-body-labeltext-400 text-[#858585]">
+            Version 2.0.0
+          </p>
         </div>
 
         {/* xl Layout (xl:1728px and bigger) */}
@@ -230,7 +224,6 @@ export const FooterSection = (): JSX.Element => {
               className="w-[233px] h-[58px] object-cover"
               alt="ATM logo"
               src="/atm-logo.png"
-              loading="lazy"
             />
 
             <div className="flex justify-between gap-[30px]">
@@ -245,14 +238,13 @@ export const FooterSection = (): JSX.Element => {
                     className="w-[24px] h-[24px]"
                     alt={social.alt}
                     src={social.src}
-                    loading="lazy"
                   />
                 </a>
               ))}
             </div>
 
             <div className="flex items-start gap-[15px] self-stretch w-full">
-              <p className="w-fit mt-[-1.00px] font-inter whitespace-nowrap">
+              <p className="w-fit mt-[-1.00px] font-body-body3-mob-400 whitespace-nowrap">
                 Discover us on:
               </p>
 
@@ -266,7 +258,6 @@ export const FooterSection = (): JSX.Element => {
                     className="w-[108px] h-[18px]"
                     alt="Brand Coin Market Cap"
                     src="/vector-4.svg"
-                    loading="lazy"
                   />
                 </a>
                 <a
@@ -278,7 +269,6 @@ export const FooterSection = (): JSX.Element => {
                     className="w-[64px] h-[18px]"
                     alt="Brand dextools light"
                     src="/dex-logo.png"
-                    loading="lazy"
                   />
                 </a>
               </div>
@@ -303,7 +293,6 @@ export const FooterSection = (): JSX.Element => {
                       className="w-[15px] h-[15px]"
                       alt="Icon"
                       src={button.icon}
-                      loading="lazy"
                     />
                     <span className="font-semibold text-primary text-[12.5px] text-right leading-[20.5px]">
                       {button.text}
@@ -313,17 +302,17 @@ export const FooterSection = (): JSX.Element => {
               ))}
             </div>
 
-            <p className="self-stretch font-inter text-right">
+            <p className="self-stretch font-body-body3-mob-400 text-right">
               Email: autonomoustrustmomentum@gmail.com
             </p>
 
-            <p className="self-stretch font-inter text-card-foreground text-right">
+            <p className="self-stretch font-body-labeltext-400 text-card-foreground text-right">
               © 2020 - 2024 Autonomous Trust Momentum All Rights Reserved
             </p>
           </div>
 
           {/* Version Number - xl */}
-          <p className="absolute h-[17px] top-[244px] left-[70px] font-inter text-card-foreground whitespace-nowrap">
+          <p className="absolute h-[17px] top-[244px] left-[70px] font-body-labeltext-400 text-card-foreground whitespace-nowrap">
             Version 2.0.0
           </p>
         </div>

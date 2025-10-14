@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../../../components/ui/button";
-import { HeadingWithDots } from "@/components/HeadingWithDots";
+import NumberedDisplay from "@/components/NumberedDisplay";
 
 export const CommunitySection = () => {
-  const { t } = useTranslation("ecosystem");
+  const { t } = useTranslation('ecosystem');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [active, setActive] = useState(1);
 
   const rewardModes = [
     {
@@ -28,18 +27,25 @@ export const CommunitySection = () => {
 
   return (
     <div className="flex flex-col gap-10 lg:gap-16 w-full">
-      {/* Community Intro Section  */}
+      {/* Community Intro Section */}
       <div className="w-full">
-        <div className="flex flex-col md:flex-row gap-[20px] lg:gap-[70px] 2xl:gap-[200px] md:mt-[60px] items-start  mb-12">
+        <div className="flex flex-col md:flex-row gap-[20px] lg:gap-[70px] 2xl:gap-[200px] md:mt-[60px] items-start mb-12">
           <div className="flex flex-col">
-            <div className="relative  ml-0 lg:ml-[30px]">
-              <HeadingWithDots text={t("communitySection.title")} />
+            <div className="relative ml-0 lg:ml-[30px]">
+              <div className="font-titles-h2-sectionheading-400 text-primary-colour text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] ml-12 mt-7 uppercase">
+                {t("communitySection.title")}
+              </div>
+              <img
+                className="absolute w-[99px] h-[99px] top-0 left-0"
+                alt="Dots"
+                src="/dots.svg"
+              />
             </div>
-            <div className="flex-1 md:max-w-[519px] lg:max-w-[750px] 2xl:max-w-[955px] font-inter text-foreground dark:text-foreground text-[16px] lg:text-xl leading-[24px] lg:leading-[27px] mt-14 lg:ml-20 2xl:ml-[300px] text-left">
+            <div className="flex-1 md:max-w-[519px] lg:max-w-[750px] 2xl:max-w-[955px] font-inter text-foreground text-[16px] lg:text-xl leading-[24px] lg:leading-[27px] mt-14 lg:ml-20 2xl:ml-[300px] text-left">
               <span className="font-light">
                 {t("communitySection.description")}{" "}
               </span>
-              <span className="font-inter font-medium">
+              <span className="font-body-body1-500 font-medium">
                 {t("communitySection.descriptionHighlight")}
               </span>
               <span className="font-light">
@@ -51,104 +57,42 @@ export const CommunitySection = () => {
         </div>
       </div>
 
-      {/*  How to Join Section  */}
+      {/* How to Join Section */}
       <div className="flex flex-col w-full items-start gap-5 max-w-[782px] 2xl:max-w-[955px] lg:mx-60 2xl:mx-96">
-        <h3 className="font-inter text-foreground dark:text-foreground text-[20px] lg:text-[26px] tracking-[0px] leading-[27px] lg:leading-[34px] text-left">
+        <h3 className="font-titles-h5-large-text-400 text-foreground text-[20px] lg:text-[length:var(--titles-h5-large-text-400-font-size)] leading-[27px] lg:leading-[var(--titles-h5-large-text-400-line-height)]">
           {t("communitySection.howToJoin.title")}
         </h3>
-        <p className="font-inter text-foreground dark:text-foreground text-[16px] lg:text-[18px] tracking-[0px] leading-[22px] lg:leading-[24px] text-left">
+        <p className="font-body-body2-400 text-foreground text-[16px] lg:text-[length:var(--body-body2-400-font-size)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)]">
           {t("communitySection.howToJoin.description")}
         </p>
       </div>
 
-      {/*  Reward Modes Section */}
+      {/* Reward Modes Section */}
       <div className="flex flex-col items-center gap-[5px] mb-12">
-        <h3 className="font-inter text-foreground dark:text-foreground text-[20px] lg:text-[26px] tracking-[0px] leading-[27px] lg:leading-[34px] text-center">
+        <h3 className="font-titles-h5-large-text-400 text-foreground text-[20px] lg:text-[length:var(--titles-h5-large-text-400-font-size)] leading-[27px] lg:leading-[var(--titles-h5-large-text-400-line-height)] text-center">
           {t("communitySection.rewardModes.title")}
         </h3>
-        <p className="font-inter text-[#4f5555] text-[12px] tracking-[0px] leading-[17px] text-center">
+        <p className="font-body-labeltext-400 text-[#4f5555] text-[12px] lg:text-[length:var(--body-labeltext-400-font-size)] leading-[17px] lg:leading-[var(--body-labeltext-400-line-height)] text-center">
           {t("communitySection.rewardModes.subtitle")}
         </p>
 
-        <div className="flex justify-center items-center relative w-full">
-          {/* Desktop version with animation */}
-          <div className="hidden md:flex flex-row items-center transition-all duration-700 ease-in-out space-x-8">
-            {rewardModes.map((mode) => {
-              const isActive = mode.id === active;
+        <NumberedDisplay
+          items={rewardModes}
+          className="mt-6"
+        />
 
-              const activeIndex = rewardModes.findIndex((m) => m.id === active);
-
-              const isNext =
-                active !== 3 && mode.id === rewardModes[activeIndex + 1]?.id;
-
-              return (
-                <div
-                  key={mode.id}
-                  onClick={() => setActive(mode.id)}
-                  className="flex items-center cursor-pointer transition-all duration-700 ease-in-out"
-                >
-                  {/* Number */}
-                  <span
-                    className={`font-bold transition-all duration-700 ease-in-out ${
-                      isActive
-                        ? "text-[150px] lg:text-[250px] text-primary"
-                        : "text-[150px] lg:text-[250px] text-[#F2F9FF] dark:text-[#40576A]"
-                    }`}
-                  >
-                    {mode.id}
-                  </span>
-
-                  {/* Active content */}
-                  {isActive && (
-                    <div className="ml-4 transition-all duration-700 ease-in-out">
-                      <p className="text-foreground dark:text-foreground text-[14px] lg:text-[16px] max-w-[630px] leading-[19px] lg:leading-[24px]">
-                        {mode.description}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Next blurred preview */}
-                  {isNext && (
-                    <div className="ml-4 relative w-[150px] h-[80px] overflow-hidden">
-                      <p className="text-foreground text-[12px] lg:text-[14px] leading-[16px] lg:leading-[20px] opacity-70 blur-[1.5px]">
-                        {mode.description}
-                      </p>
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/70 to-white dark:bg-none"></div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Mobile version without animation */}
-          <div className="flex flex-col items-center justify-center space-y-6 md:hidden w-full">
-            {rewardModes.map((mode) => (
-              <div
-                key={mode.id}
-                className="flex gap-[15px] items-center justify-center"
-              >
-                <span className="w-[105px] text-[140px] font-bold text-[#F2F9FF]">
-                  {mode.number}
-                </span>
-                <p className="text-foreground text-[14px] leading-[19px] w-[240px]">
-                  {mode.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex items-start gap-5">
+        {/* Buttons */}
+        <div className="flex items-start gap-5 mt-6">
           <Button
             onClick={() => setIsModalOpen(true)}
-            className="bg-primary text-background dark:text-primary-foreground rounded-[30px] px-[12px] lg:px-[20px] py-3 font-inter text-[16px] leading-[24px] hover:bg-primary/90"
+            className="bg-primary text-background dark:text-primary-foreground rounded-[30px] px-[12px] lg:px-[20px] py-3 font-body-body3-400 text-[16px] leading-[24px] hover:bg-primary/90"
           >
             {t("communitySection.rewardModes.buttons.join")}
           </Button>
+
           <div className="flex items-center gap-[10px] cursor-pointer">
             <a href="/community#rewards">
-              <span className="font-inter text-primary text-[14px] lg:text-[16px] tracking-[0px] leading-[19px] lg:leading-[24px]">
+              <span className="font-body-body-4-400 text-primary text-[14px] lg:text-[16px] leading-[19px] lg:leading-[var(--body-body-4-400-line-height)]">
                 {t("communitySection.rewardModes.buttons.learn")}
               </span>
             </a>
@@ -158,7 +102,6 @@ export const CommunitySection = () => {
                   className="absolute w-[33px] h-[33px] top-[3px] left-0.5 rounded-full cursor-pointer hover:bg-primary-foreground transition-all duration-700 ease-in-out hover:scale-110 hover:rotate-[-12deg]"
                   alt="Arrow right icon"
                   src="/arrow-right-icon.svg"
-                  loading="lazy"
                 />
               </div>
             </a>
@@ -166,11 +109,10 @@ export const CommunitySection = () => {
         </div>
       </div>
 
-      {/* Modal */}
+      {/*  Modal  */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
           <div className="bg-background dark:bg-white rounded-xl shadow-lg max-w-xl w-full relative p-6">
-            {/* Close X */}
             <button
               onClick={() => setIsModalOpen(false)}
               className="absolute top-3 right-3 text-primary"
@@ -178,7 +120,6 @@ export const CommunitySection = () => {
               ✕
             </button>
 
-            {/* Modal content */}
             <h2 className="text-lg mb-4 text-[#1c1c1c]">
               {t("communitySection.modal.title")}
             </h2>
@@ -192,7 +133,6 @@ export const CommunitySection = () => {
               {t("communitySection.modal.paragraph3")}
             </p>
 
-            {/* Footer button */}
             <div className="flex justify-center mt-6">
               <div
                 onClick={() => setIsModalOpen(false)}

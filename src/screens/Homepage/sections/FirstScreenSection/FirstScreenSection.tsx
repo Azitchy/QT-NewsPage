@@ -5,40 +5,34 @@ import { Badge } from "../../../../components/ui/badge";
 import { Card, CardContent } from "../../../../components/ui/card";
 
 export const FirstScreenSection = (): JSX.Element => {
-  const { t } = useTranslation("home");
+  const { t } = useTranslation('home');
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const carouselSlides = [
     {
       id: 0,
-      leftText: t("firstScreenSection.slides.slide1.leftText"),
-      rightTitle: t("firstScreenSection.slides.slide1.rightTitle"),
-      rightTitleHighlight: t(
-        "firstScreenSection.slides.slide1.rightTitleHighlight"
-      ),
-      rightSubtitle: t("firstScreenSection.slides.slide1.rightSubtitle"),
+      leftText: t('firstScreenSection.slides.slide1.leftText'),
+      rightTitle: t('firstScreenSection.slides.slide1.rightTitle'),
+      rightTitleHighlight: t('firstScreenSection.slides.slide1.rightTitleHighlight'),
+      rightSubtitle: t('firstScreenSection.slides.slide1.rightSubtitle'),
       image: "/connect-with-your-friends-image.png",
       darkImage: "/connection-main1-dark.webp",
     },
     {
       id: 1,
-      leftText: t("firstScreenSection.slides.slide2.leftText"),
-      rightTitle: t("firstScreenSection.slides.slide2.rightTitle"),
-      rightTitleHighlight: t(
-        "firstScreenSection.slides.slide2.rightTitleHighlight"
-      ),
-      rightSubtitle: t("firstScreenSection.slides.slide2.rightSubtitle"),
+      leftText: t('firstScreenSection.slides.slide2.leftText'),
+      rightTitle: t('firstScreenSection.slides.slide2.rightTitle'),
+      rightTitleHighlight: t('firstScreenSection.slides.slide2.rightTitleHighlight'),
+      rightSubtitle: t('firstScreenSection.slides.slide2.rightSubtitle'),
       image: "/hero1.png",
       darkImage: "/rewards-main3-dark.webp",
     },
     {
       id: 2,
-      leftText: t("firstScreenSection.slides.slide3.leftText"),
-      rightTitle: t("firstScreenSection.slides.slide3.rightTitle"),
-      rightTitleHighlight: t(
-        "firstScreenSection.slides.slide3.rightTitleHighlight"
-      ),
-      rightSubtitle: t("firstScreenSection.slides.slide3.rightSubtitle"),
+      leftText: t('firstScreenSection.slides.slide3.leftText'),
+      rightTitle: t('firstScreenSection.slides.slide3.rightTitle'),
+      rightTitleHighlight: t('firstScreenSection.slides.slide3.rightTitleHighlight'),
+      rightSubtitle: t('firstScreenSection.slides.slide3.rightSubtitle'),
       image: "/hero2.png",
       darkImage: "/avatar-main2-dark.webp",
     },
@@ -102,11 +96,11 @@ export const FirstScreenSection = (): JSX.Element => {
           <div className="flex-1 text-center md:text-left mt-0 md:mt-6 xl:-mt-24 xl:relative xl:right-[200px]">
             <Card className="inline-flex items-center mb-[15px] md:mb-[30px] px-[8px] md:px-[10px] py-[5px] rounded-full border border-border backdrop-blur-md bg-[linear-gradient(180deg,rgba(252,252,252,0.40)_44.56%,rgba(242,242,242,0.40)_100%)] dark:bg-[linear-gradient(180deg,rgba(81,79,79,0.40)_49.59%,rgba(36,36,36,0.40)_100%)] z-30">
               <CardContent className="flex items-center gap-[5px] p-0">
-                <Badge className="px-3 py-1 rounded-full bg-green-gradient text-background dark:text-primary-foreground text-sm">
-                  {t("firstScreenSection.newBadge")}
+                <Badge className="px-3 py-1 rounded-full bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] text-background dark:text-primary-foreground text-sm">
+                  {t('firstScreenSection.newBadge')}
                 </Badge>
                 <p className="text-foreground dark:text-foreground text-sm truncate font-inter w-48 xl:w-full overflow-hidden whitespace-nowrap">
-                  {t("firstScreenSection.announcement")}
+                  {t('firstScreenSection.announcement')}
                 </p>
                 <button className="rounded-full bg-primary-foreground hover:bg-cyan-100 transition">
                   <a href="/webapp">
@@ -119,7 +113,7 @@ export const FirstScreenSection = (): JSX.Element => {
                 </button>
               </CardContent>
             </Card>
-            <h2 className="max-w-[512px] xl:w-[512px] large:w-[784px] large:max-w-[748px] text-[26px] text-start font-space-grotesk leading-8 lg:leading-10 lg:text-[32px] font-extrabold bg-green-gradient bg-clip-text text-transparent mb-2">
+            <h2 className="max-w-[512px] xl:w-[512px] large:w-[784px] large:max-w-[748px] text-[26px] text-start font-space-grotesk leading-8 lg:leading-10 lg:text-[32px] font-extrabold  bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] bg-clip-text text-transparent mb-2">
               {currentSlideData.rightTitle}{" "}
               {currentSlideData.rightTitleHighlight}{" "}
               <span className="text-foreground text-[26px] lg:text-[32px] font-extralight dark:text-foreground">

@@ -1,12 +1,12 @@
 {
   "heroSection": {
-    "title": "探索",
+    "title": "探索力量之源",
     "subtitle": "LUCA",
-    "highlightedText": "通过共识建立稳定性"
+    "highlightedText": "通过共识构建稳定性"
   },
   "navigation": {
     "overview": "概览",
-    "galaxy": "银河",
+    "galaxy": "星系",
     "ranking": "总体排名",
     "consensus": "共识连接",
     "prNode": "PR 节点",
@@ -24,27 +24,28 @@
       "prNode": "PR 节点",
       "stakeTransaction": "质押交易"
     },
+    "loadingMore": "正在加载更多结果...（已找到 {{count}} 条）",
     "noResults": "未找到结果",
-    "invalidInput": "请输入有效的地址"
+    "invalidInput": "请输入有效的地址、哈希或合约。"
   },
   "pagination": {
     "previous": "上一页",
     "next": "下一页"
   },
   "overview": {
-    "lucaPrice": "Luca 价格",
-    "totalSupply": "总供应量",
+    "lucaPrice": "LUCA 价格",
+    "totalSupply": "总发行量",
     "userMarketCirculation": "用户市场流通量",
     "circulatingSupply": "流通供应量",
     "remainingLiquidityRewards": "剩余流动性奖励",
-    "lucaStakedConsensus": "共识连接中质押的 LUCA",
-    "lucaStakedPR": "PR 服务器中质押的 LUCA",
+    "lucaStakedConsensus": "质押于共识连接的 LUCA",
+    "lucaStakedPR": "质押于 PR 节点的 LUCA",
     "remainingCommunityFund": "剩余社区基金",
     "lucaConsensusConnections": "LUCA 共识连接",
     "prServersOperation": "运行中的 PR 服务器",
-    "proportionTitle": "整个网络中 Luca 发行的比例",
+    "proportionTitle": "LUCA 在整个网络发行中的比例",
     "travelBurnt": {
-      "title": "旅行 LUCA 燃烧量",
+      "title": "旅行 LUCA 销毁数量",
       "walletAddress": "钱包地址",
       "smartContract": "智能合约"
     },
@@ -60,7 +61,7 @@
   "chart": {
     "price": "价格",
     "priceTrend": "价格趋势",
-    "stakedConsensus": "在共识连接中质押",
+    "stakedConsensus": "质押于共识连接",
     "numberConnections": "连接数量",
     "connections": "连接",
     "contractAddress": "合约地址",
@@ -69,45 +70,45 @@
     "month": "月",
     "loading": "正在加载加密货币数据...",
     "error": "加载加密货币数据失败",
-    "noData": "没有可用的带图表的有效加密货币数据",
+    "noData": "暂无可用的加密货币图表数据",
     "noChartData": "",
     "tryDifferent": ""
   },
   "ranking": {
     "overallPR": "总体 PR 排名",
     "totalReward": "总奖励",
-    "latestUpdate": "排名数据每天更新。最新更新：",
+    "latestUpdate": "排名数据每日更新。最新更新时间：",
     "columns": {
       "ranking": "排名",
       "userAddress": "用户地址",
       "prValue": "PR 值",
-      "totalIncome": "总收益",
+      "totalIncome": "总收入",
       "action": "操作"
     },
     "detail": "详情",
     "incomeDetails": {
-      "title": "收益详情",
-      "incomeRanking": "收益排名",
+      "title": "收入详情",
+      "incomeRanking": "收入排名",
       "walletAddress": "钱包地址",
-      "totalIncome": "总收益",
-      "description": "总收益由以下四部分组成",
-      "consensusIncome": "收益排名",
-      "operationIncome": "服务器运营收益",
-      "stakeIncome": "服务器质押收益",
-      "liquidityIncome": "流动性收益"
+      "totalIncome": "总收入",
+      "description": "总收入由以下四部分组成",
+      "consensusIncome": "共识收入",
+      "operationIncome": "服务器运行收入",
+      "stakeIncome": "节点质押收入",
+      "liquidityIncome": "流动性收入"
     },
     "loading": "正在加载排名数据...",
     "error": "加载排名数据失败",
-    "noData": "没有可用的排名数据"
+    "noData": "暂无排名数据"
   },
   "consensus": {
     "title": "连接合约信息",
     "token": "代币",
-    "allNetwork": "所有网络",
+    "allNetwork": "全网",
     "columns": {
       "hash": "哈希",
-      "initiator": "发起者",
-      "receiver": "接收者",
+      "initiator": "发起方",
+      "receiver": "接收方",
       "connectionQuantity": "连接数量",
       "time": "时间",
       "action": "操作"
@@ -120,14 +121,14 @@
       "status": "状态",
       "creationTime": "创建时间",
       "connectionQuantity": "连接数量",
-      "initiator": "发起者",
-      "receiver": "接收者",
+      "initiator": "发起方",
+      "receiver": "接收方",
       "connectionContract": "连接合约",
       "lockTime": "锁定时间",
       "days": "天"
     },
     "status": {
-      "pending": "待处理",
+      "pending": "待定",
       "connected": "已连接",
       "waiting": "等待中",
       "cancelled": "已取消",
@@ -143,7 +144,7 @@
       "serverDomain": "服务器域名",
       "serverIP": "服务器 IP",
       "serverNickname": "服务器昵称",
-      "stakeAmount": "质押金额",
+      "stakeAmount": "质押数量",
       "action": "操作"
     },
     "more": "更多",
@@ -155,18 +156,18 @@
       "serverIP": "服务器 IP",
       "serverNickname": "服务器昵称",
       "nodeRanking": "节点排名",
-      "stakeAmount": "质押金额"
+      "stakeAmount": "质押数量"
     },
     "loading": "正在加载 PR 节点...",
     "error": "加载 PR 节点失败"
   },
   "stake": {
     "title": "质押交易信息",
-    "allNetwork": "所有网络",
+    "allNetwork": "全网",
     "columns": {
       "hash": "哈希",
-      "initiator": "发起者",
-      "receiver": "接收者",
+      "initiator": "发起方",
+      "receiver": "接收方",
       "connectionQuantity": "连接数量",
       "time": "时间",
       "action": "操作"
@@ -179,8 +180,8 @@
       "network": "网络",
       "stakeMethod": "质押方式",
       "creationTime": "创建时间",
-      "stakeAmount": "质押金额",
-      "initiator": "发起者",
+      "stakeAmount": "质押数量",
+      "initiator": "发起方",
       "stakeNode": "质押节点",
       "nodeRanking": "节点排名"
     },
@@ -190,8 +191,8 @@
     },
     "loading": "正在加载质押交易...",
     "error": "加载质押交易失败",
-    "initiator": "发起者",
-    "receiver": "接收者"
+    "initiator": "发起方",
+    "receiver": "接收方"
   },
   "user": {
     "title": "用户信息",
@@ -203,21 +204,21 @@
     },
     "loading": "正在加载用户信息...",
     "error": "加载用户信息失败",
-    "noData": "没有可用的用户数据"
+    "noData": "暂无用户数据"
   },
   "contract": {
-    "transactions": "交易",
+    "transactions": "交易记录",
     "balance": "合约账户余额",
-    "lastUpdate": "最后余额更新：",
+    "lastUpdate": "上次余额更新：",
     "viewAll": "查看全部",
     "viewSourceCode": "查看源代码",
     "viewAllConnections": "查看所有连接",
-    "loading": "正在加载合约",
+    "loading": "正在加载合约信息...",
     "error": "加载合约信息失败",
-    "noData": "没有可用的合约信息"
+    "noData": "暂无合约信息"
   },
   "galaxy": {
-    "title": "ATM 银河",
+    "title": "ATM 星系",
     "searchPlaceholder": "搜索地址",
     "toggleNodes": {
       "toggle": "切换",
@@ -233,6 +234,6 @@
     "copied": "已复制！",
     "loading": "加载中...",
     "error": "发生错误",
-    "noData": "没有可用数据"
+    "noData": "暂无数据"
   }
 }

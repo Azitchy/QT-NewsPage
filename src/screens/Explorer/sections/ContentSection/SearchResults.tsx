@@ -1,11 +1,7 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-} from "@/components/ui/pagination";
+import { Pagination, PaginationContent, PaginationItem } from "@/components/ui/pagination";
 import { useTranslation } from "react-i18next";
 import {
   fetchConsensusContractList,
@@ -35,19 +31,17 @@ const copyToClipboard = (text: string | undefined) => {
 };
 
 const getStakeMethod = (ledgeType: number | undefined, t: any) => {
-  return ledgeType === 1
-    ? t("stake.stakeMethod.lucaStake")
-    : t("stake.stakeMethod.consensusContract");
+  return ledgeType === 1 ? t("stake.stakeMethod.lucaStake") : t("stake.stakeMethod.consensusContract");
 };
 
 const getStatusText = (status: number | undefined, t: any) => {
   if (!status) return "Unknown";
   const statusMap: { [key: number]: string } = {
-    1: t("consensus.status.pending"),
-    2: t("consensus.status.connected"),
-    3: t("consensus.status.waiting"),
-    4: t("consensus.status.cancelled"),
-    5: t("consensus.status.disconnected"),
+    1: t('consensus.status.pending'),
+    2: t('consensus.status.connected'),
+    3: t('consensus.status.waiting'),
+    4: t('consensus.status.cancelled'),
+    5: t('consensus.status.disconnected'),
   };
   return statusMap[status] || "Unknown";
 };
@@ -65,8 +59,7 @@ const getPageNumbers = (currentPage: number, totalPages: number) => {
     } else if (currentPage >= totalPages - maxVisible + 1) {
       pages.push(1);
       pages.push("...");
-      for (let i = totalPages - maxVisible + 1; i <= totalPages; i++)
-        pages.push(i);
+      for (let i = totalPages - maxVisible + 1; i <= totalPages; i++) pages.push(i);
     } else {
       pages.push(1);
       pages.push("...");
@@ -81,20 +74,16 @@ const getPageNumbers = (currentPage: number, totalPages: number) => {
 };
 
 const hideAddress = (address: string | undefined) => {
-  return address
-    ? `${address.substring(0, 4)}...${address.substring(address.length - 4)}`
-    : "";
+  return address ? `${address.substring(0, 4)}...${address.substring(address.length - 4)}` : '';
 };
 
 // -------------------- HOOK --------------------
 function usePaginatedSearch<T>(
-  fetchFn: (
-    page: number,
-    pageSize: number
-  ) => Promise<{ data: T[]; total: number }>,
+  fetchFn: (page: number, pageSize: number) => Promise<{ data: T[]; total: number }>,
   filterFn: (item: T) => boolean,
   searchQuery: string,
-  isValidInput: boolean
+  isValidInput: boolean,
+  searchTrigger: number
 ) {
   const [allData, setAllData] = useState<T[]>([]);
   const [displayData, setDisplayData] = useState<T[]>([]);
@@ -104,10 +93,14 @@ function usePaginatedSearch<T>(
   const [total, setTotal] = useState(0);
   const [isSearchComplete, setIsSearchComplete] = useState(false);
 
+  const currentSearchIdRef = useRef(0);
+
   const itemsPerPage = 10;
 
   const searchAllData = async () => {
+    const thisSearchId = ++currentSearchIdRef.current;
     if (!isValidInput || !searchQuery) {
+      if (currentSearchIdRef.current !== thisSearchId) return;
       setAllData([]);
       setDisplayData([]);
       setTotal(0);
@@ -115,6 +108,7 @@ function usePaginatedSearch<T>(
       return;
     }
 
+    if (currentSearchIdRef.current !== thisSearchId) return;
     setLoading(true);
     setError(null);
     setIsSearchComplete(false);
@@ -127,22 +121,21 @@ function usePaginatedSearch<T>(
 
       while (hasMore) {
         const result = await fetchFn(currentPage, batchSize);
-
+        if (currentSearchIdRef.current !== thisSearchId) return; 
+        
         if (result.data && result.data.length > 0) {
           const filtered = result.data.filter(filterFn);
           allResults = [...allResults, ...filtered];
-
+          
+          if (currentSearchIdRef.current !== thisSearchId) return;
           setAllData(allResults);
           setTotal(allResults.length);
-
+          
           const startIndex = 0;
           const endIndex = itemsPerPage;
           setDisplayData(allResults.slice(startIndex, endIndex));
-
-          if (
-            result.data.length < batchSize ||
-            currentPage * batchSize >= result.total
-          ) {
+          
+          if (result.data.length < batchSize || currentPage * batchSize >= result.total) {
             hasMore = false;
           } else {
             currentPage++;
@@ -152,12 +145,15 @@ function usePaginatedSearch<T>(
         }
       }
 
+      if (currentSearchIdRef.current !== thisSearchId) return;
       setIsSearchComplete(true);
     } catch (err) {
       console.error(err);
+      if (currentSearchIdRef.current !== thisSearchId) return;
       setError("Error loading data");
       setIsSearchComplete(true);
     } finally {
+      if (currentSearchIdRef.current !== thisSearchId) return;
       setLoading(false);
     }
   };
@@ -165,7 +161,7 @@ function usePaginatedSearch<T>(
   useEffect(() => {
     setPage(1);
     searchAllData();
-  }, [searchQuery, isValidInput]);
+  }, [searchTrigger]);
 
   useEffect(() => {
     if (allData.length > 0) {
@@ -175,15 +171,7 @@ function usePaginatedSearch<T>(
     }
   }, [page, allData]);
 
-  return {
-    data: displayData,
-    loading,
-    error,
-    page,
-    total,
-    setPage,
-    isSearchComplete,
-  };
+  return { data: displayData, loading, error, page, total, setPage, isSearchComplete };
 }
 
 // -------------------- COMPONENTS --------------------
@@ -193,11 +181,7 @@ interface PaginationWrapperProps {
   onPageChange: (page: number) => void;
 }
 
-const PaginationWrapper: React.FC<PaginationWrapperProps> = ({
-  currentPage,
-  total,
-  onPageChange,
-}) => {
+const PaginationWrapper: React.FC<PaginationWrapperProps> = ({ currentPage, total, onPageChange }) => {
   const itemsPerPage = 10;
   const totalPages = Math.ceil(total / itemsPerPage);
   if (totalPages <= 1) return null;
@@ -211,13 +195,13 @@ const PaginationWrapper: React.FC<PaginationWrapperProps> = ({
   };
 
   return (
-    <div className="flex justify-center bg-card md:bg-background py-10">
+    <div className="flex justify-center py-10">
       <Pagination>
         <PaginationContent className="inline-flex items-center gap-[10px] md:gap-[35px] px-[9px] py-[10px] rounded-[40px] border border-solid border-border dark:border-primary-foreground">
-          <img
-            src="/arrow-left-icon.svg"
-            onClick={() => handlePageChange(currentPage - 1)}
-            className="w-5 h-5 cursor-pointer"
+          <img 
+            src="/arrow-left-icon.svg" 
+            onClick={() => handlePageChange(currentPage - 1)} 
+            className="w-5 h-5 cursor-pointer" 
           />
           {pages.map((page, idx) =>
             page === "..." ? (
@@ -239,10 +223,10 @@ const PaginationWrapper: React.FC<PaginationWrapperProps> = ({
               </PaginationItem>
             )
           )}
-          <img
-            src="/arrow-right-icon-3.svg"
-            onClick={() => handlePageChange(currentPage + 1)}
-            className="w-7 h-7 bg-[#e9f6f7] rounded-full cursor-pointer p-1"
+          <img 
+            src="/arrow-right-icon-3.svg" 
+            onClick={() => handlePageChange(currentPage + 1)} 
+            className="w-7 h-7 bg-[#e9f6f7] rounded-full cursor-pointer p-1" 
           />
         </PaginationContent>
       </Pagination>
@@ -255,12 +239,10 @@ interface SearchResultsProps {
   searchQuery: string;
   searchType: string;
   isValidInput: boolean;
+  searchTrigger: number;
 }
 
-const SearchResults: React.FC<SearchResultsProps> = ({
-  searchQuery,
-  isValidInput,
-}) => {
+const SearchResults: React.FC<SearchResultsProps> = ({ searchQuery, isValidInput, searchTrigger }) => {
   const { t } = useTranslation("explorer");
 
   const consensus = usePaginatedSearch<ConsensusConnectionItem>(
@@ -275,20 +257,13 @@ const SearchResults: React.FC<SearchResultsProps> = ({
       return { data: result.data || [], total: result.total || 0 };
     },
     (item) =>
-      (item.createHash?.toLowerCase() || "").includes(
-        searchQuery.toLowerCase()
-      ) ||
-      (item.createAddress?.toLowerCase() || "").includes(
-        searchQuery.toLowerCase()
-      ) ||
-      (item.targetAddress?.toLowerCase() || "").includes(
-        searchQuery.toLowerCase()
-      ) ||
-      (item.linkAddress?.toLowerCase() || "").includes(
-        searchQuery.toLowerCase()
-      ),
+      (item.createHash?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+      (item.createAddress?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+      (item.targetAddress?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+      (item.linkAddress?.toLowerCase() || '').includes(searchQuery.toLowerCase()),
     searchQuery,
-    isValidInput
+    isValidInput,
+    searchTrigger
   );
 
   const prNode = usePaginatedSearch<PRNodeItem>(
@@ -296,12 +271,10 @@ const SearchResults: React.FC<SearchResultsProps> = ({
       const result = await fetchPRNodes(page, pageSize);
       return { data: result.data || [], total: result.total || 0 };
     },
-    (item) =>
-      (item.serverAddress?.toLowerCase() || "").includes(
-        searchQuery.toLowerCase()
-      ),
+    (item) => (item.serverAddress?.toLowerCase() || '').includes(searchQuery.toLowerCase()),
     searchQuery,
-    isValidInput
+    isValidInput,
+    searchTrigger
   );
 
   const stake = usePaginatedSearch<StakeTransactionItem>(
@@ -310,22 +283,17 @@ const SearchResults: React.FC<SearchResultsProps> = ({
       return { data: result.data || [], total: result.total || 0 };
     },
     (item) =>
-      (item.hash?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
-      (item.userAddress?.toLowerCase() || "").includes(
-        searchQuery.toLowerCase()
-      ) ||
-      (item.serverAddress?.toLowerCase() || "").includes(
-        searchQuery.toLowerCase()
-      ),
+      (item.hash?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+      (item.userAddress?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+      (item.serverAddress?.toLowerCase() || '').includes(searchQuery.toLowerCase()),
     searchQuery,
-    isValidInput
+    isValidInput,
+    searchTrigger
   );
 
-  const [selectedConsensus, setSelectedConsensus] =
-    useState<ConsensusConnectionItem | null>(null);
+  const [selectedConsensus, setSelectedConsensus] = useState<ConsensusConnectionItem | null>(null);
   const [selectedPR, setSelectedPR] = useState<PRNodeItem | null>(null);
-  const [selectedStake, setSelectedStake] =
-    useState<StakeTransactionItem | null>(null);
+  const [selectedStake, setSelectedStake] = useState<StakeTransactionItem | null>(null);
 
   const renderNoData = () => (
     <div className="h-96 flex items-center justify-center text-card-foreground">
@@ -361,13 +329,9 @@ const SearchResults: React.FC<SearchResultsProps> = ({
           {/* Consensus Connection */}
           <TabsContent value="consensus">
             {consensus.loading && consensus.data.length === 0 ? (
-              <div className="h-96 flex items-center justify-center">
-                {t("consensus.loading")}
-              </div>
+              <div className="h-96 flex items-center justify-center">{t("consensus.loading")}</div>
             ) : consensus.error ? (
-              <div className="h-96 flex items-center justify-center text-red-500">
-                {consensus.error}
-              </div>
+              <div className="h-96 flex items-center justify-center text-red-500">{consensus.error}</div>
             ) : consensus.data.length === 0 && consensus.isSearchComplete ? (
               renderNoData()
             ) : selectedConsensus ? (
@@ -377,117 +341,63 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                     src="/arrow-left-icon.svg"
                     className="h-[20px] w-[20px] cursor-pointer"
                     onClick={() => setSelectedConsensus(null)}
-                    loading="lazy"
                   />
                   <h2 className="text-[14px] leading-[19px] font-normal">
-                    {t("consensus.title")}
+                    {t('consensus.title')}
                   </h2>
                 </div>
                 <div className="grid md:grid-cols-[180px_1fr] gap-y-1 md:gap-y-4 text-[14px] leading-[19px] text-foreground">
-                  <div className="text-card-foreground md:text-foreground">
-                    {t("consensus.details.hash")}
-                  </div>
-                  <div className="truncate max-w-[300px] md:max-w-full">
-                    {selectedConsensus.createHash || ""}
-                  </div>
+                  <div className="text-card-foreground md:text-foreground">{t('consensus.details.hash')}</div>
+                  <div className="truncate max-w-[300px] md:max-w-full">{selectedConsensus.createHash || ''}</div>
 
                   <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-                  <div className="text-card-foreground md:text-foreground">
-                    {t("consensus.details.network")}
-                  </div>
-                  <div>{selectedConsensus.chainNetWork || ""}</div>
+                  <div className="text-card-foreground md:text-foreground">{t('consensus.details.network')}</div>
+                  <div>{selectedConsensus.chainNetWork || ''}</div>
 
                   <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-                  <div className="text-card-foreground md:text-foreground">
-                    {t("consensus.details.status")}
-                  </div>
+                  <div className="text-card-foreground md:text-foreground">{t('consensus.details.status')}</div>
                   <div>{getStatusText(selectedConsensus.linkStatus, t)}</div>
 
                   <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-                  <div className="text-card-foreground md:text-foreground">
-                    {t("consensus.details.creationTime")}
-                  </div>
+                  <div className="text-card-foreground md:text-foreground">{t('consensus.details.creationTime')}</div>
                   <div>{formatTime(selectedConsensus.createTime)}</div>
 
                   <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-                  <div className="text-card-foreground md:text-foreground">
-                    {t("consensus.details.connectionQuantity")}
-                  </div>
-                  <div>
-                    {selectedConsensus.amount || ""}{" "}
-                    {selectedConsensus.linkCurrency || ""}
-                  </div>
-
+                  <div className="text-card-foreground md:text-foreground">{t('consensus.details.connectionQuantity')}</div>
+                  <div>{selectedConsensus.amount || ''} {selectedConsensus.linkCurrency || ''}</div>
+                  
                   <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-                  <div className="text-card-foreground md:text-foreground">
-                    {t("consensus.details.initiator")}
-                  </div>
+                  <div className="text-card-foreground md:text-foreground">{t('consensus.details.initiator')}</div>
                   <div className="flex gap-2 items-center">
-                    <span className="truncate max-w-[300px] md:max-w-full">
-                      {selectedConsensus.createAddress || ""}
-                    </span>
-                    <img
-                      src="/copy.svg"
-                      onClick={() =>
-                        copyToClipboard(selectedConsensus.createAddress)
-                      }
-                      className="cursor-pointer"
-                      loading="lazy"
-                    />
+                    <span className="truncate max-w-[300px] md:max-w-full">{selectedConsensus.createAddress || ''}</span>
+                    <img src="/copy.svg" onClick={() => copyToClipboard(selectedConsensus.createAddress)} className="cursor-pointer" />
                   </div>
-
+                  
                   <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-                  <div className="text-card-foreground md:text-foreground">
-                    {t("consensus.details.receiver")}
-                  </div>
+                  <div className="text-card-foreground md:text-foreground">{t('consensus.details.receiver')}</div>
                   <div className="flex gap-2 items-center">
-                    <span className="truncate max-w-[300px] md:max-w-full">
-                      {selectedConsensus.targetAddress || ""}
-                    </span>
-                    <img
-                      src="/copy.svg"
-                      onClick={() =>
-                        copyToClipboard(selectedConsensus.targetAddress)
-                      }
-                      className="cursor-pointer"
-                      loading="lazy"
-                    />
+                    <span className="truncate max-w-[300px] md:max-w-full">{selectedConsensus.targetAddress || ''}</span>
+                    <img src="/copy.svg" onClick={() => copyToClipboard(selectedConsensus.targetAddress)} className="cursor-pointer" />
                   </div>
-
+                  
                   <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-                  <div className="text-card-foreground md:text-foreground">
-                    {t("consensus.details.connectionContract")}
-                  </div>
+                  <div className="text-card-foreground md:text-foreground">{t('consensus.details.connectionContract')}</div>
                   <div className="flex gap-2 items-center">
-                    <span className="truncate max-w-[300px] md:max-w-full">
-                      {selectedConsensus.linkAddress || ""}
-                    </span>
-                    <img
-                      src="/copy.svg"
-                      onClick={() =>
-                        copyToClipboard(selectedConsensus.linkAddress)
-                      }
-                      className="cursor-pointer"
-                      loading="lazy"
-                    />
+                    <span className="truncate max-w-[300px] md:max-w-full">{selectedConsensus.linkAddress || ''}</span>
+                    <img src="/copy.svg" onClick={() => copyToClipboard(selectedConsensus.linkAddress)} className="cursor-pointer" />
                   </div>
-
+                  
                   <hr className="md:hidden my-2 dark:border-[#454545]" />
 
-                  <div className="text-card-foreground md:text-foreground">
-                    {t("consensus.details.lockTime")}
-                  </div>
-                  <div>
-                    {selectedConsensus.lockedDay || ""}{" "}
-                    {t("consensus.details.days")}
-                  </div>
+                  <div className="text-card-foreground md:text-foreground">{t('consensus.details.lockTime')}</div>
+                  <div>{selectedConsensus.lockedDay || ''} {t('consensus.details.days')}</div>
                 </div>
               </div>
             ) : (
@@ -498,22 +408,22 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                     <thead className="bg-[#F6F6F6] dark:bg-[#434352]">
                       <tr>
                         <th className="px-[20px] py-[20px] text-left text-[14px] leading-[19px] font-normal">
-                          {t("consensus.columns.hash")}
+                          {t('consensus.columns.hash')}
                         </th>
                         <th className="px-[20px] py-[20px] text-left text-[14px] leading-[19px] font-normal">
-                          {t("consensus.columns.initiator")}
+                          {t('consensus.columns.initiator')}
                         </th>
                         <th className="px-[20px] py-[20px] text-left text-[14px] leading-[19px] font-normal">
-                          {t("consensus.columns.receiver")}
+                          {t('consensus.columns.receiver')}
                         </th>
                         <th className="px-[20px] py-[20px] text-left text-[14px] leading-[19px] font-normal">
-                          {t("consensus.columns.connectionQuantity")}
+                          {t('consensus.columns.connectionQuantity')}
                         </th>
                         <th className="px-[20px] py-[20px] text-left text-[14px] leading-[19px] font-normal">
-                          {t("consensus.columns.time")}
+                          {t('consensus.columns.time')}
                         </th>
                         <th className="px-[20px] py-[20px] text-left text-[14px] leading-[19px] font-normal">
-                          {t("consensus.columns.action")}
+                          {t('consensus.columns.action')}
                         </th>
                       </tr>
                     </thead>
@@ -525,33 +435,20 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                           </td>
                           <td className="px-4 py-3 text-sm truncate max-w-[180px]">
                             <div className="flex gap-[15px]">
-                              <div className="truncate max-w-[180px]">
-                                {hideAddress(row.createAddress)}
-                              </div>
+                              <div className="truncate max-w-[180px]">{hideAddress(row.createAddress)}</div>
                               <div>
-                                <img
-                                  src="/table-arrow.svg"
-                                  onClick={() => setSelectedConsensus(row)}
-                                  className="cursor-pointer"
-                                />
+                                <img src="/table-arrow.svg" onClick={() => setSelectedConsensus(row)} className="cursor-pointer" />
                               </div>
                             </div>
                           </td>
                           <td className="px-4 py-3 text-sm truncate max-w-[180px]">
                             {hideAddress(row.targetAddress)}
                           </td>
+                          <td className="px-4 py-3 text-sm">{row.amount || ''} {row.linkCurrency || ''}</td>
+                          <td className="px-4 py-3 text-sm">{formatTime(row.createTime)}</td>
                           <td className="px-4 py-3 text-sm">
-                            {row.amount || ""} {row.linkCurrency || ""}
-                          </td>
-                          <td className="px-4 py-3 text-sm">
-                            {formatTime(row.createTime)}
-                          </td>
-                          <td className="px-4 py-3 text-sm">
-                            <button
-                              className="text-primary hover:underline"
-                              onClick={() => setSelectedConsensus(row)}
-                            >
-                              {t("consensus.more")}
+                            <button className="text-primary hover:underline" onClick={() => setSelectedConsensus(row)}>
+                              {t('consensus.more')}
                             </button>
                           </td>
                         </tr>
@@ -563,36 +460,22 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                 {/* Mobile View */}
                 <div className="md:hidden space-y-3">
                   {consensus.data.map((row, idx) => (
-                    <div
-                      key={idx}
-                      className="border-b dark:border-[#454545] p-3"
-                    >
+                    <div key={idx} className="border-b dark:border-[#454545] p-3">
                       <div className="flex justify-between text-sm font-normal">
                         <span className="truncate max-w-[220px] text-card-foreground">
                           {hideAddress(row.createHash)}
                         </span>
-                        <span
-                          onClick={() => setSelectedConsensus(row)}
-                          className="text-primary cursor-pointer"
-                        >
-                          {row.amount || ""} {row.linkCurrency || ""}
+                        <span onClick={() => setSelectedConsensus(row)} className="text-primary cursor-pointer">
+                          {row.amount || ''} {row.linkCurrency || ''}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm font-normal mt-2">
-                        <span className="text-card-foreground">
-                          {t("consensus.columns.initiator")}:
-                        </span>
-                        <span className="truncate max-w-[250px]">
-                          {hideAddress(row.createAddress)}
-                        </span>
+                        <span className="text-card-foreground">{t('consensus.columns.initiator')}:</span>
+                        <span className="truncate max-w-[250px]">{hideAddress(row.createAddress)}</span>
                       </div>
                       <div className="flex justify-between text-sm font-normal mt-2">
-                        <span className="text-card-foreground">
-                          {t("consensus.columns.receiver")}:
-                        </span>
-                        <span className="truncate max-w-[250px]">
-                          {hideAddress(row.targetAddress)}
-                        </span>
+                        <span className="text-card-foreground">{t('consensus.columns.receiver')}:</span>
+                        <span className="truncate max-w-[250px]">{hideAddress(row.targetAddress)}</span>
                       </div>
                     </div>
                   ))}
@@ -600,15 +483,11 @@ const SearchResults: React.FC<SearchResultsProps> = ({
 
                 {consensus.loading && !consensus.isSearchComplete && (
                   <div className="text-center py-4 text-sm text-card-foreground">
-                    Loading more results... ({consensus.total}+ found so far)
+                    {t("search.loadingMore", { count: consensus.total })}
                   </div>
                 )}
 
-                <PaginationWrapper
-                  currentPage={consensus.page}
-                  total={consensus.total}
-                  onPageChange={consensus.setPage}
-                />
+                <PaginationWrapper currentPage={consensus.page} total={consensus.total} onPageChange={consensus.setPage} />
               </>
             )}
           </TabsContent>
@@ -616,13 +495,9 @@ const SearchResults: React.FC<SearchResultsProps> = ({
           {/* PR Nodes */}
           <TabsContent value="pr-node">
             {prNode.loading && prNode.data.length === 0 ? (
-              <div className="h-96 flex items-center justify-center">
-                {t("ranking.loading")}
-              </div>
+              <div className="h-96 flex items-center justify-center">{t("prNode.loading")}</div>
             ) : prNode.error ? (
-              <div className="h-96 flex items-center justify-center text-red-500">
-                {prNode.error}
-              </div>
+              <div className="h-96 flex items-center justify-center text-red-500">{prNode.error}</div>
             ) : prNode.data.length === 0 && prNode.isSearchComplete ? (
               renderNoData()
             ) : selectedPR ? (
@@ -631,7 +506,6 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                   <img
                     src="/arrow-left-icon.svg"
                     className="h-[20px] w-[20px] cursor-pointer"
-                    loading="lazy"
                     onClick={() => setSelectedPR(null)}
                   />
                   <h2 className="text-[14px] leading-[19px] font-normal">
@@ -639,35 +513,29 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                   </h2>
                 </div>
                 <div className="grid md:grid-cols-[180px_1fr] gap-y-1 md:gap-y-4 text-[14px] leading-[19px] text-foreground">
-                  <div className="text-card-foreground md:text-foreground">
-                    {t("prNode.details.prNode")}
-                  </div>
-                  <div className="truncate max-w-full">
-                    {selectedPR.serverAddress || ""}
-                  </div>
+                  <div className="text-card-foreground md:text-foreground">{t("prNode.details.prNode")}</div>
+                  <div className="truncate max-w-full">{selectedPR.serverAddress || ''}</div>
 
                   <hr className="md:hidden my-2 dark:border-[#454545]" />
 
                   <div className="text-card-foreground md:text-foreground">
                     {t("prNode.details.serverDomain")}
                   </div>
-                  <div className="truncate max-w-full">
-                    {selectedPR.serverUrl || ""}
-                  </div>
+                  <div className="truncate max-w-full">{selectedPR.serverUrl || ''}</div>
 
                   <hr className="md:hidden my-2 dark:border-[#454545]" />
 
                   <div className="text-card-foreground md:text-foreground">
                     {t("prNode.details.serverIP")}
                   </div>
-                  <div>{selectedPR.serverIp || ""}</div>
+                  <div>{selectedPR.serverIp || ''}</div>
 
                   <hr className="md:hidden my-2 dark:border-[#454545]" />
 
                   <div className="text-card-foreground md:text-foreground">
                     {t("prNode.details.serverNickname")}
                   </div>
-                  <div>{selectedPR.serverNickname || ""}</div>
+                  <div>{selectedPR.serverNickname || ''}</div>
 
                   <hr className="md:hidden my-2 dark:border-[#454545]" />
 
@@ -675,13 +543,13 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                     {t("prNode.details.nodeRanking")}
                   </div>
                   <div>{selectedPR.rank || "N/A"}</div>
-
+                  
                   <hr className="md:hidden my-2 dark:border-[#454545]" />
 
                   <div className="text-card-foreground md:text-foreground">
                     {t("prNode.details.stakeAmount")}
                   </div>
-                  <div>{selectedPR.ledgeAmount || ""} LUCA</div>
+                  <div>{selectedPR.ledgeAmount || ''} LUCA</div>
                 </div>
               </div>
             ) : (
@@ -718,17 +586,13 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                             {hideAddress(row.serverAddress)}
                           </td>
                           <td className="px-4 py-3 text-sm truncate max-w-[180px]">
-                            {row.serverUrl || ""}
+                            {row.serverUrl || ''}
                           </td>
                           <td className="px-4 py-3 text-sm truncate max-w-[180px]">
-                            {row.serverIp || ""}
+                            {row.serverIp || ''}
                           </td>
-                          <td className="px-4 py-3 text-sm">
-                            {row.serverNickname || ""}
-                          </td>
-                          <td className="px-4 py-3 text-sm">
-                            {row.ledgeAmount || ""} LUCA
-                          </td>
+                          <td className="px-4 py-3 text-sm">{row.serverNickname || ''}</td>
+                          <td className="px-4 py-3 text-sm">{row.ledgeAmount || ''} LUCA</td>
                           <td className="px-4 py-3 text-sm">
                             <button
                               className="text-primary hover:underline"
@@ -746,25 +610,20 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                 {/* Mobile View */}
                 <div className="md:hidden space-y-3">
                   {prNode.data.map((row, idx) => (
-                    <div
-                      key={idx}
-                      className="border-b dark:border-[#454545] p-3"
-                    >
+                    <div key={idx} className="border-b dark:border-[#454545] p-3">
                       <div className="flex justify-between text-sm font-normal">
                         <span className="truncate max-w-[220px] text-card-foreground">
-                          {row.serverNickname || ""}
+                          {row.serverNickname || ''}
                         </span>
-                        <span>IP {row.serverIp || ""}</span>
+                        <span>IP {row.serverIp || ''}</span>
                       </div>
                       <div className="flex justify-between gap-10 text-sm font-normal mt-2">
-                        <span className="truncate max-w-[100px]">
-                          {hideAddress(row.serverAddress)}
-                        </span>
+                        <span className="truncate max-w-[100px]">{hideAddress(row.serverAddress)}</span>
                         <span
                           onClick={() => setSelectedPR(row)}
                           className="truncate max-w-full text-primary cursor-pointer"
                         >
-                          {row.ledgeAmount || ""} LUCA
+                          {row.ledgeAmount || ''} LUCA
                         </span>
                       </div>
                     </div>
@@ -773,15 +632,11 @@ const SearchResults: React.FC<SearchResultsProps> = ({
 
                 {prNode.loading && !prNode.isSearchComplete && (
                   <div className="text-center py-4 text-sm text-card-foreground">
-                    Loading more results... ({prNode.total}+ found so far)
+                    {t("search.loadingMore", { count: prNode.total })}
                   </div>
                 )}
 
-                <PaginationWrapper
-                  currentPage={prNode.page}
-                  total={prNode.total}
-                  onPageChange={prNode.setPage}
-                />
+                <PaginationWrapper currentPage={prNode.page} total={prNode.total} onPageChange={prNode.setPage} />
               </>
             )}
           </TabsContent>
@@ -789,13 +644,9 @@ const SearchResults: React.FC<SearchResultsProps> = ({
           {/* Stake Transactions */}
           <TabsContent value="stake">
             {stake.loading && stake.data.length === 0 ? (
-              <div className="h-96 flex items-center justify-center">
-                {t("ranking.loading")}
-              </div>
+              <div className="h-96 flex items-center justify-center">{t("stake.loading")}</div>
             ) : stake.error ? (
-              <div className="h-96 flex items-center justify-center text-red-500">
-                {stake.error}
-              </div>
+              <div className="h-96 flex items-center justify-center text-red-500">{stake.error}</div>
             ) : stake.data.length === 0 && stake.isSearchComplete ? (
               renderNoData()
             ) : selectedStake ? (
@@ -804,7 +655,6 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                   <img
                     src="/arrow-left-icon.svg"
                     className="h-[20px] w-[20px] cursor-pointer"
-                    loading="lazy"
                     onClick={() => setSelectedStake(null)}
                   />
                   <h2 className="text-[14px] leading-[19px] font-normal">
@@ -812,19 +662,15 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                   </h2>
                 </div>
                 <div className="grid md:grid-cols-[180px_1fr] gap-y-1 md:gap-y-4 text-[14px] leading-[19px] text-foreground">
-                  <div className="text-card-foreground md:text-foreground">
-                    {t("stake.details.hash")}
-                  </div>
+                  <div className="text-card-foreground md:text-foreground">{t("stake.details.hash")}</div>
                   <div className="truncate max-w-[300px] md:max-w-full">
-                    {selectedStake.hash || ""}
+                    {selectedStake.hash || ''}
                   </div>
 
                   <hr className="md:hidden my-1" />
 
-                  <div className="text-card-foreground md:text-foreground">
-                    {t("stake.details.network")}
-                  </div>
-                  <div>{selectedStake.chainNetWork || ""}</div>
+                  <div className="text-card-foreground md:text-foreground">{t("stake.details.network")}</div>
+                  <div>{selectedStake.chainNetWork || ''}</div>
 
                   <hr className="md:hidden my-1" />
 
@@ -845,8 +691,8 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                   <div className="text-card-foreground md:text-foreground">
                     {t("stake.details.stakeAmount")}
                   </div>
-                  <div>{selectedStake.ledgeAmount || ""} LUCA</div>
-
+                  <div>{selectedStake.ledgeAmount || ''} LUCA</div>
+                  
                   <hr className="md:hidden my-1" />
 
                   <div className="text-card-foreground md:text-foreground">
@@ -854,16 +700,15 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                   </div>
                   <div className="flex gap-2 items-center">
                     <span className="truncate max-w-[300px] md:max-w-full">
-                      {selectedStake.userAddress || ""}
+                      {selectedStake.userAddress || ''}
                     </span>
                     <img
                       src="/copy.svg"
                       onClick={() => copyToClipboard(selectedStake.userAddress)}
                       className="cursor-pointer"
-                      loading="lazy"
                     />
                   </div>
-
+                  
                   <hr className="md:hidden my-1" />
 
                   <div className="text-card-foreground md:text-foreground">
@@ -871,18 +716,15 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                   </div>
                   <div className="flex gap-2 items-center">
                     <span className="truncate max-w-[300px] md:max-w-full">
-                      {selectedStake.serverAddress || ""}
+                      {selectedStake.serverAddress || ''}
                     </span>
                     <img
                       src="/copy.svg"
-                      onClick={() =>
-                        copyToClipboard(selectedStake.serverAddress)
-                      }
+                      onClick={() => copyToClipboard(selectedStake.serverAddress)}
                       className="cursor-pointer"
-                      loading="lazy"
                     />
                   </div>
-
+                  
                   <hr className="md:hidden my-1" />
 
                   <div className="text-card-foreground md:text-foreground">
@@ -941,9 +783,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                           <td className="px-4 py-3 text-sm truncate max-w-[180px]">
                             {hideAddress(row.serverAddress)}
                           </td>
-                          <td className="px-4 py-3 text-sm">
-                            {row.ledgeAmount || ""} LUCA
-                          </td>
+                          <td className="px-4 py-3 text-sm">{row.ledgeAmount || ''} LUCA</td>
                           <td className="px-4 py-3 text-sm">
                             {formatTime(row.createTime)}
                           </td>
@@ -964,10 +804,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                 {/* Mobile View */}
                 <div className="md:hidden space-y-3 dark:bg-card">
                   {stake.data.map((row, idx) => (
-                    <div
-                      key={idx}
-                      className="border-b dark:border-[#454545] p-3"
-                    >
+                    <div key={idx} className="border-b dark:border-[#454545] p-3">
                       <div className="flex justify-between text-sm font-normal">
                         <span className="truncate max-w-[220px] text-card-foreground">
                           {hideAddress(row.hash)}
@@ -976,21 +813,17 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                           onClick={() => setSelectedStake(row)}
                           className="text-primary cursor-pointer"
                         >
-                          {row.ledgeAmount || ""} LUCA
+                          {row.ledgeAmount || ''} LUCA
                         </span>
                       </div>
                       <div className="flex justify-between text-sm font-normal mt-2">
-                        <span className="text-card-foreground">
-                          {t("stake.initiator")}:
-                        </span>
+                        <span className="text-card-foreground">{t("stake.initiator")}:</span>
                         <span className="truncate max-w-[250px]">
                           {hideAddress(row.userAddress)}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm font-normal mt-2">
-                        <span className="text-card-foreground">
-                          {t("stake.receiver")}:
-                        </span>
+                        <span className="text-card-foreground">{t("stake.receiver")}:</span>
                         <span className="truncate max-w-[250px]">
                           {hideAddress(row.serverAddress)}
                         </span>
@@ -1001,15 +834,11 @@ const SearchResults: React.FC<SearchResultsProps> = ({
 
                 {stake.loading && !stake.isSearchComplete && (
                   <div className="text-center py-4 text-sm text-card-foreground">
-                    Loading more results... ({stake.total}+ found so far)
+                    {t("search.loadingMore", { count: stake.total })}
                   </div>
                 )}
 
-                <PaginationWrapper
-                  currentPage={stake.page}
-                  total={stake.total}
-                  onPageChange={stake.setPage}
-                />
+                <PaginationWrapper currentPage={stake.page} total={stake.total} onPageChange={stake.setPage} />
               </>
             )}
           </TabsContent>

@@ -21,7 +21,7 @@ interface ChartData {
 }
 
 export const DashboardSection = () => {
-  const { t } = useTranslation("explorer");
+  const { t } = useTranslation('explorer');
   const [overviewData, setOverviewData] = useState<OverviewData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +35,7 @@ export const DashboardSection = () => {
         setError(null);
       } catch (err) {
         console.error("Error fetching overview data:", err);
-        setError(t("common.error"));
+        setError(t('common.error'));
       } finally {
         setLoading(false);
       }
@@ -78,13 +78,11 @@ export const DashboardSection = () => {
     if (!overviewData) return [];
 
     const userMarketNum =
-      overviewData.circulationTotal -
-      overviewData.contractTotalAmount -
-      overviewData.treatyTotal;
+      overviewData.circulationTotal - overviewData.contractTotalAmount - overviewData.treatyTotal;
 
     return [
       {
-        label: t("overview.lucaPrice"),
+        label: t('overview.lucaPrice'),
         value: formatPrice(overviewData.price),
         hasPercentage: true,
         percentage: overviewData.pre
@@ -94,39 +92,39 @@ export const DashboardSection = () => {
           : "+0.00%",
       },
       {
-        label: t("overview.totalSupply"),
+        label: t('overview.totalSupply'),
         value: formatNumber(overviewData.issuanceTotal),
       },
-      {
-        label: t("overview.userMarketCirculation"),
-        value: formatNumber(userMarketNum),
+      { 
+        label: t('overview.userMarketCirculation'), 
+        value: formatNumber(userMarketNum) 
       },
       {
-        label: t("overview.circulatingSupply"),
+        label: t('overview.circulatingSupply'),
         value: formatNumber(overviewData.circulationTotal),
       },
       {
-        label: t("overview.remainingLiquidityRewards"),
+        label: t('overview.remainingLiquidityRewards'),
         value: formatNumber(overviewData.liquidityReward),
       },
       {
-        label: t("overview.lucaStakedConsensus"),
+        label: t('overview.lucaStakedConsensus'),
         value: formatNumber(overviewData.contractTotalAmount),
       },
       {
-        label: t("overview.lucaStakedPR"),
+        label: t('overview.lucaStakedPR'),
         value: formatNumber(overviewData.treatyTotal),
       },
       {
-        label: t("overview.remainingCommunityFund"),
+        label: t('overview.remainingCommunityFund'),
         value: formatNumber(overviewData.communityFundStock),
       },
       {
-        label: t("overview.lucaConsensusConnections"),
+        label: t('overview.lucaConsensusConnections'),
         value: formatNumber(overviewData.contractCount),
       },
       {
-        label: t("overview.prServersOperation"),
+        label: t('overview.prServersOperation'),
         value: formatNumber(overviewData.prCount),
       },
     ];
@@ -147,23 +145,20 @@ export const DashboardSection = () => {
     // Outer ring: Total issuance breakdown
     const outer: ChartData[] = [
       {
-        name: t("overview.circulatingSupply"),
+        name: t('overview.circulatingSupply'),
         value: circulatingSupply,
         actualValue: circulatingSupply,
         color: "#3CC9C7",
       },
       {
-        name: t("overview.remainingCommunityFund"),
+        name: t('overview.remainingCommunityFund'),
         value: remainingCommunityFund,
         actualValue: remainingCommunityFund,
         color: "#FFC94D",
       },
       {
-        name: t("overview.remainingLiquidityRewards"),
-        value:
-          remainingLiquidityRewards === 0
-            ? minVisibleValue
-            : remainingLiquidityRewards,
+        name: t('overview.remainingLiquidityRewards'),
+        value: remainingLiquidityRewards === 0 ? minVisibleValue : remainingLiquidityRewards,
         actualValue: remainingLiquidityRewards,
         color: "#FF69B4",
       },
@@ -172,19 +167,19 @@ export const DashboardSection = () => {
     // Inner ring: Breakdown of circulating supply
     const inner: ChartData[] = [
       {
-        name: t("overview.lucaStakedConsensus"),
+        name: t('overview.lucaStakedConsensus'),
         value: lucaStakedConsensus,
         actualValue: lucaStakedConsensus,
         color: "#97D76D",
       },
       {
-        name: t("overview.userMarketCirculation"),
+        name: t('overview.userMarketCirculation'),
         value: userMarketCirculation,
         actualValue: userMarketCirculation,
         color: "#5B6BF5",
       },
       {
-        name: t("overview.lucaStakedPR"),
+        name: t('overview.lucaStakedPR'),
         value: lucaStakedPR,
         actualValue: lucaStakedPR,
         color: "#1B5E20",
@@ -198,7 +193,7 @@ export const DashboardSection = () => {
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       const actualValue = payload[0].payload.actualValue;
-
+      
       return (
         <div className="bg-white dark:bg-card border border-gray-300 dark:border-border rounded-lg p-3 shadow-lg">
           <p className="text-sm font-medium text-foreground mb-1">
@@ -215,7 +210,7 @@ export const DashboardSection = () => {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
-      alert(t("overview.copied"));
+      alert(t('overview.copied'));
     });
   };
 
@@ -242,10 +237,10 @@ export const DashboardSection = () => {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full">
         <div className="bg-card rounded-2xl border-[0px] shadow-none md:shadow-sm p-6 h-96 flex items-center justify-center">
-          <div className="text-card-foreground">{t("common.loading")}</div>
+          <div className="text-card-foreground">{t('common.loading')}</div>
         </div>
         <div className="bg-card rounded-2xl border-[0px] shadow-none md:shadow-sm p-6 h-96 flex items-center justify-center">
-          <div className="text-card-foreground">{t("common.loading")}</div>
+          <div className="text-card-foreground">{t('common.loading')}</div>
         </div>
       </div>
     );
@@ -269,12 +264,7 @@ export const DashboardSection = () => {
       <Card className="bg-card rounded-2xl border-[0px] shadow-none md:shadow-sm">
         <CardHeader className="border-b border-border dark:border-primary-foreground px-6 py-4">
           <div className="flex items-center gap-3">
-            <img
-              src="/dots.png"
-              alt="dots"
-              className="w-[3px] h-[14px]"
-              loading="lazy"
-            />
+            <img src="/dots.png" alt="dots" className="w-[3px] h-[14px]" />
             <h3 className="text-[14px] max-w-[50px] md:max-w-full leading-[19px] font-normal text-[#999F9F]">
               LUCA Overview
             </h3>
@@ -304,7 +294,6 @@ export const DashboardSection = () => {
                     <img
                       className="mr-1"
                       alt="Image"
-                      loading="lazy"
                       src={
                         parseFloat(item.percentage || "0") >= 0
                           ? "/arrow-up.svg"
@@ -324,14 +313,9 @@ export const DashboardSection = () => {
         <Card className="bg-card rounded-2xl border-[0px] shadow-none md:shadow-sm flex-1">
           <CardHeader className="border-b border-border dark:border-primary-foreground px-6 py-4">
             <div className="flex items-center gap-3">
-              <img
-                src="/dots.png"
-                alt="dots"
-                className="w-[3px] h-[14px]"
-                loading="lazy"
-              />
+              <img src="/dots.png" alt="dots" className="w-[3px] h-[14px]" />
               <h3 className="text-[14px] leading-[19px] font-normal text-[#999F9F]">
-                {t("overview.proportionTitle")}
+                {t('overview.proportionTitle')}
               </h3>
             </div>
           </CardHeader>
@@ -351,36 +335,30 @@ export const DashboardSection = () => {
                     startAngle={135}
                     endAngle={495}
                     onMouseEnter={(_, index) => {
-                      const sector = document.querySelectorAll(
-                        ".recharts-pie-sector"
-                      )[index];
+                      const sector = document.querySelectorAll('.recharts-pie-sector')[index];
                       if (sector) {
-                        sector.setAttribute("transform", `scale(1.05)`);
-                        sector.setAttribute("transform-origin", "center");
-                        (sector as SVGElement).style.transition =
-                          "transform 0.3s ease";
-                        (sector as SVGElement).style.filter =
-                          "drop-shadow(0 4px 8px rgba(0,0,0,0.2))";
-                        (sector as SVGElement).style.cursor = "pointer";
+                        sector.setAttribute('transform', `scale(1.05)`);
+                        sector.setAttribute('transform-origin', 'center');
+                        (sector as SVGElement).style.transition = 'transform 0.3s ease';
+                        (sector as SVGElement).style.filter = 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))';
+                        (sector as SVGElement).style.cursor = 'pointer';
                       }
                     }}
                     onMouseLeave={(_, index) => {
-                      const sector = document.querySelectorAll(
-                        ".recharts-pie-sector"
-                      )[index];
+                      const sector = document.querySelectorAll('.recharts-pie-sector')[index];
                       if (sector) {
-                        sector.setAttribute("transform", "scale(1)");
-                        (sector as SVGElement).style.filter = "none";
+                        sector.setAttribute('transform', 'scale(1)');
+                        (sector as SVGElement).style.filter = 'none';
                       }
                     }}
                   >
                     {dataOuter.map((entry, index) => (
-                      <Cell
-                        key={`outer-${index}`}
+                      <Cell 
+                        key={`outer-${index}`} 
                         fill={entry.color}
-                        style={{
-                          transition: "all 0.3s ease",
-                          transformOrigin: "center",
+                        style={{ 
+                          transition: 'all 0.3s ease',
+                          transformOrigin: 'center',
                         }}
                       />
                     ))}
@@ -397,40 +375,34 @@ export const DashboardSection = () => {
                     startAngle={135}
                     endAngle={495}
                     onMouseEnter={(_, index) => {
-                      const allSectors = document.querySelectorAll(
-                        ".recharts-pie-sector"
-                      );
+                      const allSectors = document.querySelectorAll('.recharts-pie-sector');
                       const innerStartIndex = dataOuter.length;
                       const sector = allSectors[innerStartIndex + index];
                       if (sector) {
-                        sector.setAttribute("transform", `scale(1.05)`);
-                        sector.setAttribute("transform-origin", "center");
-                        (sector as SVGElement).style.transition =
-                          "transform 0.3s ease";
-                        (sector as SVGElement).style.filter =
-                          "drop-shadow(0 4px 8px rgba(0,0,0,0.2))";
-                        (sector as SVGElement).style.cursor = "pointer";
+                        sector.setAttribute('transform', `scale(1.05)`);
+                        sector.setAttribute('transform-origin', 'center');
+                        (sector as SVGElement).style.transition = 'transform 0.3s ease';
+                        (sector as SVGElement).style.filter = 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))';
+                        (sector as SVGElement).style.cursor = 'pointer';
                       }
                     }}
                     onMouseLeave={(_, index) => {
-                      const allSectors = document.querySelectorAll(
-                        ".recharts-pie-sector"
-                      );
+                      const allSectors = document.querySelectorAll('.recharts-pie-sector');
                       const innerStartIndex = dataOuter.length;
                       const sector = allSectors[innerStartIndex + index];
                       if (sector) {
-                        sector.setAttribute("transform", "scale(1)");
-                        (sector as SVGElement).style.filter = "none";
+                        sector.setAttribute('transform', 'scale(1)');
+                        (sector as SVGElement).style.filter = 'none';
                       }
                     }}
                   >
                     {dataInner.map((entry, index) => (
-                      <Cell
-                        key={`inner-${index}`}
+                      <Cell 
+                        key={`inner-${index}`} 
                         fill={entry.color}
-                        style={{
-                          transition: "all 0.3s ease",
-                          transformOrigin: "center",
+                        style={{ 
+                          transition: 'all 0.3s ease',
+                          transformOrigin: 'center',
                         }}
                       />
                     ))}

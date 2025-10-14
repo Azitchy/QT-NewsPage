@@ -58,7 +58,7 @@ export const AvatarTabs = (): JSX.Element => {
       <Tabs defaultValue="about" className="mx-auto flex flex-col">
         {/* Tabs Header */}
         <div className="flex justify-center xl:justify-end">
-          <TabsList className="flex bg-transparent rounded-[40px] border border-border p-[5px] h-auto gap-[10px] my-[20px]">
+          <TabsList gradientBorder className="flex bg-background rounded-[40px] border border-border p-[5px] h-auto gap-[10px]">
             {Object.values(tabs).map((tab) => (
               <TabsTrigger
                 key={tab.id}

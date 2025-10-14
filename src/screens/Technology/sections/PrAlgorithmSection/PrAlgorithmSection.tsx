@@ -53,8 +53,8 @@ export const PrAlgorithmSection = (): JSX.Element => {
       <HeadingWithDots text={t('prAlgorithmSection.heading')} />
       <Tabs defaultValue="pr" className="pt-[20px] max-w-[1600px] mx-auto flex flex-col">
         {/* Tabs Header */}
-        <div className="flex justify-center xl:justify-end">
-          <TabsList className="flex bg-transparent rounded-[40px] border border-border p-[5px] h-auto gap-[10px] my-[20px]">
+        <div className="flex justify-center xl:justify-end my-[20px]">
+          <TabsList gradientBorder className="flex bg-background rounded-[40px] border border-border p-[5px] h-auto gap-[10px]">
             {Object.values(prTabs).map((tab) => (
               <TabsTrigger
                 key={tab.id}

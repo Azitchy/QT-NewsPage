@@ -1,62 +1,55 @@
-"use client";
+"use client"
 
 import * as React from "react";
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { useFetchNewsList } from "@/hooks/useApi";
-import { showDefaultImageIfEmpty } from "@/lib/webApi";
-import { NewsModal } from "./NewsModal";
-import { formatDate } from "@/lib/utils";
-import { useTranslation } from "react-i18next";
+import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { useFetchNewsList } from "@/hooks/useApi"
+import { showDefaultImageIfEmpty } from "@/lib/webApi"
+import { NewsModal } from "./NewsModal"
+import { formatDate } from "@/lib/utils"
+import { useTranslation } from "react-i18next"
 
 export const ContentSection = (): JSX.Element => {
   const { t } = useTranslation("news");
 
-  const [newsData, setNewsData] = useState<any[]>([]);
-  const [selectedNews, setSelectedNews] = useState<any>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const {
-    data: newsList,
-    loading,
-    error,
-    execute: fetchNews,
-  } = useFetchNewsList();
+  const [newsData, setNewsData] = useState<any[]>([])
+  const [selectedNews, setSelectedNews] = useState<any>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const { data: newsList, loading, error, execute: fetchNews } = useFetchNewsList()
 
   useEffect(() => {
     // Fetch news data
-    fetchNews({ pageIndex: 1, pageSize: 12, type: "" });
-  }, []);
+    fetchNews({ pageIndex: 1, pageSize: 12, type: "" })
+  }, [])
 
   useEffect(() => {
     if (newsList?.data?.newsList && Array.isArray(newsList.data.newsList)) {
       // Process API news data
-      const processedNews = newsList.data.newsList
-        .slice(0, 12)
-        .map((item: any) => {
-          const newsItem = { ...item };
-          showDefaultImageIfEmpty(newsItem);
+      const processedNews = newsList.data.newsList.slice(0, 12).map((item: any) => {
+        const newsItem = { ...item }
+        showDefaultImageIfEmpty(newsItem)
 
-          return {
-            image: newsItem.coverImg || "/img.png",
-            title: newsItem.title,
-            date: formatDate(newsItem.createdAt),
-          };
-        });
+        return {
+          image: newsItem.coverImg || "/img.png",
+          title: newsItem.title,
+          date: formatDate(newsItem.createdAt),
+        }
+      })
 
-      setNewsData(processedNews);
+      setNewsData(processedNews)
     }
-  }, [newsList]);
+  }, [newsList])
 
   const handleReadNews = (newsItem: any) => {
-    setSelectedNews(newsItem);
-    setIsModalOpen(true);
-  };
+    setSelectedNews(newsItem)
+    setIsModalOpen(true)
+  }
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedNews(null);
-  };
+    setIsModalOpen(false)
+    setSelectedNews(null)
+  }
 
   if (loading) {
     return (
@@ -65,7 +58,7 @@ export const ContentSection = (): JSX.Element => {
           <div className="text-gray-500"> {t("loading.news")} </div>
         </div>
       </section>
-    );
+    )
   }
 
   if (error || newsData.length === 0) {
@@ -75,7 +68,7 @@ export const ContentSection = (): JSX.Element => {
           <div className="text-red-500"> {t("error.news")} </div>
         </div>
       </section>
-    );
+    )
   }
 
   return (
@@ -94,14 +87,14 @@ export const ContentSection = (): JSX.Element => {
                     alt="News image"
                     src={news.image || "/placeholder.svg"}
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = "/img.png";
+                      ;(e.target as HTMLImageElement).src = "/img.png"
                     }}
                   />
                 </div>
 
                 <div className="flex flex-col items-start gap-2.5 pt-0 pb-2.5 px-[20px] md:px-[30px] flex-1">
-                  <div className="flex items-center justify-center w-full">
-                    <h3 className="flex-1 font-inter font-normal text-[#1c1c1c] text-[16px] md:text-[18px] lg:text-[20px] xl:text-[22px] tracking-[0px] leading-[22px] md:leading-[24px] lg:leading-[26px] xl:leading-[28px] line-clamp-3">
+                  <div className="flex items-center justify-center flex w-full">
+                    <h3 className="flex-1 font-titles-h5-large-text-400 font-[number:var(--titles-h5-large-text-400-font-weight)] text-[#1c1c1c] text-[16px] md:text-[18px] lg:text-[20px] xl:text-[22px] tracking-[var(--titles-h5-large-text-400-letter-spacing)] leading-[22px] md:leading-[24px] lg:leading-[26px] xl:leading-[28px] [font-style:var(--titles-h5-large-text-400-font-style)] line-clamp-3">
                       {news.title}
                     </h3>
                   </div>
@@ -109,7 +102,7 @@ export const ContentSection = (): JSX.Element => {
 
                 <div className="flex flex-col items-start px-[20px] md:px-[30px] py-[15px] rounded-[0px_0px_20px_20px] mt-auto">
                   <div className="flex items-center justify-between w-full gap-4">
-                    <time className="flex-1 font-inter font-normal text-[#4f5555] text-[12px] md:text-[14px] lg:text-[16px] tracking-[0px] leading-[24px]">
+                    <time className="flex-1 font-body-body3-400 font-[number:var(--body-body3-400-font-weight)] text-[#4f5555] text-[12px] md:text-[14px] lg:text-[length:var(--body-body3-400-font-size)] tracking-[var(--body-body3-400-letter-spacing)] leading-[var(--body-body3-400-line-height)] [font-style:var(--body-body3-400-font-style)]">
                       {news.date}
                     </time>
 
@@ -118,7 +111,7 @@ export const ContentSection = (): JSX.Element => {
                       className="flex items-center gap-2.5 rounded-[30px] h-auto p-0 hover:bg-transparent group"
                       onClick={() => handleReadNews(news)}
                     >
-                      <span className="font-inter font-normal text-primary-colour text-[11px] md:text-[12px] lg:text-[14px] tracking-[0px] leading-[19px] whitespace-nowrap">
+                      <span className="font-body-body-4-400 font-[number:var(--body-body-4-400-font-weight)] text-primary-colour text-[11px] md:text-[12px] lg:text-[length:var(--body-body-4-400-font-size)] tracking-[var(--body-body-4-400-letter-spacing)] leading-[var(--body-body-4-400-line-height)] [font-style:var(--body-body-4-400-font-style)] whitespace-nowrap">
                         {t("buttons.readNews")}
                       </span>
 
@@ -147,13 +140,13 @@ export const ContentSection = (): JSX.Element => {
         </div>
       </section>
 
-      <NewsModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        newsItem={selectedNews}
+      <NewsModal 
+        isOpen={isModalOpen} 
+        onClose={handleCloseModal} 
+        newsItem={selectedNews} 
         newsList={newsData}
         setNewsItem={setSelectedNews}
       />
     </>
-  );
-};
+  )
+}

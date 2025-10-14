@@ -110,10 +110,7 @@ export const NewsSection = (): JSX.Element => {
   const filteredNews = getFilteredNews();
   const totalPages = Math.ceil(filteredNews.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedNews = filteredNews.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  const paginatedNews = filteredNews.slice(startIndex, startIndex + itemsPerPage);
 
   const handleTabClick = (tabId: string) => {
     setActiveTab(tabId);
@@ -148,22 +145,22 @@ export const NewsSection = (): JSX.Element => {
       <section className="w-full px-4 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
         {/* Tabs */}
         <div className="flex justify-center mb-[35px] px-4 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
-          <div className="inline-flex items-center gap-2.5 p-[5px] rounded-[40px] border border-solid border-border dark:border-primary-foreground max-w-fit">
-            {filterTabs.map((tab) => (
-              <div
-                key={tab.id}
-                onClick={() => handleTabClick(tab.id)}
-                className={`inline-flex items-center justify-center gap-2.5 px-[12px] md:px-[15px] py-2.5 cursor-pointer relative flex-[0_0_auto] rounded-[100px] overflow-hidden transition-colors duration-200 ${
-                  activeTab === tab.id
-                    ? "bg-primary-foreground"
-                    : "hover:bg-card"
-                }`}
-              >
-                <div className="text-primary text-[12px] md:text-[14px] whitespace-nowrap">
-                  {tab.label}
+          <div className="rounded-[40px] border border-border dark:border-gradient max-w-fit">
+            <div className="inline-flex items-center gap-2.5 p-[5px] bg-background rounded-[40px]">
+              {filterTabs.map((tab) => (
+                <div
+                  key={tab.id}
+                  onClick={() => handleTabClick(tab.id)}
+                  className={`inline-flex items-center justify-center gap-2.5 px-[12px] md:px-[15px] py-2.5 cursor-pointer relative flex-[0_0_auto] rounded-[100px] overflow-hidden transition-colors duration-200 ${
+                    activeTab === tab.id ? "bg-primary-foreground" : "hover:bg-card"
+                  }`}
+                >
+                  <div className="text-primary text-[12px] md:text-[14px] whitespace-nowrap">
+                    {tab.label}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
@@ -187,23 +184,21 @@ export const NewsSection = (): JSX.Element => {
             {paginatedNews.map((news, index) => (
               <Card
                 key={`card-${index}`}
-                className="h-auto md:h-[300px] lg:h-[380px] xl:h-[380px] rounded-[20px] border border-solid border-border dark:border-primary-foreground flex flex-col bg-card hover:shadow-lg transition-shadow duration-300"
+                className="h-auto md:h-[300px] lg:h-[380px] xl:h-[380px] rounded-[20px] border border-solid border-border dark:border-gradient flex flex-col bg-card hover:shadow-lg transition-shadow duration-300"
               >
-                <CardContent className="p-0 flex flex-col h-full">
+                <CardContent className="p-0 flex flex-col h-full bg-background rounded-[20px]">
                   <div className="flex flex-col items-start gap-2.5 p-[15px] flex-1">
                     <img
                       className="rounded-[10px] object-cover w-full h-[106px] md:h-[120px]"
                       alt="News image"
                       src={news.image || news.coverImg || "/news-agf-magic.png"}
-                      loading="lazy"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                          "/news-agf-magic.png";
+                        (e.target as HTMLImageElement).src = "/news-agf-magic.png";
                       }}
                     />
                   </div>
                   <div className="flex flex-col items-start gap-2.5 pt-0 pb-2.5 px-[20px] md:px-[30px] flex-1">
-                    <h3 className="font-inter text-foreground text-[26px] md:text-[20px] lg:text-[20px] xl:text-[26px] line-clamp-3 leading-[34px] md:leading-[27px] lg:leading-[34px]">
+                    <h3 className="font-titles-h5-large-text-400 text-foreground text-[26px] md:text-[20px] lg:text-[20px] xl:text-[26px] line-clamp-3 leading-[34px] md:leading-[27px] lg:leading-[34px]">
                       {decodeHTML(news.title)}
                     </h3>
                   </div>
@@ -225,7 +220,6 @@ export const NewsSection = (): JSX.Element => {
                           className="w-[30px] h-[30px] md:w-[20px] md:h-[20px] lg:w-[30px] lg:h-[30px] hover:bg-primary-foreground rounded-full transition-all duration-700 ease-in-out hover:scale-110 hover:rotate-[-12deg]"
                           alt="Arrow right icon"
                           src="/arrow-right-icon.svg"
-                          loading="lazy"
                         />
                       </a>
                     </div>
@@ -250,46 +244,31 @@ export const NewsSection = (): JSX.Element => {
               <PaginationContent className="inline-flex items-center gap-[10px] md:gap-[35px] px-[9px] py-[10px] rounded-[40px] border border-solid border-border dark:border-primary-foreground">
                 <PaginationLink
                   onClick={() => handlePageChange(currentPage - 1)}
-                  className={
-                    currentPage === 1 ? "opacity-50 pointer-events-none" : ""
-                  }
+                  className={currentPage === 1 ? "opacity-50 pointer-events-none" : ""}
                 >
-                  <img
-                    src="/arrow-left-icon.svg"
-                    className="w-5 h-5 cursor-pointer"
-                    loading="lazy"
-                  />
+                  <img src="/arrow-left-icon.svg" className="w-5 h-5 cursor-pointer" />
                 </PaginationLink>
 
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  (page) => (
-                    <PaginationItem key={page}>
-                      <div
-                        onClick={() => handlePageChange(page)}
-                        className={`flex w-[30px] md:w-[35px] items-center justify-center text-[12px] md:text-[14px] cursor-pointer ${
-                          page === currentPage
-                            ? "text-primary"
-                            : "text-foreground"
-                        }`}
-                      >
-                        {page}
-                      </div>
-                    </PaginationItem>
-                  )
-                )}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <PaginationItem key={page}>
+                    <div
+                      onClick={() => handlePageChange(page)}
+                      className={`flex w-[30px] md:w-[35px] items-center justify-center text-[12px] md:text-[14px] cursor-pointer ${
+                        page === currentPage ? "text-primary" : "text-foreground"
+                      }`}
+                    >
+                      {page}
+                    </div>
+                  </PaginationItem>
+                ))}
 
                 <PaginationLink
                   onClick={() => handlePageChange(currentPage + 1)}
-                  className={
-                    currentPage === totalPages
-                      ? "opacity-50 pointer-events-none"
-                      : ""
-                  }
+                  className={currentPage === totalPages ? "opacity-50 pointer-events-none" : ""}
                 >
                   <img
                     src="/arrow-right-icon-3.svg"
                     className="w-7 h-7 bg-primary-foreground rounded-full cursor-pointer p-1"
-                    loading="lazy"
                   />
                 </PaginationLink>
               </PaginationContent>

@@ -36,9 +36,7 @@ const TableComponent = ({
   const currentData = data.slice(startIndex, startIndex + itemsPerPage);
 
   const hideAddress = (address: string) => {
-    return address
-      ? `${address.substring(0, 6)}...${address.substring(address.length - 6)}`
-      : "";
+    return address ? `${address.substring(0, 6)}...${address.substring(address.length - 6)}` : '';
   };
 
   return (
@@ -92,17 +90,11 @@ const TableComponent = ({
               </span>
             </div>
             <div className="flex gap-16 text-sm font-normal mt-2">
-              <span className="text-card-foreground">
-                {" "}
-                {t("user.columns.prValue")}:{" "}
-              </span>
+              <span className="text-card-foreground"> {t("user.columns.prValue")}: </span>
               <span>{row.prValue}</span>
             </div>
             <div className="flex gap-2 text-sm font-normal mt-2">
-              <span className="text-card-foreground">
-                {" "}
-                {t("user.columns.connectionQuality")}{" "}
-              </span>
+              <span className="text-card-foreground"> {t("user.columns.connectionQuality")} </span>
               <span>{row.connectionQuality}</span>
             </div>
           </div>
@@ -117,7 +109,6 @@ const TableComponent = ({
               src="/arrow-left-icon.svg"
               onClick={() => handlePageChange(currentPage - 1)}
               className="w-5 h-5 cursor-pointer"
-              loading="lazy"
             />
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <PaginationItem key={page}>
@@ -135,7 +126,6 @@ const TableComponent = ({
               src="/arrow-right-icon-3.svg"
               onClick={() => handlePageChange(currentPage + 1)}
               className="w-7 h-7 bg-[#e9f6f7] rounded-full cursor-pointer p-1"
-              loading="lazy"
             />
           </PaginationContent>
         </Pagination>
@@ -163,7 +153,7 @@ const UserInformationTable = () => {
     try {
       setLoading(true);
       const response = await fetchUserInformation(pageNo, 10);
-
+      
       if (response.data && Array.isArray(response.data)) {
         setData(response.data);
         setTotal(response.total || response.data.length);
@@ -198,9 +188,7 @@ const UserInformationTable = () => {
           </div>
         </div>
         <div className="h-96 flex items-center justify-center dark:bg-card">
-          <div className="text-card-foreground">
-            Loading user information...
-          </div>
+          <div className="text-card-foreground">Loading user information...</div>
         </div>
       </div>
     );
@@ -255,37 +243,26 @@ const UserInformationTable = () => {
                 src="/arrow-left-icon.svg"
                 onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                 className="w-5 h-5 cursor-pointer"
-                loading="lazy"
               />
-              {Array.from(
-                { length: Math.min(5, Math.ceil(total / 10)) },
-                (_, i) => {
-                  const page = currentPage <= 3 ? i + 1 : currentPage - 2 + i;
-                  return page <= Math.ceil(total / 10) ? (
-                    <PaginationItem key={page}>
-                      <div
-                        onClick={() => handlePageChange(page)}
-                        className={`flex w-[30px] items-center justify-center cursor-pointer ${
-                          page === currentPage
-                            ? "text-primary"
-                            : "text-foreground"
-                        }`}
-                      >
-                        {page}
-                      </div>
-                    </PaginationItem>
-                  ) : null;
-                }
-              )}
+              {Array.from({ length: Math.min(5, Math.ceil(total / 10)) }, (_, i) => {
+                const page = currentPage <= 3 ? i + 1 : currentPage - 2 + i;
+                return page <= Math.ceil(total / 10) ? (
+                  <PaginationItem key={page}>
+                    <div
+                      onClick={() => handlePageChange(page)}
+                      className={`flex w-[30px] items-center justify-center cursor-pointer ${
+                        page === currentPage ? "text-primary" : "text-foreground"
+                      }`}
+                    >
+                      {page}
+                    </div>
+                  </PaginationItem>
+                ) : null;
+              })}
               <img
                 src="/arrow-right-icon-3.svg"
-                onClick={() =>
-                  handlePageChange(
-                    Math.min(Math.ceil(total / 10), currentPage + 1)
-                  )
-                }
+                onClick={() => handlePageChange(Math.min(Math.ceil(total / 10), currentPage + 1))}
                 className="w-7 h-7 bg-[#e9f6f7] rounded-full cursor-pointer p-1"
-                loading="lazy"
               />
             </PaginationContent>
           </Pagination>

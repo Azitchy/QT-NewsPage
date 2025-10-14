@@ -8,41 +8,13 @@ export const AvatarGallery = (): JSX.Element => {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
   const avatarCards = [
-    {
-      className:
-        "-top-[90px] xl:-top-[75px] left-0 xl:-left-[232px] md:-left-[50px] w-[58px] h-[58px] xl:w-[89px] xl:h-[89px]",
-      img: "/avatarcards/avatars-default-1.png",
-    },
-    {
-      className:
-        "-top-[88px] xl:-top-[170px]  left-[120px] xl:left-[70px] w-[82px] h-[81px] xl:w-[154px] xl:h-[153px]",
-      img: "/avatarcards/avatars-default-2.png",
-    },
-    {
-      className:
-        "-top-[90px] xl:-top-[210px] right-4 md:-right-[30px] xl:right-[300px] w-[70px] h-[70px] xl:w-[100px] xl:h-[100px]",
-      img: "/avatarcards/avatars-default-3.png",
-    },
-    {
-      className:
-        "hidden xl:block -top-[150px] -right-[40px] w-0 h-0 xl:w-[156px] xl:h-[155px]",
-      img: "/avatarcards/avatars-default-4.png",
-    },
-    {
-      className:
-        "-bottom-[10px] xl:-bottom-[50px] left-0 md:-left-[35px] w-[65px] h-[65px] xl:w-[90px] xl:h-[90px]",
-      img: "/avatarcards/avatars-default-5.png",
-    },
-    {
-      className:
-        "-bottom-[30px] xl:-bottom-[160px] right-[20px] md:-right-[50px] xl:right-[240px] w-[76px] h-[76px] xl:w-[130px] xl:h-[130px]",
-      img: "/avatarcards/avatars-default-6.png",
-    },
-    {
-      className:
-        "hidden xl:block -bottom-[90px] -right-[220px] w-0 h-0 xl:w-[109px] xl:h-[109px]",
-      img: "/avatarcards/avatars-default-7.png",
-    },
+    { className: "-top-[90px] xl:-top-[75px] left-0 xl:-left-[232px] md:-left-[50px] w-[58px] h-[58px] xl:w-[89px] xl:h-[89px]", img: "/avatarcards/avatars-default-1.png" },
+    { className: "-top-[88px] xl:-top-[170px]  left-[120px] xl:left-[70px] w-[82px] h-[81px] xl:w-[154px] xl:h-[153px]", img: "/avatarcards/avatars-default-2.png" },
+    { className: "-top-[90px] xl:-top-[210px] right-4 md:-right-[30px] xl:right-[300px] w-[70px] h-[70px] xl:w-[100px] xl:h-[100px]", img: "/avatarcards/avatars-default-3.png" },
+    { className: "hidden xl:block -top-[150px] -right-[40px] w-0 h-0 xl:w-[156px] xl:h-[155px]", img: "/avatarcards/avatars-default-4.png" },
+    { className: "-bottom-[10px] xl:-bottom-[50px] left-0 md:-left-[35px] w-[65px] h-[65px] xl:w-[90px] xl:h-[90px]", img: "/avatarcards/avatars-default-5.png" },
+    { className: "-bottom-[30px] xl:-bottom-[160px] right-[20px] md:-right-[50px] xl:right-[240px] w-[76px] h-[76px] xl:w-[130px] xl:h-[130px]", img: "/avatarcards/avatars-default-6.png" },
+    { className: "hidden xl:block -bottom-[90px] -right-[220px] w-0 h-0 xl:w-[109px] xl:h-[109px]", img: "/avatarcards/avatars-default-7.png" },
   ];
 
   const cardVariants = {
@@ -53,6 +25,7 @@ export const AvatarGallery = (): JSX.Element => {
   return (
     <section className="pt-[160px] xl:pt-[350px] pb-[50px] xl:pb-[200px]">
       <div className="relative flex flex-col items-center gap-[20px] w-fit mx-auto">
+
         {/* Avatar Cards */}
         {avatarCards.map((card, index) => (
           <motion.div
@@ -74,14 +47,14 @@ export const AvatarGallery = (): JSX.Element => {
 
         {/* CTA */}
         <h1 className="w-[340px] xl:w-[718px] font-titlesh3-captionmob-400 xl:font-titlesh3-caption-400 text-center">
-          {t("avatarGallery.heading.text")}{" "}
+          {t("avatarGallery.heading.text")} {" "}
           <span className="font-titlesh3-captionmob-700 xl:font-titlesh3-caption-700 bg-gradient-to-br from-[#8E1BF4] to-[#100CD8] bg-clip-text text-transparent uppercase">
             {t("avatarGallery.heading.highlightedText")}
           </span>
         </h1>
 
         <div className="flex items-center gap-[18px]">
-          <span className="text-primary font-inter hidden xl:block">
+          <span className="text-primary font-bodybody-4---400 hidden xl:block">
             {t("avatarGallery.watchButton")}
           </span>
 

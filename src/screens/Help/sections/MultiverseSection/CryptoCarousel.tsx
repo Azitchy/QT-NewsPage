@@ -1,5 +1,5 @@
-import React from "react";
-import { cryptoTokens, CryptoToken } from "./cryptoTokens";
+import React from 'react';
+import { cryptoTokens, CryptoToken } from './cryptoTokens';
 
 // Crypto Card Component
 const CryptoCard: React.FC<{ token: CryptoToken }> = ({ token }) => (
@@ -9,11 +9,11 @@ const CryptoCard: React.FC<{ token: CryptoToken }> = ({ token }) => (
     rel="noopener noreferrer"
     className="relative flex items-center w-fit px-[20px] py-[15px] rounded-[10px] bg-[#FBFBFB] gap-[26px] mx-2 flex-shrink-0 cursor-pointer transition-shadow hover:shadow-md hover:bg-[#FBFBFB]/80"
   >
+
     <img
       className="w-[50px] h-[50px] relative z-10"
       alt={`${token.name} icon`}
       src={token.icon}
-      loading="lazy"
     />
     <div className="flex flex-col items-start gap-1 relative z-10">
       <div className="text-[#1C1C1C] font-inter text-[18px] font-medium leading-6">
@@ -21,17 +21,16 @@ const CryptoCard: React.FC<{ token: CryptoToken }> = ({ token }) => (
       </div>
       <div className="font-inter text-[14px] font-normal leading-[19px]">
         <span className="text-[#1c1c1c]">{token.price} &nbsp;</span>
-        <span style={{ color: token.changeColor }}>{token.change}</span>
+        <span style={{ color: token.changeColor }}>
+          {token.change}
+        </span>
       </div>
     </div>
   </a>
 );
 
 // Carousel Row Component
-const CarouselRow: React.FC<{ tokens: CryptoToken[]; speed: number }> = ({
-  tokens,
-  speed,
-}) => {
+const CarouselRow: React.FC<{ tokens: CryptoToken[]; speed: number }> = ({ tokens, speed }) => {
   const tripleTokens = [...tokens, ...tokens, ...tokens];
 
   return (
@@ -46,8 +45,8 @@ const CarouselRow: React.FC<{ tokens: CryptoToken[]; speed: number }> = ({
         className="flex animate-scroll-left-to-right group-hover:[animation-play-state:paused]"
         style={{
           animationDuration: `${speed}s`,
-          animationTimingFunction: "linear",
-          animationIterationCount: "infinite",
+          animationTimingFunction: 'linear',
+          animationIterationCount: 'infinite',
         }}
       >
         {tripleTokens.map((token, index) => (
@@ -60,9 +59,7 @@ const CarouselRow: React.FC<{ tokens: CryptoToken[]; speed: number }> = ({
 
 export const CryptoCarousel = () => {
   return (
-    <div className="group">
-      {" "}
-      {/* group wraps the WHOLE carousel */}
+    <div className="group"> {/* group wraps the WHOLE carousel */}
       <style>{`
         @keyframes scrollLeftToRight {
           0% {
@@ -77,6 +74,7 @@ export const CryptoCarousel = () => {
           animation: scrollLeftToRight linear infinite;
         }
       `}</style>
+
       <div className="space-y-6">
         <CarouselRow tokens={cryptoTokens.row1} speed={40} />
         <CarouselRow tokens={cryptoTokens.row2} speed={50} />

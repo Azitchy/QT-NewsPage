@@ -1,11 +1,10 @@
-import { HeadingWithDots } from "@/components/HeadingWithDots";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 type EcosystemTab = "gaming" | "ecology" | "travel";
 
 export const EcosystemSection = () => {
-  const { t } = useTranslation("home");
+  const { t } = useTranslation('home');
   const [activeEcosystemTab, setActiveEcosystemTab] =
     useState<EcosystemTab>("gaming");
 
@@ -20,23 +19,23 @@ export const EcosystemSection = () => {
     }
   > = {
     gaming: {
-      title: t("ecosystemSection.gaming.title"),
-      description1: t("ecosystemSection.gaming.description1"),
-      description2: t("ecosystemSection.gaming.description2"),
+      title: t('ecosystemSection.gaming.title'),
+      description1: t('ecosystemSection.gaming.description1'),
+      description2: t('ecosystemSection.gaming.description2'),
       image: "/ecosystem-gaming.png",
       href: "/games",
     },
     ecology: {
-      title: t("ecosystemSection.ecology.title"),
-      description1: t("ecosystemSection.ecology.description1"),
-      description2: t("ecosystemSection.ecology.description2"),
+      title: t('ecosystemSection.ecology.title'),
+      description1: t('ecosystemSection.ecology.description1'),
+      description2: t('ecosystemSection.ecology.description2'),
       image: "/ecosystem-ecology.png",
       href: "/ecosystem#ecology",
     },
     travel: {
-      title: t("ecosystemSection.travel.title"),
-      description1: t("ecosystemSection.travel.description1"),
-      description2: t("ecosystemSection.travel.description2"),
+      title: t('ecosystemSection.travel.title'),
+      description1: t('ecosystemSection.travel.description1'),
+      description2: t('ecosystemSection.travel.description2'),
       image: "/ecosystem-travel.png",
       href: "/ecosystem/travel",
     },
@@ -47,7 +46,14 @@ export const EcosystemSection = () => {
   return (
     <div className="relative w-full px-4 lg:px-0 lg:mb-56 xl:mb-0">
       <div className="relative h-[99px] ml-0 lg:ml-[71px]">
-        <HeadingWithDots text={t("ecosystemSection.title")} />
+        <div className="left-10 absolute h-11 top-[27px] lg:left-[45px] font-titles-h2-sectionheading-400 font-[number:var(--titles-h2-sectionheading-400-font-weight)] text-primary-colour text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] whitespace-nowrap [font-style:var(--titles-h2-sectionheading-400-font-style)]">
+          {t('ecosystemSection.title')}
+        </div>
+        <img
+          className="w-[99px] h-[99px] absolute top-0 left-0"
+          alt="Dots"
+          src="/dots-4.svg"
+        />
       </div>
 
       <div className="mt-[20px] md:px-10 lg:px-28 2xl:px-0 lg:mt-[80px] mx-auto max-w-[1414px]">
@@ -63,7 +69,7 @@ export const EcosystemSection = () => {
                     : "text-primary hover:bg-primary-foreground"
                 }`}
               >
-                {t("ecosystemSection.tabs.gaming")}
+                {t('ecosystemSection.tabs.gaming')}
               </button>
               <button
                 onClick={() => setActiveEcosystemTab("ecology")}
@@ -73,7 +79,7 @@ export const EcosystemSection = () => {
                     : "text-primary hover:bg-primary-foreground"
                 }`}
               >
-                {t("ecosystemSection.tabs.ecology")}
+                {t('ecosystemSection.tabs.ecology')}
               </button>
               <button
                 onClick={() => setActiveEcosystemTab("travel")}
@@ -83,7 +89,7 @@ export const EcosystemSection = () => {
                     : "text-primary hover:bg-primary-foreground"
                 }`}
               >
-                {t("ecosystemSection.tabs.travel")}
+                {t('ecosystemSection.tabs.travel')}
               </button>
             </div>
           </div>
@@ -93,27 +99,26 @@ export const EcosystemSection = () => {
               className="w-full lg:max-w-[682px] lg:flex-1 h-[230px] md:h-[300px] lg:h-[370px] object-cover rounded-[20px]"
               alt={`${currentEcosystemData.title} ecosystem`}
               src={currentEcosystemData.image}
-              loading="lazy"
             />
 
             <div className="flex flex-col h-auto lg:h-[300px] items-start gap-5 flex-1">
-              <div className="self-stretch text-foreground dark:text-foreground text-[22px] lg:text-[26px] leading-[30px] lg:leading-[34px] relative mt-[-1.00px] font-inter font-normal tracking-[0px]">
+              <div className="self-stretch text-foreground dark:text-foreground text-[22px] lg:text-[length:var(--titles-h5-large-text-400-font-size)] leading-[30px] lg:leading-[var(--titles-h5-large-text-400-line-height)] relative mt-[-1.00px] font-titles-h5-large-text-400 font-[number:var(--titles-h5-large-text-400-font-weight)] tracking-[var(--titles-h5-large-text-400-letter-spacing)] [font-style:var(--titles-h5-large-text-400-font-style)]">
                 {currentEcosystemData.title}
               </div>
 
-              <div className="relative self-stretch font-inter font-normal text-foreground dark:text-foreground text-[16px] lg:text-[18px] tracking-[0px] leading-[22px] lg:leading-[24px]">
+              <div className="relative self-stretch font-body-body2-400 font-[number:var(--body-body2-400-font-weight)] text-foreground dark:text-foreground text-[16px] lg:text-[length:var(--body-body2-400-font-size)] tracking-[var(--body-body2-400-letter-spacing)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)] [font-style:var(--body-body2-400-font-style)]">
                 {currentEcosystemData.description1}
               </div>
 
-              <div className="relative self-stretch font-inter font-normal text-foreground dark:text-foreground text-[16px] lg:text-[18px] tracking-[0px] leading-[22px] lg:leading-[24px]">
+              <div className="relative self-stretch font-body-body2-400 font-[number:var(--body-body2-400-font-weight)] text-foreground dark:text-foreground text-[16px] lg:text-[length:var(--body-body2-400-font-size)] tracking-[var(--body-body2-400-letter-spacing)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)] [font-style:var(--body-body2-400-font-style)]">
                 {currentEcosystemData.description2}
               </div>
 
               <div className="inline-flex items-center gap-2.5 relative rounded-[30px]">
                 <div className="relative w-[72px] h-[19px]">
                   <a href={currentEcosystemData.href}>
-                    <div className="absolute h-[19px] -top-px left-0 font-inter font-normal text-primary text-[14px] tracking-[0px] leading-[19px] whitespace-nowrap">
-                      {t("ecosystemSection.learnMore")}
+                    <div className="absolute h-[19px] -top-px left-0 font-body-body-4-400 font-[number:var(--body-body-4-400-font-weight)] text-primary text-[length:var(--body-body-4-400-font-size)] tracking-[var(--body-body-4-400-letter-spacing)] leading-[var(--body-body-4-400-line-height)] whitespace-nowrap [font-style:var(--body-body-4-400-font-style)]">
+                      {t('ecosystemSection.learnMore')}
                     </div>
                   </a>
                 </div>
@@ -123,7 +128,6 @@ export const EcosystemSection = () => {
                       className="absolute w-[33px] h-[33px] top-[3px] left-0.5 hover:bg-gray-100 rounded-full cursor-pointer transition-all duration-700 ease-in-out hover:bg-primary-foreground hover:scale-110 hover:rotate-[-12deg]"
                       alt="Arrow right icon"
                       src="/arrow-right-icon.svg"
-                      loading="lazy"
                     />
                   </div>
                 </a>

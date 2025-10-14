@@ -47,7 +47,6 @@ export const MessagingPlatformSection = (): JSX.Element => {
             src="/messaging-img.png"
             alt="Messaging Platform"
             className="w-full h-[300px] xl:h-[370px] object-cover rounded-3xl"
-            loading="lazy"
           />
         </div>
       </div>

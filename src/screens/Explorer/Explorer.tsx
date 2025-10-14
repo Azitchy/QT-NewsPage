@@ -16,8 +16,9 @@ export const Explorer = () => {
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
   const [searchType, setSearchType] = useState("Address");
-  const [isSearching, setIsSearching] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
+  const [lastSearchedQuery, setLastSearchedQuery] = useState("");
+  const [searchVersion, setSearchVersion] = useState(0);
 
   const navigationTabs = [
     { id: "overview", label: t("navigation.overview"), path: "/explorer" },
@@ -53,10 +54,12 @@ export const Explorer = () => {
 
   // Handle search button click
   const handleSearch = () => {
-    if (searchQuery.trim()) {
-      setIsSearching(true);
-      setShowSearchResults(true);
-    }
+    const trimmed = searchQuery.trim();
+    if (!trimmed) return;
+
+    setShowSearchResults(true);
+    setLastSearchedQuery(trimmed);
+    setSearchVersion((v) => v + 1); 
   };
 
 
@@ -78,14 +81,7 @@ export const Explorer = () => {
     }
   };
 
-  // Handle Enter key press in search input
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && searchQuery.trim()) {
-      handleSearch();
-    }
-  };
 
-  // Hide search results when location changes (browser navigation)
   useEffect(() => {
     setShowSearchResults(false);
   }, [location.pathname]);
@@ -154,7 +150,6 @@ export const Explorer = () => {
                   placeholder={t("search.placeholder")} 
                   value={searchQuery}
                   onChange={handleSearchInputChange}
-                  onKeyPress={handleKeyPress}
                   className="h-10 pl-4 pr-12 py-2 rounded-lg border border-border dark:border-[#454545] bg-transparent text-sm text-[#858585] placeholder:text-[#858585] focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
                 <button
@@ -183,9 +178,10 @@ export const Explorer = () => {
       {/* Main content */}
       {showSearchResults ? (
         <SearchResults 
-          searchQuery={searchQuery}
+          searchQuery={searchQuery.trim()}
           searchType={searchType}
           isValidInput={isValidInput()}
+          searchTrigger={searchVersion}
         />
       ) : (
         <main

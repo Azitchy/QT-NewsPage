@@ -11,7 +11,6 @@ export const LucaRewardsSection = (): JSX.Element => {
         src="/luca-bg.svg"
         alt="Decorative background"
         className="hidden xl:block absolute right-1/4 translate-x-1/4 h-[365px] opacity-15 z-0 pointer-events-none"
-        loading="lazy"
       />
 
       <div className="relative z-10">
@@ -30,7 +29,6 @@ export const LucaRewardsSection = (): JSX.Element => {
             className="w-[285px] xl:w-[406px] h-[178px] xl:h-[254px] object-contain mx-auto tablet:mx-0"
             alt="LUCA Rewards Illustration"
             src="/luca-rewards.png"
-            loading="lazy"
           />
         </div>
       </div>

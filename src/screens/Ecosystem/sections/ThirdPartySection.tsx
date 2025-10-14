@@ -9,7 +9,6 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
-import { HeadingWithDots } from "@/components/HeadingWithDots";
 
 export const ThirdPartySection = () => {
   const { t } = useTranslation("ecosystem");
@@ -81,7 +80,14 @@ export const ThirdPartySection = () => {
       {/* Header */}
       <div className="flex items-start mb-12">
         <div className="relative ml-0 lg:ml-[30px]">
-          <HeadingWithDots text={t("thirdPartySection.title")} />
+          <div className="font-titles-h2-sectionheading-400 text-primary-colour text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] ml-12 mt-7 uppercase">
+            {t("thirdPartySection.title")}
+          </div>
+          <img
+            className="absolute w-[99px] h-[99px] top-0 left-0"
+            alt="Dots"
+            src="/dots.svg"
+          />
         </div>
       </div>
 
@@ -163,7 +169,6 @@ export const ThirdPartySection = () => {
                             className="w-[50px] h-[50px]"
                             alt={partner.name}
                             src={partner.icon}
-                            loading="lazy"
                           />
                           <div className="flex flex-col gap-5 flex-1">
                             <h3 className="font-medium text-primary text-[20px] leading-[27px]">
@@ -183,7 +188,7 @@ export const ThirdPartySection = () => {
                 //  For Desktop
                 <CarouselItem
                   key={idx}
-                  className="basis-auto flex-shrink-0 w-[330px] py-2 pb-5 ml-2"
+                  className="basis-auto flex-shrink-0 w-[330px]   py-2 pb-5 ml-2"
                 >
                   <div className="relative rounded-[20px] w-full h-full lg:h-[310px] transform transition-all duration-700 ease-in-out delay-150 hover:scale-105 hover:shadow-lg">
                     {/* Gradient border layer */}
@@ -198,7 +203,6 @@ export const ThirdPartySection = () => {
                           className="w-[50px] h-[50px] transition-all duration-500 ease-in-out delay-150 hover:mt-[5px]"
                           alt={partner.name}
                           src={partner.icon}
-                          loading="lazy"
                         />
                         <div className="flex flex-col flex-1 transition-all duration-500 ease-in-out delay-150 gap-5 hover:space-y-1">
                           <h3 className="font-medium text-primary text-[20px] leading-[27px] transition-all duration-500 ease-in-out">

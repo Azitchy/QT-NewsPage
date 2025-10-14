@@ -24,8 +24,9 @@
       "prNode": "PR Node",
       "stakeTransaction": "Stake Transaction"
     },
+    "loadingMore": "Loading more results... ({{count}}+ found so far)",
     "noResults": "No results found",
-    "invalidInput": "Please enter a valid address"
+    "invalidInput": "Please enter a valid address, hash, or contract."
   },
   "pagination": {
     "previous": "Previous",

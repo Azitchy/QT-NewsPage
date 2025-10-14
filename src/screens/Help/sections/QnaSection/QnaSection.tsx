@@ -29,8 +29,8 @@ export const QnaSection = (): JSX.Element => {
 
       <Tabs value={activeTab} onValueChange={handleTabChange} className="mx-auto flex flex-col max-w-[1603px]">
         {/* Tabs Header */}
-        <div className="flex justify-center xl:justify-end">
-          <TabsList className="flex bg-transparent rounded-[40px] border border-border p-[5px] h-auto gap-[10px] my-[20px]">
+        <div className="flex justify-center xl:justify-end my-[20px]">
+          <TabsList gradientBorder className="flex rounded-[40px] border border-border p-[5px] h-auto gap-[10px]">
             {tabs.map((tab) => (
               <TabsTrigger
                 key={tab.id}

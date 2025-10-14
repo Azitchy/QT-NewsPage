@@ -99,37 +99,39 @@ export const CourseCarousel = (): JSX.Element => {
     <section className="w-full">
       {/* Carousel Navigation */}
       <div className="flex justify-end mb-8">
-        <div className="flex items-center gap-[15px] px-[9px] py-[5px] rounded-[40px] border border-border">
-          <Button
-            variant="ghost"
-            className={`w-[38.53px] h-[38.53px] p-0 rounded-full hover:bg-gray-100 ${
-              canPrev ? "bg-primary-foreground" : "bg-transparent"
-            }`}
-            onClick={() => api?.scrollPrev()}
-            disabled={!canPrev}
-          >
-            <ArrowLeftIcon
-              className={`w-5 h-5 ${
-                canPrev ? "text-[#2EA8AF]" : "text-gray-400"
+        {/* Gradient border wrapper */}
+        <div className="dark:border-gradient rounded-[40px]">
+          {/* Inner container (acts as background) */}
+          <div className="flex items-center gap-[15px] px-[9px] py-[5px] rounded-[40px] bg-background border border-border">
+            <Button
+              variant="ghost"
+              className={`w-[38.53px] h-[38.53px] p-0 rounded-full hover:bg-gray-100 ${
+                canPrev ? "bg-primary-foreground" : "bg-transparent"
               }`}
-            />
-          </Button>
-          <Button
-            variant="ghost"
-            className={`w-[38.53px] h-[38.53px] p-0 rounded-full hover:bg-gray-100 ${
-              canNext ? "bg-primary-foreground" : "bg-transparent"
-            }`}
-            onClick={() => api?.scrollNext()}
-            disabled={!canNext}
-          >
-            <ArrowRightIcon
-              className={`w-6 h-6 ${
-                canNext ? "text-[#2EA8AF]" : "text-gray-400"
+              onClick={() => api?.scrollPrev()}
+              disabled={!canPrev}
+            >
+              <ArrowLeftIcon
+                className={`w-5 h-5 ${canPrev ? "text-[#2EA8AF]" : "text-gray-400"}`}
+              />
+            </Button>
+
+            <Button
+              variant="ghost"
+              className={`w-[38.53px] h-[38.53px] p-0 rounded-full hover:bg-gray-100 ${
+                canNext ? "bg-primary-foreground" : "bg-transparent"
               }`}
-            />
-          </Button>
+              onClick={() => api?.scrollNext()}
+              disabled={!canNext}
+            >
+              <ArrowRightIcon
+                className={`w-6 h-6 ${canNext ? "text-[#2EA8AF]" : "text-gray-400"}`}
+              />
+            </Button>
+          </div>
         </div>
       </div>
+
 
       {/* Carousel Content */}
       <div>
@@ -144,40 +146,41 @@ export const CourseCarousel = (): JSX.Element => {
                 key={index}
                 className="px-[7.5px] xl:px-[10px] basis-auto flex-shrink-0"
               >
-                <Card className="flex flex-col w-[360px] xl:w-[402px] h-[300px] xl:h-[340px] border border-solid border-border rounded-[20px] bg-card shadow-sm">
-                  <CardContent className="flex flex-col p-[15px] rounded-[20px] flex-1">
-                    <img
-                      className="w-full h-[122px] xl:h-[164px] rounded-[10px] object-cover"
-                      alt="Tutorial thumbnail"
-                      src={card.image}
-                      loading="lazy"
-                    />
-                    <div className="flex items-center justify-center w-full mt-[15px]">
-                      <div className="text-foreground flex-1 font-sans text-[26px] font-normal leading-[34px]">
-                        {card.title}
-                      </div>
-                    </div>
-                  </CardContent>
-
-                  {/* Bottom Section */}
-                  <div className="flex flex-col items-start px-[20px] py-[15px] rounded-[0px_0px_20px_20px]">
-                    <div className="flex items-center justify-between w-full">
-                      <div
-                        className={`text-card-foreground font-normal font-body text-[14px] leading-[19px] ${
-                          !card.showDate ? "opacity-0" : ""
-                        }`}
-                      >
-                        {card.date}
-                      </div>
-
-                      <StyledLink
-                        text={t("courseCarousel.viewPdf")}
-                        link={card.link}
-                        newTab
+                <div className="dark:border-gradient rounded-[20px]">
+                  <Card className="flex flex-col w-[360px] xl:w-[402px] h-[300px] xl:h-[340px] rounded-[18px] bg-card shadow-sm">
+                    <CardContent className="flex flex-col p-[15px] rounded-[20px] flex-1">
+                      <img
+                        className="w-full h-[122px] xl:h-[164px] rounded-[10px] object-cover"
+                        alt="Tutorial thumbnail"
+                        src={card.image}
                       />
+                      <div className="flex items-center justify-center w-full mt-[15px]">
+                        <div className="text-foreground flex-1 font-sans text-[26px] font-normal leading-[34px]">
+                          {card.title}
+                        </div>
+                      </div>
+                    </CardContent>
+
+                    {/* Bottom Section */}
+                    <div className="flex flex-col items-start px-[20px] py-[15px] rounded-[0px_0px_20px_20px]">
+                      <div className="flex items-center justify-between w-full">
+                        <div
+                          className={`text-card-foreground font-normal font-body text-[14px] leading-[19px] ${
+                            !card.showDate ? "opacity-0" : ""
+                          }`}
+                        >
+                          {card.date}
+                        </div>
+
+                        <StyledLink
+                          text={t("courseCarousel.viewPdf")}
+                          link={card.link}
+                          newTab
+                        />
+                      </div>
                     </div>
-                  </div>
-                </Card>
+                  </Card>
+                </div>
               </CarouselItem>
             ))}
           </CarouselContent>

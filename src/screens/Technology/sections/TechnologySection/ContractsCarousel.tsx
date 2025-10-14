@@ -10,9 +10,11 @@ import {
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { StyledLink } from "@/components/StyledLink";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "@/components/theme-provider";
 
 export const ContractsCarousel = (): JSX.Element => {
   const { t } = useTranslation("technology");
+  const { theme } = useTheme();
   const [api, setApi] = useState<CarouselApi>();
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
@@ -21,48 +23,56 @@ export const ContractsCarousel = (): JSX.Element => {
     {
       id: 1,
       image: "/contract-1.svg",
+      darkImage: "/contract-1-dark.svg",
       title: t("contractsCarousel.contracts.luca.title"),
       description: t("contractsCarousel.contracts.luca.description"),
     },
     {
       id: 2,
       image: "/contract-2.svg",
+      darkImage: "/contract-2-dark.svg",
       title: t("contractsCarousel.contracts.factory.title"),
       description: t("contractsCarousel.contracts.factory.description"),
     },
     {
       id: 3,
       image: "/contract-3.svg",
+      darkImage: "/contract-3-dark.svg",
       title: t("contractsCarousel.contracts.stake.title"),
       description: t("contractsCarousel.contracts.stake.description"),
     },
     {
       id: 4,
       image: "/contract-4.svg",
+      darkImage: "/contract-4-dark.svg",
       title: t("contractsCarousel.contracts.incentive.title"),
       description: t("contractsCarousel.contracts.incentive.description"),
     },
     {
       id: 5,
       image: "/contract-5.svg",
+      darkImage: "/contract-5-dark.svg",
       title: t("contractsCarousel.contracts.investment.title"),
       description: t("contractsCarousel.contracts.investment.description"),
     },
     {
       id: 6,
       image: "/contract-6.svg",
+      darkImage: "/contract-6-dark.svg",
       title: t("contractsCarousel.contracts.promotion.title"),
       description: t("contractsCarousel.contracts.promotion.description"),
     },
     {
       id: 7,
       image: "/contract-7.svg",
+      darkImage: "/contract-7-dark.svg",
       title: t("contractsCarousel.contracts.crossChain.title"),
       description: t("contractsCarousel.contracts.crossChain.description"),
     },
     {
       id: 8,
       image: "/contract-8.svg",
+      darkImage: "/contract-8-dark.svg",
       title: t("contractsCarousel.contracts.wormhole.title"),
       description: t("contractsCarousel.contracts.wormhole.description"),
     },
@@ -96,35 +106,38 @@ export const ContractsCarousel = (): JSX.Element => {
     <div className="w-full pt-[20px]">
       {/* Carousel Navigation */}
       <div className="flex justify-end mb-8 px-[16px] tablet:px-[60px]">
-        <div className="flex items-center gap-[15px] px-[9px] py-[5px] rounded-[40px] border border-border">
-          <Button
-            variant="ghost"
-            className={`w-[38.53px] h-[38.53px] p-0 rounded-[19.26px] hover:bg-gray-100 ${
-              canPrev ? "bg-primary-foreground" : "bg-transparent"
-            }`}
-            onClick={() => api?.scrollPrev()}
-            disabled={!canPrev}
-          >
-            <ArrowLeftIcon
-              className={`w-5 h-5 ${
-                canPrev ? "text-primary" : "text-gray-400"
+        {/* Gradient border wrapper */}
+        <div className="dark:border-gradient rounded-[40px]">
+          <div className="flex items-center gap-[15px] px-[9px] py-[5px] rounded-[40px] bg-white dark:bg-black border border-border">
+            <Button
+              variant="ghost"
+              className={`w-[38.53px] h-[38.53px] p-0 rounded-full hover:bg-gray-100 ${
+                canPrev ? "bg-primary-foreground" : "bg-transparent"
               }`}
-            />
-          </Button>
-          <Button
-            variant="ghost"
-            className={`w-[38.53px] h-[38.53px] p-0 rounded-[19.26px] hover:bg-[#d6f0f2] ${
-              canNext ? "bg-[#e9f6f7]" : "bg-transparent"
-            }`}
-            onClick={() => api?.scrollNext()}
-            disabled={!canNext}
-          >
-            <ArrowRightIcon
-              className={`w-6 h-6 ${
-                canNext ? "text-primary" : "text-gray-400"
+              onClick={() => api?.scrollPrev()}
+              disabled={!canPrev}
+            >
+              <ArrowLeftIcon
+                className={`w-5 h-5 ${
+                  canPrev ? "text-[#2EA8AF]" : "text-gray-400"
+                }`}
+              />
+            </Button>
+            <Button
+              variant="ghost"
+              className={`w-[38.53px] h-[38.53px] p-0 rounded-full hover:bg-gray-100 ${
+                canNext ? "bg-primary-foreground" : "bg-transparent"
               }`}
-            />
-          </Button>
+              onClick={() => api?.scrollNext()}
+              disabled={!canNext}
+            >
+              <ArrowRightIcon
+                className={`w-6 h-6 ${
+                  canNext ? "text-[#2EA8AF]" : "text-gray-400"
+                }`}
+              />
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -143,27 +156,32 @@ export const ContractsCarousel = (): JSX.Element => {
               >
                 <div className="flex flex-col gap-[15px] xl:flex-row xl:gap-[10px]">
                   {row.map((card) => (
-                    <Card
+                    <div
                       key={card.id}
-                      className="w-[330px] h-[300px] xl:w-[360px] xl:h-[330px] p-[30px] rounded-[20px] border border-border hover:shadow-lg transition-shadow text-foreground"
+                      className="dark:border-gradient rounded-[20px]"
                     >
-                      <CardContent className="p-0 h-full">
-                        <div className="flex flex-col gap-[15px] h-full">
-                          <img
-                            className="w-[81px] h-[81px] flex-shrink-0"
-                            alt={card.title}
-                            src={card.image}
-                            loading="lazy"
-                          />
-                          <h3 className="text-primary font-[family:var(--typography-family-body,Inter)] text-lg font-medium leading-tight">
-                            {card.title}
-                          </h3>
-                          <p className="font-[family:var(--typography-family-body,Inter)] text-sm leading-relaxed flex-1">
-                            {card.description}
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
+                      <Card className="w-[330px] h-[300px] xl:w-[360px] xl:h-[330px] p-[30px] rounded-[20px] bg-card border border-border hover:shadow-lg transition-shadow text-foreground">
+                        <CardContent className="p-0 h-full">
+                          <div className="flex flex-col gap-[15px] h-full">
+                            <img
+                              className="w-[81px] h-[81px] flex-shrink-0"
+                              alt={card.title}
+                              src={
+                                theme === "dark"
+                                  ? card.darkImage
+                                  : card.image
+                              }
+                            />
+                            <h3 className="text-primary font-[family:var(--typography-family-body,Inter)] text-lg font-medium leading-tight">
+                              {card.title}
+                            </h3>
+                            <p className="font-[family:var(--typography-family-body,Inter)] text-sm leading-relaxed flex-1">
+                              {card.description}
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
                   ))}
                 </div>
               </CarouselItem>

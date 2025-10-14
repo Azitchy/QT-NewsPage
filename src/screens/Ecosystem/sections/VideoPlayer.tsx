@@ -51,19 +51,12 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       {!isUserControl && (
         <>
           <button
-            onClick={handleActivateControls}
             className="absolute inset-0 flex items-center justify-center cursor-pointer"
             aria-label="Activate video controls and sound"
           >
-            <img src="/play-button.svg" alt="Play" className="w-16 h-16" onClick={handleActivateControls} />
+            <img src="/play-button.svg" alt="Play" className="w-[40px] h-[40px]" onClick={handleActivateControls} />
           </button>
-          
-          <div 
-            onClick={handleActivateControls}
-            className="absolute bottom-4 right-4 text-white text-sm cursor-pointer hover:opacity-80 transition-opacity duration-300"
-          >
-            Click here to play sound
-          </div>
+        
         </>
       )}
     </div>

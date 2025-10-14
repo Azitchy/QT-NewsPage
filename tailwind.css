@@ -149,6 +149,11 @@
 
 /* Typography Utility Classes */
 @layer utilities {
+  .border-gradient {
+    background: linear-gradient(96deg, #C6C6C6 69.03%, #2B2B2B 102.49%);
+    padding: 1px;
+  }
+
   /* Heading Classes */
   .font-h1-xl-heading-mob {
     @apply font-inter font-bold uppercase text-[50px] leading-[56px] uppercase;

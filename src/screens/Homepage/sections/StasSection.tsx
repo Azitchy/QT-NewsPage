@@ -10,26 +10,26 @@ type Stat = {
   showLine?: boolean;
 };
 export const StasSection = (): JSX.Element => {
-  const { t } = useTranslation("home");
+  const { t } = useTranslation('home');
 
   // Stats data
   const statsData: Stat[] = [
     {
-      value: t("stasSection.stats.cc.value"),
-      label: t("stasSection.stats.cc.label"),
+      value: t('stasSection.stats.cc.value'),
+      label: t('stasSection.stats.cc.label'),
       hasInfo: false,
       showLine: true,
     },
     {
-      value: t("stasSection.stats.staked.value"),
-      label: t("stasSection.stats.staked.label"),
+      value: t('stasSection.stats.staked.value'),
+      label: t('stasSection.stats.staked.label'),
       hasInfo: true,
       showLine: true,
-      tooltip: t("stasSection.stats.staked.tooltip"),
+      tooltip: t('stasSection.stats.staked.tooltip'),
     },
     {
-      value: t("stasSection.stats.supply.value"),
-      label: t("stasSection.stats.supply.label"),
+      value: t('stasSection.stats.supply.value'),
+      label: t('stasSection.stats.supply.label'),
       hasInfo: false,
       showLine: false,
     },
@@ -41,7 +41,7 @@ export const StasSection = (): JSX.Element => {
           <React.Fragment key={`stat-${index}`}>
             <div className="flex flex-col lg:flex-row  items-center gap-[5px] flex-1 w-full lg:w-auto">
               <div className="flex flex-col items-center justify-center gap-[5px] w-full">
-                <div className="flex-1 self-stretch mt-[-1.00px] font-space-grotesk font-light text-foreground dark:text-foreground text-[38px] text-center leading-[48px] whitespace-nowrap">
+                <div className="flex-1 self-stretch mt-[-1.00px] font-titles-h3-caption-400 font-[number:var(--titles-h3-caption-400-font-weight)] text-foreground dark:text-foreground text-[length:var(--titles-h3-caption-400-font-size)] text-center tracking-[var(--titles-h3-caption-400-letter-spacing)] leading-[var(--titles-h3-caption-400-line-height)] whitespace-nowrap [font-style:var(--titles-h3-caption-400-font-style)]">
                   {stat.value}
                 </div>
                 <div className="flex items-center justify-center gap-[3px] w-full relative">

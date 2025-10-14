@@ -11,11 +11,7 @@ import {
   PaginationContent,
   PaginationItem,
 } from "../../../../components/ui/pagination";
-import {
-  fetchRankList,
-  fetchSystemTime,
-  RankingItem,
-} from "../../../../lib/webApi";
+import { fetchRankList, fetchSystemTime, RankingItem } from "../../../../lib/webApi";
 import { useTranslation } from "react-i18next";
 
 const getPageNumbers = (currentPage: number, totalPages: number) => {
@@ -90,9 +86,7 @@ const TableComponent = ({
   };
 
   const hideAddress = (address: string) => {
-    return address
-      ? `${address.substring(0, 4)}...${address.substring(address.length - 4)}`
-      : "";
+    return address ? `${address.substring(0, 4)}...${address.substring(address.length - 4)}` : '';
   };
 
   if (loading) {
@@ -167,14 +161,9 @@ const TableComponent = ({
         {data.map((row, idx) => (
           <div key={idx} className="border-b dark:border-[#454545]  p-3 ">
             <div className="flex justify-between text-sm font-normal">
+              <span>{t("ranking.columns.ranking")} {row.rank}</span>
               <span>
-                {t("ranking.columns.ranking")} {row.rank}
-              </span>
-              <span>
-                {showAction
-                  ? `${t("ranking.columns.totalIncome")}:`
-                  : `${t("ranking.columns.prValue")}:`}{" "}
-                {row.totalAmount || row.pr}
+                {showAction ? `${t("ranking.columns.totalIncome")}:` : `${t("ranking.columns.prValue")}:`} {row.totalAmount || row.pr}
               </span>
             </div>
             <div className="flex gap-2 items-center justify-between">
@@ -205,7 +194,6 @@ const TableComponent = ({
                 src="/arrow-left-icon.svg"
                 onClick={() => handlePageChange(currentPage - 1)}
                 className="w-5 h-5 cursor-pointer"
-                loading="lazy"
               />
 
               {getPageNumbers(currentPage, totalPages).map((page, idx) =>
@@ -220,9 +208,7 @@ const TableComponent = ({
                     <div
                       onClick={() => handlePageChange(Number(page))}
                       className={`flex w-[30px] md:w-[35px] items-center justify-center text-[12px] md:text-[14px] cursor-pointer ${
-                        page === currentPage
-                          ? "text-primary"
-                          : "text-foreground"
+                        page === currentPage ? "text-primary" : "text-foreground"
                       }`}
                     >
                       {page}
@@ -235,7 +221,6 @@ const TableComponent = ({
                 src="/arrow-right-icon-3.svg"
                 onClick={() => handlePageChange(currentPage + 1)}
                 className="w-7 h-7 bg-[#e9f6f7] rounded-full cursor-pointer p-1"
-                loading="lazy"
               />
             </PaginationContent>
           </Pagination>
@@ -348,14 +333,14 @@ const OverallRankingTable = () => {
   const overallColumns = [
     t("ranking.columns.ranking"),
     t("ranking.columns.userAddress"),
-    t("ranking.columns.prValue"),
+    t("ranking.columns.prValue")
   ];
-
+  
   const rewardColumns = [
     t("ranking.columns.ranking"),
     t("ranking.columns.userAddress"),
     t("ranking.columns.totalIncome"),
-    t("ranking.columns.action"),
+    t("ranking.columns.action")
   ];
 
   const fetchOverallRanking = async (page = 1) => {
@@ -423,11 +408,11 @@ const OverallRankingTable = () => {
   }, [rewardPage]);
 
   const formatTime = (timestamp: number) => {
-    if (!timestamp) return "";
+    if (!timestamp) return '';
     const date = new Date(timestamp);
     date.setDate(date.getDate() - 1);
-    const day = ("0" + date.getDate()).slice(-2);
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const year = date.getFullYear();
     return `${day}.${month}.${year}`;
   };
@@ -461,9 +446,9 @@ const OverallRankingTable = () => {
       </TabsList>
 
       <TabsContent value="overall">
-        <TableComponent
-          columns={overallColumns}
-          data={overallData}
+        <TableComponent 
+          columns={overallColumns} 
+          data={overallData} 
           loading={loading}
           error={error}
           total={overallTotal}

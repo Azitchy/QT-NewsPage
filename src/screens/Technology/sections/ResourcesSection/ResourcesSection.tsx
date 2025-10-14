@@ -107,8 +107,9 @@ export const ResourcesSection = (): JSX.Element => {
           value={activeTab}
           onValueChange={(v) => setActiveTab(v as any)}
           className="w-full flex flex-col items-center"
-        >
-          <TabsList className="flex bg-transparent rounded-[40px] border border-border p-[5px] h-auto gap-[10px] my-[20px]">
+        > 
+        <div className="my-[20px]">
+          <TabsList  gradientBorder className="flex bg-card rounded-[40px] border border-border p-[5px] h-auto gap-[10px]">
             <TabsTrigger
               value="white-paper"
               className="inline-flex items-center justify-center px-[15px] py-2.5 rounded-[100px] overflow-hidden hover:bg-[#f6f6f6] data-[state=active]:bg-primary-foreground !shadow-none"
@@ -122,6 +123,7 @@ export const ResourcesSection = (): JSX.Element => {
               <span className="text-primary">{t('resourcesSection.tabs.auditReport')}</span>
             </TabsTrigger>
           </TabsList>
+        </div>
 
           {/* Content Layout */}
           <div className="w-full flex flex-col xl:flex-row xl:items-center xl:justify-between gap-[40px]">

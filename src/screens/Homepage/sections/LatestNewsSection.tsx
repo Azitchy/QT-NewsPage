@@ -4,10 +4,9 @@ import { Card, CardContent } from "../../../components/ui/card";
 import { NewsModal } from "@/screens/News/sections/NewsModal";
 import { useFetchNewsList } from "@/hooks/useApi";
 import { showDefaultImageIfEmpty } from "@/lib/webApi";
-import { HeadingWithDots } from "@/components/HeadingWithDots";
 
 export const LatestNewsSection = () => {
-  const { t } = useTranslation("home");
+  const { t } = useTranslation('home');
   const [allNews, setAllNews] = useState<any[]>([]);
   const [selectedNews, setSelectedNews] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -110,16 +109,17 @@ export const LatestNewsSection = () => {
       <div className="relative w-full px-4 lg:px-0">
         <div className="relative w-full lg:w-[225px] h-[99px]">
           <div className="relative w-full lg:w-[232px] h-[99px] lg:ml-[71px]">
-            <HeadingWithDots text={t("latestNewsSection.title")} />
+            <div className="left-10 absolute top-[26px] lg:left-[49px] font-titles-h2-sectionheading-400 font-[number:var(--titles-h2-sectionheading-400-font-weight)] text-primary-colour text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] whitespace-nowrap [font-style:var(--titles-h2-sectionheading-400-font-style)]">
+              {t('latestNewsSection.title')}
+            </div>
+            <img className="w-[99px] h-[99px]" alt="Dots" src="/dots.svg" />
           </div>
         </div>
 
         {/* Loading State */}
         {loading && (
           <div className="flex justify-center items-center py-10">
-            <div className="text-gray-500">
-              {t("latestNewsSection.loading")}
-            </div>
+            <div className="text-gray-500">{t('latestNewsSection.loading')}</div>
           </div>
         )}
 
@@ -128,15 +128,14 @@ export const LatestNewsSection = () => {
           {allNews.map((news, index) => (
             <Card
               key={`card-${index}`}
-              className="h-auto md:h-[300px] lg:h-[380px] rounded-[20px] border border-solid border-border dark:border-primary-foreground flex flex-col bg-card hover:shadow-lg transition-shadow duration-300 w-full"
+              className="h-auto md:h-[300px] lg:h-[380px] rounded-[20px] border border-border dark:border-gradient flex flex-col hover:shadow-lg transition-shadow duration-300 w-full"
             >
-              <CardContent className="p-0 flex flex-col h-full">
+              <CardContent className="p-0 flex flex-col h-full bg-card rounded-[20px]">
                 <div className="flex flex-col items-start gap-2.5 p-[15px] flex-1">
                   <img
                     className="rounded-[10px] object-cover w-full h-[106px] md:h-[120px]"
                     alt="News image"
                     src={news.image}
-                    loading="lazy"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src =
                         "/news-agf-magic.png";
@@ -145,7 +144,7 @@ export const LatestNewsSection = () => {
                 </div>
 
                 <div className="flex flex-col items-start gap-2.5 pt-0 pb-2.5 px-[20px] md:px-[30px] flex-1">
-                  <h3 className="font-inter text-foreground text-[26px] md:text-[20px] lg:text-[20px] xl:text-[26px] line-clamp-3 leading-[34px] md:leading-[27px] lg:leading-[34px]">
+                  <h3 className="font-titles-h5-large-text-400 text-foreground text-[26px] md:text-[20px] lg:text-[20px] xl:text-[26px] line-clamp-3 leading-[34px] md:leading-[27px] lg:leading-[34px]">
                     {decodeHTML(news.title || "")}
                   </h3>
                 </div>
@@ -163,12 +162,11 @@ export const LatestNewsSection = () => {
                         handleReadNews(news);
                       }}
                     >
-                      <span>{t("latestNewsSection.readNews")}</span>
+                      <span>{t('latestNewsSection.readNews')}</span>
                       <img
                         className="w-[30px] h-[30px] md:w-[20px] md:h-[20px] lg:w-[30px] lg:h-[30px] hover:bg-primary-foreground rounded-full transition-all duration-700 ease-in-out hover:scale-110 hover:rotate-[-12deg]"
                         alt="Arrow right icon"
                         src="/arrow-right-icon.svg"
-                        loading="lazy"
                       />
                     </a>
                   </div>
