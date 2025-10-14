@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 
 export const HeroSection = (): JSX.Element => {
   const { t } = useTranslation("news");
-  
+
   const [featuredNews, setFeaturedNews] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -124,14 +124,15 @@ export const HeroSection = (): JSX.Element => {
               className="w-full md:max-w-[427px] xl:max-w-[750px] large:max-w-[858px] h-[178px] md:h-[213px] lg:h-[300px] rounded-[20px] object-cover flex-shrink-0"
               alt="News img main"
               src={imageUrl || "/placeholder.svg"}
+              loading="lazy"
             />
 
             <div className="flex flex-col gap-4 md:gap-5 flex-1 min-w-0">
-              <h1 className="font-titles-h5-large-text-400 font-[number:var(--titles-h5-large-text-400-font-weight)] text-foreground text-[26px] md:text-[16px] lg:text-[24px] 2xl:text-[26px] tracking-[var(--titles-h5-large-text-400-letter-spacing)] leading-[34px] md:leading-[20px] lg:leading-[30px] xl:leading-[var(--titles-h5-large-text-400-line-height)] [font-style:var(--titles-h5-large-text-400-font-style)]">
+              <h1 className="font-inter font-normal text-foreground text-[26px] md:text-[16px] lg:text-[24px] 2xl:text-[26px] tracking-[0px] leading-[34px] md:leading-[20px] lg:leading-[30px] xl:leading-[34px]">
                 {decodeHTML(featuredNews?.title)}
               </h1>
 
-              <p className="font-body-body3-400 font-[number:var(--body-body3-400-font-weight)] text-foreground text-[16px] md:text-[14px] tracking-[var(--body-body3-400-letter-spacing)] leading-[24px] md:leading-[19px] lg:leading-[var(--body-body3-400-line-height)] [font-style:var(--body-body3-400-font-style)] line-clamp-2">
+              <p className="font-inter font-normal text-foreground text-[16px] md:text-[14px] tracking-[0px] leading-[24px] md:leading-[19px] lg:leading-[24px] line-clamp-2">
                 {featuredNews?.content
                   ?.replace(/<\/?[^>]+(>|$)/g, "")
                   .split("\n")
@@ -148,7 +149,7 @@ export const HeroSection = (): JSX.Element => {
               </p>
 
               <div className="flex items-center justify-between">
-                <time className="font-body-body3-400 font-[number:var(--body-body3-400-font-weight)] text-[#4f5555] dark:text-card-foreground text-[16px] md:text-[14px] lg:text-[length:var(--body-body3-400-font-size)] tracking-[var(--body-body3-400-letter-spacing)] leading-[var(--body-body3-400-line-height)] [font-style:var(--body-body3-400-font-style)]">
+                <time className="font-inter font-normal text-[#4f5555] dark:text-card-foreground text-[16px] md:text-[14px] lg:text-[16px] tracking-[0px] leading-[24px]">
                   {formatDate(featuredNews?.createTime)}
                 </time>
 
@@ -165,6 +166,7 @@ export const HeroSection = (): JSX.Element => {
                     className="w-[30px] h-[30px] md:w-[20px] md:h-[20px] lg:w-[30px] lg:h-[30px] rounded-full transition-all duration-700 ease-in-out hover:bg-primary-foreground hover:scale-110 hover:rotate-[-12deg]"
                     alt="Arrow right icon"
                     src="/arrow-right-icon.svg"
+                    loading="lazy"
                   />
                 </a>
               </div>

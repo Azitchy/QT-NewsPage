@@ -41,6 +41,7 @@ export const ProposalDecisionSection = (): JSX.Element => {
               src="/proposal-img.png"
               alt="Hands Clapping"
               className="opacity-40 order-1 xl:order-2 w-[392px] h-[135px] xl:max-w-[546px] xl:max-h-[173px]"
+              loading="lazy"
             />
           </div>
 

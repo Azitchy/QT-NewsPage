@@ -11,19 +11,21 @@ export const HeroSection = () => {
           className="hidden md:block w-full h-full object-contain md:scale-125 lg:scale-100 large:scale-125 transition-transform duration-500"
           alt="Hero illustration"
           src="/explorer-hero-img.png"
+          loading="lazy"
         />
         <img
           className="md:hidden w-full h-full"
           alt="Hero illustration"
           src="/explorer-hero-small.png"
+          loading="lazy"
         />
       </div>
 
       {/* Text Section */}
       <div className="md:max-w-[370px] lg:max-w-[512px] large:w-[1400px] md:absolute md:top-52 md:right-[10px] lg:right-[100px] large:static large:text-left">
         <h1 className="text-[26px] md:text-[24px] lg:text-[32px] leading-[32px] lg:leading-10 font-light text-start lg:text-left text-foreground mb-2 font-space-grotesk">
-          {t("heroSection.title")} <br /> {t("heroSection.subtitle")} {" "}
-          <span className="bg-gradient-to-tr from-[#AADA5D] to-[#0DAEB9] bg-clip-text text-transparent font-bold">
+          {t("heroSection.title")} <br /> {t("heroSection.subtitle")}{" "}
+          <span className="bg-green-gradient bg-clip-text text-transparent font-bold">
             {t("heroSection.highlightedText")}
           </span>
         </h1>

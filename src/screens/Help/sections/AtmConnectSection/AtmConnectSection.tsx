@@ -10,9 +10,9 @@ export const AtmConnectSection = (): JSX.Element => {
         <HeadingWithDots text={t("atmConnectSection.heading")} />
         <div className="pl-0 tablet:pl-[77px] xl:pl-[134px] large:pl-[203px] gap-[20px] xl:gap-[40px] flex flex-col">
           <p className="pt-[20px] font-light font-body text-[18px] leading-[24px] xl:text-[20px] xl:leading-[27px] tablet:max-w-[516px] xl:max-w-[782px]">
-            {t("atmConnectSection.paragraphPart1")} {" "}
+            {t("atmConnectSection.paragraphPart1")}{" "}
             <span className="font-medium">
-              {t("atmConnectSection.paragraphBoldPart")} {" "}
+              {t("atmConnectSection.paragraphBoldPart")}{" "}
             </span>
             {t("atmConnectSection.paragraphPart2")}
           </p>
@@ -30,6 +30,7 @@ export const AtmConnectSection = (): JSX.Element => {
                   className="w-[174px] h-[51px]"
                   alt="Google Play Store"
                   src="/google-play-badge.png"
+                  loading="lazy"
                 />
               </a>
               <a
@@ -41,6 +42,7 @@ export const AtmConnectSection = (): JSX.Element => {
                   className="w-[150px] h-[51px]"
                   alt="App Store"
                   src="/apple-store-badge.png"
+                  loading="lazy"
                 />
               </a>
             </div>
@@ -51,6 +53,7 @@ export const AtmConnectSection = (): JSX.Element => {
         className="w-[342px] xl:w-[592px] h-[283px] xl:h-[386px] object-contain mx-auto tablet:mx-0"
         alt="ATM Connect App"
         src="/atm-connect-img.png"
+        loading="lazy"
       />
     </section>
   );

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../../../components/ui/button";
 import NumberedDisplay from "@/components/NumberedDisplay";
+import { HeadingWithDots } from "@/components/HeadingWithDots";
 
 export const CommunitySection = () => {
   const { t } = useTranslation('ecosystem');
@@ -32,20 +33,13 @@ export const CommunitySection = () => {
         <div className="flex flex-col md:flex-row gap-[20px] lg:gap-[70px] 2xl:gap-[200px] md:mt-[60px] items-start mb-12">
           <div className="flex flex-col">
             <div className="relative ml-0 lg:ml-[30px]">
-              <div className="font-titles-h2-sectionheading-400 text-primary-colour text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] ml-12 mt-7 uppercase">
-                {t("communitySection.title")}
-              </div>
-              <img
-                className="absolute w-[99px] h-[99px] top-0 left-0"
-                alt="Dots"
-                src="/dots.svg"
-              />
+               <HeadingWithDots text={t("communitySection.title")} />
             </div>
             <div className="flex-1 md:max-w-[519px] lg:max-w-[750px] 2xl:max-w-[955px] font-inter text-foreground text-[16px] lg:text-xl leading-[24px] lg:leading-[27px] mt-14 lg:ml-20 2xl:ml-[300px] text-left">
               <span className="font-light">
                 {t("communitySection.description")}{" "}
               </span>
-              <span className="font-body-body1-500 font-medium">
+                <span className="font-inter font-medium">
                 {t("communitySection.descriptionHighlight")}
               </span>
               <span className="font-light">
@@ -59,20 +53,20 @@ export const CommunitySection = () => {
 
       {/* How to Join Section */}
       <div className="flex flex-col w-full items-start gap-5 max-w-[782px] 2xl:max-w-[955px] lg:mx-60 2xl:mx-96">
-        <h3 className="font-titles-h5-large-text-400 text-foreground text-[20px] lg:text-[length:var(--titles-h5-large-text-400-font-size)] leading-[27px] lg:leading-[var(--titles-h5-large-text-400-line-height)]">
+        <h3 className="font-inter text-foreground dark:text-foreground text-[20px] lg:text-[26px] tracking-[0px] leading-[27px] lg:leading-[34px] text-left">
           {t("communitySection.howToJoin.title")}
         </h3>
-        <p className="font-body-body2-400 text-foreground text-[16px] lg:text-[length:var(--body-body2-400-font-size)] leading-[22px] lg:leading-[var(--body-body2-400-line-height)]">
+        <p className="font-inter text-foreground dark:text-foreground text-[16px] lg:text-[18px] tracking-[0px] leading-[22px] lg:leading-[24px] text-left">
           {t("communitySection.howToJoin.description")}
         </p>
       </div>
 
       {/* Reward Modes Section */}
       <div className="flex flex-col items-center gap-[5px] mb-12">
-        <h3 className="font-titles-h5-large-text-400 text-foreground text-[20px] lg:text-[length:var(--titles-h5-large-text-400-font-size)] leading-[27px] lg:leading-[var(--titles-h5-large-text-400-line-height)] text-center">
+       <h3 className="font-inter text-foreground dark:text-foreground text-[20px] lg:text-[26px] tracking-[0px] leading-[27px] lg:leading-[34px] text-center">
           {t("communitySection.rewardModes.title")}
         </h3>
-        <p className="font-body-labeltext-400 text-[#4f5555] text-[12px] lg:text-[length:var(--body-labeltext-400-font-size)] leading-[17px] lg:leading-[var(--body-labeltext-400-line-height)] text-center">
+        <p className="font-inter text-[#4f5555] text-[12px] tracking-[0px] leading-[17px] text-center">
           {t("communitySection.rewardModes.subtitle")}
         </p>
 
@@ -92,7 +86,7 @@ export const CommunitySection = () => {
 
           <div className="flex items-center gap-[10px] cursor-pointer">
             <a href="/community#rewards">
-              <span className="font-body-body-4-400 text-primary text-[14px] lg:text-[16px] leading-[19px] lg:leading-[var(--body-body-4-400-line-height)]">
+             <span className="font-inter text-primary text-[14px] lg:text-[16px] tracking-[0px] leading-[19px] lg:leading-[24px]">
                 {t("communitySection.rewardModes.buttons.learn")}
               </span>
             </a>
@@ -102,6 +96,7 @@ export const CommunitySection = () => {
                   className="absolute w-[33px] h-[33px] top-[3px] left-0.5 rounded-full cursor-pointer hover:bg-primary-foreground transition-all duration-700 ease-in-out hover:scale-110 hover:rotate-[-12deg]"
                   alt="Arrow right icon"
                   src="/arrow-right-icon.svg"
+                  loading="lazy"
                 />
               </div>
             </a>

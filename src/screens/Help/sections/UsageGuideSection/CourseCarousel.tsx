@@ -153,6 +153,7 @@ export const CourseCarousel = (): JSX.Element => {
                         className="w-full h-[122px] xl:h-[164px] rounded-[10px] object-cover"
                         alt="Tutorial thumbnail"
                         src={card.image}
+                        loading="lazy"
                       />
                       <div className="flex items-center justify-center w-full mt-[15px]">
                         <div className="text-foreground flex-1 font-sans text-[26px] font-normal leading-[34px]">

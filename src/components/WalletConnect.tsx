@@ -24,7 +24,7 @@ export const WalletConnect: React.FC = () => {
         <div className="absolute inset-0 -top-40 mobile:-top-48 flex items-center justify-center z-10">
           <button
             onClick={() => setShowModal(true)}
-            className="px-[30px] sm:px-16 py-[20px] sm:py-5 bg-gradient-to-r from-[#AAD95D] to-[#0DAEB9] hover:from-[#9BC850] hover:to-[#0C9DA7] text-white text-[18px] sm:text-[20px] lg:text-[28px] rounded-full shadow-lg transition-all duration-300 transform hover:scale-105"
+            className="px-[30px] sm:px-16 py-[20px] sm:py-5 bg-green-gradient hover:from-[#9BC850] hover:to-[#0C9DA7] text-white text-[18px] sm:text-[20px] lg:text-[28px] rounded-full shadow-lg transition-all duration-300 transform hover:scale-105"
           >
             Wallet
           </button>
@@ -32,10 +32,7 @@ export const WalletConnect: React.FC = () => {
       </div>
 
       {/* Wallet Modal */}
-      <WalletModal 
-        isOpen={showModal} 
-        onClose={() => setShowModal(false)} 
-      />
+      <WalletModal isOpen={showModal} onClose={() => setShowModal(false)} />
     </>
   );
 };

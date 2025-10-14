@@ -16,7 +16,7 @@ export function InstallWalletCard({ className = "" }: { className?: string }) {
 
         <div className="p-6 space-y-[10px] 2xl:space-y-[30px] font-normal font-[Inter] text-[16px] leading-[22px] 2xl:text-[18px] 2xl:leading-[24px]">
           <div className="border border-primary rounded-2xl p-3 flex items-start gap-3">
-            <img className="w-5 h-5" alt="Tip icon" src="/light-bulb.svg" />
+            <img className="w-5 h-5" alt="Tip icon" src="/light-bulb.svg" loading="lazy" />
             <p className="text-primary text-[12px] leading-[17px] font-normal">
               {t("connectCardsSection.installWalletCard.tip")}
             </p>
@@ -31,7 +31,7 @@ export function InstallWalletCard({ className = "" }: { className?: string }) {
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 px-4 py-2 bg-[#e0f7fa] rounded-full"
             >
-              <img className="w-5 h-5" alt="Metamask" src="/metamask.svg" />
+              <img className="w-5 h-5" alt="Metamask" src="/metamask.svg" loading="lazy" />
               <span className="text-primary font-normal text-[14px] leading-[19px] 2xl:text-[16px] 2xl:leading-[24px]">
                 MetaMask
               </span>
@@ -45,7 +45,7 @@ export function InstallWalletCard({ className = "" }: { className?: string }) {
               href=""
               className="flex items-center justify-center gap-2 px-4 py-2 bg-[#e0f7fa] rounded-full"
             >
-              <img className="w-5 h-5" alt="Binance" src="/binance-1.svg" />
+              <img className="w-5 h-5" alt="Binance" src="/binance-1.svg" loading="lazy" />
               <span className="text-primary font-normal text-[14px] leading-[19px] 2xl:text-[16px] 2xl:leading-[24px]">
                 {t("connectCardsSection.installWalletCard.bscNetworkText")}
               </span>
@@ -59,7 +59,7 @@ export function InstallWalletCard({ className = "" }: { className?: string }) {
               href=""
               className="flex items-center gap-2 px-3 py-2 bg-[#e0f7fa] rounded-full"
             >
-              <img className="w-4 h-4" alt="Luca" src="/luca.svg" />
+              <img className="w-4 h-4" alt="Luca" src="/luca.svg" loading="lazy" />
               <span className="text-primary font-normal text-[14px] leading-[19px] 2xl:text-[16px] 2xl:leading-[24px]">
                 LUCA
               </span>
@@ -69,7 +69,7 @@ export function InstallWalletCard({ className = "" }: { className?: string }) {
               href=""
               className="flex items-center gap-2 px-3 py-2 bg-[#e0f7fa] rounded-full"
             >
-              <img className="w-4 h-4" alt="USDC" src="/usdc.svg" />
+              <img className="w-4 h-4" alt="USDC" src="/usdc.svg" loading="lazy" />
               <span className="text-primary font-normal text-[14px] leading-[19px] 2xl:text-[16px] 2xl:leading-[24px]">
                 USDC
               </span>
@@ -79,7 +79,7 @@ export function InstallWalletCard({ className = "" }: { className?: string }) {
               href="/"
               className="flex items-center gap-2 px-3 py-2 bg-[#e0f7fa] rounded-full"
             >
-              <img className="w-4 h-4" alt="AGT" src="/coin-icon.svg" />
+              <img className="w-4 h-4" alt="AGT" src="/coin-icon.svg" loading="lazy" />
               <span className="text-primary font-normal text-[14px] leading-[19px] 2xl:text-[16px] 2xl:leading-[24px]">
                 AGT
               </span>
@@ -161,6 +161,7 @@ export function FundWalletCard({ className = "" }: { className?: string }) {
               className="w-[184px] h-[35px] object-contain"
               alt="MoonPay"
               src="/moonpay.svg"
+              loading="lazy"
             />
             <p className="text-[#1C1C1C] font-medium text-[18px] leading-[24px] 2xl:text-[20px] 2xl:leading-[27px]">
               {t("connectCardsSection.fundWalletCard.moonpayHeading")}

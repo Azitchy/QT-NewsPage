@@ -166,6 +166,7 @@ export const ContractsCarousel = (): JSX.Element => {
                             <img
                               className="w-[81px] h-[81px] flex-shrink-0"
                               alt={card.title}
+                              loading="lazy"
                               src={
                                 theme === "dark"
                                   ? card.darkImage

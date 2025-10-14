@@ -28,15 +28,28 @@ interface Language {
 }
 
 const LANGUAGES: Language[] = [
-  { code: 'en', label: 'EN', icon: '/lang-en.svg' },
-  { code: 'zh', label: 'CN', icon: '/lang-zh.svg' },
+  { code: "en", label: "EN", icon: "/lang-en.svg" },
+  { code: "zh", label: "CN", icon: "/lang-zh.svg" },
 ];
 
-const WALLET_OPTIONS: Array<{type: WalletType; name: string; icon: string}> = [
-  { type: 'metamask', name: 'MetaMask', icon: '/webapp/MetaMask-icon-fox.svg' },
-  { type: 'walletconnect', name: 'WalletConnect', icon: 'https://avatars.githubusercontent.com/u/37784886' },
-  { type: 'coinbase', name: 'Coinbase Wallet', icon: 'https://www.coinbase.com/img/favicon/favicon-32x32.png' },
-];
+const WALLET_OPTIONS: Array<{ type: WalletType; name: string; icon: string }> =
+  [
+    {
+      type: "metamask",
+      name: "MetaMask",
+      icon: "/webapp/MetaMask-icon-fox.svg",
+    },
+    {
+      type: "walletconnect",
+      name: "WalletConnect",
+      icon: "https://avatars.githubusercontent.com/u/37784886",
+    },
+    {
+      type: "coinbase",
+      name: "Coinbase Wallet",
+      icon: "https://www.coinbase.com/img/favicon/favicon-32x32.png",
+    },
+  ];
 
 export const HeaderSection = (): JSX.Element => {
   const { t, i18n } = useTranslation("common");
@@ -44,10 +57,11 @@ export const HeaderSection = (): JSX.Element => {
   const [currentMenu, setCurrentMenu] = useState<MenuType>("main");
   const [activeSubMenu, setActiveSubMenu] = useState<any>(null);
   const [showWalletModal, setShowWalletModal] = useState(false);
-  
+
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated, wallet, disconnectWallet, isConnecting } = useWeb3Auth();
+  const { isAuthenticated, wallet, disconnectWallet, isConnecting } =
+    useWeb3Auth();
   const { setTheme, theme } = useTheme();
 
   const navItems = [
@@ -99,7 +113,8 @@ export const HeaderSection = (): JSX.Element => {
   ];
 
   // Helper functions
-  const formatAddress = (address: string) => `${address.slice(0, 6)}...${address.slice(-4)}`;
+  const formatAddress = (address: string) =>
+    `${address.slice(0, 6)}...${address.slice(-4)}`;
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
@@ -151,19 +166,21 @@ export const HeaderSection = (): JSX.Element => {
   const WalletButton = ({ className }: { className: string }) => {
     if (isAuthenticated && wallet) {
       return (
-        <Button 
-          className={`${className} flex items-center gap-1.5 sm:gap-2`} 
+        <Button
+          className={`${className} flex items-center gap-1.5 sm:gap-2`}
           onClick={handleWalletButtonClick}
         >
-          <span className="truncate min-w-0">{formatAddress(wallet.address)}</span>
+          <span className="truncate min-w-0">
+            {formatAddress(wallet.address)}
+          </span>
         </Button>
       );
     }
 
     return (
-      <Button 
-        className={className} 
-        onClick={handleWalletButtonClick} 
+      <Button
+        className={className}
+        onClick={handleWalletButtonClick}
         disabled={isConnecting}
       >
         {isConnecting ? (
@@ -195,7 +212,9 @@ export const HeaderSection = (): JSX.Element => {
         <Link
           to={item.path}
           className={`block h-[50px] rounded-lg text-[14px] font-normal transition-colors ${
-            location.pathname === item.path ? "text-primary" : "text-foreground dark:text-foreground"
+            location.pathname === item.path
+              ? "text-primary"
+              : "text-foreground dark:text-foreground"
           } hover:text-primary flex items-center`}
           onClick={closeMobileMenu}
         >
@@ -226,7 +245,7 @@ export const HeaderSection = (): JSX.Element => {
                 {item.description ? (
                   <>
                     <NavigationMenuTrigger
-                      className={`inline-flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-full font-body-body-4-400 text-[14px] font-normal leading-[19px] cursor-pointer transition-colors hover:bg-card hover:text-primary dark:hover:bg-card dark:hover:text-primary ${
+                      className={`inline-flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-full font-inter text-[14px] font-normal leading-[19px] cursor-pointer transition-colors hover:bg-card hover:text-primary dark:hover:bg-card dark:hover:text-primary ${
                         location.pathname === item.path
                           ? "bg-background text-primary dark:bg-foreground dark:text-card"
                           : "text-foreground dark:text-foreground"
@@ -254,7 +273,10 @@ export const HeaderSection = (): JSX.Element => {
                         {item.subItems && (
                           <div className="flex gap-[30px] items-start justify-center">
                             {item.subItems.map((sub, subIndex) => (
-                              <div key={subIndex} className="flex flex-col items-start justify-start">
+                              <div
+                                key={subIndex}
+                                className="flex flex-col items-start justify-start"
+                              >
                                 {sub.image && (
                                   <div className="w-[100px] h-[110px] mb-[8px]">
                                     <img
@@ -266,13 +288,26 @@ export const HeaderSection = (): JSX.Element => {
                                 )}
                                 <div className="flex flex-col gap-[6px] items-start">
                                   {sub.subLabel.map((label, labelIndex) => (
-                                    <div key={labelIndex} className="flex gap-[12px] items-start">
+                                    <div
+                                      key={labelIndex}
+                                      className="flex gap-[12px] items-start"
+                                    >
                                       {sub.subLabelImage?.[labelIndex] && (
-                                        <img src={sub.subLabelImage[labelIndex]} alt="label icon" className="w-5 h-5" />
+                                        <img
+                                          src={sub.subLabelImage[labelIndex]}
+                                          alt="label icon"
+                                          className="w-5 h-5"
+                                        />
                                       )}
                                       <a
                                         href={sub.href?.[labelIndex] || "#"}
-                                        target={sub.href?.[labelIndex]?.startsWith("http") ? "_blank" : "_self"}
+                                        target={
+                                          sub.href?.[labelIndex]?.startsWith(
+                                            "http"
+                                          )
+                                            ? "_blank"
+                                            : "_self"
+                                        }
                                         rel="noopener noreferrer"
                                         className="text-sm text-foreground dark:text-primary-foreground hover:text-primary cursor-pointer"
                                       >
@@ -292,7 +327,7 @@ export const HeaderSection = (): JSX.Element => {
                   <NavigationMenuLink asChild>
                     <Link
                       to={item.path}
-                      className={`inline-flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-full font-body-body-4-400 text-[14px] font-normal leading-[19px] cursor-pointer transition-colors hover:bg-card hover:text-primary dark:hover:text-primary ${
+                      className={`inline-flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-full font-inter text-[14px] font-normal leading-[19px] cursor-pointer transition-colors hover:bg-card hover:text-primary dark:hover:text-primary ${
                         location.pathname === item.path
                           ? "bg-background text-primary dark:bg-foreground dark:text-card"
                           : "text-foreground dark:text-foreground"
@@ -308,9 +343,7 @@ export const HeaderSection = (): JSX.Element => {
         </NavigationMenu>
 
         <div className="flex items-center gap-1 sm:gap-2 lg:gap-[10px] flex-shrink-0 min-w-0">
-          <WalletButton
-            className="flex h-[32px] sm:h-[36px] lg:h-[38px] px-2 sm:px-3 lg:px-[15px] py-1.5 sm:py-2 lg:py-2.5 rounded-full bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] hover:opacity-90 transition-opacity text-background font-normal text-[11px] sm:text-[13px] lg:text-[14px] min-w-0 max-w-[140px] sm:max-w-[160px] lg:max-w-none"
-          />
+          <WalletButton className="flex h-[32px] sm:h-[36px] lg:h-[38px] px-2 sm:px-3 lg:px-[15px] py-1.5 sm:py-2 lg:py-2.5 rounded-full bg-green-gradient hover:opacity-90 transition-opacity text-background font-normal text-[11px] sm:text-[13px] lg:text-[14px] min-w-0 max-w-[140px] sm:max-w-[160px] lg:max-w-none" />
 
           <div className="hidden lg:flex items-center px-2 gap-2">
             <LanguageSwitcher />
@@ -320,7 +353,11 @@ export const HeaderSection = (): JSX.Element => {
               className="rounded-full hover:bg-card-foreground dark:hover:bg-slate-700 cursor-pointer"
               onClick={handleThemeToggle}
             >
-              {theme === "dark" ? <Sun className="w-10 h-10 text-foreground" /> : <Moon className="w-10 h-10 -scale-x-100" />}
+              {theme === "dark" ? (
+                <Sun className="w-10 h-10 text-foreground" />
+              ) : (
+                <Moon className="w-10 h-10 -scale-x-100" />
+              )}
             </Button>
           </div>
 
@@ -330,7 +367,11 @@ export const HeaderSection = (): JSX.Element => {
             className="lg:hidden w-8 h-8 sm:w-10 sm:h-10 p-1.5 sm:p-2 rounded-full dark:text-primary-foreground flex-shrink-0"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
-            {isMobileMenuOpen ? <X className="w-4 h-4 sm:w-5 sm:h-5" /> : <Menu className="w-4 h-4 sm:w-5 sm:h-5" />}
+            {isMobileMenuOpen ? (
+              <X className="w-4 h-4 sm:w-5 sm:h-5" />
+            ) : (
+              <Menu className="w-4 h-4 sm:w-5 sm:h-5" />
+            )}
           </Button>
         </div>
       </div>
@@ -350,7 +391,10 @@ export const HeaderSection = (): JSX.Element => {
                   {/* Language Menu Button */}
                   <button
                     onClick={() => {
-                      setActiveSubMenu({ label: t("navbar.language"), subItems: LANGUAGES });
+                      setActiveSubMenu({
+                        label: t("navbar.language"),
+                        subItems: LANGUAGES,
+                      });
                       setCurrentMenu("language");
                     }}
                     className="w-full flex items-center justify-between h-[50px] rounded-lg text-left text-[14px] text-foreground dark:text-foreground hover:text-primary transition-colors"
@@ -371,7 +415,8 @@ export const HeaderSection = (): JSX.Element => {
                     onClick={() => setCurrentMenu("main")}
                     className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-primary transition-colors px-4 h-[50px]"
                   >
-                    <span className="text-primary">← </span> {t("navbar.mobileMenu.back")}
+                    <span className="text-primary">← </span>{" "}
+                    {t("navbar.mobileMenu.back")}
                   </button>
 
                   <div className="px-4 h-[50px] rounded-lg text-[14px] font-normal text-foreground dark:text-foreground flex items-center">
@@ -385,7 +430,11 @@ export const HeaderSection = (): JSX.Element => {
                         <div key={labelIdx}>
                           <a
                             href={sub.href?.[labelIdx] || "#"}
-                            target={sub.href?.[labelIdx]?.startsWith("http") ? "_blank" : "_self"}
+                            target={
+                              sub.href?.[labelIdx]?.startsWith("http")
+                                ? "_blank"
+                                : "_self"
+                            }
                             rel="noopener noreferrer"
                             className="block px-8 h-[50px] rounded-lg text-[14px] text-foreground dark:text-foreground hover:text-primary flex items-center"
                             onClick={closeMobileMenu}
@@ -407,7 +456,8 @@ export const HeaderSection = (): JSX.Element => {
                     onClick={() => setCurrentMenu("main")}
                     className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-primary transition-colors h-[50px]"
                   >
-                    <span className="text-primary">← </span> {t("navbar.mobileMenu.back")}
+                    <span className="text-primary">← </span>{" "}
+                    {t("navbar.mobileMenu.back")}
                   </button>
 
                   {LANGUAGES.map((lang, idx) => (
@@ -415,15 +465,21 @@ export const HeaderSection = (): JSX.Element => {
                       <button
                         onClick={() => handleLanguageChange(lang.code)}
                         className={`flex items-center gap-3 w-full h-[50px] rounded-lg text-[14px] transition-colors ${
-                          i18n.language === lang.code 
-                            ? "text-primary font-medium" 
+                          i18n.language === lang.code
+                            ? "text-primary font-medium"
                             : "text-foreground dark:text-foreground hover:text-primary"
                         }`}
                       >
-                        <img src={lang.icon} alt={lang.label} className="w-5 h-5" />
+                        <img
+                          src={lang.icon}
+                          alt={lang.label}
+                          className="w-5 h-5"
+                        />
                         {lang.label}
                       </button>
-                      {idx !== LANGUAGES.length - 1 && <hr className="border-border my-2" />}
+                      {idx !== LANGUAGES.length - 1 && (
+                        <hr className="border-border my-2" />
+                      )}
                     </div>
                   ))}
                 </>
@@ -448,9 +504,9 @@ export const HeaderSection = (): JSX.Element => {
       )}
 
       {/* Wallet Modal */}
-      <WalletModal 
-        isOpen={showWalletModal} 
-        onClose={() => setShowWalletModal(false)} 
+      <WalletModal
+        isOpen={showWalletModal}
+        onClose={() => setShowWalletModal(false)}
       />
     </header>
   );

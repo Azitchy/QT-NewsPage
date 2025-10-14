@@ -1,47 +1,41 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "../../../components/ui/button";
+import { HeadingWithDots } from "@/components/HeadingWithDots";
 
 export const CommunitySection = () => {
-  const { t } = useTranslation('home');
+  const { t } = useTranslation("home");
 
   return (
     <div className="relative w-full px-4 lg:px-0">
       <div className="relative h-[99px] ml-0 lg:ml-[71px]">
-        <div className="left-10 absolute h-11 top-[27px] lg:left-[49px] font-titles-h2-sectionheading-400 font-[number:var(--titles-h2-sectionheading-400-font-weight)] text-primary-colour text-[length:var(--titles-h2-sectionheading-400-font-size)] tracking-[var(--titles-h2-sectionheading-400-letter-spacing)] leading-[var(--titles-h2-sectionheading-400-line-height)] whitespace-nowrap [font-style:var(--titles-h2-sectionheading-400-font-style)]">
-          {t('communitySection.title')}
-        </div>
-        <img
-          className="w-[99px] h-[99px] absolute top-0 left-0"
-          alt="Dots"
-          src="/dots-1.svg"
-        />
+        <HeadingWithDots text={t("communitySection.title")} />
       </div>
 
       <div className="flex flex-col w-full max-w-[1316px] h-auto lg:h-[287px] items-center gap-5 mx-auto mt-6 md:px-4">
-        <div className="relative self-stretch mt-[-1.00px] font-titles-h5-large-text-400 font-[number:var(--titles-h5-large-text-400-font-weight)] text-foreground dark:text-foreground text-[20px] lg:text-[length:var(--titles-h5-large-text-400-font-size)] text-center tracking-[var(--titles-h5-large-text-400-letter-spacing)] leading-[30px] lg:leading-[var(--titles-h5-large-text-400-line-height)] [font-style:var(--titles-h5-large-text-400-font-style)]">
-          {t('communitySection.subtitle')}
+        <div className="relative self-stretch mt-[-1.00px] font-inter font-normal text-foreground dark:text-foreground text-[20px] lg:text-[26px] text-center tracking-[0px] leading-[30px] lg:leading-[34px]">
+          {t("communitySection.subtitle")}
         </div>
 
-        <div className="relative w-full font-space-grotesk font-[number:var(--body-body1-300-font-weight)] text-foreground dark:text-foreground text-[26px] lg:text-[38px] text-center tracking-[var(--body-body1-300-letter-spacing)] leading-[34px] lg:leading-[48px] [font-style:var(--body-body1-300-font-style)]">
-          {t('communitySection.description')}{" "}
-          <span className="bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] font-extrabold bg-clip-text text-transparent">
-            {t('communitySection.descriptionHighlight1')}
+        <div className="relative w-full font-space-grotesk font-light text-foreground dark:text-foreground text-[26px] lg:text-[38px] text-center tracking-[0px] leading-[34px] lg:leading-[48px]">
+          {t("communitySection.description")}{" "}
+          <span className="bg-green-gradient font-extrabold bg-clip-text text-transparent">
+            {t("communitySection.descriptionHighlight1")}
           </span>
           ,{" "}
-          <span className="bg-[linear-gradient(136deg,#AADA5D_0%,#0DAEB9_98.28%)] font-extrabold  bg-clip-text text-transparent">
-            {t('communitySection.descriptionHighlight2')}
+          <span className="bg-green-gradient font-extrabold  bg-clip-text text-transparent">
+            {t("communitySection.descriptionHighlight2")}
           </span>
-          {t('communitySection.descriptionEnd')}
+          {t("communitySection.descriptionEnd")}
         </div>
 
         <div className="text-[18px] text-center lg:text-[20px] max-w-[750px] font-light text-[#4f5555] font-inter dark:text-foreground leading-6">
-          {t('communitySection.additionalText')}
+          {t("communitySection.additionalText")}
         </div>
 
         <Button className="bg-primary rounded-[30px] px-[15px] py-[12px] md:px-5 md:py-6 z-20">
           <a href="/community">
-            <span className="font-body-body3-400 font-[number:var(--body-body3-400-font-weight)] text-background dark:text-primary-foreground text-[14px] md:text-[length:var(--body-body3-400-font-size)] tracking-[var(--body-body3-400-letter-spacing)] leading-[var(--body-body3-400-line-height)] whitespace-nowrap [font-style:var(--body-body3-400-font-style)]">
-              {t('communitySection.button')}
+            <span className="font-inter font-normal text-background dark:text-primary-foreground text-[14px] md:text-[16px] tracking-[0px] leading-[24px] whitespace-nowrap">
+              {t("communitySection.button")}
             </span>
           </a>
         </Button>
