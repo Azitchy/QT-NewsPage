@@ -27,6 +27,8 @@ import StakeTransactionTable from "./screens/Explorer/sections/ContentSection/St
 import UserInformationTable from "./screens/Explorer/sections/ContentSection/UserInformationTable";
 import ContractInformation from "./screens/Explorer/sections/ContentSection/ContractInformation";
 import JoinATMForm from "./screens/Ecosystem/sections/JoinAtm";
+import SideBar from "./screens/Sidebar/SideBar";
+import Dashboard from "./screens/Dashboard/Dashboard";
 
 export const App = (): JSX.Element => {
   const { pathname } = useLocation();
@@ -35,13 +37,18 @@ export const App = (): JSX.Element => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
+  const hideHeader =
+    /^\/(dashboard|connection|trading|proposals|chat|avatar|game|travel|settings|create-connection)/.test(
+      pathname
+    );
+
   return (
     <ApiProvider>
       <Web3AuthProvider>
         <BlockchainProvider>
           <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
             <div className="flex flex-col w-full min-h-screen">
-              <HeaderSection />
+              {!hideHeader && <HeaderSection />}
               <main className="flex-1">
                 <Routes>
                   {/* Main routes */}
@@ -80,6 +87,8 @@ export const App = (): JSX.Element => {
                       </ProtectedRoute>
                     }
                   />
+                  {/* Dashboard */}
+                  <Route path="/:main/:sub?" element={<Dashboard />} />
                 </Routes>
               </main>
             </div>
