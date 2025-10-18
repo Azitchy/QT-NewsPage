@@ -1,11 +1,11 @@
 import { useParams, useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar/SideBar";
-import BalanceSection from "./Portfolio/BalanceSection";
-import { PieChartCard } from "./Portfolio/PieChartCard";
-import TokenBalance from "./Portfolio/TokenBalance";
-import ATMGalaxy from "./Portfolio/ATMGalaxy";
+import BalanceSection from "../Dashboard/Portfolio/BalanceSection";
+import { PieChartCard } from "../Dashboard/Portfolio/PieChartCard";
+import TokenBalance from "../Dashboard/Portfolio/TokenBalance";
+import ATMGalaxy from "../Dashboard/Portfolio/ATMGalaxy";
 
-const Dashboard = () => {
+const SidebarComponent = () => {
   const { main = "dashboard", sub } = useParams();
   const navigate = useNavigate();
 
@@ -104,4 +104,4 @@ const componentMap: Record<string, React.FC> = {
   "connection/pr-node": PRNode,
 };
 
-export default Dashboard;
+export default SidebarComponent;

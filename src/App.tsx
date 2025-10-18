@@ -27,8 +27,7 @@ import StakeTransactionTable from "./screens/Explorer/sections/ContentSection/St
 import UserInformationTable from "./screens/Explorer/sections/ContentSection/UserInformationTable";
 import ContractInformation from "./screens/Explorer/sections/ContentSection/ContractInformation";
 import JoinATMForm from "./screens/Ecosystem/sections/JoinAtm";
-import SideBar from "./screens/Sidebar/SideBar";
-import Dashboard from "./screens/Dashboard/Dashboard";
+import SidebarComponent from "./screens/Sidebar/SideBarComponent";
 
 export const App = (): JSX.Element => {
   const { pathname } = useLocation();
@@ -88,7 +87,7 @@ export const App = (): JSX.Element => {
                     }
                   />
                   {/* Dashboard */}
-                  <Route path="/:main/:sub?" element={<Dashboard />} />
+                  <Route path="/:main/:sub?" element={<SidebarComponent />} />
                 </Routes>
               </main>
             </div>
