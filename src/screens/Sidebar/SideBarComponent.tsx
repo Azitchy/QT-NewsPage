@@ -33,14 +33,14 @@ const SidebarComponent = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row m-6 gap-5 bg-background">
+    <div className="flex flex-col md:flex-row m-4 md:m-6 gap-5 bg-background">
       <Sidebar
         active={main}
         setActive={handleSetActive}
         activeSub={sub}
         setActiveSub={handleSetActiveSub}
       />
-      <div className="flex-1">{renderMainContent()}</div>
+      <div className="flex-1 md:ml-[290px]">{renderMainContent()}</div>
     </div>
   );
 };

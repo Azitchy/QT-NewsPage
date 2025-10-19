@@ -30,7 +30,7 @@ export const PieChartCard: React.FC<PieChartCardProps> = ({
   className = "",
 }) => {
   return (
-    <div className={`flex h-[355px] ${className}`}>
+    <div className={`flex flex-1 md:w-[250px] ${className}`}>
       <div className="bg-background dark:bg-[#15152B] rounded-2xl p-5 w-full max-w-xl shadow relative">
         <h2 className="text-[20px] font-normal text-foreground mb-4">
           {title}

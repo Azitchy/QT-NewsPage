@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Mic, Search, Trash2 } from "lucide-react";
 import { ConfirmationModal } from "@/components/ConfirmationModal";
 import { LoadingAnimation } from "@/components/LoadingAnimation";
@@ -94,6 +94,17 @@ const dummyImportableTokens = [
     usd: "$7.87",
     change: 0.9,
   },
+  {
+    name: "Uniswap",
+    symbol: "UNI",
+    logo: "/uniswap-logo.png",
+    balanceText: "232.23 UNI",
+    balance: 232.23,
+    price: 7.87,
+    priceText: "$1.30",
+    usd: "$7.87",
+    change: 0.9,
+  },
 ];
 
 const initialTokens = [
@@ -173,6 +184,18 @@ const TokenBalance = () => {
         return 0;
     }
   });
+
+  useEffect(() => {
+    if (isImportModalOpen || isModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isImportModalOpen, isModalOpen]);
 
   const handleRemoveClick = (name: string) => {
     setSelectedToken(name);
@@ -392,11 +415,11 @@ const TokenBalance = () => {
               add
             </div>
 
-            <div className="space-y-3 mb-4">
+            <div className="space-y-3 mb-4 max-h-[400px] md:max-h-[550px] overflow-scroll">
               {filteredImportTokens.map((token) => (
                 <label
                   key={token.symbol}
-                  className="flex items-center justify-between p-2 rounded-md hover:bg-gray-100"
+                  className="flex items-center justify-between p-2 rounded-md"
                 >
                   <div className="flex items-center space-x-2">
                     <input
@@ -447,7 +470,7 @@ const TokenBalance = () => {
             </div>
 
             {/* Buttons */}
-            <div className="flex justify-end space-x-3">
+            <div className="absolute bottom-4 right-4 flex justify-end space-x-3 mt-1">
               <button
                 className="px-6 py-3 border-2  border-primary text-primary rounded-full text-sm hover:bg-[#46A59B]/10 transition"
                 onClick={() => setIsImportModalOpen(false)}

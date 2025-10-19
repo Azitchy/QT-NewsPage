@@ -23,7 +23,7 @@ export default function BalanceSection() {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col flex-1 md:min-w-[425px]">
       {/* Main Profile Card */}
       <div className="bg-background dark:bg-[#15152B] rounded-2xl p-5 w-full max-w-xl shadow relative">
         <div className="flex items-center gap-4">
@@ -91,21 +91,21 @@ export default function BalanceSection() {
       {/* Stats Row */}
       <div className="grid grid-cols-3 gap-4 mt-4 w-full max-w-xl h-[105px] md:h-[140px]">
         <div className="bg-background dark:bg-[#15152B] rounded-2xl p-3 md:p-5 shadow">
-          <p className="text-[#878787] text-[12px] md:text-[16px]  font-normal">
+          <p className="text-[#878787] text-[12px] md:text-[15px]  font-normal">
             PR Value
           </p>
           <p className="text-xl font-semibold mt-1">15.33</p>
         </div>
 
         <div className="bg-background dark:bg-[#15152B] rounded-2xl p-3 md:p-5 shadow">
-          <p className="text-[#878787] text-[12px] md:text-[16px]  font-normal">
+          <p className="text-[#878787] text-[12px] md:text-[15px]  font-normal">
             ATM stars
           </p>
           <p className="text-xl font-semibold mt-1">234</p>
         </div>
 
         <div className="bg-background dark:bg-[#15152B] rounded-2xl p-3 md:p-5 shadow relative">
-          <p className="text-[#878787] text-[12px] md:text-[16px] font-normal">
+          <p className="text-[#878787] text-[12px] md:text-[15px] font-normal">
             AGT Balance
           </p>
           <p className="text-xl font-semibold mt-1">180</p>
