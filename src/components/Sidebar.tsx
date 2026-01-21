@@ -17,7 +17,6 @@ export default function Sidebar({ className = "" }) {
       {/* Sidebar Icons */}
       <div className="w-[70px] py-[20px] px-[10px] rounded-l-[15px] bg-white mx-auto">
         <DashboardIcon className="w-full h-auto text-red-500" />
-        <ConnectionIcon className="w-full h-auto text-red-500" />
       </div>
 
       {/* Sidebar Menu */}
