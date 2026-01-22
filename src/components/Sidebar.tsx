@@ -13,10 +13,13 @@ import LeaveIcon from "@/assets/icons/leave-btn-icon.svg?react";
 
 export default function Sidebar({ className = "" }) {
   return (
-    <div className={`w-[282px] flex gap-[1px] ${className}`}>
+    <div
+      className={`w-[282px] flex gap-[1px] ${className}`}
+    >
       {/* Sidebar Icons */}
       <div className="w-[70px] py-[20px] px-[10px] rounded-l-[15px] bg-white mx-auto">
-        <DashboardIcon className="w-full h-auto text-red-500" />
+        <DashboardIcon className="w-full h-auto text-red-500"/>
+    
       </div>
 
       {/* Sidebar Menu */}
@@ -24,5 +27,5 @@ export default function Sidebar({ className = "" }) {
         <span className="text-[20px]">Dashboard</span>
       </div>
     </div>
-  );
+  )
 }

@@ -73,12 +73,14 @@
   --color-sidebar-border: var(--sidebar-border);
 
   --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-modal: var(--modal);
 }
 
 :root {
   --radius: 0.625rem;
 
-  --background: oklch(1 0 0);
+  --background: oklch(0.97 0 0);
 
   --foreground: oklch(0.145 0 0);
 
@@ -90,7 +92,7 @@
 
   --popover-foreground: oklch(0.145 0 0);
 
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(0.72 0.11 195);
 
   --primary-foreground: oklch(0.985 0 0);
 
@@ -139,6 +141,8 @@
   --sidebar-border: oklch(0.922 0 0);
 
   --sidebar-ring: oklch(0.708 0 0);
+
+  --modal: oklch(1 0 0);
 
   --font-inter: "Inter", Helvetica, sans-serif;
   --font-space-grotesk: "Space Grotesk", sans-serif;
@@ -261,11 +265,11 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  --background: oklch(0.19 0.07 265);
 
   --foreground: oklch(0.985 0 0);
 
-  --card: oklch(0.205 0 0);
+  --card: oklch(0.23 0.08 265);
 
   --card-foreground: oklch(0.985 0 0);
 
@@ -273,7 +277,7 @@
 
   --popover-foreground: oklch(0.985 0 0);
 
-  --primary: oklch(0.922 0 0);
+  --primary: oklch(0.72 0.11 195);
 
   --primary-foreground: oklch(0.205 0 0);
 
@@ -322,6 +326,8 @@
   --sidebar-border: oklch(1 0 0 / 10%);
 
   --sidebar-ring: oklch(0.556 0 0);
+
+  --modal: oklch(0.3 0.04 260);
 }
 
 @layer base {

@@ -6,6 +6,7 @@ import Connect from "@/screens/Connect";
 import Dashboard from "@/screens/Dashboard";
 import Connections from "@/screens/Connections";
 
+
 function App() {
   return (
     <Routes>
@@ -22,4 +23,5 @@ function App() {
   );
 }
 
-export default App;
+export default App
+
