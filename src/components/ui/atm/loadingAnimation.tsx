@@ -1,4 +1,6 @@
 import React from "react";
+import LoadingIcon from "@/assets/icons/loading-animation-icon.svg";
+
 
 interface LoadingAnimationProps {
   isVisible: boolean;
@@ -7,7 +9,7 @@ interface LoadingAnimationProps {
 
 export const LoadingAnimation: React.FC<LoadingAnimationProps> = ({
   isVisible,
-  loadingImage = "/loading-animation-icon.svg",
+  loadingImage = LoadingIcon,
 }) => {
   if (!isVisible) return null;
 

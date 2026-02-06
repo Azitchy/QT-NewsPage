@@ -1,15 +1,86 @@
 import path from "path"
 import tailwindcss from "@tailwindcss/vite"
 import react from "@vitejs/plugin-react"
-import { defineConfig } from "vite"
+import { defineConfig, loadEnv } from "vite"
 import vitePluginSvgr from "vite-plugin-svgr"
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [react(), tailwindcss(), vitePluginSvgr()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '')
+
+  return {
+    plugins: [react(), tailwindcss(), vitePluginSvgr()],
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+      },
     },
-  },
+    define: {
+      global: "globalThis",
+      'process.env': {},
+      'process.env.NODE_ENV': JSON.stringify(mode),
+    },
+    server: {
+      hmr: { timeout: 100000, overlay: false },
+      proxy: {
+        '/openapi': {
+          target: env.VITE_OPENAPI_BASE_URL || 'https://webapp.atm.network',
+          changeOrigin: true,
+          secure: true,
+          rewrite: (path) => path.replace(/^\/openapi/, ''),
+          cookieDomainRewrite: 'localhost',
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyReq, req) => {
+              const apiToken = env.VITE_API_TOKEN;
+              if (apiToken) {
+                proxyReq.setHeader('apiToken', apiToken);
+              }
+              if (req.headers.cookie) {
+                proxyReq.setHeader('Cookie', req.headers.cookie);
+              }
+            });
+            proxy.on('proxyRes', (proxyRes) => {
+              if (proxyRes.headers['set-cookie']) {
+                proxyRes.headers['set-cookie'] = proxyRes.headers['set-cookie'].map(c =>
+                  c.replace(/Domain=[^;]+/i, 'Domain=localhost')
+                   .replace(/Secure[;]?/i, '')
+                   .replace(/SameSite=None/i, 'SameSite=Lax')
+                );
+              }
+            });
+          },
+        },
+        '/api': {
+          target: env.VITE_WEB_API_BASE_URL || 'https://webapp.atm.network',
+          changeOrigin: true,
+          secure: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
+          cookieDomainRewrite: 'localhost',
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyReq, req) => {
+              if (req.headers.cookie) {
+                proxyReq.setHeader('Cookie', req.headers.cookie);
+              }
+            });
+            proxy.on('proxyRes', (proxyRes) => {
+              if (proxyRes.headers['set-cookie']) {
+                proxyRes.headers['set-cookie'] = proxyRes.headers['set-cookie'].map(c =>
+                  c.replace(/Domain=[^;]+/i, 'Domain=localhost')
+                   .replace(/Secure[;]?/i, '')
+                   .replace(/SameSite=None/i, 'SameSite=Lax')
+                );
+              }
+            });
+          },
+        },
+        '/gameapi': {
+          target: env.VITE_GAME_API_BASE_URL || 'https://webapp.atm.network',
+          changeOrigin: true,
+          secure: true,
+          rewrite: (path) => path.replace(/^\/gameapi/, ''),
+          cookieDomainRewrite: 'localhost',
+        },
+      },
+    },
+  }
 })

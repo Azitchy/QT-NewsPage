@@ -345,6 +345,7 @@
 }
 
 @layer utilities {
+
   /* Heading Classes */
   .font-h1 {
     font-family: var(--titles-h1-desktop-400-font-family);
