@@ -259,7 +259,7 @@ const TokenBalance = () => {
   );
 
   return (
-    <div className="bg-white shadow rounded-[12px] p-5 transition-all duration-300">
+    <div className="bg-card shadow rounded-[12px] p-5 transition-all duration-300">
       {/* Header */}
       <div className="flex justify-between items-start mb-4">
         <div>
