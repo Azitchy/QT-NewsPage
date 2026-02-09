@@ -3,6 +3,8 @@ import BalanceSection from "./portfolio/BalanceSection";
 import AGTRecord from "./portfolio/AGTRecord";
 import { useState } from "react";
 import TokenBalance from "./portfolio/TokenBalance";
+import GalaxyGraph from "./portfolio/GalaxyGraph";
+import CoinWatchlist from "./portfolio/CoinWatchlist";
 
 export default function Portfolio() {
   const lucaData = [
@@ -48,6 +50,8 @@ export default function Portfolio() {
           </div>
           <div className="flex flex-col gap-5">
             <TokenBalance />
+            <GalaxyGraph />
+            <CoinWatchlist />
           </div>
         </div>
       ) : (

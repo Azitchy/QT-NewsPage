@@ -401,7 +401,7 @@ const TokenBalance = () => {
               add
             </div>
 
-            <div className="space-y-3 mb-4 max-h-100 md:max-h-160 overflow-scroll">
+            <div className="space-y-3 mb-4 max-h-100 md:max-h-130 overflow-y-auto hide-scrollbar">
               {filteredImportTokens.map((token) => (
                 <label
                   key={token.symbol}
@@ -490,6 +490,18 @@ const TokenBalance = () => {
           onClose={() => setToast(null)}
         />
       )}
+
+      <style>
+        {`
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+  `}
+      </style>
     </div>
   );
 };
