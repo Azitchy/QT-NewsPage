@@ -2,11 +2,18 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { useUnified } from "@/context/Context";
 import { useDashboardCache } from "@/context/DashboardCacheContext";
 import type { TokenRowData } from "@/context/DashboardCacheContext";
-import {
-  useUpdateNickname,
-} from "@/hooks/useWebAppService";
+import { useUpdateNickname } from "@/hooks/useWebAppService";
 import type { OverviewData } from "@/hooks/useWebAppService";
-import { Loader2, Wallet, Pencil, Copy, Check, X, Settings, Trash2, Plus } from "lucide-react";
+import {
+  Loader2,
+  Wallet,
+  Check,
+  X,
+  Trash2,
+  PenLine,
+  InfoIcon,
+  SlidersHorizontal,
+} from "lucide-react";
 import { Dropdown } from "@/components/ui/atm/dropdown";
 import {
   Tooltip,
@@ -14,81 +21,87 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/atm/tooltip";
+import LucaIcon from "@/assets/icons/luca-icon.png";
+import { PieChart, Pie, Cell } from "recharts";
+import { ConfirmationModal } from "@/components/ui/atm/confirmationModal";
+import { LoadingAnimation } from "@/components/ui/atm/loadingAnimation";
+import { Toast } from "@/components/ui/atm/toastMessage";
+import AGTRecord from "./portfolio/AGTRecord";
 
 /* ============================================================================
    DONUT CHART COMPONENT
    ============================================================================ */
 
-interface DonutSegment {
-  value: number;
-  color: string;
-  label: string;
+interface PieChartCardProps {
+  title: string;
+  data: { label: string; value: number; color: string }[];
+  innerRadius?: number;
+  outerRadius?: number;
+  width?: number;
+  height?: number;
+  className?: string;
+  showLegend?: boolean;
 }
 
-function DonutChart({
-  segments,
-  size = 160,
-  strokeWidth = 28,
-  children,
-}: {
-  segments: DonutSegment[];
-  size?: number;
-  strokeWidth?: number;
-  children?: React.ReactNode;
-}) {
-  const radius = (size - strokeWidth) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const center = size / 2;
-  const total = segments.reduce((sum, s) => sum + s.value, 0);
-
-  let cumulativeOffset = 0;
-
+const PieChartCard: React.FC<PieChartCardProps> = ({
+  title,
+  data,
+  innerRadius = 70,
+  outerRadius = 100,
+  width = 280,
+  height = 250,
+  className = "",
+  showLegend = true,
+}) => {
   return (
-    <div className="relative" style={{ width: size, height: size }}>
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        {/* Background circle */}
-        <circle
-          cx={center}
-          cy={center}
-          r={radius}
-          fill="none"
-          stroke="#F0F0F0"
-          strokeWidth={strokeWidth}
-        />
-        {total > 0 &&
-          segments.map((segment, i) => {
-            const pct = segment.value / total;
-            const dashLength = pct * circumference;
-            const dashGap = circumference - dashLength;
-            const offset = cumulativeOffset;
-            cumulativeOffset += dashLength;
+    <div className={`flex flex-1 xl:w-[250px] ${className}`}>
+      <div className="bg-card rounded-2xl p-5 w-full max-w-xl relative">
+        <h2 className="font-h4-400 text-foreground mb-4">{title}</h2>
 
-            return (
-              <circle
-                key={i}
-                cx={center}
-                cy={center}
-                r={radius}
-                fill="none"
-                stroke={segment.color}
-                strokeWidth={strokeWidth}
-                strokeDasharray={`${dashLength} ${dashGap}`}
-                strokeDashoffset={-offset}
-                strokeLinecap="round"
-                transform={`rotate(-90 ${center} ${center})`}
-                className="transition-all duration-700 ease-out"
-              />
-            );
-          })}
-      </svg>
-      {children && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          {children}
+        <div className="flex items-center">
+          <PieChart width={width} height={height}>
+            <Pie
+              data={data}
+              cx="50%"
+              cy="50%"
+              startAngle={0}
+              endAngle={360}
+              innerRadius={innerRadius}
+              outerRadius={outerRadius}
+              dataKey="value"
+              cornerRadius={10}
+            >
+              {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+          </PieChart>
+
+          {showLegend && (
+            <div className="ml-6 space-y-4">
+              {data.map((entry, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <span
+                    className="inline-block w-4 h-1.5 rounded-full"
+                    style={{ backgroundColor: entry.color }}
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-[#878787] text-[12px]">
+                      {entry.label}
+                    </span>
+                    <span className="text-foreground text-[14px] font-normal">
+                      {entry.value.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
-}
+};
 
 /* ============================================================================
    MINI SPARKLINE CHART
@@ -97,22 +110,22 @@ function DonutChart({
 function SparklineChart({
   data,
   color = "#0DAEB9",
-  width = 120,
-  height = 50,
+  height = 60,
 }: {
   data: number[];
   color?: string;
-  width?: number;
   height?: number;
 }) {
   if (!data || data.length < 2) {
-    return <div style={{ width, height }} className="bg-gray-50 rounded" />;
+    return <div style={{ height }} className="w-full bg-gray-50 rounded" />;
   }
+
+  const width = 100;
+  const padding = 2;
 
   const min = Math.min(...data);
   const max = Math.max(...data);
   const range = max - min || 1;
-  const padding = 2;
 
   const points = data
     .map((val, i) => {
@@ -134,14 +147,22 @@ function SparklineChart({
   const gradientId = `sparkGrad-${color.replace("#", "")}-${Math.random().toString(36).substring(7)}`;
 
   return (
-    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+    <svg
+      width="100%"
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      preserveAspectRatio="none"
+      className="w-full"
+    >
       <defs>
         <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={color} stopOpacity="0.2" />
           <stop offset="100%" stopColor={color} stopOpacity="0.02" />
         </linearGradient>
       </defs>
+
       <path d={areaPath} fill={`url(#${gradientId})`} />
+
       <polyline
         points={points}
         fill="none"
@@ -160,14 +181,14 @@ function SparklineChart({
 
 function TokenRow({
   token,
-  onRemove,
+  onRemoveClick,
 }: {
   token: TokenRowData;
-  onRemove?: (symbol: string) => void;
+  onRemoveClick?: (symbol: string) => void;
 }) {
   const isPositive = token.change24h >= 0;
   const DEFAULT_TOKENS = ["LUCA", "USDC", "USDT", "BNB"];
-  const canRemove = !DEFAULT_TOKENS.includes(token.symbol) && onRemove;
+  const canRemove = !DEFAULT_TOKENS.includes(token.symbol) && onRemoveClick;
 
   return (
     <div className="flex items-center py-[16px] border-b border-[#F0F0F0] last:border-b-0 group">
@@ -176,9 +197,10 @@ function TokenRow({
         <img
           src={token.icon}
           alt={token.symbol}
-          className="w-[36px] h-[36px] rounded-full object-cover"
+          className="w-[40px] h-[40px] rounded-full object-cover"
           onError={(e) => {
-            (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${token.symbol}&background=0DAEB9&color=fff&size=36`;
+            (e.target as HTMLImageElement).src =
+              `https://ui-avatars.com/api/?name=${token.symbol}&background=0DAEB9&color=fff&size=36`;
           }}
         />
         <div>
@@ -196,11 +218,11 @@ function TokenRow({
       </div>
 
       {/* Price + Remove */}
-      <div className="w-[30%] flex items-center justify-end gap-[8px]">
+      <div className="w-[30%] flex items-center gap-[8px]">
         <div className="text-right">
           <p className="body-text1-500 text-foreground">${token.price}</p>
           <p
-            className={`body-label-400 ${
+            className={`body-label-400 text-start ${
               isPositive ? "text-[#5DD27A]" : "text-[#FF6B6B]"
             }`}
           >
@@ -210,11 +232,13 @@ function TokenRow({
         </div>
         {canRemove && (
           <button
-            onClick={() => onRemove!(token.symbol)}
-            className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer p-1 hover:bg-red-50 rounded"
-            title="Remove token"
+            onClick={() => onRemoveClick?.(token.symbol)}
+            className="opacity-0 flex items-center group-hover:opacity-100 transition-opacity cursor-pointer p-1 rounded pl-10"
           >
-            <Trash2 className="w-[14px] h-[14px] text-[#959595] hover:text-red-500" />
+            <Trash2 className=" text-[#FE5572]" />
+            <span className="text-[14px] font-normal text-[#FE5572]">
+              Remove token
+            </span>
           </button>
         )}
       </div>
@@ -239,55 +263,58 @@ interface WatchlistCoin {
 function CoinWatchlistCard({ coin }: { coin: WatchlistCoin }) {
   const isPositive = coin.change >= 0;
   return (
-    <div className="bg-white rounded-[15px] p-[16px] flex-1 min-w-[250px]">
-      <div className="flex items-center justify-between mb-[12px]">
+    <div className="bg-white rounded-[10px] border border-[#EBEBEB] h-57">
+      <div className="flex items-center justify-between mb-[12px] p-4">
         <div className="flex items-center gap-[8px]">
           <img
             src={coin.icon}
             alt={coin.symbol}
-            className="w-[28px] h-[28px] rounded-full"
+            className="w-10 h-10 rounded-full"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${coin.symbol}&background=0DAEB9&color=fff&size=28`;
+              (e.target as HTMLImageElement).src =
+                `https://ui-avatars.com/api/?name=${coin.symbol}&background=0DAEB9&color=fff&size=28`;
             }}
           />
           <div>
-            <p className="body-text1-500 text-foreground">{coin.symbol}</p>
-            <p className="body-label-400 text-[#959595]">{coin.name}</p>
+            <p className="text-foreground font-h4-400">{coin.symbol}</p>
+            <p className="text-[#878787] body-text1-400">{coin.name}</p>
           </div>
         </div>
-        <div className="text-right">
-          <p className="body-text1-500 text-foreground">$ {coin.price}</p>
-          <p
-            className={`body-label-400 ${
-              isPositive ? "text-[#5DD27A]" : "text-[#FF6B6B]"
-            }`}
-          >
-            {isPositive ? "+" : ""}
-            {coin.change.toFixed(1)}%
-          </p>
+        <div>
+          <div className="text-right flex items-center gap-1">
+            <p className="body-text1-500 text-foreground">$ {coin.price}</p>
+            <p
+              className={`body-label-400 ${
+                isPositive ? "text-[#5DD27A]" : "text-[#FF6B6B]"
+              }`}
+            >
+              {isPositive ? "+" : ""}
+              {coin.change.toFixed(1)}%
+            </p>
+          </div>
+          <div className="flex items-end gap-[4px]">
+            <p className="body-label-400 text-[#959595]">₿ {coin.btcPrice}</p>
+            <p
+              className={`body-label-400 ${
+                isPositive ? "text-[#5DD27A]" : "text-[#FF6B6B]"
+              }`}
+            >
+              {isPositive ? "+" : ""}
+              {(coin.change * 0.3).toFixed(1)}%
+            </p>
+          </div>
         </div>
       </div>
-      <div className="flex items-end gap-[4px]">
-        <p className="body-label-400 text-[#959595]">₿ {coin.btcPrice}</p>
-        <p
-          className={`body-label-400 ${
-            isPositive ? "text-[#5DD27A]" : "text-[#FF6B6B]"
-          }`}
-        >
-          {isPositive ? "+" : ""}
-          {(coin.change * 0.3).toFixed(1)}%
-        </p>
-      </div>
+
       <div className="mt-[8px]">
         <SparklineChart
           data={coin.sparkData}
           color={isPositive ? "#0DAEB9" : "#FF6B6B"}
-          width={220}
           height={60}
         />
       </div>
-      <div className="flex items-center justify-between mt-[8px]">
-        <div className="flex items-center gap-[4px]">
+      <div className="flex items-center justify-between p-4 relative top-5">
+        <div className="flex items-center gap-[4px] ">
           <div
             className="w-[8px] h-[8px] rounded-full"
             style={{ backgroundColor: isPositive ? "#0DAEB9" : "#FF6B6B" }}
@@ -451,6 +478,14 @@ export default function Portfolio() {
   const [showImportModal, setShowImportModal] = useState(false);
   const [addressCopied, setAddressCopied] = useState(false);
   const editInputRef = useRef<HTMLInputElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
+  const [selectedToken, setSelectedToken] = useState<string | null>(null);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [showAGTHistory, setShowAGTHistory] = useState(false);
 
   // Derive data from cache
   const overview = portfolioData?.overview ?? null;
@@ -555,9 +590,7 @@ export default function Portfolio() {
       symbol: "LUCA",
       name: "LUCA",
       price:
-        overview?.price != null
-          ? Number(overview.price).toFixed(5)
-          : "1.51365",
+        overview?.price != null ? Number(overview.price).toFixed(5) : "1.51365",
       btcPrice: "0.00000541",
       change: parseFloat(String(overview?.pre || "-8.8")),
       sparkData: [1.6, 1.55, 1.52, 1.48, 1.51, 1.49, 1.53, 1.51],
@@ -589,7 +622,7 @@ export default function Portfolio() {
   // Total tokens balance
   const totalTokensBalance = allTokens.reduce(
     (sum, t) => sum + parseFloat(t.balanceUsd || "0"),
-    0
+    0,
   );
 
   // Sort tokens
@@ -601,6 +634,31 @@ export default function Portfolio() {
     if (sortOrder === "name-asc") return a.symbol.localeCompare(b.symbol);
     return 0;
   });
+
+  const handleRemoveConfirm = async () => {
+    if (!selectedToken) return;
+
+    setIsRemoving(true);
+
+    try {
+      await new Promise((res) => setTimeout(res, 1200));
+      removeToken(selectedToken);
+
+      setToast({
+        message: `Token has been removed`,
+        type: "success",
+      });
+    } catch (err) {
+      setToast({
+        message: "Failed to remove token",
+        type: "error",
+      });
+    } finally {
+      setIsRemoving(false);
+      setIsModalOpen(false);
+      setSelectedToken(null);
+    }
+  };
 
   // Connect wallet screen
   if (!isConnected) {
@@ -685,308 +743,288 @@ export default function Portfolio() {
 
   return (
     <TooltipProvider>
-      <div className="space-y-[20px]">
-        {/* ============ TOP ROW: Profile + Locked Amount + Connections ============ */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-[20px]">
-          {/* Profile Card */}
-          <div className="bg-white rounded-[15px] p-[20px]">
-            <div className="flex items-center gap-[12px] mb-[16px]">
-              <div className="w-[48px] h-[48px] rounded-full bg-gradient-to-br from-[#A5DC53] to-[#5DD27A] flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
-                {userName.charAt(0).toUpperCase()}
-              </div>
-              <div className="flex-1 min-w-0">
-                {/* Editable Username */}
-                {isEditingName ? (
-                  <div className="flex items-center gap-[4px]">
-                    <input
-                      ref={editInputRef}
-                      type="text"
-                      value={editNameValue}
-                      onChange={(e) => setEditNameValue(e.target.value)}
-                      onKeyDown={handleNameKeyDown}
-                      className="body-text1-500 text-foreground border-b border-primary focus:outline-none bg-transparent w-full max-w-[140px]"
-                      maxLength={20}
-                    />
-                    <button
-                      onClick={saveName}
-                      disabled={isSavingName}
-                      className="cursor-pointer p-0.5 hover:bg-green-50 rounded"
-                    >
-                      {isSavingName ? (
-                        <Loader2 className="w-[14px] h-[14px] animate-spin text-primary" />
-                      ) : (
-                        <Check className="w-[14px] h-[14px] text-[#5DD27A]" />
-                      )}
-                    </button>
-                    <button
-                      onClick={cancelEditName}
-                      className="cursor-pointer p-0.5 hover:bg-red-50 rounded"
-                    >
-                      <X className="w-[14px] h-[14px] text-[#FF6B6B]" />
-                    </button>
+      {!showAGTHistory ? (
+        <div className="space-y-[20px]">
+          {/* ============ TOP ROW: Profile + Locked Amount + Connections ============ */}
+          <div className="flex flex-col xl:flex-row gap-5">
+            {/* Profile Card */}
+            <div>
+              <div className="bg-card rounded-[15px] p-5 lg:max-w-[570px] w-full mb-[10px]">
+                <div className="flex items-center gap-[12px] mb-[16px]">
+                  <div className="w-17.5 h-17.5 rounded-full bg-gradient-to-br from-[#A5DC53] to-[#5DD27A] flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
+                    {userName.charAt(0).toUpperCase()}
                   </div>
-                ) : (
-                  <div className="flex items-center gap-[6px]">
-                    <h3 className="body-text1-500 text-foreground truncate">
-                      {userName}
-                    </h3>
-                    <button
-                      onClick={startEditName}
-                      className="cursor-pointer flex-shrink-0"
-                    >
-                      <Pencil className="w-[14px] h-[14px] text-[#959595] hover:text-primary transition-colors" />
-                    </button>
-                  </div>
-                )}
-
-                {/* Wallet Address with Tooltip */}
-                <div className="flex items-center gap-[6px]">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <p className="body-label-400 text-[#959595] cursor-default">
-                        {truncatedAddress}
-                      </p>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="font-mono text-xs">{address}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                  <button onClick={copyAddress} className="cursor-pointer flex-shrink-0">
-                    {addressCopied ? (
-                      <Check className="w-[12px] h-[12px] text-[#5DD27A]" />
+                  <div className="flex-1 min-w-0">
+                    {/* Editable Username */}
+                    {isEditingName ? (
+                      <div className="flex items-center gap-[4px]">
+                        <input
+                          ref={editInputRef}
+                          type="text"
+                          value={editNameValue}
+                          onChange={(e) => setEditNameValue(e.target.value)}
+                          onKeyDown={handleNameKeyDown}
+                          className="body-text1-500 text-foreground focus:outline-none bg-transparent w-full max-w-[140px]"
+                          maxLength={20}
+                        />
+                        <button
+                          onClick={saveName}
+                          disabled={isSavingName}
+                          className="cursor-pointer p-0.5  rounded"
+                        >
+                          {isSavingName ? (
+                            <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                          ) : (
+                            <Check className="w-5 h-5 text-primary" />
+                          )}
+                        </button>
+                      </div>
                     ) : (
-                      <Copy className="w-[12px] h-[12px] text-[#959595] hover:text-primary transition-colors" />
+                      <div className="flex items-center gap-[6px]">
+                        <h3 className="body-text-600 text-foreground truncate">
+                          {userName}
+                        </h3>
+                        <button
+                          onClick={startEditName}
+                          className="cursor-pointer flex-shrink-0"
+                        >
+                          <PenLine className="text-primary w-5 h-5 cursor-pointer transition-colors" />
+                        </button>
+                      </div>
                     )}
+
+                    {/* Wallet Address with Tooltip */}
+                    <div className="flex items-center gap-[6px]">
+                      <Tooltip>
+                        <p className="body-text1-400 text-foreground cursor-default">
+                          {truncatedAddress}
+                        </p>
+                        <TooltipContent>
+                          <p className="font-mono text-xs">{address}</p>
+                        </TooltipContent>
+                        <TooltipTrigger asChild>
+                          <button className="cursor-pointer flex-shrink-0">
+                            <InfoIcon className="w-5 h-5 cursor-pointer text-[#B5B5B5]" />
+                          </button>
+                        </TooltipTrigger>
+                      </Tooltip>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Balance */}
+                <div className="flex items-center justify-between mt-5">
+                  <div>
+                    <p className="text-foreground font-h4-400">Balance</p>
+                    <p className="text-[#119B56] font-h2">{userBalance} LUCA</p>
+                  </div>
+                  <div>
+                    <img src={LucaIcon} alt="luca" className="w-14 h-14" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Stats row */}
+              <div className="grid grid-cols-3 gap-[10px] mt-4 w-full max-w-xl h-[105px] md:h-35">
+                <div className="bg-card  rounded-2xl p-3 md:p-5">
+                  <p className="text-[#878787] text-[12px] md:text-[15px]  font-normal">
+                    PR Value
+                  </p>
+                  <p className="font-h4-600 mt-1">{prValue}</p>
+                </div>
+
+                <div className="bg-card rounded-2xl p-3 md:p-5">
+                  <p className="text-[#878787] text-[12px] md:text-[15px]  font-normal">
+                    ATM stars
+                  </p>
+                  <p className="font-h4-600 mt-1">{atmStars}</p>
+                </div>
+
+                <div className="bg-card rounded-2xl p-3 md:p-5 relative">
+                  <p className="text-[#878787] text-[12px] md:text-[15px] font-normal">
+                    AGT Balance
+                  </p>
+                  <p className="font-h4-600 mt-1">{agtBalance}</p>
+                  <button
+                    onClick={() => setShowAGTHistory(true)}
+                    className="body-text2-500 text-primary mt-2 cursor-pointer"
+                  >
+                    See history
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* Balance */}
-            <div className="mb-[16px]">
-              <p className="body-label-400 text-[#959595]">Balance</p>
-              <p className="font-h3-500 text-primary">
-                {userBalance} LUCA
-              </p>
-            </div>
+            {/* Locked Amount of LUCA */}
+            <PieChartCard
+              title="Locked amount of LUCA"
+              data={[
+                { value: lockedMine, color: "#A5DC53", label: "Mine" },
+                { value: lockedOthers, color: "#FFB347", label: "Others" },
+              ]}
+              innerRadius={95}
+              outerRadius={110}
+              width={290}
+              height={260}
+            />
 
-            {/* Stats row */}
-            <div className="flex gap-[1px] bg-[#F0F0F0] rounded-[10px] overflow-hidden">
-              <div className="flex-1 bg-white p-[12px]">
-                <p className="body-label-400 text-[#959595]">PR Value</p>
-                <p className="body-text1-500 text-foreground">{prValue}</p>
-              </div>
-              <div className="flex-1 bg-white p-[12px]">
-                <p className="body-label-400 text-[#959595]">ATM stars</p>
-                <p className="body-text1-500 text-foreground">{atmStars}</p>
-              </div>
-              <div className="flex-1 bg-white p-[12px]">
-                <p className="body-label-400 text-[#959595]">AGT Balance</p>
-                <p className="body-text1-500 text-foreground">{agtBalance}</p>
-                <button className="text-primary body-label-400 hover:underline mt-[2px] cursor-pointer">
-                  See history
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Locked Amount of LUCA */}
-          <div className="bg-white rounded-[15px] p-[20px]">
-            <h3 className="body-text1-500 text-foreground mb-[20px]">
-              Locked amount of LUCA
-            </h3>
-            <div className="flex items-center justify-center gap-[24px]">
-              <DonutChart
-                segments={[
-                  { value: lockedMine, color: "#A5DC53", label: "Mine" },
-                  { value: lockedOthers, color: "#FFB347", label: "Others" },
-                ]}
-                size={140}
-                strokeWidth={24}
-              />
-              <div className="space-y-[12px]">
-                <div className="flex items-center gap-[8px]">
-                  <div className="w-[10px] h-[10px] rounded-full bg-[#A5DC53]" />
-                  <div>
-                    <p className="body-label-400 text-[#959595]">Mine</p>
-                    <p className="body-text2-500 text-foreground">
-                      {lockedMine.toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-[8px]">
-                  <div className="w-[10px] h-[10px] rounded-full bg-[#FFB347]" />
-                  <div>
-                    <p className="body-label-400 text-[#959595]">Others</p>
-                    <p className="body-text2-500 text-foreground">
-                      {lockedOthers.toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Connections */}
-          <div className="bg-white rounded-[15px] p-[20px]">
-            <h3 className="body-text1-500 text-foreground mb-[20px]">
-              Connections
-            </h3>
-            <div className="flex items-center justify-center gap-[24px]">
-              <DonutChart
-                segments={[
-                  { value: activeConns, color: "#0DAEB9", label: "Active" },
-                  { value: pendingConns, color: "#FFB347", label: "Pending" },
-                  {
-                    value: inactiveConns,
-                    color: "#FF8A80",
-                    label: "Inactive",
-                  },
-                ]}
-                size={140}
-                strokeWidth={24}
-              />
-              <div className="space-y-[8px]">
-                <div className="flex items-center gap-[8px]">
-                  <div className="w-[10px] h-[10px] rounded-full bg-[#0DAEB9]" />
-                  <div>
-                    <p className="body-label-400 text-[#959595]">Active</p>
-                    <p className="body-text2-500 text-foreground">
-                      {activeConns}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-[8px]">
-                  <div className="w-[10px] h-[10px] rounded-full bg-[#FFB347]" />
-                  <div>
-                    <p className="body-label-400 text-[#959595]">Pending</p>
-                    <p className="body-text2-500 text-foreground">
-                      {pendingConns}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-[8px]">
-                  <div className="w-[10px] h-[10px] rounded-full bg-[#FF8A80]" />
-                  <div>
-                    <p className="body-label-400 text-[#959595]">Inactive</p>
-                    <p className="body-text2-500 text-foreground">
-                      {inactiveConns}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ============ TOTAL TOKENS BALANCE TABLE ============ */}
-        <div className="bg-white rounded-[15px] p-[20px]">
-          <div className="flex items-center justify-between mb-[4px]">
-            <div>
-              <h3 className="body-text1-500 text-foreground">
-                Total tokens balance
-              </h3>
-              <p className="font-h3-500 text-foreground">
-                ${totalTokensBalance.toFixed(2)}
-              </p>
-            </div>
-            <div className="flex items-center gap-[12px]">
-              <button
-                onClick={() => setShowImportModal(true)}
-                className="text-primary body-text2-400 hover:underline cursor-pointer flex items-center gap-[4px]"
-              >
-                Import token
-              </button>
-              <Dropdown
-                options={[
-                  { label: "Balance: High to low", value: "balance-desc" },
-                  { label: "Balance: Low to high", value: "balance-asc" },
-                  { label: "Name: A to Z", value: "name-asc" },
-                ]}
-                value={sortOrder}
-                onChange={setSortOrder}
-                placeholder="Sort by"
-              />
-            </div>
-          </div>
-
-          {/* Table header */}
-          <div className="flex items-center py-[12px] border-b border-[#F0F0F0]">
-            <p className="body-text2-500 text-[#959595] w-[35%]">Token</p>
-            <p className="body-text2-500 text-[#959595] w-[35%]">Balance</p>
-            <p className="body-text2-500 text-[#959595] w-[30%] text-right">
-              Price (24hr)
-            </p>
-          </div>
-
-          {/* Token rows */}
-          {sortedTokens.length > 0 ? (
-            sortedTokens.map((token, i) => (
-              <TokenRow
-                key={`${token.symbol}-${i}`}
-                token={token}
-                onRemove={removeToken}
-              />
-            ))
-          ) : (
-            <div className="py-[40px] text-center">
-              <p className="body-text2-400 text-[#959595]">
-                No tokens found in your portfolio
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* ============ ATM GALAXY (iframe) ============ */}
-        <div className="bg-white rounded-[15px] p-[20px]">
-          <div className="flex items-center justify-between mb-[16px]">
-            <div className="flex items-center gap-[12px]">
-              <h3 className="body-text1-500 text-foreground">ATM Galaxy</h3>
-              <span className="body-text2-400 text-[#959595]">
-                Total connections:{" "}
-                <span className="body-text2-500 text-foreground">
-                  {totalConnections}
-                </span>
-              </span>
-            </div>
-            <button className="cursor-pointer">
-              <Settings className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors" />
-            </button>
-          </div>
-          <div className="w-full h-[300px] rounded-[10px] overflow-hidden bg-[#0D1117]">
-            <iframe
-              src="https://visual.atm.network/vis3d/false/ALL/conNodes"
-              title="ATM Galaxy"
-              className="w-full h-full border-0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
-              loading="lazy"
+            {/* Connections */}
+            <PieChartCard
+              title="Connections"
+              data={[
+                { value: activeConns, color: "#0DAEB9", label: "Active" },
+                { value: pendingConns, color: "#FFB347", label: "Pending" },
+                {
+                  value: inactiveConns,
+                  color: "#FF8A80",
+                  label: "Inactive",
+                },
+              ]}
+              innerRadius={95}
+              outerRadius={110}
+              width={290}
+              height={260}
             />
           </div>
-        </div>
 
-        {/* ============ COIN WATCHLIST ============ */}
-        <div className="bg-white rounded-[15px] p-[20px]">
-          <div className="flex items-center justify-between mb-[16px]">
-            <h3 className="body-text1-500 text-foreground">Coin watchlist</h3>
-            <button className="cursor-pointer">
-              <Settings className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors" />
-            </button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-[16px]">
-            {watchlistCoins.map((coin) => (
-              <CoinWatchlistCard key={coin.symbol} coin={coin} />
-            ))}
-          </div>
-        </div>
+          {/* ============ TOTAL TOKENS BALANCE TABLE ============ */}
+          <div className="bg-white rounded-[15px] p-[20px]">
+            <div className="flex items-center justify-between mb-[4px]">
+              <div>
+                <h3 className="font-h4-400 text-foreground">
+                  Total tokens balance
+                </h3>
+                <p className="font-h2 text-[#119B56]">
+                  ${totalTokensBalance.toFixed(2)}
+                </p>
+              </div>
+              <div className="flex items-center gap-[12px]">
+                <button
+                  onClick={() => setShowImportModal(true)}
+                  className="text-primary body-text2-400 hover:underline cursor-pointer flex items-center gap-[4px]"
+                >
+                  Import token
+                </button>
+                <Dropdown
+                  options={[
+                    { label: "Balance: High to low", value: "balance-desc" },
+                    { label: "Balance: Low to high", value: "balance-asc" },
+                    { label: "Name: A to Z", value: "name-asc" },
+                  ]}
+                  value={sortOrder}
+                  onChange={setSortOrder}
+                  placeholder="Sort by"
+                />
+              </div>
+            </div>
 
-        {/* Import Token Modal */}
-        <ImportTokenModal
-          isOpen={showImportModal}
-          onClose={() => setShowImportModal(false)}
-          onImport={handleImportToken}
-          existingSymbols={allTokens.map((t) => t.symbol)}
-        />
-      </div>
+            {/* Table header */}
+            <div className="flex items-center py-[12px] border-b border-[#F0F0F0]">
+              <p className="body-text-600 text-foreground w-[35%]">Token</p>
+              <p className="body-text-600 text-foreground w-[35%]">Balance</p>
+              <p className="body-text-600 text-foreground  ">Price (24hr)</p>
+            </div>
+
+            {/* Token rows */}
+            {sortedTokens.length > 0 ? (
+              sortedTokens.map((token, i) => (
+                <TokenRow
+                  key={`${token.symbol}-${i}`}
+                  token={token}
+                  onRemoveClick={(symbol) => {
+                    setSelectedToken(symbol);
+                    setIsModalOpen(true);
+                  }}
+                />
+              ))
+            ) : (
+              <div className="py-[40px] text-center">
+                <p className="body-text2-400 text-[#959595]">
+                  No tokens found in your portfolio
+                </p>
+              </div>
+            )}
+
+            {/* Confirmation Modal */}
+            <ConfirmationModal
+              isOpen={isModalOpen}
+              title="Token removal confirmation"
+              description="You can import this token again later from the filter options"
+              message={`Are you sure you want to remove the ${selectedToken} token?`}
+              onConfirm={handleRemoveConfirm}
+              onCancel={() => {
+                setIsModalOpen(false);
+                setSelectedToken(null);
+              }}
+              confirmText={isRemoving ? "Removing..." : "Remove"}
+            />
+
+            {/* Loading Animation */}
+            <LoadingAnimation isVisible={isRemoving} />
+
+            {/* Toast Message */}
+            {toast && (
+              <Toast
+                message={toast.message}
+                type={toast.type}
+                onClose={() => setToast(null)}
+              />
+            )}
+          </div>
+
+          {/* ============ ATM GALAXY (iframe) ============ */}
+          <div className="bg-card rounded-[15px] p-[20px]">
+            <div className="flex items-center justify-between mb-[16px]">
+              <div className="flex items-center gap-[12px]">
+                <h3 className="font-h4-400 text-foreground">ATM Galaxy</h3>
+                <span className="body-text-400 text-foreground">
+                  Total connections:{" "}
+                  <span className="body-text-600 text-foreground">
+                    {totalConnections}
+                  </span>
+                </span>
+              </div>
+              <button className="cursor-pointer">
+                <SlidersHorizontal className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors" />
+              </button>
+            </div>
+            <div className="w-full h-105 rounded-[10px] overflow-hidden bg-[#0D1117]">
+              <iframe
+                src="https://visual.atm.network/vis3d/false/ALL/conNodes"
+                title="ATM Galaxy"
+                className="w-full h-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
+                loading="lazy"
+              />
+            </div>
+          </div>
+
+          {/* ============ COIN WATCHLIST ============ */}
+          <div className="bg-card rounded-[15px] p-[20px]">
+            <div className="flex items-center justify-between mb-[16px]">
+              <h3 className="font-h4-400 text-foreground">Coin watchlist</h3>
+              <button className="cursor-pointer">
+                <SlidersHorizontal className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors" />
+              </button>
+            </div>
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-[16px]">
+              {watchlistCoins.map((coin) => (
+                <CoinWatchlistCard key={coin.symbol} coin={coin} />
+              ))}
+            </div>
+          </div>
+
+          {/* Import Token Modal */}
+          <ImportTokenModal
+            isOpen={showImportModal}
+            onClose={() => setShowImportModal(false)}
+            onImport={handleImportToken}
+            existingSymbols={allTokens.map((t) => t.symbol)}
+          />
+        </div>
+      ) : (
+        <AGTRecord onBack={() => setShowAGTHistory(false)} />
+      )}
     </TooltipProvider>
   );
 }
