@@ -15,8 +15,6 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/atm/too
 
 interface SidebarProps {
   className?: string;
-  activeTab?: string;
-  onTabChange?: (tab: string) => void;
 }
 
 interface NavItem {
@@ -27,7 +25,7 @@ interface NavItem {
   pages?: { label: string; to: string }[];
 }
 
-export default function Sidebar({ className = "", onTabChange }: SidebarProps) {
+export default function Sidebar({ className = "" }: SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -118,7 +116,6 @@ export default function Sidebar({ className = "", onTabChange }: SidebarProps) {
         navItems[0];
 
   function handleSectionClick(item: NavItem) {
-    onTabChange?.(item.id);
     navigate(item.to);
   }
 
@@ -338,12 +335,7 @@ export function MobileTopBar() {
   );
 }
 
-interface MobileBottomBarProps {
-  activeTab?: string;
-  onTabChange?: (tab: string) => void;
-}
-
-export function MobileBottomBar({ onTabChange }: MobileBottomBarProps) {
+export function MobileBottomBar() {
   const location = useLocation();
   const navigate = useNavigate();
   type MobileNavItem =
@@ -381,7 +373,6 @@ export function MobileBottomBar({ onTabChange }: MobileBottomBarProps) {
             return (
               <button 
                 key={item.id}
-                onClick={() => onTabChange?.(item.id)}
                 className="w-[56px] flex flex-col items-center group"
               >
                 <img 
@@ -399,10 +390,7 @@ export function MobileBottomBar({ onTabChange }: MobileBottomBarProps) {
           return (
             <button 
               key={navItem.id}
-              onClick={() => {
-                onTabChange?.(navItem.id);
-                navigate(navItem.to);
-              }}
+              onClick={() => navigate(navItem.to)}
               className="w-[56px] flex flex-col items-center group"
             >
               {isActive ? (

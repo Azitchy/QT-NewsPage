@@ -4,7 +4,7 @@ import AppLayout from "@/layouts/AppLayout";
 import { TooltipProvider } from "@/components/ui/atm/tooltip";
 
 import Connect from "@/screens/Connect";
-import Page from "@/screens/Page";
+import Page from "./screens/Page";
 
 import Portfolio from "@/screens/dashboard/Portfolio";
 import Income from "@/screens/dashboard/Income";
@@ -32,7 +32,9 @@ import Contributions from "@/screens/games/Contributions";
 import ProposeGame from "@/screens/games/ProposeGame";
 
 import SettingsIndex from "@/screens/settings/Index";
-import CreateConnectionPage from "@/screens/create-connection/Index";
+import CreateConnection from "@/screens/create-connection/Index";
+import DashboardLayout from "@/layouts/DashboardLayout";
+
 
 function App() {
   return (
@@ -45,21 +47,20 @@ function App() {
         <Route element={<AppLayout />}>
           <Route path="/" element={<Navigate to="/dashboard" />} />
 
-          {/* Create Connection (standalone) */}
-          <Route path="/create-connection" element={<CreateConnectionPage />} />
+          {/* Create Connection */}
+          <Route path="/create-connection" element={<CreateConnection />} />
 
-          {/* Dashboard */}
-          <Route path="/dashboard">
-            <Route index element={<Navigate to="portfolio" replace />} />
-            <Route path="portfolio" element={<Portfolio />} />
-            <Route path="income" element={<Income />} />
+          {/* Dashboard — wrapped with DashboardLayout for cross-tab data caching */}
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route element={<Page title="Dashboard" showOutlet />}>
+              <Route index element={<Navigate to="portfolio" replace />} />
+              <Route path="portfolio" element={<Portfolio />} />
+              <Route path="income" element={<Income />} />
+            </Route>
           </Route>
 
           {/* Connections */}
-          <Route
-            path="/connections"
-            element={<Page title="Connections" showOutlet />}
-          >
+          <Route path="/connections" element={<Page title="Connections" showOutlet />}>
             <Route index element={<Navigate to="token-connection" replace />} />
             <Route path="token-connection" element={<TokenConnection />} />
             <Route path="nft-connection" element={<NftConnection />} />
@@ -67,18 +68,9 @@ function App() {
           </Route>
 
           {/* Proposals */}
-          <Route
-            path="/proposals"
-            element={<Page title="Proposals" showOutlet />}
-          >
-            <Route
-              index
-              element={<Navigate to="proposal-participate" replace />}
-            />
-            <Route
-              path="proposal-participate"
-              element={<ProposalParticipate />}
-            />
+          <Route path="/proposals" element={<Page title="Proposals" showOutlet />}>
+            <Route index element={<Navigate to="proposal-participate" replace />} />
+            <Route path="proposal-participate" element={<ProposalParticipate />} />
             <Route path="proposal-initiated" element={<ProposalInitiated />} />
             <Route path="recovery-plan" element={<RecoveryPlan />} />
             <Route path="agf-contribution" element={<AgfContribution />} />
@@ -86,18 +78,9 @@ function App() {
           </Route>
 
           {/* Trading */}
-          <Route
-            path="/trading"
-            element={<Page title="Trading tools" showOutlet />}
-          >
-            <Route
-              index
-              element={<Navigate to="atm-cross-chain-transfer" replace />}
-            />
-            <Route
-              path="atm-cross-chain-transfer"
-              element={<AtmCrossChainTransfer />}
-            />
+          <Route path="/trading" element={<Page title="Trading tools" showOutlet />}>
+            <Route index element={<Navigate to="atm-cross-chain-transfer" replace />} />
+            <Route path="atm-cross-chain-transfer" element={<AtmCrossChainTransfer />} />
           </Route>
 
           {/* Chat */}
@@ -122,10 +105,7 @@ function App() {
           </Route>
 
           {/* Settings */}
-          <Route
-            path="/settings"
-            element={<Page title="Settings" showOutlet />}
-          >
+          <Route path="/settings" element={<Page title="Settings" showOutlet />}>
             <Route index element={<SettingsIndex />} />
           </Route>
         </Route>
@@ -134,4 +114,5 @@ function App() {
   );
 }
 
-export default App;
+export default App
+

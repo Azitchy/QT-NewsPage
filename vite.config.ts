@@ -3,17 +3,28 @@ import tailwindcss from "@tailwindcss/vite"
 import react from "@vitejs/plugin-react"
 import { defineConfig, loadEnv } from "vite"
 import vitePluginSvgr from "vite-plugin-svgr"
+import { nodePolyfills } from "vite-plugin-node-polyfills"
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
-    plugins: [react(), tailwindcss(), vitePluginSvgr()],
+    plugins: [
+      react(),
+      tailwindcss(),
+      vitePluginSvgr(),
+      nodePolyfills({
+        include: ['buffer', 'process'],
+        globals: { Buffer: true, global: true, process: true },
+        protocolImports: true,
+      }),
+    ],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
       },
+      dedupe: ['@wagmi/core', 'wagmi', 'viem', '@reown/appkit'],
     },
     define: {
       global: "globalThis",
@@ -24,7 +35,7 @@ export default defineConfig(({ mode }) => {
       hmr: { timeout: 100000, overlay: false },
       proxy: {
         '/openapi': {
-          target: env.VITE_OPENAPI_BASE_URL || 'https://webapp.atm.network',
+          target: env.VITE_OPENAPI_BASE_URL || 'https://openapi.atm.network',
           changeOrigin: true,
           secure: true,
           rewrite: (path) => path.replace(/^\/openapi/, ''),
@@ -51,7 +62,7 @@ export default defineConfig(({ mode }) => {
           },
         },
         '/api': {
-          target: env.VITE_WEB_API_BASE_URL || 'https://webapp.atm.network',
+          target: env.VITE_WEB_API_BASE_URL || 'https://webapi.atm.network',
           changeOrigin: true,
           secure: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
@@ -74,7 +85,7 @@ export default defineConfig(({ mode }) => {
           },
         },
         '/gameapi': {
-          target: env.VITE_GAME_API_BASE_URL || 'https://webapp.atm.network',
+          target: env.VITE_GAME_API_BASE_URL || 'https://gameapi.atm.network',
           changeOrigin: true,
           secure: true,
           rewrite: (path) => path.replace(/^\/gameapi/, ''),

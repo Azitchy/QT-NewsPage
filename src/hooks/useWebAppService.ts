@@ -1061,6 +1061,17 @@ export const useGetNFTProjectList = () => {
 
 
 /**
+ * Hook for updating user nickname
+ */
+export const useUpdateNickname = () => {
+  return useApiCall(
+    async ({ nickName, walletProvider }: { nickName: string; walletProvider?: any }) => {
+      return await webAPIService.updateNickname(nickName, walletProvider);
+    }
+  );
+};
+
+/**
  * Hook for getting user PR coin list
  */
 export const useGetUserPRCoinList = () => {

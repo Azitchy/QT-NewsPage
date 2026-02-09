@@ -1,6 +1,8 @@
-import Page from "@/screens/Page";
-
 export default function RecoveryPlan() {
-  return <Page title="Recovery Plan" />;
+  return (
+    <div className="rounded-[15px] bg-white p-[20px]">
+      <h1 className="text-[20px] font-semibold">Recovery Plan</h1>
+    </div>
+  );
 }
 

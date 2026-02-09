@@ -64,21 +64,21 @@ interface UnifiedContextType {
   caipAddress: string | undefined;
   status: 'connected' | 'disconnected' | 'connecting' | 'reconnecting' | undefined;
   walletProvider: Provider | undefined;
-  
+
   // Wallet actions
   openModal: () => void;
   disconnectWallet: () => Promise<void>;
   getUserBalance: () => Promise<string>;
   checkLUCASupport: () => boolean;
   switchToSupportedChain: () => Promise<void>;
-  
+
   // ATM Authentication
   isAuthenticated: boolean;
   isAuthenticating: boolean;
   authError: string | null;
   authenticate: () => Promise<boolean>;
   clearAuth: () => void;
-  
+
   // ATM Withdrawal
   withdrawalBalance: number | null;
   isLoadingBalance: boolean;
@@ -102,7 +102,7 @@ const UnifiedContextInner: React.FC<{ children: ReactNode }> = ({ children }) =>
   const chainId: number | undefined = typeof rawChainId === 'string'
     ? parseInt(rawChainId, 10)
     : rawChainId;
-  
+
   const [isAuthenticated, setIsAuthenticated] = useState(() => authService.isAuthenticated());
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
@@ -113,10 +113,25 @@ const UnifiedContextInner: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [withdrawError, setWithdrawError] = useState<string | null>(null);
   const [lastTransactionHash, setLastTransactionHash] = useState<string | null>(null);
 
-  const hasInitialized = useRef(false);
   const balanceFetchRef = useRef(false);
+  const autoOpenTriggered = useRef(false);
 
   const openModal = () => modal.open({ view: 'Connect' });
+
+  // Auto-open Reown AppKit connect modal on first load if not connected
+  useEffect(() => {
+    if (autoOpenTriggered.current) return;
+    if (status === 'connecting' || status === 'reconnecting') return;
+    const timer = setTimeout(() => {
+      if (!autoOpenTriggered.current && !isConnected) {
+        autoOpenTriggered.current = true;
+        modal.open({ view: 'Connect' });
+      } else {
+        autoOpenTriggered.current = true;
+      }
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [status, isConnected]);
 
   const disconnectWallet = async () => {
     await disconnect();
@@ -166,6 +181,7 @@ const UnifiedContextInner: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  // ── clearAuth ──
   const clearAuth = useCallback(() => {
     authService.clearAuth();
     withdrawalService.clearBalanceCache();
@@ -177,6 +193,8 @@ const UnifiedContextInner: React.FC<{ children: ReactNode }> = ({ children }) =>
     setLastTransactionHash(null);
   }, []);
 
+  // ── refreshBalance ──
+  // Matches reference: guards on isAuthenticated + walletProvider + balanceFetchRef
   const refreshBalance = useCallback(async () => {
     if (!isAuthenticated || !walletProvider || balanceFetchRef.current) return;
 
@@ -188,6 +206,7 @@ const UnifiedContextInner: React.FC<{ children: ReactNode }> = ({ children }) =>
       const balance = await withdrawalService.getWithdrawalBalance(walletProvider);
       setWithdrawalBalance(balance);
     } catch (error: any) {
+      console.error('Balance fetch error:', error);
       setBalanceError(error?.message || 'Failed to load balance');
     } finally {
       setIsLoadingBalance(false);
@@ -195,6 +214,8 @@ const UnifiedContextInner: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, [isAuthenticated, walletProvider]);
 
+  // ── authenticate ──
+  // Matches reference: guards on isAuthenticating state, calls refreshBalance() after success
   const authenticate = useCallback(async (): Promise<boolean> => {
     if (!address || !isConnected || !walletProvider || isAuthenticating) return false;
 
@@ -205,7 +226,11 @@ const UnifiedContextInner: React.FC<{ children: ReactNode }> = ({ children }) =>
       authService.setUserAddress(address);
       await authService.authenticate(walletProvider);
       setIsAuthenticated(true);
-      refreshBalance();
+      // refreshBalance will be triggered by the auth effect re-running
+      // after isAuthenticated changes, or we call it directly here.
+      // Since refreshBalance guards on isAuthenticated which is not yet
+      // updated in this tick, we schedule it for next tick.
+      setTimeout(() => refreshBalance(), 0);
       return true;
     } catch (error: any) {
       setAuthError(error?.message || 'Authentication failed');
@@ -216,6 +241,7 @@ const UnifiedContextInner: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, [address, isConnected, walletProvider, isAuthenticating, refreshBalance]);
 
+  // ── withdrawLUCA ──
   const withdrawLUCA = useCallback(async (amount: number): Promise<{ success: boolean; transactionHash?: string; error?: string }> => {
     if (!isAuthenticated || !walletProvider) return { success: false, error: 'Not authenticated' };
     if (amount <= 0) return { success: false, error: 'Invalid amount' };
@@ -244,36 +270,44 @@ const UnifiedContextInner: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, [isAuthenticated, walletProvider, withdrawalBalance, refreshBalance]);
 
+  // ── Main auth flow effect ──
+  // Wallet Connection → Authentication → LUCA Balance
+  // Matches reference: includes isAuthenticated and isAuthenticating in deps
   useEffect(() => {
     // Skip during connection transitions
     if (status === 'connecting' || status === 'reconnecting') return;
-    if (!hasInitialized.current) hasInitialized.current = true;
 
-    // Handle disconnection
+    // Handle disconnection — clear everything
     if (!isConnected || !address) {
       if (isAuthenticated) clearAuth();
       return;
     }
 
+    // Wallet is connected, check auth state
     const normalizedAddress = address.toLowerCase();
     const storedAddress = authService.getUserAddress();
     const isTokenValid = authService.isTokenValid();
 
+    // Always keep authService in sync with current address
     authService.setUserAddress(address);
 
-    // Restore auth if valid token exists for this address
+    // Case 1: Valid token exists for this address — restore session
     if (isTokenValid && storedAddress === normalizedAddress) {
       if (!isAuthenticated) {
         setIsAuthenticated(true);
         refreshBalance();
       }
+      return;
     }
-    // Trigger authentication if no valid token and wallet provider ready
-    else if (!isAuthenticated && !isAuthenticating && walletProvider) {
+
+    // Case 2: No valid token — need to authenticate
+    // Only attempt if not already authenticated/authenticating and walletProvider is available
+    if (!isAuthenticated && !isAuthenticating && walletProvider) {
       authenticate();
     }
-  }, [status, isConnected, address, walletProvider, isAuthenticated, isAuthenticating, clearAuth, authenticate, refreshBalance]);
+  }, [status, isConnected, address, walletProvider, isAuthenticated, isAuthenticating]);
 
+  // ── Periodic balance refresh (30s) ──
   useEffect(() => {
     if (!isAuthenticated) return;
     const interval = setInterval(() => refreshBalance(), 30000);

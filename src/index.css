@@ -226,6 +226,14 @@
   --body-text1-tablet-700-font-size: 16px;
   --body-text1-mobile-700-font-size: 14px;
 
+  --body-text1-desktop-600-font-family: var(--font-inter);
+  --body-text1-desktop-600-font-size: 16px;
+  --body-text1-desktop-600-font-style: normal;
+  --body-text1-desktop-600-font-weight: 600;
+  --body-text1-desktop-600-letter-spacing: 0px;
+  --body-text1-tablet-600-font-size: 16px;
+  --body-text1-mobile-600-font-size: 14px;
+
   --body-text1-desktop-500-font-family: var(--font-inter);
   --body-text1-desktop-500-font-size: 16px;
   --body-text1-desktop-500-font-style: normal;
@@ -410,6 +418,13 @@
     letter-spacing: var(--body-text1-desktop-700-letter-spacing);
   }
 
+  .body-text1-600 {
+    font-family: var(--body-text1-desktop-600-font-family);
+    font-size: var(--body-text1-desktop-600-font-size);
+    font-weight: var(--body-text1-desktop-600-font-weight);
+    letter-spacing: var(--body-text1-desktop-600-letter-spacing);
+  }
+
   .body-text1-500 {
     font-family: var(--body-text1-desktop-500-font-family);
     font-size: var(--body-text1-desktop-500-font-size);
@@ -476,6 +491,9 @@
     .body-text1-700 {
       font-size: var(--body-text1-tablet-700-font-size);
     }
+    .body-text1-600 {
+      font-size: var(--body-text1-tablet-600-font-size);
+    }
     .body-text1-500 {
       font-size: var(--body-text1-tablet-500-font-size);
     }
@@ -514,6 +532,9 @@
     }
     .body-text1-700 {
       font-size: var(--body-text1-mobile-700-font-size);
+    }
+    .body-text1-600 {
+      font-size: var(--body-text1-mobile-600-font-size);
     }
     .body-text1-500 {
       font-size: var(--body-text1-mobile-500-font-size);

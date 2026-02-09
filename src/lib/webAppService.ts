@@ -1733,7 +1733,8 @@ class IncomeService {
       const headers: Record<string, string> = { 'Content-Type': 'application/json', 'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE, 'token': token };
       if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
 
-      const config: any = { headers, params: { pageSize: this.PAGE_SIZE, lastEvaluatedKey: lastEvalKey } };
+      const config: any = { headers, params: { pageSize: this.PAGE_SIZE } };
+      if (lastEvalKey) config.params.lastEvaluatedKey = lastEvalKey;
       if (startTimestamps) config.params.startTimestamps = startTimestamps;
       if (endTimestamps) config.params.endTimestamps = endTimestamps;
       if (shouldUseCredentials()) config.withCredentials = true;
@@ -1767,7 +1768,8 @@ class IncomeService {
       const headers: Record<string, string> = { 'Content-Type': 'application/json', 'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE, 'token': token };
       if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
 
-      const config: any = { headers, params: { pageSize: this.PAGE_SIZE, lastEvaluatedKey: lastEvalKey } };
+      const config: any = { headers, params: { pageSize: this.PAGE_SIZE } };
+      if (lastEvalKey) config.params.lastEvaluatedKey = lastEvalKey;
       if (startTimestamps) config.params.startTimestamps = startTimestamps;
       if (endTimestamps) config.params.endTimestamps = endTimestamps;
       if (shouldUseCredentials()) config.withCredentials = true;
@@ -2099,7 +2101,7 @@ class WebAPIService {
   async getOverview(): Promise<OverviewData> {
     const requestOptions: RequestInit = { method: 'GET', headers: this.getFormHeaders() };
     if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/getOverview`, requestOptions);
+    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/overview`, requestOptions);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const result = await response.json();
     return result?.data || {};
@@ -2209,6 +2211,25 @@ class WebAPIService {
     } catch (error) {
       return null;
     }
+  }
+
+  async updateNickname(nickName: string, walletProvider?: any): Promise<any> {
+    const token = walletProvider ? await authService.getToken(walletProvider) : '';
+    const params = new URLSearchParams({ nickName });
+    const requestOptions: RequestInit = { method: 'POST', headers: { ...this.getFormHeaders(), ...(token && { token }) }, body: params };
+    if (shouldUseCredentials()) requestOptions.credentials = 'include';
+    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/updateNickname`, requestOptions);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const result = await response.json();
+    if (result?.errorcode === 'NOT_LOGGEDIN' || result?.failed) {
+      const newToken = await authService.authenticate(walletProvider);
+      const retryOptions: RequestInit = { method: 'POST', headers: { ...this.getFormHeaders(), token: newToken }, body: params };
+      if (shouldUseCredentials()) retryOptions.credentials = 'include';
+      const retryResponse = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/updateNickname`, retryOptions);
+      if (!retryResponse.ok) throw new Error(`HTTP error! status: ${retryResponse.status}`);
+      return await retryResponse.json();
+    }
+    return result;
   }
 
   async getUserPRCoinList(walletProvider?: any): Promise<any> {

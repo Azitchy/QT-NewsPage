@@ -1,6 +1,8 @@
-import Page from "@/screens/Page";
-
 export default function Contributions() {
-  return <Page title="Contributions" />;
+  return (
+    <div className="rounded-[15px] bg-white p-[20px]">
+      <h1 className="text-[20px] font-semibold">Contributions</h1>
+    </div>
+  );
 }
 

@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap rounded-[30px] body-text2-500 transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap rounded-[30px] body-text2-400 transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
   {
     variants: {
       variant: {
@@ -19,6 +19,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         gradient:
           "bg-[linear-gradient(315deg,#41CD8B_0%,#C2E043_100%)] text-primary-foreground",
+        disabled: "bg-[#E5E5E5] text-white cursor-not-allowed",
       },
       size: {
         default: "px-6 py-3",
