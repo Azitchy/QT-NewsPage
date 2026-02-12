@@ -13,6 +13,8 @@ import {
   PenLine,
   InfoIcon,
   SlidersHorizontal,
+  Search,
+  Mic,
 } from "lucide-react";
 import { Dropdown } from "@/components/ui/atm/dropdown";
 import {
@@ -27,6 +29,8 @@ import { ConfirmationModal } from "@/components/ui/atm/confirmationModal";
 import { LoadingAnimation } from "@/components/ui/atm/loadingAnimation";
 import { Toast } from "@/components/ui/atm/toastMessage";
 import AGTRecord from "./portfolio/AGTRecord";
+import { Button } from "@/components/ui/atm/button";
+import AddCoinsModal from "./portfolio/AddCoinsModal";
 
 /* ============================================================================
    DONUT CHART COMPONENT
@@ -330,116 +334,6 @@ function CoinWatchlistCard({ coin }: { coin: WatchlistCoin }) {
 }
 
 /* ============================================================================
-   IMPORT TOKEN MODAL
-   ============================================================================ */
-
-function ImportTokenModal({
-  isOpen,
-  onClose,
-  onImport,
-  existingSymbols,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  onImport: (token: { symbol: string; name: string; icon: string }) => void;
-  existingSymbols: string[];
-}) {
-  const [contractAddress, setContractAddress] = useState("");
-  const [tokenSymbol, setTokenSymbol] = useState("");
-  const [tokenName, setTokenName] = useState("");
-
-  if (!isOpen) return null;
-
-  const handleImport = () => {
-    if (!tokenSymbol.trim()) return;
-    if (existingSymbols.includes(tokenSymbol.toUpperCase())) {
-      alert("Token already exists in your list");
-      return;
-    }
-    onImport({
-      symbol: tokenSymbol.toUpperCase(),
-      name: tokenName || tokenSymbol.toUpperCase(),
-      icon: `https://ui-avatars.com/api/?name=${tokenSymbol}&background=0DAEB9&color=fff&size=36`,
-    });
-    setContractAddress("");
-    setTokenSymbol("");
-    setTokenName("");
-    onClose();
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-[15px] p-[24px] w-[420px] max-w-[90vw]">
-        <div className="flex items-center justify-between mb-[20px]">
-          <h3 className="font-h4-600 text-foreground">Import Token</h3>
-          <button
-            onClick={onClose}
-            className="cursor-pointer p-1 hover:bg-gray-100 rounded"
-          >
-            <X className="w-5 h-5 text-[#959595]" />
-          </button>
-        </div>
-
-        <div className="space-y-[16px]">
-          <div>
-            <label className="body-label-400 text-[#959595] block mb-[6px]">
-              Contract Address
-            </label>
-            <input
-              type="text"
-              value={contractAddress}
-              onChange={(e) => setContractAddress(e.target.value)}
-              placeholder="0x..."
-              className="w-full px-[12px] py-[10px] rounded-[10px] border border-[#E0E0E0] body-text2-400 text-foreground focus:outline-none focus:border-primary"
-            />
-          </div>
-          <div>
-            <label className="body-label-400 text-[#959595] block mb-[6px]">
-              Token Symbol
-            </label>
-            <input
-              type="text"
-              value={tokenSymbol}
-              onChange={(e) => setTokenSymbol(e.target.value)}
-              placeholder="e.g. DOGE"
-              className="w-full px-[12px] py-[10px] rounded-[10px] border border-[#E0E0E0] body-text2-400 text-foreground focus:outline-none focus:border-primary"
-            />
-          </div>
-          <div>
-            <label className="body-label-400 text-[#959595] block mb-[6px]">
-              Token Name
-            </label>
-            <input
-              type="text"
-              value={tokenName}
-              onChange={(e) => setTokenName(e.target.value)}
-              placeholder="e.g. Dogecoin"
-              className="w-full px-[12px] py-[10px] rounded-[10px] border border-[#E0E0E0] body-text2-400 text-foreground focus:outline-none focus:border-primary"
-            />
-          </div>
-        </div>
-
-        <div className="flex gap-[12px] mt-[24px]">
-          <button
-            onClick={onClose}
-            className="flex-1 px-4 py-[10px] rounded-[10px] border border-[#E0E0E0] body-text2-500 text-[#959595] hover:bg-gray-50 cursor-pointer transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleImport}
-            disabled={!tokenSymbol.trim()}
-            className="flex-1 px-4 py-[10px] rounded-[10px] bg-primary text-white body-text2-500 hover:bg-primary/90 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Import
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ============================================================================
    MAIN PORTFOLIO COMPONENT
    ============================================================================ */
 
@@ -470,12 +364,32 @@ export default function Portfolio() {
   // API hooks (only for actions, not data fetching)
   const updateNicknameHook = useUpdateNickname();
 
+  const walletImportTokens = [
+    {
+      symbol: "DOGE",
+      name: "Dogecoin",
+      icon: "https://cryptologos.cc/logos/dogecoin-doge-logo.png",
+      balanceUsd: "0.08",
+      balance: "4.4",
+      change24h: 2.4,
+      price: "3.4",
+    },
+    {
+      symbol: "MATIC",
+      name: "Polygon",
+      icon: "https://cryptologos.cc/logos/polygon-matic-logo.png",
+      balanceUsd: "0.92",
+      balance: "9.4",
+      change24h: -1.2,
+      price: "4.3",
+    },
+  ];
+
   // Local UI state only (not data)
   const [sortOrder, setSortOrder] = useState("balance-desc");
   const [isEditingName, setIsEditingName] = useState(false);
   const [editNameValue, setEditNameValue] = useState("");
   const [isSavingName, setIsSavingName] = useState(false);
-  const [showImportModal, setShowImportModal] = useState(false);
   const [addressCopied, setAddressCopied] = useState(false);
   const editInputRef = useRef<HTMLInputElement>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -486,6 +400,11 @@ export default function Portfolio() {
   const [selectedToken, setSelectedToken] = useState<string | null>(null);
   const [isRemoving, setIsRemoving] = useState(false);
   const [showAGTHistory, setShowAGTHistory] = useState(false);
+
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedImports, setSelectedImports] = useState<string[]>([]);
+  const [isImporting, setIsImporting] = useState(false);
 
   // Derive data from cache
   const overview = portfolioData?.overview ?? null;
@@ -502,6 +421,66 @@ export default function Portfolio() {
   const totalConnections = portfolioData?.totalConnections ?? 0;
   const userName = portfolioData?.userName ?? "User";
   const isLoading = portfolioLoading && !portfolioData;
+
+  const filteredImportTokens = walletImportTokens.filter(
+    (t) =>
+      t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      t.symbol.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  const handleImportTokens = async () => {
+    if (selectedImports.length === 0) return;
+
+    setIsImporting(true);
+
+    try {
+      await new Promise((res) => setTimeout(res, 1200));
+
+      // filter out duplicates
+      const tokensToAdd = walletImportTokens
+        .filter(
+          (t) =>
+            selectedImports.includes(t.symbol) &&
+            !existingSymbols.includes(t.symbol.toUpperCase()),
+        )
+        .map((t) => ({
+          icon: t.icon,
+          symbol: t.symbol,
+          name: t.name,
+          balance: t.balance,
+          balanceUsd: t.balanceUsd,
+          price: t.price,
+          change24h: t.change24h,
+          isDefault: false,
+        }));
+
+      if (tokensToAdd.length === 0) {
+        setToast({
+          message: "Token already exists in your list",
+          type: "error",
+        });
+        return;
+      }
+
+      setImportedTokens((prev) => [...prev, ...tokensToAdd]);
+
+      setToast({
+        message: "Tokens imported successfully",
+        type: "success",
+      });
+
+      setSelectedImports([]);
+      setSearchTerm("");
+      setIsImportModalOpen(false);
+    } catch {
+      setToast({
+        message: "Failed to import tokens",
+        type: "error",
+      });
+    } finally {
+      setIsImporting(false);
+    }
+  };
 
   // Truncate address
   const truncatedAddress = address
@@ -616,8 +595,21 @@ export default function Portfolio() {
     },
   ];
 
+  const [coins, setCoins] = useState(watchlistCoins);
+  const [isCoinModalOpen, setIsCoinModalOpen] = useState(false);
+  const [coinToast, setCoinToast] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
+
+  const handleSaveCoins = (updatedCoins: WatchlistCoin[]) => {
+    setCoins(updatedCoins);
+    setIsCoinModalOpen(false);
+  };
   // Combine API tokens + imported tokens
   const allTokens = [...tokens, ...importedTokens];
+
+  const existingSymbols = allTokens.map((t) => t.symbol.toUpperCase());
 
   // Total tokens balance
   const totalTokensBalance = allTokens.reduce(
@@ -900,7 +892,7 @@ export default function Portfolio() {
               </div>
               <div className="flex items-center gap-[12px]">
                 <button
-                  onClick={() => setShowImportModal(true)}
+                  onClick={() => setIsImportModalOpen(true)}
                   className="text-primary body-text2-400 hover:underline cursor-pointer flex items-center gap-[4px]"
                 >
                   Import token
@@ -972,6 +964,108 @@ export default function Portfolio() {
             )}
           </div>
 
+          {/* Import Token Modal */}
+          {isImportModalOpen && (
+            <div className="fixed inset-0 z-50 flex justify-end bg-black/30">
+              <div className="w-100 bg-white dark:bg-[#2B2F3E] p-6 h-full rounded-[12px] overflow-auto shadow-xl relative">
+                {/* Header */}
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="font-h4-400 text-foreground">Import tokens</h2>
+                  <X
+                    className="text-primary cursor-pointer"
+                    onClick={() => setIsImportModalOpen(false)}
+                  />
+                </div>
+
+                {/* Search */}
+                <div className="relative w-full mb-4">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                    <Search size={16} />
+                  </span>
+
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-10 py-2 rounded-[10px] bg-[#F8F8F8] dark:bg-[#383D4C]"
+                  />
+
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <Mic size={16} />
+                  </span>
+                </div>
+
+                <div className="body-text1-400 mb-5">
+                  We find these tokens in your wallet. Choose which one you want
+                  to add
+                </div>
+
+                {/* Token List */}
+                <div className="space-y-3 mb-24 overflow-y-auto">
+                  {filteredImportTokens.map((token) => (
+                    <label
+                      key={token.symbol}
+                      className="flex items-center justify-between p-2 rounded-md cursor-pointer"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          checked={selectedImports.includes(token.symbol)}
+                          onChange={() =>
+                            setSelectedImports((prev) =>
+                              prev.includes(token.symbol)
+                                ? prev.filter((s) => s !== token.symbol)
+                                : [...prev, token.symbol],
+                            )
+                          }
+                        />
+
+                        <img
+                          src={token.icon}
+                          className="w-10 h-10 rounded-full"
+                        />
+
+                        <div>
+                          <p>{token.name}</p>
+                          <p className="text-[#878787]">{token.symbol}</p>
+                        </div>
+                      </div>
+
+                      <div className="text-right">
+                        <p>{token.balanceUsd}</p>
+                        <span
+                          className={
+                            token.change24h >= 0
+                              ? "text-[#119B56]"
+                              : "text-destructive"
+                          }
+                        >
+                          {token.change24h >= 0
+                            ? `+${token.change24h}%`
+                            : `${token.change24h}%`}
+                        </span>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+
+                {/* Buttons */}
+                <div className="absolute bottom-4 right-4 flex gap-3">
+                  <Button
+                    variant="success"
+                    onClick={() => setIsImportModalOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+
+                  <Button onClick={handleImportTokens}>Import tokens</Button>
+                </div>
+              </div>
+              <LoadingAnimation isVisible={isImporting} />
+            </div>
+          )}
+
           {/* ============ ATM GALAXY (iframe) ============ */}
           <div className="bg-card rounded-[15px] p-[20px]">
             <div className="flex items-center justify-between mb-[16px]">
@@ -1004,26 +1098,41 @@ export default function Portfolio() {
             <div className="flex items-center justify-between mb-[16px]">
               <h3 className="font-h4-400 text-foreground">Coin watchlist</h3>
               <button className="cursor-pointer">
-                <SlidersHorizontal className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors" />
+                <SlidersHorizontal
+                  className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors"
+                  onClick={() => setIsCoinModalOpen(true)}
+                />
               </button>
             </div>
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-[16px]">
-              {watchlistCoins.map((coin) => (
+              {coins.map((coin) => (
                 <CoinWatchlistCard key={coin.symbol} coin={coin} />
               ))}
             </div>
           </div>
 
-          {/* Import Token Modal */}
-          <ImportTokenModal
-            isOpen={showImportModal}
-            onClose={() => setShowImportModal(false)}
-            onImport={handleImportToken}
-            existingSymbols={allTokens.map((t) => t.symbol)}
+          <AddCoinsModal
+            isOpen={isCoinModalOpen}
+            onClose={() => setIsCoinModalOpen(false)}
+            onSave={handleSaveCoins}
+            selectedCoins={coins}
+            setSelectedCoins={setCoins}
+            setToast={setCoinToast}
           />
+
+          {coinToast && (
+            <Toast
+              message={coinToast.message}
+              type={coinToast.type}
+              onClose={() => setCoinToast(null)}
+            />
+          )}
         </div>
       ) : (
-        <AGTRecord onBack={() => setShowAGTHistory(false)} />
+        <AGTRecord
+          agtBalance={agtBalance}
+          onBack={() => setShowAGTHistory(false)}
+        />
       )}
     </TooltipProvider>
   );

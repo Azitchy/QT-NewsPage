@@ -133,7 +133,13 @@ const dummyData: HistoryItem[] = [
 
 const ITEMS_PER_PAGE = 10;
 
-export default function AGTRecord({ onBack }: { onBack: () => void }) {
+export default function AGTRecord({
+  onBack,
+  agtBalance,
+}: {
+  onBack: () => void;
+  agtBalance: any;
+}) {
   const [page, setPage] = useState(1);
 
   const start = (page - 1) * ITEMS_PER_PAGE;
@@ -162,7 +168,9 @@ export default function AGTRecord({ onBack }: { onBack: () => void }) {
       {/* Header */}
       <div className="flex gap-1 mb-2.5">
         <p className="font-h4-400 text-foreground">AGT balance:</p>
-        <p className="text-[20px] font-semibold text-foreground">180</p>
+        <p className="text-[20px] font-semibold text-foreground">
+          {agtBalance}
+        </p>
       </div>
 
       {/* Table */}
