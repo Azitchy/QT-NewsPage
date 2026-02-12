@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from 'react';
 import {
   authService,
   withdrawalService,
@@ -50,7 +50,7 @@ import {
   type AGFGameProposal,
   type AGFProposalResponse,
   type CrosschainTransferResult,
-} from "../lib/webAppService";
+} from '../lib/webAppService';
 
 /* ============================================================================
    BASE HOOK TYPES
@@ -75,31 +75,28 @@ interface UseApiReturn<T, P = any> extends UseApiState<T> {
  * Generic API call hook with loading, error, and data states
  */
 export const useApiCall = <T = any, P = any>(
-  apiFunction: (params: P) => Promise<T>,
+  apiFunction: (params: P) => Promise<T>
 ): UseApiReturn<T, P> => {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const execute = useCallback(
-    async (params?: P) => {
-      setLoading(true);
-      setError(null);
+  const execute = useCallback(async (params?: P) => {
+    setLoading(true);
+    setError(null);
 
-      try {
-        const result = await apiFunction(params!);
-        setData(result);
-        return result;
-      } catch (err: any) {
-        const errorMessage = err.message || "An error occurred";
-        setError(errorMessage);
-        throw err;
-      } finally {
-        setLoading(false);
-      }
-    },
-    [apiFunction],
-  );
+    try {
+      const result = await apiFunction(params!);
+      setData(result);
+      return result;
+    } catch (err: any) {
+      const errorMessage = err.message || 'An error occurred';
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [apiFunction]);
 
   const reset = useCallback(() => {
     setData(null);
@@ -122,7 +119,7 @@ export const useApiCall = <T = any, P = any>(
 export const useApiQuery = <T = any, P = any>(
   apiFunction: (params: P) => Promise<T>,
   params?: P,
-  dependencies: any[] = [],
+  dependencies: any[] = []
 ): UseApiState<T> & { refetch: () => Promise<T> } => {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(false);
@@ -137,7 +134,7 @@ export const useApiQuery = <T = any, P = any>(
       setData(result);
       return result;
     } catch (err: any) {
-      const errorMessage = err.message || "An error occurred";
+      const errorMessage = err.message || 'An error occurred';
       setError(errorMessage);
       throw err;
     } finally {
@@ -167,10 +164,10 @@ export const useApiQuery = <T = any, P = any>(
  */
 export const useAuth = () => {
   const [userAddress, setUserAddress] = useState<string | null>(
-    authService.getUserAddress(),
+    authService.getUserAddress()
   );
   const [isAuthenticated, setIsAuthenticated] = useState(
-    authService.isAuthenticated(),
+    authService.isAuthenticated()
   );
 
   const setAddress = useCallback((address: string) => {
@@ -179,17 +176,19 @@ export const useAuth = () => {
     setIsAuthenticated(authService.isAuthenticated());
   }, []);
 
-  const authenticate = useApiCall(async (walletProvider: any) => {
-    const token = await authService.authenticate(walletProvider);
-    setIsAuthenticated(true);
-    return token;
-  });
+  const authenticate = useApiCall(
+    async (walletProvider: any) => {
+      const token = await authService.authenticate(walletProvider);
+      setIsAuthenticated(true);
+      return token;
+    }
+  );
 
   const getToken = useCallback(
     async (walletProvider?: any, forceRefresh = false) => {
       return await authService.getToken(walletProvider, forceRefresh);
     },
-    [],
+    []
   );
 
   const logout = useCallback(() => {
@@ -224,15 +223,9 @@ export const useGetSignMessage = () => {
  */
 export const useSignMessage = () => {
   return useApiCall(
-    async ({
-      message,
-      walletProvider,
-    }: {
-      message: string;
-      walletProvider: any;
-    }) => {
+    async ({ message, walletProvider }: { message: string; walletProvider: any }) => {
       return await authService.signMessage(message, walletProvider);
-    },
+    }
   );
 };
 
@@ -254,15 +247,9 @@ export const useWithdrawalBalance = (walletProvider?: any) => {
  */
 export const useWithdrawLUCA = () => {
   return useApiCall(
-    async ({
-      amount,
-      walletProvider,
-    }: {
-      amount: number;
-      walletProvider: any;
-    }) => {
+    async ({ amount, walletProvider }: { amount: number; walletProvider: any }) => {
       return await withdrawalService.withdrawLUCA(amount, walletProvider);
-    },
+    }
   );
 };
 
@@ -302,9 +289,9 @@ export const useMyParticipatedProposals = () => {
         searchKeys,
         pageIndex,
         pageSize,
-        walletProvider,
+        walletProvider
       );
-    },
+    }
   );
 };
 
@@ -331,9 +318,9 @@ export const useMyInitiatedProposals = () => {
         searchKeys,
         pageIndex,
         pageSize,
-        walletProvider,
+        walletProvider
       );
-    },
+    }
   );
 };
 
@@ -342,15 +329,9 @@ export const useMyInitiatedProposals = () => {
  */
 export const useWithdrawAGT = () => {
   return useApiCall(
-    async ({
-      keyIds,
-      walletProvider,
-    }: {
-      keyIds: string[];
-      walletProvider?: any;
-    }) => {
+    async ({ keyIds, walletProvider }: { keyIds: string[]; walletProvider?: any }) => {
       return await proposalService.withdrawAGT(keyIds, walletProvider);
-    },
+    }
   );
 };
 
@@ -359,18 +340,9 @@ export const useWithdrawAGT = () => {
  */
 export const useCreateCommunityProposal = () => {
   return useApiCall(
-    async ({
-      proposalData,
-      walletProvider,
-    }: {
-      proposalData: any;
-      walletProvider?: any;
-    }) => {
-      return await proposalService.createCommunityProposal(
-        proposalData,
-        walletProvider,
-      );
-    },
+    async ({ proposalData, walletProvider }: { proposalData: any; walletProvider?: any }) => {
+      return await proposalService.createCommunityProposal(proposalData, walletProvider);
+    }
   );
 };
 
@@ -407,9 +379,9 @@ export const useConnectionLinks = () => {
         linkStatus,
         userWalletAddress,
         chainId,
-        walletProvider,
+        walletProvider
       );
-    },
+    }
   );
 };
 
@@ -435,16 +407,16 @@ export const useUpdatePledgeStatus = () => {
     }: {
       connectionId: number;
       nodeAddress: string;
-      action: "pledge" | "depledge";
+      action: 'pledge' | 'depledge';
       walletProvider?: any;
     }) => {
       return await connectionService.updatePledgeStatus(
         connectionId,
         nodeAddress,
         action,
-        walletProvider,
+        walletProvider
       );
-    },
+    }
   );
 };
 
@@ -454,18 +426,9 @@ export const useUpdatePledgeStatus = () => {
 
 export const useCheckNetworkMatch = () => {
   return useApiCall(
-    async ({
-      selectedChainId,
-      walletProvider,
-    }: {
-      selectedChainId: number;
-      walletProvider: any;
-    }) => {
-      return await connectionCreationService.checkNetworkMatch(
-        selectedChainId,
-        walletProvider,
-      );
-    },
+    async ({ selectedChainId, walletProvider }: { selectedChainId: number; walletProvider: any }) => {
+      return await connectionCreationService.checkNetworkMatch(selectedChainId, walletProvider);
+    }
   );
 };
 
@@ -476,7 +439,7 @@ export const useCheckAllowance = () => {
       approveAddress,
       amountBase,
       currencyList,
-      walletProvider,
+      walletProvider
     }: {
       currency: string;
       approveAddress: string;
@@ -489,9 +452,9 @@ export const useCheckAllowance = () => {
         approveAddress,
         amountBase,
         currencyList,
-        walletProvider,
+        walletProvider
       );
-    },
+    }
   );
 };
 
@@ -502,7 +465,7 @@ export const useApproveToken = () => {
       contractForApproval,
       amount,
       currencyList,
-      walletProvider,
+      walletProvider
     }: {
       currency: string;
       contractForApproval: string;
@@ -515,9 +478,9 @@ export const useApproveToken = () => {
         contractForApproval,
         amount,
         currencyList,
-        walletProvider,
+        walletProvider
       );
-    },
+    }
   );
 };
 
@@ -527,7 +490,7 @@ export const useCheckNFTApproval = () => {
       tokenId,
       nftAddress,
       factoryAddress,
-      walletProvider,
+      walletProvider
     }: {
       tokenId: string;
       nftAddress: string;
@@ -538,9 +501,9 @@ export const useCheckNFTApproval = () => {
         tokenId,
         nftAddress,
         factoryAddress,
-        walletProvider,
+        walletProvider
       );
-    },
+    }
   );
 };
 
@@ -550,7 +513,7 @@ export const useApproveNFT = () => {
       tokenId,
       nftAddress,
       factoryAddress,
-      walletProvider,
+      walletProvider
     }: {
       tokenId: string;
       nftAddress: string;
@@ -561,9 +524,9 @@ export const useApproveNFT = () => {
         tokenId,
         nftAddress,
         factoryAddress,
-        walletProvider,
+        walletProvider
       );
-    },
+    }
   );
 };
 
@@ -572,7 +535,7 @@ export const useCheckNFTOwnership = () => {
     async ({
       tokenId,
       nftAddress,
-      walletProvider,
+      walletProvider
     }: {
       tokenId: string;
       nftAddress: string;
@@ -581,9 +544,9 @@ export const useCheckNFTOwnership = () => {
       return await connectionCreationService.checkNFTOwnership(
         tokenId,
         nftAddress,
-        walletProvider,
+        walletProvider
       );
-    },
+    }
   );
 };
 
@@ -596,12 +559,12 @@ export const useCreateTokenConnection = () => {
       percentA,
       lockupDays,
       factoryAddress,
-      walletProvider,
+      walletProvider
     }: {
       toAddress: string;
-      tokenSymbol: string; // Changed from tokenGateway
-      totalAmount: bigint; // Changed from myAmount
-      percentA: number; // Changed from otherAmount
+      tokenSymbol: string;  // Changed from tokenGateway
+      totalAmount: bigint;  // Changed from myAmount
+      percentA: number;     // Changed from otherAmount
       lockupDays: number;
       factoryAddress: string;
       walletProvider: any;
@@ -613,9 +576,9 @@ export const useCreateTokenConnection = () => {
         percentA,
         lockupDays,
         factoryAddress,
-        walletProvider,
+        walletProvider
       );
-    },
+    }
   );
 };
 
@@ -627,7 +590,7 @@ export const useCreateNFTConnection = () => {
       tokenList,
       lockupDays,
       factoryAddress,
-      walletProvider,
+      walletProvider
     }: {
       nftAddress: string;
       toAddress: string;
@@ -642,15 +605,16 @@ export const useCreateNFTConnection = () => {
         tokenList,
         lockupDays,
         factoryAddress,
-        walletProvider,
+        walletProvider
       );
-    },
+    }
   );
 };
 
 /* ============================================================================
    INCOME HOOKS
    ============================================================================ */
+
 
 /**
  * Hook for getting Validating Address
@@ -660,7 +624,7 @@ export const useValidateAddress = () => {
   return {
     execute: (address: string) => {
       return connectionCreationService.validateAddress(address);
-    },
+    }
   };
 };
 
@@ -669,18 +633,9 @@ export const useValidateAddress = () => {
  */
 export const useIncomeHistory = () => {
   return useApiCall(
-    async ({
-      startTimestamps,
-      endTimestamps,
-    }: {
-      startTimestamps?: number;
-      endTimestamps?: number;
-    }) => {
-      return await incomeService.getIncomeHistory(
-        startTimestamps,
-        endTimestamps,
-      );
-    },
+    async ({ startTimestamps, endTimestamps }: { startTimestamps?: number; endTimestamps?: number }) => {
+      return await incomeService.getIncomeHistory(startTimestamps, endTimestamps);
+    }
   );
 };
 
@@ -698,18 +653,9 @@ export const useAllIncomeHistory = () => {
  */
 export const useWithdrawalHistory = () => {
   return useApiCall(
-    async ({
-      startTimestamps,
-      endTimestamps,
-    }: {
-      startTimestamps?: number;
-      endTimestamps?: number;
-    }) => {
-      return await incomeService.getWithdrawalHistory(
-        startTimestamps,
-        endTimestamps,
-      );
-    },
+    async ({ startTimestamps, endTimestamps }: { startTimestamps?: number; endTimestamps?: number }) => {
+      return await incomeService.getWithdrawalHistory(startTimestamps, endTimestamps);
+    }
   );
 };
 
@@ -738,7 +684,7 @@ export const usePaginatedIncomeHistory = () => {
   return useApiCall(
     async ({ offset = 0, limit = 20 }: { offset?: number; limit?: number }) => {
       return await incomeService.getIncomeHistoryPaginated(offset, limit);
-    },
+    }
   );
 };
 
@@ -877,15 +823,9 @@ export const useGetStars = () => {
  */
 export const useSubmitJoinATM = () => {
   return useApiCall(
-    async ({
-      formData,
-      errorText,
-    }: {
-      formData: JoinATMFormData;
-      errorText?: string;
-    }) => {
+    async ({ formData, errorText }: { formData: JoinATMFormData; errorText?: string }) => {
       return await gameService.submitJoinATMApplication(formData, errorText);
-    },
+    }
   );
 };
 
@@ -901,14 +841,14 @@ export const useFetchNewsList = () => {
     async ({
       pageIndex = 1,
       pageSize = 10,
-      type = "",
+      type = '',
     }: {
       pageIndex?: number;
       pageSize?: number;
       type?: string;
     }) => {
       return await webAPIService.fetchNewsList(pageIndex, pageSize, type);
-    },
+    }
   );
 };
 
@@ -965,9 +905,9 @@ export const useFetchStakeTransactionsWithParams = () => {
         chainId,
         searchKey,
         searchType,
-        walletProvider,
+        walletProvider
       );
-    },
+    }
   );
 };
 
@@ -978,7 +918,7 @@ export const useGetContractInfo = () => {
   return useApiCall(
     async ({ walletProvider }: { walletProvider?: any } = {}) => {
       return await webAPIService.getContractInfo(walletProvider);
-    },
+    }
   );
 };
 
@@ -997,9 +937,9 @@ export const useFetchPRNodesPaginated = () => {
         params.pageNo,
         params.pageSize,
         params.searchKey,
-        params.searchType,
+        params.searchType
       );
-    },
+    }
   );
 };
 
@@ -1020,9 +960,9 @@ export const useFetchStakeTransactionsPaginated = () => {
         params.pageSize,
         params.chainId,
         params.searchKey,
-        params.searchType,
+        params.searchType
       );
-    },
+    }
   );
 };
 
@@ -1039,9 +979,10 @@ export const useFetchUserTreatyList = () => {
       type: number;
     }) => {
       return await webAPIService.fetchUserTreatyList(params);
-    },
+    }
   );
 };
+
 
 /**
  * Hook for fetching burn total data
@@ -1056,9 +997,9 @@ export const useFetchBurnTotal = () => {
       return await webAPIService.fetchBurnTotal(
         params.pageNo,
         params.pageIndex,
-        params.pageSize,
+        params.pageSize
       );
-    },
+    }
   );
 };
 
@@ -1103,15 +1044,9 @@ export const useGetInitiateList = () => {
  */
 export const useSendContactMail = () => {
   return useApiCall(
-    async ({
-      formData,
-      token,
-    }: {
-      formData: ContactFormData;
-      token: string;
-    }) => {
+    async ({ formData, token }: { formData: ContactFormData; token: string }) => {
       return await webAPIService.sendContactMail(formData, token);
-    },
+    }
   );
 };
 
@@ -1124,20 +1059,15 @@ export const useGetNFTProjectList = () => {
   });
 };
 
+
 /**
  * Hook for updating user nickname
  */
 export const useUpdateNickname = () => {
   return useApiCall(
-    async ({
-      nickName,
-      walletProvider,
-    }: {
-      nickName: string;
-      walletProvider?: any;
-    }) => {
+    async ({ nickName, walletProvider }: { nickName: string; walletProvider?: any }) => {
       return await webAPIService.updateNickname(nickName, walletProvider);
-    },
+    }
   );
 };
 
@@ -1148,7 +1078,7 @@ export const useGetUserPRCoinList = () => {
   return useApiCall(
     async ({ walletProvider }: { walletProvider?: any } = {}) => {
       return await webAPIService.getUserPRCoinList(walletProvider);
-    },
+    }
   );
 };
 
@@ -1157,15 +1087,9 @@ export const useGetUserPRCoinList = () => {
  */
 export const useGetUserPRCurve = () => {
   return useApiCall(
-    async ({
-      networkType,
-      walletProvider,
-    }: {
-      networkType: string;
-      walletProvider?: any;
-    }) => {
+    async ({ networkType, walletProvider }: { networkType: string; walletProvider?: any }) => {
       return await webAPIService.getUserPRCurve(networkType, walletProvider);
-    },
+    }
   );
 };
 
@@ -1174,17 +1098,9 @@ export const useGetUserPRCurve = () => {
  */
 export const useGetUserAGTRecord = () => {
   return useApiCall(
-    async ({
-      pageNo = 1,
-      pageSize = 20,
-      walletProvider,
-    }: { pageNo?: number; pageSize?: number; walletProvider?: any } = {}) => {
-      return await webAPIService.getUserAGTRecord(
-        pageNo,
-        pageSize,
-        walletProvider,
-      );
-    },
+    async ({ pageNo = 1, pageSize = 20, walletProvider }: { pageNo?: number; pageSize?: number; walletProvider?: any } = {}) => {
+      return await webAPIService.getUserAGTRecord(pageNo, pageSize, walletProvider);
+    }
   );
 };
 
@@ -1201,7 +1117,7 @@ export const useGetNFTLinkList = () => {
       chainId?: string;
     }) => {
       return await webAPIService.getNFTLinkList(params);
-    },
+    }
   );
 };
 
@@ -1219,15 +1135,9 @@ export const useGetNFTLinkById = () => {
  */
 export const useGetNFTMetadata = () => {
   return useApiCall(
-    async ({
-      nftAddress,
-      tokenId,
-    }: {
-      nftAddress: string;
-      tokenId: string;
-    }) => {
+    async ({ nftAddress, tokenId }: { nftAddress: string; tokenId: string }) => {
       return await webAPIService.getNFTMetadata(nftAddress, tokenId);
-    },
+    }
   );
 };
 
@@ -1286,9 +1196,7 @@ export const useNewsImageHelper = () => {
  * Handles balance check, signature collection, and withdrawal execution
  */
 export const useCompleteWithdrawal = () => {
-  const [step, setStep] = useState<
-    "idle" | "checking" | "collecting" | "executing" | "success" | "error"
-  >("idle");
+  const [step, setStep] = useState<'idle' | 'checking' | 'collecting' | 'executing' | 'success' | 'error'>('idle');
   const [progress, setProgress] = useState(0);
 
   const balanceHook = useWithdrawalBalance();
@@ -1297,7 +1205,7 @@ export const useCompleteWithdrawal = () => {
   const execute = useCallback(
     async (amount: number, walletProvider: any) => {
       try {
-        setStep("checking");
+        setStep('checking');
         setProgress(10);
 
         const balance = await balanceHook.execute();
@@ -1306,28 +1214,28 @@ export const useCompleteWithdrawal = () => {
           throw new Error(`Insufficient balance. Available: ${balance} LUCA`);
         }
 
-        setStep("collecting");
+        setStep('collecting');
         setProgress(30);
 
-        setStep("executing");
+        setStep('executing');
         setProgress(60);
 
         const result = await withdrawHook.execute({ amount, walletProvider });
 
         setProgress(100);
-        setStep("success");
+        setStep('success');
 
         return result;
       } catch (error: any) {
-        setStep("error");
+        setStep('error');
         throw error;
       }
     },
-    [balanceHook, withdrawHook],
+    [balanceHook, withdrawHook]
   );
 
   const reset = useCallback(() => {
-    setStep("idle");
+    setStep('idle');
     setProgress(0);
     balanceHook.reset();
     withdrawHook.reset();
@@ -1418,24 +1326,14 @@ export const useConnectionManager = () => {
  */
 export const useLoadApprovals = () => {
   return useApiCall(
-    async ({
-      address,
-      contracts,
-      walletProvider,
-      chainId,
-    }: {
+    async ({ address, contracts, walletProvider, chainId }: {
       address: string;
       contracts: any;
       walletProvider: any;
-      chainId: number;
+      chainId: number
     }) => {
-      return await authorizationService.loadApprovals(
-        address,
-        contracts,
-        walletProvider,
-        chainId,
-      );
-    },
+      return await authorizationService.loadApprovals(address, contracts, walletProvider, chainId);
+    }
   );
 };
 
@@ -1444,24 +1342,14 @@ export const useLoadApprovals = () => {
  */
 export const useRevokeApproval = () => {
   return useApiCall(
-    async ({
-      tokenAddress,
-      spenderAddress,
-      walletProvider,
-      address,
-    }: {
+    async ({ tokenAddress, spenderAddress, walletProvider, address }: {
       tokenAddress: string;
       spenderAddress: string;
       walletProvider: any;
-      address: string;
+      address: string
     }) => {
-      return await authorizationService.revokeApproval(
-        tokenAddress,
-        spenderAddress,
-        walletProvider,
-        address,
-      );
-    },
+      return await authorizationService.revokeApproval(tokenAddress, spenderAddress, walletProvider, address);
+    }
   );
 };
 
@@ -1482,9 +1370,11 @@ export const useGetTokenList = () => {
  * Hook for getting recovery pot balance
  */
 export const useGetRecoveryPotBalance = () => {
-  return useApiCall(async (chainId: number) => {
-    return await recoveryPlanService.getRecoveryPotBalance(chainId);
-  });
+  return useApiCall(
+    async (chainId: number) => {
+      return await recoveryPlanService.getRecoveryPotBalance(chainId);
+    }
+  );
 };
 
 /**
@@ -1492,18 +1382,9 @@ export const useGetRecoveryPotBalance = () => {
  */
 export const useGetRecoveryTransactions = () => {
   return useApiCall(
-    async ({
-      userAddress,
-      chainId,
-    }: {
-      userAddress: string;
-      chainId: number;
-    }) => {
-      return await recoveryPlanService.getRecoveryTransactions(
-        userAddress,
-        chainId,
-      );
-    },
+    async ({ userAddress, chainId }: { userAddress: string; chainId: number }) => {
+      return await recoveryPlanService.getRecoveryTransactions(userAddress, chainId);
+    }
   );
 };
 
@@ -1515,45 +1396,55 @@ export const useGetRecoveryTransactions = () => {
  * Hook for getting user's game proposals
  */
 export const useGetUserGameProposals = () => {
-  return useApiCall(async () => {
-    return await agfGameProposalService.getProposalByUserId();
-  });
+  return useApiCall(
+    async () => {
+      return await agfGameProposalService.getProposalByUserId();
+    }
+  );
 };
 
 /**
  * Hook for getting all game proposals (admin only)
  */
 export const useGetAdminGameProposals = () => {
-  return useApiCall(async () => {
-    return await agfGameProposalService.getAdminProposal();
-  });
+  return useApiCall(
+    async () => {
+      return await agfGameProposalService.getAdminProposal();
+    }
+  );
 };
 
 /**
  * Hook for creating a new game proposal
  */
 export const useCreateGameProposal = () => {
-  return useApiCall(async (proposalData: any) => {
-    return await agfGameProposalService.createProposal(proposalData);
-  });
+  return useApiCall(
+    async (proposalData: any) => {
+      return await agfGameProposalService.createProposal(proposalData);
+    }
+  );
 };
 
 /**
  * Hook for updating an existing game proposal
  */
 export const useUpdateGameProposal = () => {
-  return useApiCall(async (proposalData: any) => {
-    return await agfGameProposalService.updateProposal(proposalData);
-  });
+  return useApiCall(
+    async (proposalData: any) => {
+      return await agfGameProposalService.updateProposal(proposalData);
+    }
+  );
 };
 
 /**
  * Hook for updating proposal status (admin only)
  */
 export const useUpdateGameProposalByAdmin = () => {
-  return useApiCall(async (updateData: any) => {
-    return await agfGameProposalService.updateProposalByAdmin(updateData);
-  });
+  return useApiCall(
+    async (updateData: any) => {
+      return await agfGameProposalService.updateProposalByAdmin(updateData);
+    }
+  );
 };
 
 /**
@@ -1563,7 +1454,7 @@ export const useUnwrapAGFProposal = () => {
   return {
     execute: (proposal: AGFGameProposal) => {
       agfGameProposalService.unwrapAGFProposal(proposal);
-    },
+    }
   };
 };
 
@@ -1574,7 +1465,7 @@ export const useWrapAGFProposal = () => {
   return {
     execute: (isEdit: boolean = false) => {
       return agfGameProposalService.wrapAGFProposal(isEdit);
-    },
+    }
   };
 };
 
@@ -1585,7 +1476,7 @@ export const useClearProposalData = () => {
   return {
     execute: () => {
       agfGameProposalService.clearProposalData();
-    },
+    }
   };
 };
 
@@ -1597,9 +1488,11 @@ export const useClearProposalData = () => {
  * Hook for fetching connection details by ID
  */
 export const useFetchConnectionById = () => {
-  return useApiCall(async ({ id, isNFT }: { id: string; isNFT: boolean }) => {
-    return await linkConnectionService.fetchConnectionById(id, isNFT);
-  });
+  return useApiCall(
+    async ({ id, isNFT }: { id: string; isNFT: boolean }) => {
+      return await linkConnectionService.fetchConnectionById(id, isNFT);
+    }
+  );
 };
 
 /**
@@ -1607,15 +1500,9 @@ export const useFetchConnectionById = () => {
  */
 export const useFetchNFTMetadata = () => {
   return useApiCall(
-    async ({
-      nftAddress,
-      tokenId,
-    }: {
-      nftAddress: string;
-      tokenId: string;
-    }) => {
+    async ({ nftAddress, tokenId }: { nftAddress: string; tokenId: string }) => {
       return await linkConnectionService.fetchNFTMetadata(nftAddress, tokenId);
-    },
+    }
   );
 };
 
@@ -1627,18 +1514,14 @@ export const useAgreeConnection = () => {
     async ({
       linkAddress,
       tokenId,
-      walletProvider,
+      walletProvider
     }: {
       linkAddress: string;
       tokenId?: string;
-      walletProvider: any;
+      walletProvider: any
     }) => {
-      return await linkConnectionService.agreeConnection(
-        linkAddress,
-        tokenId,
-        walletProvider,
-      );
-    },
+      return await linkConnectionService.agreeConnection(linkAddress, tokenId, walletProvider);
+    }
   );
 };
 
@@ -1647,18 +1530,9 @@ export const useAgreeConnection = () => {
  */
 export const useCancelConnection = () => {
   return useApiCall(
-    async ({
-      linkAddress,
-      walletProvider,
-    }: {
-      linkAddress: string;
-      walletProvider: any;
-    }) => {
-      return await linkConnectionService.cancelConnection(
-        linkAddress,
-        walletProvider,
-      );
-    },
+    async ({ linkAddress, walletProvider }: { linkAddress: string; walletProvider: any }) => {
+      return await linkConnectionService.cancelConnection(linkAddress, walletProvider);
+    }
   );
 };
 
@@ -1667,18 +1541,9 @@ export const useCancelConnection = () => {
  */
 export const useRejectConnection = () => {
   return useApiCall(
-    async ({
-      linkAddress,
-      walletProvider,
-    }: {
-      linkAddress: string;
-      walletProvider: any;
-    }) => {
-      return await linkConnectionService.rejectConnection(
-        linkAddress,
-        walletProvider,
-      );
-    },
+    async ({ linkAddress, walletProvider }: { linkAddress: string; walletProvider: any }) => {
+      return await linkConnectionService.rejectConnection(linkAddress, walletProvider);
+    }
   );
 };
 
@@ -1687,18 +1552,9 @@ export const useRejectConnection = () => {
  */
 export const useCloseConnection = () => {
   return useApiCall(
-    async ({
-      linkAddress,
-      walletProvider,
-    }: {
-      linkAddress: string;
-      walletProvider: any;
-    }) => {
-      return await linkConnectionService.closeConnection(
-        linkAddress,
-        walletProvider,
-      );
-    },
+    async ({ linkAddress, walletProvider }: { linkAddress: string; walletProvider: any }) => {
+      return await linkConnectionService.closeConnection(linkAddress, walletProvider);
+    }
   );
 };
 
@@ -1718,9 +1574,10 @@ export const useExecuteCrosschainTransfer = () => {
       walletProvider: any;
     }) => {
       return await crosschainService.executeCrosschainTransfer(params);
-    },
+    }
   );
 };
+
 
 /* ============================================================================
    EXPORTS
@@ -1881,4 +1738,4 @@ export type {
   AGFGameProposal,
   AGFProposalResponse,
   CrosschainTransferResult,
-} from "../lib/webAppService";
+} from '../lib/webAppService';

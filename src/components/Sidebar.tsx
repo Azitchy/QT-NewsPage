@@ -1,4 +1,5 @@
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useUnified } from "@/context/Context";
 import DashboardIcon from "@/assets/icons/dashboard-btn-icon.svg?react";
 import ConnectionIcon from "@/assets/icons/connections-btn-icon.svg?react";
 import ProposalIcon from "@/assets/icons/proposals-btn-icon.svg?react";
@@ -28,6 +29,7 @@ interface NavItem {
 export default function Sidebar({ className = "" }: SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { logout } = useUnified();
 
   const navItems: NavItem[] = [
     {
@@ -237,7 +239,11 @@ export default function Sidebar({ className = "" }: SidebarProps) {
           
           <Tooltip>
             <TooltipTrigger asChild>
-              <button className="group relative w-[24px] h-[24px] transition-all cursor-pointer" aria-label="Log out">
+              <button
+                className="group relative w-[24px] h-[24px] transition-all cursor-pointer"
+                aria-label="Log out"
+                onClick={logout}
+              >
                 <LeaveIcon className="w-[24px] h-auto text-primary group-hover:[&>path]:fill-[url(#icon-gradient)] group-hover:drop-shadow-[0_0_10px_rgba(93,210,122,0.4)] transition-all duration-300"/>
               </button>
             </TooltipTrigger>
@@ -286,6 +292,8 @@ export default function Sidebar({ className = "" }: SidebarProps) {
 }
 
 export function MobileTopBar() {
+  const { logout } = useUnified();
+
   return (
     <div className="sticky top-0 bg-white border-b border-[#EBEBEB] px-[16px] py-[10px] z-50">
       {/* Hidden SVG with gradient definitions */}
@@ -312,16 +320,25 @@ export function MobileTopBar() {
         >
           <img src="/atm.svg" alt="ATM Logo" className="w-[40px]" />
         </button>
-        
+
         <div className="flex items-center gap-[20px]">
           {/* Notification Button */}
           <button className="group relative transition-all cursor-pointer">
             <BellIcon className="w-[20px] h-auto text-primary group-hover:[&>path]:fill-[url(#icon-gradient-mobile)] group-hover:drop-shadow-[0_0_8px_rgba(93,210,122,0.4)] transition-all duration-300" />
           </button>
-          
+
           {/* Settings Button */}
           <button className="group relative transition-all">
             <SettingsIcon className="w-[20px] h-auto text-primary group-hover:[&>path]:fill-[url(#icon-gradient-mobile)] group-hover:drop-shadow-[0_0_8px_rgba(93,210,122,0.4)] transition-all duration-300" />
+          </button>
+
+          {/* Logout Button */}
+          <button
+            className="group relative transition-all cursor-pointer"
+            aria-label="Log out"
+            onClick={logout}
+          >
+            <LeaveIcon className="w-[20px] h-auto text-primary group-hover:[&>path]:fill-[url(#icon-gradient-mobile)] group-hover:drop-shadow-[0_0_8px_rgba(93,210,122,0.4)] transition-all duration-300" />
           </button>
 
           {/* Network Badge */}

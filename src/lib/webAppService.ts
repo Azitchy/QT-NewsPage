@@ -512,6 +512,20 @@ class AuthenticationService {
     localStorage.removeItem('atm_cookie');
   }
 
+  /**
+   * Clear only the token (not the user address) — used in retry paths
+   * where we need to re-authenticate but still know who the user is.
+   */
+  clearToken() {
+    this.loginToken = null;
+    this.tokenExpiry = null;
+    this.cookie = null;
+    this.authPromise = null;
+    localStorage.removeItem('atm_token');
+    localStorage.removeItem('atm_token_expiry');
+    localStorage.removeItem('atm_cookie');
+  }
+
   isTokenValid(): boolean {
     return !!(this.loginToken && this.tokenExpiry && Date.now() < this.tokenExpiry);
   }
@@ -566,9 +580,17 @@ class AuthenticationService {
     if (!walletProvider) throw new Error('Wallet provider not available');
 
     try {
+      // personal_sign requires a hex-encoded message.
+      // If the message is already hex-prefixed, use it as-is; otherwise convert UTF-8 → hex.
+      const hexMessage = message.startsWith('0x')
+        ? message
+        : '0x' + Array.from(new TextEncoder().encode(message))
+            .map(b => b.toString(16).padStart(2, '0'))
+            .join('');
+
       const signature = await walletProvider.request({
         method: 'personal_sign',
-        params: [message, this.userAddress],
+        params: [hexMessage, this.userAddress],
       });
       return signature;
     } catch (error: any) {
@@ -618,6 +640,7 @@ class AuthenticationService {
   async authenticate(walletProvider: any): Promise<string> {
     if (this.authPromise) return this.authPromise;
     if (this.isTokenValid() && this.loginToken) return this.loginToken;
+    if (!this.userAddress) throw new Error('User address not set. Call setUserAddress() before authenticating.');
 
     this.authPromise = (async () => {
       try {
@@ -719,8 +742,8 @@ class WithdrawalService {
       });
 
       if (response.data?.errorcode === 'NOT_LOGGEDIN' || response.data?.failed) {
-        // Clear stale auth and force re-authentication
-        authService.clearAuth();
+        // Clear stale token (preserve address) and force re-authentication
+        authService.clearToken();
         const newToken = await authService.authenticate(walletProvider);
         headers['token'] = newToken;
         const retryResponse = await axios.get(`${API_CONFIG.OPENAPI_BASE_URL}/open/getCurrentIncome`, {
@@ -1122,23 +1145,39 @@ class WithdrawalService {
    ============================================================================ */
 
 class CommunityProposalService {
+  private getBaseUrl(): string {
+    return isDevelopment ? '' : API_CONFIG.WEB_API_BASE_URL;
+  }
+
   async getMyPartList(status: string | number, searchKeys: string, pageIndex: number = 1, pageSize: number = 20, walletProvider?: any): Promise<ProposalListResponse> {
     try {
       const token = await authService.getToken(walletProvider);
-      const headers: Record<string, string> = { 'Content-Type': 'application/x-www-form-urlencoded', 'token': token };
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE,
+        'token': token,
+      };
       if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
 
-      const params = new URLSearchParams({ status: String(status || ''), searchKeys: searchKeys || '', pageIndex: String(pageIndex), pageSize: String(pageSize) });
-      const response = await axios.post(`${API_CONFIG.WEB_API_BASE_URL}/community/getMyPartList`, params, { headers, withCredentials: true });
+      const url = `${this.getBaseUrl()}/community/getMyPartList`;
+      const body = { status: String(status || ''), searchKeys: searchKeys || '', pageIndex, pageSize };
+      console.log('[getMyPartList] Request:', { url, body, headers: { ...headers, token: token ? '***' : 'none' } });
+
+      const response = await axios.post(url, body, { headers, withCredentials: shouldUseCredentials() });
+      console.log('[getMyPartList] Response:', response.data);
 
       if (response.data?.errorcode === 'NOT_LOGGEDIN' || !response.data?.success) {
+        console.log('[getMyPartList] Token expired, re-authenticating...');
+        authService.clearToken();
         const newToken = await authService.authenticate(walletProvider);
         headers['token'] = newToken;
-        const retryResponse = await axios.post(`${API_CONFIG.WEB_API_BASE_URL}/community/getMyPartList`, params, { headers, withCredentials: true });
+        const retryResponse = await axios.post(url, body, { headers, withCredentials: shouldUseCredentials() });
+        console.log('[getMyPartList] Retry Response:', retryResponse.data);
         return retryResponse.data;
       }
       return response.data;
     } catch (error: any) {
+      console.error('[getMyPartList] Error:', error?.response?.data || error?.message);
       throw new Error(error?.response?.data?.message || error?.message || 'Failed to get proposals');
     }
   }
@@ -1146,20 +1185,32 @@ class CommunityProposalService {
   async getMyInitiateList(status: string | number, searchKeys: string, pageIndex: number = 1, pageSize: number = 20, walletProvider?: any): Promise<ProposalListResponse> {
     try {
       const token = await authService.getToken(walletProvider);
-      const headers: Record<string, string> = { 'Content-Type': 'application/x-www-form-urlencoded', 'token': token };
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE,
+        'token': token,
+      };
       if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
 
-      const params = new URLSearchParams({ status: String(status || ''), searchKeys: searchKeys || '', pageIndex: String(pageIndex), pageSize: String(pageSize) });
-      const response = await axios.post(`${API_CONFIG.WEB_API_BASE_URL}/community/getMyInitiateList`, params, { headers, withCredentials: true });
+      const url = `${this.getBaseUrl()}/community/getMyInitiateList`;
+      const body = { status: String(status || ''), searchKeys: searchKeys || '', pageIndex, pageSize };
+      console.log('[getMyInitiateList] Request:', { url, body, headers: { ...headers, token: token ? '***' : 'none' } });
+
+      const response = await axios.post(url, body, { headers, withCredentials: shouldUseCredentials() });
+      console.log('[getMyInitiateList] Response:', response.data);
 
       if (response.data?.errorcode === 'NOT_LOGGEDIN' || !response.data?.success) {
+        console.log('[getMyInitiateList] Token expired, re-authenticating...');
+        authService.clearToken();
         const newToken = await authService.authenticate(walletProvider);
         headers['token'] = newToken;
-        const retryResponse = await axios.post(`${API_CONFIG.WEB_API_BASE_URL}/community/getMyInitiateList`, params, { headers, withCredentials: true });
+        const retryResponse = await axios.post(url, body, { headers, withCredentials: shouldUseCredentials() });
+        console.log('[getMyInitiateList] Retry Response:', retryResponse.data);
         return retryResponse.data;
       }
       return response.data;
     } catch (error: any) {
+      console.error('[getMyInitiateList] Error:', error?.response?.data || error?.message);
       throw new Error(error?.response?.data?.message || error?.message || 'Failed to get proposals');
     }
   }
@@ -1167,15 +1218,20 @@ class CommunityProposalService {
   async withdrawAGT(keyIds: string[], walletProvider?: any): Promise<{ success: boolean; message?: string }> {
     try {
       const token = await authService.getToken(walletProvider);
-      const headers: Record<string, string> = { 'Content-Type': 'application/json', 'token': token };
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE,
+        'token': token,
+      };
       if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
 
-      const response = await axios.post(`${API_CONFIG.WEB_API_BASE_URL}/community/withdrawAGT`, { keyIds }, { headers, withCredentials: true });
+      const response = await axios.post(`${this.getBaseUrl()}/community/withdrawAGT`, { keyIds }, { headers, withCredentials: shouldUseCredentials() });
 
       if (response.data?.errorcode === 'NOT_LOGGEDIN' || !response.data?.success) {
+        authService.clearToken();
         const newToken = await authService.authenticate(walletProvider);
         headers['token'] = newToken;
-        const retryResponse = await axios.post(`${API_CONFIG.WEB_API_BASE_URL}/community/withdrawAGT`, { keyIds }, { headers, withCredentials: true });
+        const retryResponse = await axios.post(`${this.getBaseUrl()}/community/withdrawAGT`, { keyIds }, { headers, withCredentials: shouldUseCredentials() });
         return { success: retryResponse.data?.success || false, message: retryResponse.data?.message };
       }
       return { success: response.data?.success || false, message: response.data?.message };
@@ -1195,22 +1251,27 @@ class CommunityProposalService {
   async createCommunityProposal(proposalData: any, walletProvider?: any): Promise<{ success: boolean; message?: string }> {
     try {
       const token = await authService.getToken(walletProvider);
-      const headers: Record<string, string> = { 'Content-Type': 'application/json', 'token': token };
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE,
+        'token': token,
+      };
       if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
 
       const response = await axios.post(
-        `${API_CONFIG.WEB_API_BASE_URL}/community/createProposal`,
+        `${this.getBaseUrl()}/community/createProposal`,
         proposalData,
-        { headers, withCredentials: true }
+        { headers, withCredentials: shouldUseCredentials() }
       );
 
       if (response.data?.errorcode === 'NOT_LOGGEDIN' || !response.data?.success) {
+        authService.clearToken();
         const newToken = await authService.authenticate(walletProvider);
         headers['token'] = newToken;
         const retryResponse = await axios.post(
-          `${API_CONFIG.WEB_API_BASE_URL}/community/createProposal`,
+          `${this.getBaseUrl()}/community/createProposal`,
           proposalData,
-          { headers, withCredentials: true }
+          { headers, withCredentials: shouldUseCredentials() }
         );
         return { success: retryResponse.data?.success || false, message: retryResponse.data?.message };
       }
@@ -1239,6 +1300,7 @@ class ConsensusConnectionService {
       });
 
       if (response.data?.errorcode === 'NOT_LOGGEDIN' || response.data?.failed) {
+        authService.clearToken();
         const newToken = await authService.authenticate(walletProvider);
         headers['token'] = newToken;
         const retryResponse = await axios.get(`${API_CONFIG.OPENAPI_BASE_URL}/open/getUserConnList`, {
@@ -1273,6 +1335,7 @@ class ConsensusConnectionService {
       const response = await axios.get(`${API_CONFIG.OPENAPI_BASE_URL}/open/getTreatyList`, { headers, withCredentials: true });
 
       if (response.data?.errorcode === 'NOT_LOGGEDIN' || response.data?.failed) {
+        authService.clearToken();
         const newToken = await authService.authenticate(walletProvider);
         headers['token'] = newToken;
         const retryResponse = await axios.get(`${API_CONFIG.OPENAPI_BASE_URL}/open/getTreatyList`, { headers, withCredentials: true });
@@ -1303,6 +1366,7 @@ class ConsensusConnectionService {
       const response = await axios.post(`${API_CONFIG.OPENAPI_BASE_URL}/open/updateLedgeStatus`, payload, { headers, withCredentials: true });
 
       if (response.data?.errorcode === 'NOT_LOGGEDIN' || response.data?.failed) {
+        authService.clearToken();
         const newToken = await authService.authenticate(walletProvider);
         headers['token'] = newToken;
         const retryResponse = await axios.post(`${API_CONFIG.OPENAPI_BASE_URL}/open/updateLedgeStatus`, payload, { headers, withCredentials: true });
@@ -1832,13 +1896,18 @@ class IncomeService {
    ============================================================================ */
 
 class GameService {
+  private allGamesCache: { data: ApiResponse<Game[]>; timestamp: number } | null = null;
+  private gameByIdCache: Map<string, { data: ApiResponse<Game>; timestamp: number }> = new Map();
+  private readonly GAMES_CACHE_TTL = 5 * 60_000; // 5 minutes
+  private readonly GAME_DETAIL_CACHE_TTL = 2 * 60_000; // 2 minutes
+
   private getCommonHeaders(): Record<string, string> {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('atm_token');
     return { 'Content-Type': 'application/json', ...(token && { token }) };
   }
 
   private getAuthHeaders(): Record<string, string> {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('atm_token');
     return { 'Content-Type': 'application/json', 'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE, ...(token && { token }) };
   }
 
@@ -1849,6 +1918,11 @@ class GameService {
     } catch (error) {
       return null;
     }
+  }
+
+  clearGamesCache() {
+    this.allGamesCache = null;
+    this.gameByIdCache.clear();
   }
 
   async createProposal(data: Partial<GameProposal>): Promise<ApiResponse<any>> {
@@ -1899,18 +1973,33 @@ class GameService {
   }
 
   async getAllGame(): Promise<ApiResponse<Game[]>> {
+    if (this.allGamesCache && (Date.now() - this.allGamesCache.timestamp) < this.GAMES_CACHE_TTL) {
+      return this.allGamesCache.data;
+    }
     try {
       const response = await axios.post(`${API_CONFIG.GAME_API_BASE_URL}/game/getAllGame`, {}, { headers: this.getCommonHeaders(), withCredentials: true });
-      return { data: response.data.data || [], isSuccess: response.data.success || false, success: response.data.success || false, message: 'Success' };
+      const result: ApiResponse<Game[]> = { data: response.data.data || [], isSuccess: response.data.success || false, success: response.data.success || false, message: 'Success' };
+      if (result.success) {
+        this.allGamesCache = { data: result, timestamp: Date.now() };
+      }
+      return result;
     } catch (error: any) {
       return { message: error.response?.data?.message || 'Something went wrong', isSuccess: false, success: false };
     }
   }
 
   async getGameById(gameId: string): Promise<ApiResponse<Game>> {
+    const cached = this.gameByIdCache.get(gameId);
+    if (cached && (Date.now() - cached.timestamp) < this.GAME_DETAIL_CACHE_TTL) {
+      return cached.data;
+    }
     try {
       const response = await axios.post(`${API_CONFIG.GAME_API_BASE_URL}/game/getGameById`, { id: gameId }, { headers: this.getCommonHeaders(), withCredentials: true });
-      return { data: response.data.data, isSuccess: response.data.success || false, success: response.data.success || false, message: 'Success' };
+      const result: ApiResponse<Game> = { data: response.data.data, isSuccess: response.data.success || false, success: response.data.success || false, message: 'Success' };
+      if (result.success) {
+        this.gameByIdCache.set(gameId, { data: result, timestamp: Date.now() });
+      }
+      return result;
     } catch (error: any) {
       return { message: error.response?.data?.message || 'Something went wrong', isSuccess: false, success: false };
     }
@@ -1918,7 +2007,7 @@ class GameService {
 
   async gameRating(dataObject: GameRating): Promise<ApiResponse<any>> {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('atm_token');
       const apiUrl = token ? `${API_CONFIG.GAME_API_BASE_URL}/game/knownRating` : `${API_CONFIG.GAME_API_BASE_URL}/game/anonymousRating`;
       const response = await axios.post(apiUrl, dataObject, { ...(token && { withCredentials: true }), headers: token ? this.getAuthHeaders() : this.getCommonHeaders() });
       return { data: response.data.data || '', isSuccess: response.data.success || false, success: response.data.success || false, message: 'Success' };
@@ -1930,7 +2019,13 @@ class GameService {
   async gameContributed(dataObject: GameInvestment): Promise<ApiResponse<any>> {
     try {
       const response = await axios.post(`${API_CONFIG.GAME_API_BASE_URL}/game/invest`, dataObject, { withCredentials: true, headers: this.getAuthHeaders() });
-      return { data: response.data.data || '', isSuccess: response.data.success || false, success: response.data.success || false, message: 'Success' };
+      const result = { data: response.data.data || '', isSuccess: response.data.success || false, success: response.data.success || false, message: 'Success' };
+      if (result.success) {
+        // Invalidate caches after successful contribution
+        this.gameByIdCache.delete(dataObject.gameId);
+        this.allGamesCache = null;
+      }
+      return result;
     } catch (error: any) {
       return { message: error.response?.data?.message || 'Something went wrong', isSuccess: false, success: false };
     }
@@ -1989,8 +2084,14 @@ class GameService {
    ============================================================================ */
 
 class WebAPIService {
+  private prNodesCache: { data: PRNodeItem[]; timestamp: number } | null = null;
+  private stakeTransactionsCache: { data: StakeTransactionItem[]; timestamp: number } | null = null;
+  private overviewCache: { data: OverviewData; timestamp: number } | null = null;
+  private readonly LIST_CACHE_TTL = 2 * 60_000; // 2 minutes
+  private readonly OVERVIEW_CACHE_TTL = 5 * 60_000; // 5 minutes
+
   private getFormHeaders(): Record<string, string> {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('atm_token');
     return { 'Content-Type': 'application/x-www-form-urlencoded', 'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE, ...(token && { token }) };
   }
 
@@ -2017,21 +2118,31 @@ class WebAPIService {
   }
 
   async fetchPRNodes(): Promise<PRNodeItem[]> {
+    if (this.prNodesCache && (Date.now() - this.prNodesCache.timestamp) < this.LIST_CACHE_TTL) {
+      return this.prNodesCache.data;
+    }
     const requestOptions: RequestInit = { method: 'GET', headers: this.getFormHeaders() };
     if (shouldUseCredentials()) requestOptions.credentials = 'include';
     const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/getPRList`, requestOptions);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const result = await response.json();
-    return result?.data?.prList || [];
+    const data = result?.data?.prList || [];
+    this.prNodesCache = { data, timestamp: Date.now() };
+    return data;
   }
 
   async fetchStakeTransactions(): Promise<StakeTransactionItem[]> {
+    if (this.stakeTransactionsCache && (Date.now() - this.stakeTransactionsCache.timestamp) < this.LIST_CACHE_TTL) {
+      return this.stakeTransactionsCache.data;
+    }
     const requestOptions: RequestInit = { method: 'GET', headers: this.getFormHeaders() };
     if (shouldUseCredentials()) requestOptions.credentials = 'include';
     const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/getLedgeList`, requestOptions);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const result = await response.json();
-    return result?.data?.ledgeList || [];
+    const data = result?.data?.ledgeList || [];
+    this.stakeTransactionsCache = { data, timestamp: Date.now() };
+    return data;
   }
 
   async fetchStakeTransactionsWithParams(pageIndex: number = 1, pageSize: number = 10, chainId?: string, searchKey?: string, searchType?: string, walletProvider?: any): Promise<any> {
@@ -2065,7 +2176,8 @@ class WebAPIService {
     const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/prList?${queryString}`, requestOptions);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const result = await response.json();
-    return { success: result.success || false, data: result.data?.prList || [], total: result.data?.totalCount || 0 };
+    const nodeList = Array.isArray(result.data) ? result.data : result.data?.prList || [];
+    return { success: result.success || false, data: nodeList, total: result.total || nodeList.length };
   }
 
   async fetchStakeTransactionsPaginated(pageNo: number, pageSize: number = 25, chainId: string | null = null, searchKey?: string, searchType?: string): Promise<{ success: boolean; data: StakeTransactionItem[]; total: number }> {
@@ -2084,7 +2196,7 @@ class WebAPIService {
   async fetchUserTreatyList(params: { ledgeAddress: string; chainId?: string; pageIndex: number; pageSize?: number; type: number }): Promise<{ success: boolean; data: { treatyList: any[]; totalCount: number } }> {
     const requestOptions: RequestInit = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ledgeAddress: params.ledgeAddress, chainId: params.chainId || '', pageIndex: params.pageIndex, pageSize: params.pageSize || 10, type: params.type }) };
     if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.OPENAPI_BASE_URL}/getUserTreatyList`, requestOptions);
+    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/server/getUserTreatyList`, requestOptions);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     return await response.json();
   }
@@ -2099,12 +2211,17 @@ class WebAPIService {
   }
 
   async getOverview(): Promise<OverviewData> {
+    if (this.overviewCache && (Date.now() - this.overviewCache.timestamp) < this.OVERVIEW_CACHE_TTL) {
+      return this.overviewCache.data;
+    }
     const requestOptions: RequestInit = { method: 'GET', headers: this.getFormHeaders() };
     if (shouldUseCredentials()) requestOptions.credentials = 'include';
     const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/overview`, requestOptions);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const result = await response.json();
-    return result?.data || {};
+    const data = result?.data || {};
+    this.overviewCache = { data, timestamp: Date.now() };
+    return data;
   }
 
   async getCurrencyList(): Promise<CoinCurrency[]> {
@@ -2190,7 +2307,7 @@ class WebAPIService {
     const result = await response.json();
     if (result.success && result.data?.linkRecord) {
       const record = result.data.linkRecord;
-      const userAddress = localStorage.getItem('walletAddress');
+      const userAddress = localStorage.getItem('atm_address');
       if (userAddress && record.createAddress.toLowerCase() === userAddress.toLowerCase()) {
         record.myNft = record.createLockNft;
         if (record.lockFlag === 1) record.myNft2 = record.targetLockNft;
@@ -2222,6 +2339,7 @@ class WebAPIService {
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const result = await response.json();
     if (result?.errorcode === 'NOT_LOGGEDIN' || result?.failed) {
+      authService.clearToken();
       const newToken = await authService.authenticate(walletProvider);
       const retryOptions: RequestInit = { method: 'POST', headers: { ...this.getFormHeaders(), token: newToken }, body: params };
       if (shouldUseCredentials()) retryOptions.credentials = 'include';
@@ -2240,6 +2358,7 @@ class WebAPIService {
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const result = await response.json();
     if (result?.errorcode === 'NOT_LOGGEDIN' || result?.failed) {
+      authService.clearToken();
       const newToken = await authService.authenticate(walletProvider);
       const retryOptions: RequestInit = { method: 'GET', headers: { ...this.getFormHeaders(), token: newToken } };
       if (shouldUseCredentials()) retryOptions.credentials = 'include';
@@ -2260,6 +2379,7 @@ class WebAPIService {
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const result = await response.json();
     if (result?.errorcode === 'NOT_LOGGEDIN' || result?.failed) {
+      authService.clearToken();
       const newToken = await authService.authenticate(walletProvider);
       const retryOptions: RequestInit = { method: 'GET', headers: { ...this.getFormHeaders(), token: newToken } };
       if (shouldUseCredentials()) retryOptions.credentials = 'include';
@@ -2280,6 +2400,7 @@ class WebAPIService {
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const result = await response.json();
     if (result?.errorcode === 'NOT_LOGGEDIN' || result?.failed) {
+      authService.clearToken();
       const newToken = await authService.authenticate(walletProvider);
       const retryOptions: RequestInit = { method: 'GET', headers: { ...this.getFormHeaders(), token: newToken } };
       if (shouldUseCredentials()) retryOptions.credentials = 'include';
@@ -2521,7 +2642,7 @@ class AuthorizationService {
 class AGFGameProposalService {
 
   private getAGFHeaders() {
-    const loginToken = localStorage.getItem('token');
+    const loginToken = localStorage.getItem('atm_token');
     return {
       token: loginToken || '',
       'Content-Type': 'application/json',

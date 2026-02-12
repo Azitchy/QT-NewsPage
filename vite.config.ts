@@ -84,6 +84,28 @@ export default defineConfig(({ mode }) => {
             });
           },
         },
+        '/community': {
+          target: env.VITE_WEB_API_BASE_URL || 'https://webapi.atm.network',
+          changeOrigin: true,
+          secure: true,
+          cookieDomainRewrite: 'localhost',
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyReq, req) => {
+              if (req.headers.cookie) {
+                proxyReq.setHeader('Cookie', req.headers.cookie);
+              }
+            });
+            proxy.on('proxyRes', (proxyRes) => {
+              if (proxyRes.headers['set-cookie']) {
+                proxyRes.headers['set-cookie'] = proxyRes.headers['set-cookie'].map(c =>
+                  c.replace(/Domain=[^;]+/i, 'Domain=localhost')
+                   .replace(/Secure[;]?/i, '')
+                   .replace(/SameSite=None/i, 'SameSite=Lax')
+                );
+              }
+            });
+          },
+        },
         '/gameapi': {
           target: env.VITE_GAME_API_BASE_URL || 'https://gameapi.atm.network',
           changeOrigin: true,

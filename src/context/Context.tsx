@@ -13,8 +13,12 @@ import { activeChains, getLucaContract, supportedChains } from '@/config/chains'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: false,
+      retry: 1,
+      retryDelay: 1000,
       refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+      staleTime: 60_000,       // data stays fresh for 60s
+      gcTime: 5 * 60_000,     // unused data garbage-collected after 5 min
     },
   },
 });
@@ -44,7 +48,11 @@ const modal = createAppKit({
   networks: supportedChains as [ReturnType<typeof defineChain>, ...ReturnType<typeof defineChain>[]],
   projectId,
   metadata,
-  features: { analytics: false },
+  features: {
+    analytics: false,
+    email: true,
+    socials: ['google', 'apple', 'discord', 'x'],
+  },
   themeMode: 'light',
   themeVariables: { '--w3m-accent': '#0DAEB9' }
 });
@@ -68,6 +76,7 @@ interface UnifiedContextType {
   // Wallet actions
   openModal: () => void;
   disconnectWallet: () => Promise<void>;
+  logout: () => Promise<void>;
   getUserBalance: () => Promise<string>;
   checkLUCASupport: () => boolean;
   switchToSupportedChain: () => Promise<void>;
@@ -118,19 +127,23 @@ const UnifiedContextInner: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const openModal = () => modal.open({ view: 'Connect' });
 
-  // Auto-open Reown AppKit connect modal on first load if not connected
+  // Auto-open Reown AppKit connect modal on every page load so users can
+  // pick / switch wallet accounts.  Skipped while Wagmi is still reconnecting
+  // a previous session — once reconnection settles the effect re-runs and
+  // either the user is already connected or we pop the modal.
   useEffect(() => {
     if (autoOpenTriggered.current) return;
     if (status === 'connecting' || status === 'reconnecting') return;
-    const timer = setTimeout(() => {
-      if (!autoOpenTriggered.current && !isConnected) {
-        autoOpenTriggered.current = true;
-        modal.open({ view: 'Connect' });
-      } else {
-        autoOpenTriggered.current = true;
-      }
-    }, 1500);
-    return () => clearTimeout(timer);
+
+    // Already connected from a previous session — no need to show the modal
+    if (isConnected) {
+      autoOpenTriggered.current = true;
+      return;
+    }
+
+    // Not connected — open the modal immediately
+    autoOpenTriggered.current = true;
+    modal.open({ view: 'Connect' });
   }, [status, isConnected]);
 
   const disconnectWallet = async () => {
@@ -192,6 +205,20 @@ const UnifiedContextInner: React.FC<{ children: ReactNode }> = ({ children }) =>
     setWithdrawError(null);
     setLastTransactionHash(null);
   }, []);
+
+  // ── logout ──
+  // Full logout: clear auth state, disconnect wallet, and re-open the Reown
+  // modal so the user can connect with a different account.
+  const logout = useCallback(async () => {
+    clearAuth();
+    await disconnect();
+    // Reset the auto-open guard so the modal can re-appear
+    autoOpenTriggered.current = false;
+    // Small delay to let wagmi finish disconnect before opening modal
+    setTimeout(() => {
+      modal.open({ view: 'Connect' });
+    }, 300);
+  }, [clearAuth, disconnect]);
 
   // ── refreshBalance ──
   // Matches reference: guards on isAuthenticated + walletProvider + balanceFetchRef
@@ -323,6 +350,7 @@ const UnifiedContextInner: React.FC<{ children: ReactNode }> = ({ children }) =>
     walletProvider,
     openModal,
     disconnectWallet,
+    logout,
     getUserBalance,
     checkLUCASupport,
     switchToSupportedChain,
