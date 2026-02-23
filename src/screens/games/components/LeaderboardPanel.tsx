@@ -33,8 +33,7 @@ export default function LeaderboardPanel({
   }, [isOpen]);
 
   const isUserRow = (entry: RankingItem) =>
-    userAddress &&
-    entry.address.toLowerCase() === userAddress.toLowerCase();
+    userAddress && entry.address.toLowerCase() === userAddress.toLowerCase();
 
   return (
     <>
@@ -61,7 +60,7 @@ export default function LeaderboardPanel({
             onClick={onClose}
             className="p-[4px] rounded-full hover:bg-[#F6F6F6] cursor-pointer transition-colors"
           >
-            <X className="w-[20px] h-[20px] text-[#959595]" />
+            <X className="w-[20px] h-[20px] text-primary" />
           </button>
         </div>
 
@@ -87,9 +86,7 @@ export default function LeaderboardPanel({
                   <div
                     key={`${entry.rank}-${entry.address}`}
                     className={`flex items-center gap-[12px] px-[12px] py-[10px] rounded-[10px] transition-colors ${
-                      highlighted
-                        ? "bg-[#E9F6F7]"
-                        : "hover:bg-[#FAFAFA]"
+                      highlighted ? "bg-[#E9F6F7]" : "hover:bg-[#FAFAFA]"
                     }`}
                   >
                     {/* Rank */}

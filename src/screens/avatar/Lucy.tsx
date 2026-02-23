@@ -27,8 +27,11 @@ export default function Lucy() {
   const quickActionsHook = useGetQuickActions();
 
   // ── Local state ────────────────────────────────────────────────────────────
-  const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
-  const [localConversation, setLocalConversation] = useState<AvatarConversation | null>(null);
+  const [activeConversationId, setActiveConversationId] = useState<
+    string | null
+  >(null);
+  const [localConversation, setLocalConversation] =
+    useState<AvatarConversation | null>(null);
 
   // ── Bootstrap ──────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -45,7 +48,7 @@ export default function Lucy() {
       if (result) setLocalConversation(result);
       navigate("/avatar/lucy/chat");
     },
-    [conversationById, navigate]
+    [conversationById, navigate],
   );
 
   // ── New chat (clear active) ────────────────────────────────────────────────
@@ -61,7 +64,8 @@ export default function Lucy() {
 
       // Create a new conversation if none is active
       if (!convId) {
-        const title = content.length > 30 ? content.slice(0, 30) + "..." : content;
+        const title =
+          content.length > 30 ? content.slice(0, 30) + "..." : content;
         const newConv = await createConversation.execute(title);
         if (newConv) {
           convId = newConv.id;
@@ -81,7 +85,13 @@ export default function Lucy() {
         conversations.execute();
       }, 1000);
     },
-    [activeConversationId, createConversation, sendMessage, conversationById, conversations]
+    [
+      activeConversationId,
+      createConversation,
+      sendMessage,
+      conversationById,
+      conversations,
+    ],
   );
 
   // ── Delete conversation ────────────────────────────────────────────────────
@@ -94,7 +104,7 @@ export default function Lucy() {
       }
       conversations.execute();
     },
-    [activeConversationId, deleteConversation, conversations]
+    [activeConversationId, deleteConversation, conversations],
   );
 
   // ── Quick action ───────────────────────────────────────────────────────────
@@ -102,11 +112,11 @@ export default function Lucy() {
     (action: AvatarQuickAction) => {
       handleSendMessage(action.label);
     },
-    [handleSendMessage]
+    [handleSendMessage],
   );
 
   return (
-    <div className="flex gap-[20px] h-full">
+    <div className=" flex-col lg:flex lg:flex-row  gap-[20px] h-full">
       {/* ── Sidebar ──────────────────────────────────────── */}
       <AvatarSidebar
         profile={profile.data}

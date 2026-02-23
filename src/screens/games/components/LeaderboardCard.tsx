@@ -26,14 +26,13 @@ export default function LeaderboardCard({
   const visibleEntries = getVisibleLeaderboardEntries(rankings, userAddress);
 
   const isUserRow = (entry: RankingItem) =>
-    userAddress &&
-    entry.address.toLowerCase() === userAddress.toLowerCase();
+    userAddress && entry.address.toLowerCase() === userAddress.toLowerCase();
 
   return (
     <div className="rounded-[15px] bg-white p-[20px] h-full">
       <h3 className="font-h4-400 text-foreground">{title}</h3>
       {subtitle && (
-        <p className="body-label-400 text-[#959595] mt-[2px]">{subtitle}</p>
+        <p className="text-[14px] text-[#999F9F] mt-[2px]">{subtitle}</p>
       )}
 
       {loading ? (
@@ -67,9 +66,7 @@ export default function LeaderboardCard({
               <div
                 key={`${entry.rank}-${entry.address}`}
                 className={`flex items-center gap-[12px] px-[12px] py-[10px] rounded-[10px] transition-colors ${
-                  highlighted
-                    ? "bg-[#E9F6F7]"
-                    : "hover:bg-[#FAFAFA]"
+                  highlighted ? "bg-[#E9F6F7]" : "hover:bg-[#FAFAFA]"
                 }`}
               >
                 {/* Rank */}
@@ -84,9 +81,7 @@ export default function LeaderboardCard({
                 {/* Address */}
                 <span
                   className={`flex-1 body-text2-400 ${
-                    highlighted
-                      ? "text-primary font-medium"
-                      : "text-foreground"
+                    highlighted ? "text-primary font-medium" : "text-foreground"
                   }`}
                 >
                   {truncateAddress(entry.address)}
@@ -112,7 +107,7 @@ export default function LeaderboardCard({
           {/* See all button */}
           <button
             onClick={onSeeAll}
-            className="mt-[12px] text-primary body-text2-400 hover:underline cursor-pointer"
+            className="mt-[20px] text-primary body-text1-400 hover:underline cursor-pointer"
           >
             See all
           </button>

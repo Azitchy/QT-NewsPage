@@ -75,7 +75,7 @@ export default function AvatarChat({
                 {profile?.name?.charAt(0) ?? "L"}
               </span>
             </div>
-            <p className="text-[14px] text-[#666] text-center max-w-[360px] leading-[20px]">
+            <p className="text-[14px] text-[#666] text-center  leading-[20px]">
               {profile?.greeting ??
                 "Hey, I'm here to help you and don't worry, our story will be our secret."}
             </p>
@@ -83,7 +83,11 @@ export default function AvatarChat({
         ) : (
           /* Message bubbles */
           messages.map((msg) => (
-            <MessageBubble key={msg.id} message={msg} avatarName={profile?.name ?? "Lucy"} />
+            <MessageBubble
+              key={msg.id}
+              message={msg}
+              avatarName={profile?.name ?? "Lucy"}
+            />
           ))
         )}
         <div ref={messagesEndRef} />
@@ -155,10 +159,10 @@ function MessageBubble({
 
       {/* Bubble */}
       <div
-        className={`max-w-[70%] rounded-[12px] px-[14px] py-[10px] ${
+        className={`max-w-[70%] rounded-[20px]  px-[14px] py-[10px] ${
           isUser
-            ? "bg-gradient-to-b from-[#8E1BF4] to-[#100CD8] text-white"
-            : "bg-[#F6F6F6] text-[#1C1C1C]"
+            ? "bg-[#EAF6F7] text-foreground rounded-br-none "
+            : "bg-[#F6F6F6] text-[#1C1C1C] rounded-tl-none"
         }`}
       >
         <p className="text-[14px] leading-[20px] whitespace-pre-wrap">
@@ -166,7 +170,7 @@ function MessageBubble({
         </p>
         <p
           className={`text-[11px] mt-[4px] ${
-            isUser ? "text-white/60" : "text-[#999]"
+            isUser ? "text-foreground" : "text-[#999]"
           }`}
         >
           {message.timestamp}

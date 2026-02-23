@@ -6,6 +6,7 @@ import {
   ExternalLink,
   CheckCircle,
   Circle,
+  ArrowLeft,
 } from "lucide-react";
 import { useGetGameById, useGameContributed } from "@/hooks/useApi";
 import { useUnified } from "@/context/Context";
@@ -61,8 +62,7 @@ const DEFAULT_MILESTONES: GameMilestone[] = [
   {
     number: 7,
     title: "Release",
-    description:
-      "Launch the game and monitor initial user feedback.",
+    description: "Launch the game and monitor initial user feedback.",
     completed: false,
   },
 ];
@@ -72,11 +72,7 @@ export default function GameDetail() {
   const navigate = useNavigate();
   const { address, isAuthenticated, getUserBalance } = useUnified();
 
-  const {
-    data: gameResponse,
-    loading,
-    execute: fetchGame,
-  } = useGetGameById();
+  const { data: gameResponse, loading, execute: fetchGame } = useGetGameById();
   const { execute: contribute, loading: contributing } = useGameContributed();
 
   const [amount, setAmount] = useState("");
@@ -201,13 +197,13 @@ export default function GameDetail() {
         onClick={() => navigate(-1)}
         className="flex items-center gap-[6px] text-foreground body-text1-400 hover:text-primary cursor-pointer transition-colors"
       >
-        <ChevronLeft className="w-[18px] h-[18px]" />
+        <ArrowLeft className="w-[18px] h-[18px]" />
         Go back
       </button>
 
-      <div className="flex gap-[24px]">
+      <div className="flex flex-col-reverse xl:flex-row gap-[24px]">
         {/* Left side - Game info */}
-        <div className="flex-1 min-w-0 space-y-[20px]">
+        <div className="flex-1 min-w-0 space-y-[20px] bg-white p-[20px] rounded-[15px]">
           {/* Category tags */}
           {categories.length > 0 && (
             <div className="flex gap-[8px] flex-wrap">
@@ -223,7 +219,7 @@ export default function GameDetail() {
           )}
 
           {/* Title */}
-          <h1 className="text-[48px] font-bold text-primary uppercase leading-tight">
+          <h1 className="text-[50px] font-bold text-[#01CC90] uppercase leading-tight">
             {game.title}
           </h1>
 
@@ -276,9 +272,9 @@ export default function GameDetail() {
                   >
                     <ExternalLink className="w-[16px] h-[16px]" />
                   </a>
-                )
+                ),
               )}
-              {(!((game as any).contactDetails) ||
+              {(!(game as any).contactDetails ||
                 (game as any).contactDetails.length === 0) && (
                 <p className="body-text2-400 text-[#959595]">
                   No contact details available
@@ -291,107 +287,108 @@ export default function GameDetail() {
         {/* Right sidebar */}
         <div className="w-[340px] flex-shrink-0 space-y-[16px]">
           {/* Days left + Likes */}
-          <div className="rounded-[15px] bg-[#F6F6F6] p-[20px]">
-            <div className="flex items-center justify-between mb-[8px]">
-              <div className="flex items-center gap-[8px]">
-                <span className="px-[12px] py-[4px] rounded-full bg-[#E9F6F7] text-primary body-text2-400">
-                  {daysLeft} days left
-                </span>
+          <div className="bg-white p-[20px] rounded-[15px]">
+            <div className="rounded-[15px] ">
+              <div className="flex items-center justify-between mb-[8px]">
+                <div className="flex items-center gap-[8px]">
+                  <span className="px-[12px] py-[4px] rounded-full bg-[#E9F6F7] text-primary body-text2-400">
+                    {daysLeft} days left
+                  </span>
+                </div>
+                <div className="flex items-center gap-[4px]">
+                  <span className="body-text2-400 text-foreground">
+                    {likesCount}
+                  </span>
+                  <button
+                    onClick={handleToggleLike}
+                    className="cursor-pointer transition-colors"
+                  >
+                    <Heart
+                      className={`w-[20px] h-[20px] ${
+                        liked
+                          ? "fill-[#FF6B6B] text-[#FF6B6B]"
+                          : "text-[#FF6B6B]"
+                      }`}
+                    />
+                  </button>
+                </div>
               </div>
-              <div className="flex items-center gap-[4px]">
-                <span className="body-text2-400 text-foreground">
-                  {likesCount}
-                </span>
-                <button
-                  onClick={handleToggleLike}
-                  className="cursor-pointer transition-colors"
-                >
-                  <Heart
-                    className={`w-[20px] h-[20px] ${
-                      liked
-                        ? "fill-[#FF6B6B] text-[#FF6B6B]"
-                        : "text-[#FF6B6B]"
-                    }`}
-                  />
-                </button>
+
+              {/* Contribution amounts */}
+              <div className="mt-[12px]">
+                <p className="text-[24px] font-bold text-foreground">
+                  {totalContributed} USDC
+                </p>
+                <p className="body-label-400 text-[#959595]">
+                  Total contribution
+                </p>
+              </div>
+
+              {/* Progress chart */}
+              <div className="flex justify-center my-[16px]">
+                <ContributionChart
+                  totalContributed={totalContributed}
+                  goalAmount={goalAmount}
+                  size={160}
+                />
+              </div>
+
+              {/* Legend */}
+              <div className="flex items-center justify-between text-[13px]">
+                <div>
+                  <p className="text-foreground font-medium">
+                    {userContribution} USDC
+                  </p>
+                  <p className="text-[#959595]">Your contribution</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-foreground font-medium">
+                    {goalAmount} USDC
+                  </p>
+                  <p className="text-[#959595]">Goal</p>
+                </div>
               </div>
             </div>
 
-            {/* Contribution amounts */}
-            <div className="mt-[12px]">
-              <p className="text-[24px] font-bold text-foreground">
-                {totalContributed} USDC
+            {/* Contribute form */}
+            <div className="mt-[30px]">
+              <h4 className="font-h4-400 text-foreground mb-[4px]">
+                Contribute to {game.title}
+              </h4>
+              <p className="body-label-400 text-[#959595] mb-[12px]">
+                Amount of USDC
               </p>
-              <p className="body-label-400 text-[#959595]">
-                Total contribution
-              </p>
-            </div>
-
-            {/* Progress chart */}
-            <div className="flex justify-center my-[16px]">
-              <ContributionChart
-                totalContributed={totalContributed}
-                goalAmount={goalAmount}
-                size={160}
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => {
+                  setAmount(e.target.value);
+                  setValidationError(null);
+                }}
+                placeholder="Enter the amount"
+                min="0"
+                className="w-full px-[16px] py-[12px] rounded-[10px] border border-[#E0E0E0] body-text2-400 text-foreground focus:outline-none focus:border-primary bg-white"
               />
-            </div>
-
-            {/* Legend */}
-            <div className="flex items-center justify-between text-[13px]">
-              <div>
-                <p className="text-foreground font-medium">
-                  {userContribution} USDC
+              {validationError && (
+                <p className="text-[#FF6B6B] text-[12px] mt-[4px]">
+                  {validationError}
                 </p>
-                <p className="text-[#959595]">Your contribution</p>
-              </div>
-              <div className="text-right">
-                <p className="text-foreground font-medium">
-                  {goalAmount} USDC
-                </p>
-                <p className="text-[#959595]">Goal</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Contribute form */}
-          <div className="rounded-[15px] bg-[#F6F6F6] p-[20px]">
-            <h4 className="font-h4-400 text-foreground mb-[4px]">
-              Contribute to {game.title}
-            </h4>
-            <p className="body-label-400 text-[#959595] mb-[12px]">
-              Amount of USDC
-            </p>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => {
-                setAmount(e.target.value);
-                setValidationError(null);
-              }}
-              placeholder="Enter the amount"
-              min="0"
-              className="w-full px-[16px] py-[12px] rounded-[10px] border border-[#E0E0E0] body-text2-400 text-foreground focus:outline-none focus:border-primary bg-white"
-            />
-            {validationError && (
-              <p className="text-[#FF6B6B] text-[12px] mt-[4px]">
-                {validationError}
+              )}
+              <p className="body-label-400 text-[#959595] mt-[8px]">
+                Your balance: {balance} USDC
               </p>
-            )}
-            <p className="body-label-400 text-[#959595] mt-[8px]">
-              Your balance: {balance} USDC
-            </p>
-            <Button
-              variant="gradient"
-              className="w-full mt-[12px]"
-              onClick={handleContribute}
-              disabled={contributing || !isAuthenticated}
-            >
-              {contributing ? "Contributing..." : "Contribute"}
-            </Button>
+              <Button
+                className="w-full mt-[12px] bg-[#0DA885]"
+                onClick={handleContribute}
+                disabled={contributing || !isAuthenticated}
+              >
+                {contributing ? "Contributing..." : "Contribute"}
+              </Button>
+            </div>
           </div>
 
           {/* Milestones */}
-          <div className="rounded-[15px] bg-[#F6F6F6] p-[20px]">
+          <div className="rounded-[15px] bg-white p-[20px]">
             <h4 className="font-h4-400 text-foreground mb-[16px]">
               Milestones
             </h4>
@@ -420,21 +417,24 @@ export default function GameDetail() {
                       {milestone.title}
                     </p>
                     {milestone.description && (
-                      <ul className="mt-[4px] space-y-[2px]">
-                        {milestone.description
-                          .split(".")
-                          .filter(Boolean)
-                          .map((item, i) => (
-                            <li
-                              key={i}
-                              className="body-label-400 text-[#959595] flex items-start gap-[4px]"
-                            >
-                              <span className="mt-[6px] w-[4px] h-[4px] rounded-full bg-[#959595] flex-shrink-0" />
-                              {item.trim()}.
-                            </li>
-                          ))}
-                      </ul>
+                      <div
+                        className="
+                        body-label-400 text-[#959595] mt-[4px]
+                        [&>p]:mb-[4px]
+                        [&>ul]:mt-[4px] [&>ul]:pl-[14px] [&>ul]:list-none
+                        [&>ul>li]:flex [&>ul>li]:gap-[6px] [&>ul>li]:items-start [&>ul>li]:mb-[2px]
+                        [&>ul>li::before]:content-[''] 
+                        [&>ul>li::before]:w-[4px] 
+                        [&>ul>li::before]:h-[4px] 
+                        [&>ul>li::before]:rounded-full 
+                      [&>ul>li::before]:bg-[#959595] 
+                        [&>ul>li::before]:flex-shrink-0"
+                        dangerouslySetInnerHTML={{
+                          __html: milestone.description,
+                        }}
+                      />
                     )}
+
                     {milestone.completed && milestone.txHash && (
                       <a
                         href={`https://bscscan.com/tx/${milestone.txHash}`}

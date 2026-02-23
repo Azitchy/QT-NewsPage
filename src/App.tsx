@@ -39,7 +39,6 @@ import SettingsIndex from "@/screens/settings/Index";
 import CreateConnection from "@/screens/create-connection/Index";
 import DashboardLayout from "@/layouts/DashboardLayout";
 
-
 function App() {
   return (
     <TooltipProvider>
@@ -56,7 +55,7 @@ function App() {
 
           {/* Dashboard — wrapped with DashboardLayout for cross-tab data caching */}
           <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route >
+            <Route>
               <Route index element={<Navigate to="portfolio" replace />} />
               <Route path="portfolio" element={<Portfolio />} />
               <Route path="income" element={<Income />} />
@@ -64,7 +63,10 @@ function App() {
           </Route>
 
           {/* Connections */}
-          <Route path="/connections" element={<Page title="Connections" showOutlet />}>
+          <Route
+            path="/connections"
+            element={<Page title="Connections" showOutlet />}
+          >
             <Route index element={<Navigate to="token-connection" replace />} />
             <Route path="token-connection" element={<TokenConnection />} />
             <Route path="nft-connection" element={<NftConnection />} />
@@ -72,9 +74,18 @@ function App() {
           </Route>
 
           {/* Proposals */}
-          <Route path="/proposals" element={<Page title="Proposals" showOutlet />}>
-            <Route index element={<Navigate to="proposal-participate" replace />} />
-            <Route path="proposal-participate" element={<ProposalParticipate />} />
+          <Route
+            path="/proposals"
+            element={<Page title="Proposals" showOutlet />}
+          >
+            <Route
+              index
+              element={<Navigate to="proposal-participate" replace />}
+            />
+            <Route
+              path="proposal-participate"
+              element={<ProposalParticipate />}
+            />
             <Route path="proposal-initiated" element={<ProposalInitiated />} />
             <Route path="recovery-plan" element={<RecoveryPlan />} />
             <Route path="agf-contribution" element={<AgfContribution />} />
@@ -84,9 +95,18 @@ function App() {
           </Route>
 
           {/* Trading */}
-          <Route path="/trading" element={<Page title="Trading tools" showOutlet />}>
-            <Route index element={<Navigate to="atm-cross-chain-transfer" replace />} />
-            <Route path="atm-cross-chain-transfer" element={<AtmCrossChainTransfer />} />
+          <Route
+            path="/trading"
+            element={<Page title="Trading tools" showOutlet />}
+          >
+            <Route
+              index
+              element={<Navigate to="atm-cross-chain-transfer" replace />}
+            />
+            <Route
+              path="atm-cross-chain-transfer"
+              element={<AtmCrossChainTransfer />}
+            />
           </Route>
 
           {/* Avatar — Lucy/Alex manage their own sidebar + sub-routes */}
@@ -97,7 +117,7 @@ function App() {
           </Route>
 
           {/* Games */}
-          <Route path="/games" element={<Page title="Games" showOutlet />}>
+          <Route path="/games">
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<GamesDashboard />} />
             <Route path="games" element={<Games />} />
@@ -107,7 +127,10 @@ function App() {
           </Route>
 
           {/* Settings */}
-          <Route path="/settings" element={<Page title="Settings" showOutlet />}>
+          <Route
+            path="/settings"
+            element={<Page title="Settings" showOutlet />}
+          >
             <Route index element={<SettingsIndex />} />
           </Route>
         </Route>
@@ -121,5 +144,4 @@ function App() {
   );
 }
 
-export default App
-
+export default App;

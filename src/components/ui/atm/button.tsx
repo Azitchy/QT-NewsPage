@@ -20,6 +20,7 @@ const buttonVariants = cva(
         gradient:
           "bg-[linear-gradient(315deg,#41CD8B_0%,#C2E043_100%)] text-primary-foreground",
         disabled: "bg-[#E5E5E5] text-white cursor-not-allowed",
+        destructive: "bg-[#FE5572] text-white",
       },
       size: {
         default: "px-6 py-3",
