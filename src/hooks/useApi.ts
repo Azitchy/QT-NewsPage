@@ -77,10 +77,6 @@ export const useGameContributed = () => {
   return useApiCall(gameApi.gameContributed);
 };
 
-export const useGetStars = () => {
-  return useApiCall(gameApi.getStars);
-};
-
 // Web API hooks
 export const useFetchNewsList = () => {
   return useApiCall<webApi.NewsListResponse, { pageIndex: number; pageSize: number; type: string }>(

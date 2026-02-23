@@ -1,5 +1,4 @@
-import type { Game } from "@/lib/gameApi";
-import type { RankingItem } from "@/lib/webApi";
+import type { Game, RankingItem } from "@/lib/webappservice";
 
 export type GameDisplayStatus = "Ready to play" | "Contribution" | "Development";
 

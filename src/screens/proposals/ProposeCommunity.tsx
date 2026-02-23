@@ -170,69 +170,7 @@ export default function ProposeCommunity() {
   const canSubmit = title.trim() && content.trim() && !submitting;
 
   /* ── Connect wallet screen ── */
-  if (!isConnected) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center space-y-4 max-w-md">
-          <div className="w-16 h-16 bg-teal-50 rounded-full flex items-center justify-center mx-auto">
-            <Wallet className="w-8 h-8 text-primary" />
-          </div>
-          <h3 className="font-h4-600 text-foreground">Connect Wallet</h3>
-          <p className="body-text2-400 text-[#959595]">
-            Please connect your wallet to create a proposal
-          </p>
-          <button
-            onClick={openModal}
-            className="px-6 py-3 bg-primary hover:bg-primary/90 text-white rounded-lg button-text-500 transition-colors flex items-center gap-2 mx-auto cursor-pointer"
-          >
-            <Wallet className="w-5 h-5" />
-            Connect Wallet
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  /* ── Auth screen ── */
-  if (!isAuthenticated) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center space-y-4 max-w-md">
-          <div className="w-16 h-16 bg-teal-50 rounded-full flex items-center justify-center mx-auto">
-            <Wallet className="w-8 h-8 text-primary" />
-          </div>
-          <h3 className="font-h4-600 text-foreground">
-            {isAuthenticating ? "Authenticating..." : "Sign to Continue"}
-          </h3>
-          <p className="body-text2-400 text-[#959595]">
-            {isAuthenticating
-              ? "Please sign the message in your wallet"
-              : "Sign a message to create a proposal"}
-          </p>
-          {authError && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-              <p className="text-sm text-red-800">{authError}</p>
-            </div>
-          )}
-          {!isAuthenticating && (
-            <button
-              onClick={authenticate}
-              className="px-6 py-3 bg-primary hover:bg-primary/90 text-white rounded-lg button-text-500 transition-colors flex items-center gap-2 mx-auto cursor-pointer"
-            >
-              <Wallet className="w-5 h-5" />
-              Sign Message
-            </button>
-          )}
-          {isAuthenticating && (
-            <div className="flex items-center justify-center gap-2">
-              <Loader2 className="w-5 h-5 animate-spin text-primary" />
-              <span className="body-text2-400 text-[#959595]">Waiting for signature...</span>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
+  if (!isConnected || !isAuthenticated) return null;
 
   /* ---------- Render ---------- */
   return (

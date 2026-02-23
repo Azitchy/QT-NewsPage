@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useUnified } from "@/context/Context";
 import { useDashboardCache } from "@/context/DashboardCacheContext";
 import type { IncomeRecord, WithdrawalRecord } from "@/hooks/useWebAppService";
-import { Loader2, Copy, ChevronLeft, ChevronRight, Info } from "lucide-react";
+import { Copy, ChevronLeft, ChevronRight, Info } from "lucide-react";
 import { Button } from "@/components/ui/atm/button";
 import { Toast } from "@/components/ui/atm/toastMessage";
 import { LoadingAnimation } from "@/components/ui/atm/loadingAnimation";
@@ -67,14 +67,6 @@ function IncomeTable({
     setCurrentPage(1);
   }, [records.length]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-[60px]">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-[60px] gap-[12px]">
@@ -92,16 +84,21 @@ function IncomeTable({
 
   if (records.length === 0) {
     return (
-      <div className="flex items-center justify-center py-[60px]">
-        <p className="body-text2-400 text-[#959595]">
-          No income records found
-        </p>
-      </div>
+      <>
+        <LoadingAnimation isVisible={loading} />
+        <div className="flex items-center justify-center py-[60px]">
+          <p className="body-text2-400 text-[#959595]">
+            No income records found
+          </p>
+        </div>
+      </>
     );
   }
 
   return (
-    <div>
+    <>
+      <LoadingAnimation isVisible={loading} />
+      <div>
       {/* Header */}
       <div className="grid grid-cols-5 py-[14px] border-b border-[#F0F0F0]">
         <p className="body-text2-500 text-[#959595]">Date</p>
@@ -202,6 +199,7 @@ function IncomeTable({
         </div>
       )}
     </div>
+    </>
   );
 }
 
@@ -230,14 +228,6 @@ function WithdrawalTable({
     setCurrentPage(1);
   }, [records.length]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-[60px]">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-[60px] gap-[12px]">
@@ -255,16 +245,21 @@ function WithdrawalTable({
 
   if (records.length === 0) {
     return (
-      <div className="flex items-center justify-center py-[60px]">
-        <p className="body-text2-400 text-[#959595]">
-          No withdrawal records found
-        </p>
-      </div>
+      <>
+        <LoadingAnimation isVisible={loading} />
+        <div className="flex items-center justify-center py-[60px]">
+          <p className="body-text2-400 text-[#959595]">
+            No withdrawal records found
+          </p>
+        </div>
+      </>
     );
   }
 
   return (
-    <div>
+    <>
+      <LoadingAnimation isVisible={loading} />
+      <div>
       {/* Header */}
       <div className="grid grid-cols-4 py-[14px] border-b border-[#F0F0F0]">
         <p className="body-text2-500 text-[#959595]">Date</p>
@@ -344,6 +339,7 @@ function WithdrawalTable({
         </div>
       )}
     </div>
+    </>
   );
 }
 
@@ -471,19 +467,7 @@ const Income = () => {
     }
   };
 
-  // Show spinner while auto-auth is in progress
-  if (!isConnected || !isAuthenticated) {
-    return (
-      <div className="flex items-center justify-center min-h-[500px]">
-        <div className="text-center space-y-4">
-          <Loader2 className="w-10 h-10 animate-spin text-primary mx-auto" />
-          <p className="body-text1-400 text-[#959595]">
-            Connecting wallet...
-          </p>
-        </div>
-      </div>
-    );
-  }
+  if (!isConnected || !isAuthenticated) return null;
 
   return (
     <div className="space-y-[20px]">
@@ -496,7 +480,7 @@ const Income = () => {
         />
       )}
 
-      {/* Loading overlay */}
+      {/* Loading overlays – only show full-screen spinner for active withdrawal */}
       <LoadingAnimation isVisible={isWithdrawing} />
 
       {/* Confirmation modal */}
@@ -521,9 +505,7 @@ const Income = () => {
           </p>
 
           {isLoadingBalance ? (
-            <div className="mb-[16px]">
-              <Loader2 className="w-10 h-10 animate-spin inline text-white" />
-            </div>
+            <div className="mb-[16px] h-10" />
           ) : balanceError ? (
             <div className="mb-[16px]">
               <p className="body-text2-400 text-red-200 mb-[8px]">
@@ -617,14 +599,7 @@ const Income = () => {
               parseFloat(withdrawAmount) <= 0
             }
           >
-            {isWithdrawing ? (
-              <span className="flex items-center gap-[8px]">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Withdrawing...
-              </span>
-            ) : (
-              "Withdraw"
-            )}
+            {isWithdrawing ? "Withdrawing..." : "Withdraw"}
           </Button>
 
           {/* Error / Success */}

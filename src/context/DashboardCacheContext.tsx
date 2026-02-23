@@ -3,9 +3,8 @@ import {
   webAPIService,
   connectionService,
   incomeService,
-} from '@/lib/webAppService';
-import { authService } from '@/lib/webAppService';
-import type { OverviewData, IncomeRecord, WithdrawalRecord } from '@/lib/webAppService';
+} from '@/lib/webappservice';
+import type { OverviewData, IncomeRecord, WithdrawalRecord } from '@/lib/webappservice';
 
 /* ============================================================================
    TYPES
@@ -62,6 +61,9 @@ interface DashboardCacheContextType {
   // Imported tokens (persist across navigations)
   importedTokens: TokenRowData[];
   setImportedTokens: React.Dispatch<React.SetStateAction<TokenRowData[]>>;
+
+  // Clear everything on logout
+  clearAllCache: () => void;
 }
 
 const DashboardCacheContext = createContext<DashboardCacheContextType | undefined>(undefined);
@@ -297,6 +299,25 @@ export const DashboardCacheProvider: React.FC<{ children: ReactNode }> = ({ chil
     incomeFetchedAt.current = 0;
   }, []);
 
+  const clearAllCache = useCallback(() => {
+    // Clear React in-memory state
+    setPortfolioData(null);
+    portfolioFetchedAt.current = 0;
+    portfolioFetching.current = false;
+    setPortfolioError(null);
+
+    setIncomeData(null);
+    incomeFetchedAt.current = 0;
+    incomeFetching.current = false;
+    setIncomeError(null);
+
+    setImportedTokens([]);
+
+    // Clear the encrypted localStorage cache so a different wallet
+    // never sees the previous user's income / withdrawal records.
+    incomeService.clearCache();
+  }, []);
+
   const contextValue: DashboardCacheContextType = {
     portfolioData,
     portfolioLoading,
@@ -313,6 +334,8 @@ export const DashboardCacheProvider: React.FC<{ children: ReactNode }> = ({ chil
 
     importedTokens,
     setImportedTokens,
+
+    clearAllCache,
   };
 
   return (

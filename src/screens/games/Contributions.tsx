@@ -2,8 +2,8 @@ import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Wallet, ExternalLink } from "lucide-react";
 import { useUnified } from "@/context/Context";
-import { useGetAllGames } from "@/hooks/useApi";
-import type { Game } from "@/lib/gameApi";
+import { useGetAllGames } from "@/hooks/useWebAppService";
+import type { Game } from "@/hooks/useWebAppService";
 import ContributionChart from "./components/ContributionChart";
 import { mapGameStatus, getStatusBadgeClasses } from "./types";
 import type { GameMilestone } from "./types";
@@ -31,28 +31,7 @@ export default function Contributions() {
     }
   }, [contributedGames, selectedGame]);
 
-  if (!isConnected) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center space-y-4 max-w-md">
-          <div className="w-16 h-16 bg-teal-50 rounded-full flex items-center justify-center mx-auto">
-            <Wallet className="w-8 h-8 text-primary" />
-          </div>
-          <h3 className="font-h4-600 text-foreground">Connect Wallet</h3>
-          <p className="body-text2-400 text-[#959595]">
-            Connect your wallet to view your game contributions
-          </p>
-          <button
-            onClick={openModal}
-            className="px-6 py-3 bg-primary hover:bg-primary/90 text-white rounded-lg button-text-500 transition-colors flex items-center gap-2 mx-auto cursor-pointer"
-          >
-            <Wallet className="w-5 h-5" />
-            Connect Wallet
-          </button>
-        </div>
-      </div>
-    );
-  }
+  if (!isConnected) return null;
 
   if (loading) {
     return (

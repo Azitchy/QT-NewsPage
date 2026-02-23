@@ -1,8 +1,12 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useUnified } from "@/context/Context";
 import { useDashboardCache } from "@/context/DashboardCacheContext";
 import type { TokenRowData } from "@/context/DashboardCacheContext";
-import { useUpdateNickname } from "@/hooks/useWebAppService";
+import {
+  useUpdateNickname,
+  useGetCurrencyList,
+  useFetchCoinPriceTrend,
+} from "@/hooks/useWebAppService";
 import type { OverviewData } from "@/hooks/useWebAppService";
 import {
   Loader2,
@@ -13,6 +17,8 @@ import {
   PenLine,
   InfoIcon,
   SlidersHorizontal,
+  Search,
+  Mic,
 } from "lucide-react";
 import { Dropdown } from "@/components/ui/atm/dropdown";
 import {
@@ -26,6 +32,9 @@ import { PieChart, Pie, Cell } from "recharts";
 import { ConfirmationModal } from "@/components/ui/atm/confirmationModal";
 import { LoadingAnimation } from "@/components/ui/atm/loadingAnimation";
 import { Toast } from "@/components/ui/atm/toastMessage";
+import AGTRecord from "./portfolio/AGTRecord";
+import { Button } from "@/components/ui/atm/button";
+import AddCoinsModal from "./portfolio/AddCoinsModal";
 
 /* ============================================================================
    DONUT CHART COMPONENT
@@ -143,7 +152,7 @@ function SparklineChart({
     .map((p) => p)
     .join(" L")} L${lastX},${height} Z`;
 
-  const gradientId = `sparkGrad-${color.replace("#", "")}-${Math.random().toString(36).substring(7)}`;
+  const gradientId = `sparkGrad-${color.replace("#", "")}`;
 
   return (
     <svg
@@ -260,7 +269,8 @@ interface WatchlistCoin {
 }
 
 function CoinWatchlistCard({ coin }: { coin: WatchlistCoin }) {
-  const isPositive = coin.change >= 0;
+  const safeChange = isNaN(coin.change) ? 0 : coin.change;
+  const isPositive = safeChange >= 0;
   return (
     <div className="bg-white rounded-[10px] border border-[#EBEBEB] h-57">
       <div className="flex items-center justify-between mb-[12px] p-4">
@@ -288,7 +298,7 @@ function CoinWatchlistCard({ coin }: { coin: WatchlistCoin }) {
               }`}
             >
               {isPositive ? "+" : ""}
-              {coin.change.toFixed(1)}%
+              {safeChange.toFixed(1)}%
             </p>
           </div>
           <div className="flex items-end gap-[4px]">
@@ -299,7 +309,7 @@ function CoinWatchlistCard({ coin }: { coin: WatchlistCoin }) {
               }`}
             >
               {isPositive ? "+" : ""}
-              {(coin.change * 0.3).toFixed(1)}%
+              {(safeChange * 0.3).toFixed(1)}%
             </p>
           </div>
         </div>
@@ -323,116 +333,6 @@ function CoinWatchlistCard({ coin }: { coin: WatchlistCoin }) {
           </span>
         </div>
         <span className="body-label-400 text-[#959595]">This Week</span>
-      </div>
-    </div>
-  );
-}
-
-/* ============================================================================
-   IMPORT TOKEN MODAL
-   ============================================================================ */
-
-function ImportTokenModal({
-  isOpen,
-  onClose,
-  onImport,
-  existingSymbols,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  onImport: (token: { symbol: string; name: string; icon: string }) => void;
-  existingSymbols: string[];
-}) {
-  const [contractAddress, setContractAddress] = useState("");
-  const [tokenSymbol, setTokenSymbol] = useState("");
-  const [tokenName, setTokenName] = useState("");
-
-  if (!isOpen) return null;
-
-  const handleImport = () => {
-    if (!tokenSymbol.trim()) return;
-    if (existingSymbols.includes(tokenSymbol.toUpperCase())) {
-      alert("Token already exists in your list");
-      return;
-    }
-    onImport({
-      symbol: tokenSymbol.toUpperCase(),
-      name: tokenName || tokenSymbol.toUpperCase(),
-      icon: `https://ui-avatars.com/api/?name=${tokenSymbol}&background=0DAEB9&color=fff&size=36`,
-    });
-    setContractAddress("");
-    setTokenSymbol("");
-    setTokenName("");
-    onClose();
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-[15px] p-[24px] w-[420px] max-w-[90vw]">
-        <div className="flex items-center justify-between mb-[20px]">
-          <h3 className="font-h4-600 text-foreground">Import Token</h3>
-          <button
-            onClick={onClose}
-            className="cursor-pointer p-1 hover:bg-gray-100 rounded"
-          >
-            <X className="w-5 h-5 text-[#959595]" />
-          </button>
-        </div>
-
-        <div className="space-y-[16px]">
-          <div>
-            <label className="body-label-400 text-[#959595] block mb-[6px]">
-              Contract Address
-            </label>
-            <input
-              type="text"
-              value={contractAddress}
-              onChange={(e) => setContractAddress(e.target.value)}
-              placeholder="0x..."
-              className="w-full px-[12px] py-[10px] rounded-[10px] border border-[#E0E0E0] body-text2-400 text-foreground focus:outline-none focus:border-primary"
-            />
-          </div>
-          <div>
-            <label className="body-label-400 text-[#959595] block mb-[6px]">
-              Token Symbol
-            </label>
-            <input
-              type="text"
-              value={tokenSymbol}
-              onChange={(e) => setTokenSymbol(e.target.value)}
-              placeholder="e.g. DOGE"
-              className="w-full px-[12px] py-[10px] rounded-[10px] border border-[#E0E0E0] body-text2-400 text-foreground focus:outline-none focus:border-primary"
-            />
-          </div>
-          <div>
-            <label className="body-label-400 text-[#959595] block mb-[6px]">
-              Token Name
-            </label>
-            <input
-              type="text"
-              value={tokenName}
-              onChange={(e) => setTokenName(e.target.value)}
-              placeholder="e.g. Dogecoin"
-              className="w-full px-[12px] py-[10px] rounded-[10px] border border-[#E0E0E0] body-text2-400 text-foreground focus:outline-none focus:border-primary"
-            />
-          </div>
-        </div>
-
-        <div className="flex gap-[12px] mt-[24px]">
-          <button
-            onClick={onClose}
-            className="flex-1 px-4 py-[10px] rounded-[10px] border border-[#E0E0E0] body-text2-500 text-[#959595] hover:bg-gray-50 cursor-pointer transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleImport}
-            disabled={!tokenSymbol.trim()}
-            className="flex-1 px-4 py-[10px] rounded-[10px] bg-primary text-white body-text2-500 hover:bg-primary/90 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Import
-          </button>
-        </div>
       </div>
     </div>
   );
@@ -468,13 +368,46 @@ export default function Portfolio() {
 
   // API hooks (only for actions, not data fetching)
   const updateNicknameHook = useUpdateNickname();
+  const {
+    data: currencyListData,
+    execute: fetchCurrencyList,
+  } = useGetCurrencyList();
+  const {
+    execute: fetchCoinPriceTrend,
+  } = useFetchCoinPriceTrend();
+
+  // Derive importable tokens from the currency list API
+  // API returns CoinCurrency objects with: baseCurrency, currencyName, currencyLogo, nowPrice, pricePlaces
+  const walletImportTokens = useMemo(() => {
+    if (!currencyListData || !Array.isArray(currencyListData)) return [];
+    return currencyListData
+      .filter(
+        (c: any) =>
+          c.baseCurrency &&
+          !["LUCA", "USDC", "USDT", "BNB"].includes(c.baseCurrency.toUpperCase()),
+      )
+      .map((c: any) => ({
+        symbol: c.baseCurrency || "",
+        name: c.currencyName || c.baseCurrency || "",
+        icon:
+          c.currencyLogo ||
+          `https://ui-avatars.com/api/?name=${c.baseCurrency}&background=0DAEB9&color=fff&size=36`,
+        balanceUsd: "0.00",
+        balance: "0.00",
+        change24h: 0,
+        price: String(
+          c.nowPrice != null
+            ? Number(c.nowPrice).toFixed(c.pricePlaces ?? 4)
+            : "0.00",
+        ),
+      }));
+  }, [currencyListData]);
 
   // Local UI state only (not data)
   const [sortOrder, setSortOrder] = useState("balance-desc");
   const [isEditingName, setIsEditingName] = useState(false);
   const [editNameValue, setEditNameValue] = useState("");
   const [isSavingName, setIsSavingName] = useState(false);
-  const [showImportModal, setShowImportModal] = useState(false);
   const [addressCopied, setAddressCopied] = useState(false);
   const editInputRef = useRef<HTMLInputElement>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -484,6 +417,12 @@ export default function Portfolio() {
   } | null>(null);
   const [selectedToken, setSelectedToken] = useState<string | null>(null);
   const [isRemoving, setIsRemoving] = useState(false);
+  const [showAGTHistory, setShowAGTHistory] = useState(false);
+
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedImports, setSelectedImports] = useState<string[]>([]);
+  const [isImporting, setIsImporting] = useState(false);
 
   // Derive data from cache
   const overview = portfolioData?.overview ?? null;
@@ -500,6 +439,66 @@ export default function Portfolio() {
   const totalConnections = portfolioData?.totalConnections ?? 0;
   const userName = portfolioData?.userName ?? "User";
   const isLoading = portfolioLoading && !portfolioData;
+
+  const filteredImportTokens = walletImportTokens.filter(
+    (t) =>
+      t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      t.symbol.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  const handleImportTokens = async () => {
+    if (selectedImports.length === 0) return;
+
+    setIsImporting(true);
+
+    try {
+      await new Promise((res) => setTimeout(res, 1200));
+
+      // filter out duplicates
+      const tokensToAdd = walletImportTokens
+        .filter(
+          (t) =>
+            selectedImports.includes(t.symbol) &&
+            !existingSymbols.includes(t.symbol.toUpperCase()),
+        )
+        .map((t) => ({
+          icon: t.icon,
+          symbol: t.symbol,
+          name: t.name,
+          balance: t.balance,
+          balanceUsd: t.balanceUsd,
+          price: t.price,
+          change24h: t.change24h,
+          isDefault: false,
+        }));
+
+      if (tokensToAdd.length === 0) {
+        setToast({
+          message: "Token already exists in your list",
+          type: "error",
+        });
+        return;
+      }
+
+      setImportedTokens((prev) => [...prev, ...tokensToAdd]);
+
+      setToast({
+        message: "Tokens imported successfully",
+        type: "success",
+      });
+
+      setSelectedImports([]);
+      setSearchTerm("");
+      setIsImportModalOpen(false);
+    } catch {
+      setToast({
+        message: "Failed to import tokens",
+        type: "error",
+      });
+    } finally {
+      setIsImporting(false);
+    }
+  };
 
   // Truncate address
   const truncatedAddress = address
@@ -576,46 +575,177 @@ export default function Portfolio() {
     setImportedTokens((prev) => [...prev, newToken]);
   };
 
+  // Watchlist coin price trends state
+  const [watchlistPriceTrends, setWatchlistPriceTrends] = useState<
+    Record<string, number[]>
+  >({});
+  const [watchlistPriceInfo, setWatchlistPriceInfo] = useState<
+    Record<string, { nowPrice: number; change: number }>
+  >({});
+
+  // Build watchlist coins from currency list (nowPrice) + price trend (sparkline + change %)
+  // API note: BTC is listed as "BTCB" in baseCurrency; trend endpoint uses "BTCB" too
+  const watchlistCoins: WatchlistCoin[] = useMemo(() => {
+    const safeNum = (v: any, fallback = 0) => {
+      const n = Number(v ?? fallback);
+      return isNaN(n) ? fallback : n;
+    };
+    const safeChange = (v: any) => {
+      const n = parseFloat(String(v ?? "0"));
+      return isNaN(n) ? 0 : n;
+    };
+
+    const defaultCoins: WatchlistCoin[] = [];
+
+    if (!currencyListData || !Array.isArray(currencyListData)) return defaultCoins;
+
+    // LUCA — baseCurrency: "LUCA"
+    const lucaData = currencyListData.find(
+      (c: any) => c.baseCurrency?.toUpperCase() === "LUCA",
+    );
+    if (lucaData) {
+      // Price: currency list nowPrice is primary; trend nowPrice as fallback
+      const lucaPrice = safeNum(lucaData.nowPrice) || safeNum(watchlistPriceInfo["LUCA"]?.nowPrice) || safeNum(overview?.price);
+      const lucaChange = safeChange(watchlistPriceInfo["LUCA"]?.change ?? overview?.pre);
+      defaultCoins.push({
+        symbol: "LUCA",
+        name: lucaData.currencyName || "LUCA",
+        price: lucaPrice > 0 ? lucaPrice.toFixed(lucaData.pricePlaces ?? 4) : "0.00",
+        btcPrice: "0.00000000",
+        change: lucaChange,
+        sparkData: watchlistPriceTrends["LUCA"] || [],
+        icon: lucaData.currencyLogo || "/img/currency/luca.png",
+      });
+    }
+
+    // BTC — baseCurrency: "BTCB" in the API; show as "BTC" in UI
+    const btcData = currencyListData.find(
+      (c: any) => c.baseCurrency?.toUpperCase() === "BTCB" || c.baseCurrency?.toUpperCase() === "BTC",
+    );
+    if (btcData) {
+      const btcPrice = safeNum(btcData.nowPrice);
+      // Trend is keyed by the actual baseCurrency from the API (e.g. "BTCB")
+      const trendKey = btcData.baseCurrency as string;
+      const btcChange = safeChange(watchlistPriceInfo[trendKey]?.change);
+      defaultCoins.push({
+        symbol: "BTC",
+        name: "Bitcoin",
+        price: btcPrice > 0 ? btcPrice.toFixed(btcData.pricePlaces ?? 2) : "0.00",
+        btcPrice: "1.00000000",
+        change: btcChange,
+        sparkData: watchlistPriceTrends[trendKey] || [],
+        icon: btcData.currencyLogo || "/img/currency/btc.png",
+      });
+    }
+
+    // ETH — baseCurrency: "ETH"
+    const ethData = currencyListData.find(
+      (c: any) => c.baseCurrency?.toUpperCase() === "ETH",
+    );
+    if (ethData) {
+      const ethPrice = safeNum(ethData.nowPrice);
+      const btcRef = safeNum(btcData?.nowPrice, 1) || 1;
+      const ethChange = safeChange(watchlistPriceInfo["ETH"]?.change);
+      defaultCoins.push({
+        symbol: "ETH",
+        name: ethData.currencyName || "Ethereum",
+        price: ethPrice > 0 ? ethPrice.toFixed(ethData.pricePlaces ?? 4) : "0.00",
+        btcPrice: (ethPrice / btcRef).toFixed(8),
+        change: ethChange,
+        sparkData: watchlistPriceTrends["ETH"] || [],
+        icon: ethData.currencyLogo || "/img/currency/eth.png",
+      });
+    }
+
+    return defaultCoins;
+  }, [overview, currencyListData, watchlistPriceTrends, watchlistPriceInfo]);
+
+  const [coins, setCoins] = useState<WatchlistCoin[]>([]);
+
   // Fetch data on auth (uses cache — won't re-fetch if data is fresh)
   useEffect(() => {
     if (!isAuthenticated || !walletProvider) return;
     fetchPortfolioData(walletProvider, getUserBalance);
-  }, [isAuthenticated, walletProvider, fetchPortfolioData, getUserBalance]);
+    fetchCurrencyList();
+  }, [isAuthenticated, walletProvider, fetchPortfolioData, getUserBalance, fetchCurrencyList]);
 
-  // Generate watchlist data
-  const watchlistCoins: WatchlistCoin[] = [
-    {
-      symbol: "LUCA",
-      name: "LUCA",
-      price:
-        overview?.price != null ? Number(overview.price).toFixed(5) : "1.51365",
-      btcPrice: "0.00000541",
-      change: parseFloat(String(overview?.pre || "-8.8")),
-      sparkData: [1.6, 1.55, 1.52, 1.48, 1.51, 1.49, 1.53, 1.51],
-      icon: "/img/currency/luca.png",
-    },
-    {
-      symbol: "BTC",
-      name: "Bitcoin",
-      price: "42746.2",
-      btcPrice: "1.00000000",
-      change: -6.3,
-      sparkData: [44000, 43500, 43000, 42500, 42800, 42600, 42700, 42746],
-      icon: "/img/currency/btc.png",
-    },
-    {
-      symbol: "ETH",
-      name: "Ethereum",
-      price: "2545.76",
-      btcPrice: "0.05960898",
-      change: 0.3,
-      sparkData: [2520, 2530, 2540, 2535, 2545, 2550, 2548, 2545],
-      icon: "/img/currency/eth.png",
-    },
-  ];
+  // Fetch price trends for watchlist coins — run once per currency list load
+  // Uses actual baseCurrency from API (e.g. "BTCB" not "BTC") as the trend key
+  const priceTrendFetchedRef = useRef(false);
+  useEffect(() => {
+    if (!isAuthenticated) priceTrendFetchedRef.current = false;
+  }, [isAuthenticated]);
+  useEffect(() => {
+    if (!isAuthenticated || !currencyListData || priceTrendFetchedRef.current) return;
+    priceTrendFetchedRef.current = true;
 
+    // Resolve actual API symbols from the currency list so the trend key matches
+    const resolveSymbol = (uiSymbol: string) => {
+      if (!Array.isArray(currencyListData)) return uiSymbol;
+      // For BTC, the API uses "BTCB"
+      const match = currencyListData.find(
+        (c: any) => c.baseCurrency?.toUpperCase() === uiSymbol.toUpperCase()
+          || (uiSymbol === "BTC" && c.baseCurrency?.toUpperCase() === "BTCB"),
+      );
+      return (match?.baseCurrency as string) ?? uiSymbol;
+    };
+
+    const uiSymbols = ["LUCA", "BTC", "ETH"];
+    uiSymbols.forEach(async (uiSymbol) => {
+      const apiSymbol = resolveSymbol(uiSymbol);
+      try {
+        const trendData = await fetchCoinPriceTrend({
+          coinCurrency: apiSymbol,
+          type: "1",
+        });
+        if (trendData?.y && Array.isArray(trendData.y)) {
+          setWatchlistPriceTrends((prev) => ({
+            ...prev,
+            // Key by API symbol so useMemo can look it up with the same key
+            [apiSymbol]: trendData.y.map((val: any) => {
+              const n = Number(val ?? 0);
+              return isNaN(n) ? 0 : n;
+            }),
+          }));
+        }
+        if (trendData?.info) {
+          const parsedPrice = Number(trendData.info.nowPrice ?? 0);
+          const parsedChange = parseFloat(String(trendData.info.pre ?? "0"));
+          setWatchlistPriceInfo((prev) => ({
+            ...prev,
+            [apiSymbol]: {
+              nowPrice: isNaN(parsedPrice) ? 0 : parsedPrice,
+              change: isNaN(parsedChange) ? 0 : parsedChange,
+            },
+          }));
+        }
+      } catch {
+        // Silently handle — sparkline will just be empty
+      }
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, currencyListData]);
+
+  // Sync watchlist coins into coins state whenever data updates (price trends, currency list, overview)
+  useEffect(() => {
+    if (watchlistCoins.length > 0) {
+      setCoins(watchlistCoins);
+    }
+  }, [watchlistCoins]);
+  const [isCoinModalOpen, setIsCoinModalOpen] = useState(false);
+  const [coinToast, setCoinToast] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
+
+  const handleSaveCoins = (updatedCoins: WatchlistCoin[]) => {
+    setCoins(updatedCoins);
+    setIsCoinModalOpen(false);
+  };
   // Combine API tokens + imported tokens
   const allTokens = [...tokens, ...importedTokens];
+
+  const existingSymbols = allTokens.map((t) => t.symbol.toUpperCase());
 
   // Total tokens balance
   const totalTokensBalance = allTokens.reduce(
@@ -658,364 +788,415 @@ export default function Portfolio() {
     }
   };
 
-  // Connect wallet screen
-  if (!isConnected) {
-    return (
-      <div className="flex items-center justify-center min-h-[500px]">
-        <div className="text-center space-y-4 max-w-md">
-          <div className="w-16 h-16 bg-teal-50 rounded-full flex items-center justify-center mx-auto">
-            <Wallet className="w-8 h-8 text-primary" />
-          </div>
-          <h3 className="font-h4-600 text-foreground">Connect Wallet</h3>
-          <p className="body-text2-400 text-[#959595]">
-            Please connect your wallet to view your portfolio dashboard
-          </p>
-          <button
-            onClick={openModal}
-            className="px-6 py-3 bg-primary hover:bg-primary/90 text-white rounded-lg button-text-500 transition-colors flex items-center gap-2 mx-auto cursor-pointer"
-          >
-            <Wallet className="w-5 h-5" />
-            Connect Wallet
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // Authenticating screen
-  if (!isAuthenticated) {
-    return (
-      <div className="flex items-center justify-center min-h-[500px]">
-        <div className="text-center space-y-4 max-w-md">
-          <div className="w-16 h-16 bg-teal-50 rounded-full flex items-center justify-center mx-auto">
-            <Wallet className="w-8 h-8 text-primary" />
-          </div>
-          <h3 className="font-h4-600 text-foreground">
-            {isAuthenticating ? "Authenticating..." : "Sign to Continue"}
-          </h3>
-          <p className="body-text2-400 text-[#959595]">
-            {isAuthenticating
-              ? "Please sign the message in your wallet"
-              : "Sign a message to access your portfolio"}
-          </p>
-          {authError && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-              <p className="text-sm text-red-800">{authError}</p>
-            </div>
-          )}
-          {!isAuthenticating && (
-            <button
-              onClick={authenticate}
-              className="px-6 py-3 bg-primary hover:bg-primary/90 text-white rounded-lg button-text-500 transition-colors flex items-center gap-2 mx-auto cursor-pointer"
-            >
-              <Wallet className="w-5 h-5" />
-              Sign Message
-            </button>
-          )}
-          {isAuthenticating && (
-            <div className="flex items-center justify-center gap-2">
-              <Loader2 className="w-5 h-5 animate-spin text-primary" />
-              <span className="body-text2-400 text-[#959595]">
-                Waiting for signature...
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  // Loading skeleton
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[500px]">
-        <div className="text-center space-y-4">
-          <Loader2 className="w-10 h-10 animate-spin text-primary mx-auto" />
-          <p className="body-text1-400 text-[#959595]">
-            Loading portfolio data...
-          </p>
-        </div>
-      </div>
-    );
-  }
+  if (!isConnected || !isAuthenticated) return null;
 
   return (
     <TooltipProvider>
-      <div className="space-y-[20px]">
-        {/* ============ TOP ROW: Profile + Locked Amount + Connections ============ */}
-        <div className="flex flex-col xl:flex-row gap-5">
-          {/* Profile Card */}
-          <div>
-            <div className="bg-card rounded-[15px] p-5 lg:max-w-[570px] w-full mb-[10px]">
-              <div className="flex items-center gap-[12px] mb-[16px]">
-                <div className="w-17.5 h-17.5 rounded-full bg-gradient-to-br from-[#A5DC53] to-[#5DD27A] flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
-                  {userName.charAt(0).toUpperCase()}
-                </div>
-                <div className="flex-1 min-w-0">
-                  {/* Editable Username */}
-                  {isEditingName ? (
-                    <div className="flex items-center gap-[4px]">
-                      <input
-                        ref={editInputRef}
-                        type="text"
-                        value={editNameValue}
-                        onChange={(e) => setEditNameValue(e.target.value)}
-                        onKeyDown={handleNameKeyDown}
-                        className="body-text1-500 text-foreground focus:outline-none bg-transparent w-full max-w-[140px]"
-                        maxLength={20}
-                      />
-                      <button
-                        onClick={saveName}
-                        disabled={isSavingName}
-                        className="cursor-pointer p-0.5  rounded"
-                      >
-                        {isSavingName ? (
-                          <Loader2 className="w-5 h-5 animate-spin text-primary" />
-                        ) : (
-                          <Check className="w-5 h-5 text-primary" />
-                        )}
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-[6px]">
-                      <h3 className="body-text-600 text-foreground truncate">
-                        {userName}
-                      </h3>
-                      <button
-                        onClick={startEditName}
-                        className="cursor-pointer flex-shrink-0"
-                      >
-                        <PenLine className="text-primary w-5 h-5 cursor-pointer transition-colors" />
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Wallet Address with Tooltip */}
-                  <div className="flex items-center gap-[6px]">
-                    <Tooltip>
-                      <p className="body-text1-400 text-foreground cursor-default">
-                        {truncatedAddress}
-                      </p>
-                      <TooltipContent>
-                        <p className="font-mono text-xs">{address}</p>
-                      </TooltipContent>
-                      <TooltipTrigger asChild>
-                        <button className="cursor-pointer flex-shrink-0">
-                          <InfoIcon className="w-5 h-5 cursor-pointer text-[#B5B5B5]" />
+      <LoadingAnimation isVisible={isLoading} />
+      {!showAGTHistory ? (
+        <div className="space-y-[20px]">
+          {/* ============ TOP ROW: Profile + Locked Amount + Connections ============ */}
+          <div className="flex flex-col xl:flex-row gap-5">
+            {/* Profile Card */}
+            <div>
+              <div className="bg-card rounded-[15px] p-5 lg:max-w-[570px] w-full mb-[10px]">
+                <div className="flex items-center gap-[12px] mb-[16px]">
+                  <div className="w-17.5 h-17.5 rounded-full bg-gradient-to-br from-[#A5DC53] to-[#5DD27A] flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
+                    {userName.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    {/* Editable Username */}
+                    {isEditingName ? (
+                      <div className="flex items-center gap-[4px]">
+                        <input
+                          ref={editInputRef}
+                          type="text"
+                          value={editNameValue}
+                          onChange={(e) => setEditNameValue(e.target.value)}
+                          onKeyDown={handleNameKeyDown}
+                          className="body-text1-500 text-foreground focus:outline-none bg-transparent w-full max-w-[140px]"
+                          maxLength={20}
+                        />
+                        <button
+                          onClick={saveName}
+                          disabled={isSavingName}
+                          className="cursor-pointer p-0.5  rounded"
+                        >
+                          {isSavingName ? (
+                            <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                          ) : (
+                            <Check className="w-5 h-5 text-primary" />
+                          )}
                         </button>
-                      </TooltipTrigger>
-                    </Tooltip>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-[6px]">
+                        <h3 className="body-text-600 text-foreground truncate">
+                          {userName}
+                        </h3>
+                        <button
+                          onClick={startEditName}
+                          className="cursor-pointer flex-shrink-0"
+                        >
+                          <PenLine className="text-primary w-5 h-5 cursor-pointer transition-colors" />
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Wallet Address with Tooltip */}
+                    <div className="flex items-center gap-[6px]">
+                      <Tooltip>
+                        <p className="body-text1-400 text-foreground cursor-default">
+                          {truncatedAddress}
+                        </p>
+                        <TooltipContent>
+                          <p className="font-mono text-xs">{address}</p>
+                        </TooltipContent>
+                        <TooltipTrigger asChild>
+                          <button className="cursor-pointer flex-shrink-0">
+                            <InfoIcon className="w-5 h-5 cursor-pointer text-[#B5B5B5]" />
+                          </button>
+                        </TooltipTrigger>
+                      </Tooltip>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Balance */}
+                <div className="flex items-center justify-between mt-5">
+                  <div>
+                    <p className="text-foreground font-h4-400">LUCA Balance</p>
+                    <p className="text-[#119B56] font-h2">{userBalance} LUCA</p>
+                  </div>
+                  <div>
+                    <img src={LucaIcon} alt="luca" className="w-14 h-14" />
                   </div>
                 </div>
               </div>
 
-              {/* Balance */}
-              <div className="flex items-center justify-between mt-5">
-                <div>
-                  <p className="text-foreground font-h4-400">Balance</p>
-                  <p className="text-[#119B56] font-h2">{userBalance} LUCA</p>
+              {/* Stats row */}
+              <div className="grid grid-cols-3 gap-[10px] mt-4 w-full max-w-xl h-[105px] md:h-35">
+                <div className="bg-card  rounded-2xl p-3 md:p-5">
+                  <p className="text-[#878787] text-[12px] md:text-[15px]  font-normal">
+                    PR Value
+                  </p>
+                  <p className="font-h4-600 mt-1">{prValue}</p>
                 </div>
-                <div>
-                  <img src={LucaIcon} alt="luca" className="w-14 h-14" />
+
+                <div className="bg-card rounded-2xl p-3 md:p-5">
+                  <p className="text-[#878787] text-[12px] md:text-[15px]  font-normal">
+                    ATM stars
+                  </p>
+                  <p className="font-h4-600 mt-1">{atmStars}</p>
+                </div>
+
+                <div className="bg-card rounded-2xl p-3 md:p-5 relative">
+                  <p className="text-[#878787] text-[12px] md:text-[15px] font-normal">
+                    AGT Balance
+                  </p>
+                  <p className="font-h4-600 mt-1">{agtBalance}</p>
+                  <button
+                    onClick={() => setShowAGTHistory(true)}
+                    className="body-text2-500 text-primary mt-2 cursor-pointer"
+                  >
+                    See history
+                  </button>
                 </div>
               </div>
             </div>
 
-            {/* Stats row */}
-            <div className="grid grid-cols-3 gap-[10px] mt-4 w-full max-w-xl h-[105px] md:h-35">
-              <div className="bg-card  rounded-2xl p-3 md:p-5">
-                <p className="text-[#878787] text-[12px] md:text-[15px]  font-normal">
-                  PR Value
-                </p>
-                <p className="font-h4-600 mt-1">{prValue}</p>
-              </div>
+            {/* Locked Amount of LUCA */}
+            <PieChartCard
+              title="Locked amount of LUCA"
+              data={[
+                { value: lockedMine, color: "#A5DC53", label: "Mine" },
+                { value: lockedOthers, color: "#FFB347", label: "Others" },
+              ]}
+              innerRadius={95}
+              outerRadius={110}
+              width={290}
+              height={260}
+            />
 
-              <div className="bg-card rounded-2xl p-3 md:p-5">
-                <p className="text-[#878787] text-[12px] md:text-[15px]  font-normal">
-                  ATM stars
-                </p>
-                <p className="font-h4-600 mt-1">{atmStars}</p>
-              </div>
+            {/* Connections */}
+            <PieChartCard
+              title="Connections"
+              data={[
+                { value: activeConns, color: "#0DAEB9", label: "Active" },
+                { value: pendingConns, color: "#FFB347", label: "Pending" },
+                {
+                  value: inactiveConns,
+                  color: "#FF8A80",
+                  label: "Inactive",
+                },
+              ]}
+              innerRadius={95}
+              outerRadius={110}
+              width={290}
+              height={260}
+            />
+          </div>
 
-              <div className="bg-card rounded-2xl p-3 md:p-5 relative">
-                <p className="text-[#878787] text-[12px] md:text-[15px] font-normal">
-                  AGT Balance
+          {/* ============ TOTAL TOKENS BALANCE TABLE ============ */}
+          <div className="bg-white rounded-[15px] p-[20px]">
+            <div className="flex items-center justify-between mb-[4px]">
+              <div>
+                <h3 className="font-h4-400 text-foreground">
+                  Total tokens balance
+                </h3>
+                <p className="font-h2 text-[#119B56]">
+                  ${totalTokensBalance.toFixed(2)}
                 </p>
-                <p className="font-h4-600 mt-1">{agtBalance}</p>
-                <button className="body-text2-500 text-primary mt-2 cursor-pointer">
-                  See history
+              </div>
+              <div className="flex items-center gap-[12px]">
+                <button
+                  onClick={() => setIsImportModalOpen(true)}
+                  className="text-primary body-text2-400 hover:underline cursor-pointer flex items-center gap-[4px]"
+                >
+                  Import token
                 </button>
+                <Dropdown
+                  options={[
+                    { label: "Balance: High to low", value: "balance-desc" },
+                    { label: "Balance: Low to high", value: "balance-asc" },
+                    { label: "Name: A to Z", value: "name-asc" },
+                  ]}
+                  value={sortOrder}
+                  onChange={setSortOrder}
+                  placeholder="Sort by"
+                />
               </div>
             </div>
-          </div>
 
-          {/* Locked Amount of LUCA */}
-          <PieChartCard
-            title="Locked amount of LUCA"
-            data={[
-              { value: lockedMine, color: "#A5DC53", label: "Mine" },
-              { value: lockedOthers, color: "#FFB347", label: "Others" },
-            ]}
-            innerRadius={95}
-            outerRadius={110}
-            width={290}
-            height={260}
-          />
-
-          {/* Connections */}
-          <PieChartCard
-            title="Connections"
-            data={[
-              { value: activeConns, color: "#0DAEB9", label: "Active" },
-              { value: pendingConns, color: "#FFB347", label: "Pending" },
-              {
-                value: inactiveConns,
-                color: "#FF8A80",
-                label: "Inactive",
-              },
-            ]}
-            innerRadius={95}
-            outerRadius={110}
-            width={290}
-            height={260}
-          />
-        </div>
-
-        {/* ============ TOTAL TOKENS BALANCE TABLE ============ */}
-        <div className="bg-white rounded-[15px] p-[20px]">
-          <div className="flex items-center justify-between mb-[4px]">
-            <div>
-              <h3 className="font-h4-400 text-foreground">
-                Total tokens balance
-              </h3>
-              <p className="font-h2 text-[#119B56]">
-                ${totalTokensBalance.toFixed(2)}
-              </p>
+            {/* Table header */}
+            <div className="flex items-center py-[12px] border-b border-[#F0F0F0]">
+              <p className="body-text-600 text-foreground w-[35%]">Token</p>
+              <p className="body-text-600 text-foreground w-[35%]">Balance</p>
+              <p className="body-text-600 text-foreground  ">Price (24hr)</p>
             </div>
-            <div className="flex items-center gap-[12px]">
-              <button
-                onClick={() => setShowImportModal(true)}
-                className="text-primary body-text2-400 hover:underline cursor-pointer flex items-center gap-[4px]"
-              >
-                Import token
-              </button>
-              <Dropdown
-                options={[
-                  { label: "Balance: High to low", value: "balance-desc" },
-                  { label: "Balance: Low to high", value: "balance-asc" },
-                  { label: "Name: A to Z", value: "name-asc" },
-                ]}
-                value={sortOrder}
-                onChange={setSortOrder}
-                placeholder="Sort by"
-              />
-            </div>
-          </div>
 
-          {/* Table header */}
-          <div className="flex items-center py-[12px] border-b border-[#F0F0F0]">
-            <p className="body-text-600 text-foreground w-[35%]">Token</p>
-            <p className="body-text-600 text-foreground w-[35%]">Balance</p>
-            <p className="body-text-600 text-foreground  ">Price (24hr)</p>
-          </div>
+            {/* Token rows */}
+            {sortedTokens.length > 0 ? (
+              sortedTokens.map((token, i) => (
+                <TokenRow
+                  key={`${token.symbol}-${i}`}
+                  token={token}
+                  onRemoveClick={(symbol) => {
+                    setSelectedToken(symbol);
+                    setIsModalOpen(true);
+                  }}
+                />
+              ))
+            ) : (
+              <div className="py-[40px] text-center">
+                <p className="body-text2-400 text-[#959595]">
+                  No tokens found in your portfolio
+                </p>
+              </div>
+            )}
 
-          {/* Token rows */}
-          {sortedTokens.length > 0 ? (
-            sortedTokens.map((token, i) => (
-              <TokenRow
-                key={`${token.symbol}-${i}`}
-                token={token}
-                onRemoveClick={(symbol) => {
-                  setSelectedToken(symbol);
-                  setIsModalOpen(true);
-                }}
-              />
-            ))
-          ) : (
-            <div className="py-[40px] text-center">
-              <p className="body-text2-400 text-[#959595]">
-                No tokens found in your portfolio
-              </p>
-            </div>
-          )}
-
-          {/* Confirmation Modal */}
-          <ConfirmationModal
-            isOpen={isModalOpen}
-            title="Token removal confirmation"
-            description="You can import this token again later from the filter options"
-            message={`Are you sure you want to remove the ${selectedToken} token?`}
-            onConfirm={handleRemoveConfirm}
-            onCancel={() => {
-              setIsModalOpen(false);
-              setSelectedToken(null);
-            }}
-            confirmText={isRemoving ? "Removing..." : "Remove"}
-          />
-
-          {/* Loading Animation */}
-          <LoadingAnimation isVisible={isRemoving} />
-
-          {/* Toast Message */}
-          {toast && (
-            <Toast
-              message={toast.message}
-              type={toast.type}
-              onClose={() => setToast(null)}
+            {/* Confirmation Modal */}
+            <ConfirmationModal
+              isOpen={isModalOpen}
+              title="Token removal confirmation"
+              description="You can import this token again later from the filter options"
+              message={`Are you sure you want to remove the ${selectedToken} token?`}
+              onConfirm={handleRemoveConfirm}
+              onCancel={() => {
+                setIsModalOpen(false);
+                setSelectedToken(null);
+              }}
+              confirmText={isRemoving ? "Removing..." : "Remove"}
             />
-          )}
-        </div>
 
-        {/* ============ ATM GALAXY (iframe) ============ */}
-        <div className="bg-card rounded-[15px] p-[20px]">
-          <div className="flex items-center justify-between mb-[16px]">
-            <div className="flex items-center gap-[12px]">
-              <h3 className="font-h4-400 text-foreground">ATM Galaxy</h3>
-              <span className="body-text-400 text-foreground">
-                Total connections:{" "}
-                <span className="body-text-600 text-foreground">
-                  {totalConnections}
+            {/* Loading Animation */}
+            <LoadingAnimation isVisible={isRemoving} />
+
+            {/* Toast Message */}
+            {toast && (
+              <Toast
+                message={toast.message}
+                type={toast.type}
+                onClose={() => setToast(null)}
+              />
+            )}
+          </div>
+
+          {/* Import Token Modal */}
+          {isImportModalOpen && (
+            <div className="fixed inset-0 z-50 flex justify-end bg-black/30">
+              <div className="w-105 bg-card p-6 h-full rounded-l-2xl shadow-xl relative flex flex-col">
+                {/* Header */}
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="font-h4-400 text-foreground">Import tokens</h2>
+                  <X
+                    className="text-primary cursor-pointer"
+                    onClick={() => setIsImportModalOpen(false)}
+                  />
+                </div>
+
+                {/* Search */}
+                <div className="relative w-full mb-4">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                    <Search size={16} />
+                  </span>
+
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-10 py-2 rounded-[10px] bg-[#F8F8F8] dark:bg-[#383D4C]"
+                  />
+
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <Mic size={16} />
+                  </span>
+                </div>
+
+                <div className="body-text1-400 mb-5">
+                  We find these tokens in your wallet. Choose which one you want
+                  to add
+                </div>
+
+                {/* Token List */}
+                 <div className="flex-1 overflow-y-auto space-y-3 pr-2 
+                   [&::-webkit-scrollbar]:hidden 
+                   [-ms-overflow-style:none] 
+                   [scrollbar-width:none]"
+                 >
+                  {filteredImportTokens.map((token) => (
+                    <label
+                      key={token.symbol}
+                      className="flex items-center justify-between p-2 rounded-md cursor-pointer"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          checked={selectedImports.includes(token.symbol)}
+                          onChange={() =>
+                            setSelectedImports((prev) =>
+                              prev.includes(token.symbol)
+                                ? prev.filter((s) => s !== token.symbol)
+                                : [...prev, token.symbol],
+                            )
+                          }
+                        />
+
+                        <img
+                          src={token.icon}
+                          className="w-10 h-10 rounded-full"
+                        />
+
+                        <div>
+                          <p>{token.name}</p>
+                          <p className="text-[#878787]">{token.symbol}</p>
+                        </div>
+                      </div>
+
+                      <div className="text-right">
+                        <p>{token.balanceUsd}</p>
+                        <span
+                          className={
+                            token.change24h >= 0
+                              ? "text-[#119B56]"
+                              : "text-destructive"
+                          }
+                        >
+                          {token.change24h >= 0
+                            ? `+${token.change24h}%`
+                            : `${token.change24h}%`}
+                        </span>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+
+                {/* Buttons */}
+              {/* <div className="sticky bottom-0 bg-white pt-4  flex justify-end gap-3"> */}
+                <div className="pt-4 flex justify-end gap-3 ">
+                  <Button
+                    variant="success"
+                    onClick={() => setIsImportModalOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+
+                  <Button onClick={handleImportTokens}>Import tokens</Button>
+                </div>
+              </div>
+              <LoadingAnimation isVisible={isImporting} />
+            </div>
+          )}
+
+          {/* ============ ATM GALAXY (iframe) ============ */}
+          <div className="bg-card rounded-[15px] p-[20px]">
+            <div className="flex items-center justify-between mb-[16px]">
+              <div className="flex items-center gap-[12px]">
+                <h3 className="font-h4-400 text-foreground">ATM Galaxy</h3>
+                <span className="body-text-400 text-foreground">
+                  Total connections:{" "}
+                  <span className="body-text-600 text-foreground">
+                    {totalConnections}
+                  </span>
                 </span>
-              </span>
+              </div>
+              <button className="cursor-pointer">
+                <SlidersHorizontal className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors" />
+              </button>
             </div>
-            <button className="cursor-pointer">
-              <SlidersHorizontal className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors" />
-            </button>
+            <div className="w-full h-105 rounded-[10px] overflow-hidden bg-[#0D1117]">
+              <iframe
+                src="https://visual.atm.network/vis3d/false/ALL/conNodes"
+                title="ATM Galaxy"
+                className="w-full h-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
+                loading="lazy"
+              />
+            </div>
           </div>
-          <div className="w-full h-105 rounded-[10px] overflow-hidden bg-[#0D1117]">
-            <iframe
-              src="https://visual.atm.network/vis3d/false/ALL/conNodes"
-              title="ATM Galaxy"
-              className="w-full h-full border-0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
-              loading="lazy"
+
+          {/* ============ COIN WATCHLIST ============ */}
+          <div className="bg-card rounded-[15px] p-[20px]">
+            <div className="flex items-center justify-between mb-[16px]">
+              <h3 className="font-h4-400 text-foreground">Coin watchlist</h3>
+              <button className="cursor-pointer">
+                <SlidersHorizontal
+                  className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors"
+                  onClick={() => setIsCoinModalOpen(true)}
+                />
+              </button>
+            </div>
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-[16px]">
+              {coins.map((coin) => (
+                <CoinWatchlistCard key={coin.symbol} coin={coin} />
+              ))}
+            </div>
+          </div>
+
+          <AddCoinsModal
+            isOpen={isCoinModalOpen}
+            onClose={() => setIsCoinModalOpen(false)}
+            onSave={handleSaveCoins}
+            selectedCoins={coins}
+            setSelectedCoins={setCoins}
+            setToast={setCoinToast}
+          />
+
+          {coinToast && (
+            <Toast
+              message={coinToast.message}
+              type={coinToast.type}
+              onClose={() => setCoinToast(null)}
             />
-          </div>
+          )}
         </div>
-
-        {/* ============ COIN WATCHLIST ============ */}
-        <div className="bg-card rounded-[15px] p-[20px]">
-          <div className="flex items-center justify-between mb-[16px]">
-            <h3 className="font-h4-400 text-foreground">Coin watchlist</h3>
-            <button className="cursor-pointer">
-              <SlidersHorizontal className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors" />
-            </button>
-          </div>
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-[16px]">
-            {watchlistCoins.map((coin) => (
-              <CoinWatchlistCard key={coin.symbol} coin={coin} />
-            ))}
-          </div>
-        </div>
-
-        {/* Import Token Modal */}
-        <ImportTokenModal
-          isOpen={showImportModal}
-          onClose={() => setShowImportModal(false)}
-          onImport={handleImportToken}
-          existingSymbols={allTokens.map((t) => t.symbol)}
+      ) : (
+        <AGTRecord
+          agtBalance={agtBalance}
+          onBack={() => setShowAGTHistory(false)}
         />
-      </div>
+      )}
     </TooltipProvider>
   );
 }

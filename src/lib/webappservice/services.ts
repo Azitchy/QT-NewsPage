@@ -1,396 +1,19 @@
 import axios from 'axios';
+import { API_CONFIG, isDevelopment, ENCRYPTION_KEY_STORAGE, CACHE_PREFIX, CACHE_TTL, shouldUseCredentials } from './constants';
+import { getOpenApiFormHeaders, getFormHeaders, getJsonHeaders, getJsonHeadersMinimal, getTokenJsonHeaders, getAGFHeaders } from './headers';
+import { urls } from './urls';
+import type {
+  AuthTokenData, WithdrawalResult, Proposal, ProposalListResponse,
+  LinkConnection, ConsensusConnection, IncomeRecord, WithdrawalRecord, JoinATMFormData,
+  GameProposal, Game, GameRating, GameInvestment, BattleData, UpdateBattleData,
+  UserStarsData, ApiResponse, CoinCurrency, TokenInfo, TokenApproval, ContractSection,
+  RecoveryTransaction, AGFGameProposal, AGFProposalResponse, CrosschainTransferResult,
+} from './types';
 
-const isDevelopment = import.meta.env.DEV;
-
-export const API_CONFIG = {
-  OPENAPI_BASE_URL: isDevelopment ? '/openapi' : import.meta.env.VITE_OPENAPI_BASE_URL,
-  WEB_API_BASE_URL: isDevelopment ? '/api' : import.meta.env.VITE_WEB_API_BASE_URL,
-  GAME_API_BASE_URL: isDevelopment ? '/gameapi' : import.meta.env.VITE_GAME_API_BASE_URL,
-  API_TOKEN: import.meta.env.VITE_API_TOKEN,
-  CLIENT_TYPE: parseInt(import.meta.env.VITE_CLIENT_TYPE || '6'),
-  CLIENT_VERSION: parseInt(import.meta.env.VITE_CLIENT_VERSION || '1'),
-  DEVICE_ID: parseInt(import.meta.env.VITE_DEVICE_ID || '112233'),
-  SESSION_DURATION: parseInt(import.meta.env.VITE_SESSION_DURATION || '86400000'),
-  DEFAULT_LANGUAGE: import.meta.env.VITE_DEFAULT_LANGUAGE || 'en',
-} as const;
-
-const ENCRYPTION_KEY_STORAGE = 'atm_enc_key';
-const CACHE_PREFIX = 'atm_cache_';
-const CACHE_TTL = 86400000;
-const SIGNATURE_CACHE_KEY = 'atm_withdrawal_signatures_cache';
-const SIGNATURE_CACHE_DURATION = 10 * 60 * 1000;
-const USE_CACHED_SIGNATURES = 1;
-
-const shouldUseCredentials = () => !isDevelopment;
-
-/* ============================================================================
-   TYPE DEFINITIONS
-   ============================================================================ */
-
-export interface AuthTokenData {
-  loginToken: string;
-  tokenExpiry: number;
-  userAddress: string;
-}
-
-export interface SignatureCache {
-  signs: string[];
-  expected_expiration: number;
-  code: string;
-  timestamp: number;
-  userAddress: string;
-}
-
-export interface WithdrawalResult {
-  success: boolean;
-  transactionHash?: string;
-  error?: string;
-}
-
-export interface Proposal {
-  id: string;
-  title: string;
-  status: number;
-  startTime?: number;
-  endTime?: number;
-  createTime: number;
-  typeOfProposal?: string;
-  redeemFlag?: number;
-  creatorUserDetailsModel?: {
-    walletAddress: string;
-  };
-}
-
-export interface ProposalListResponse {
-  success: boolean;
-  data: {
-    initiateList: Proposal[];
-    totalCount: number;
-  };
-}
-
-export interface LinkConnection {
-  id: number;
-  createAddress: string;
-  targetAddress: string;
-  linkAddress: string;
-  createBalance: number;
-  targetBalance: number;
-  linkCurrency: string;
-  lockedDay: number;
-  linkStatus: number;
-  redeemStatus?: number;
-  createTime?: number;
-  unlockedTime?: string;
-  chainId?: number;
-}
-
-export interface ConsensusConnection {
-  id: number;
-  newNodeAddress: string;
-  serverNickname: string;
-  amount: number;
-  myAmount: number;
-  stackThisYear: number;
-  userStakingLimit: number;
-  remainingStakingAmount: number;
-  ledgeType?: string;
-  status?: number;
-}
-
-export interface IncomeRecord {
-  date: string;
-  pr: number;
-  topNodes: number;
-  pledge: number;
-  liquidity: number;
-  user_id: string;
-}
-
-export interface WithdrawalRecord {
-  get_time: string;
-  total_amount: number;
-  transaction_hash: string;
-  coin_type: string;
-  in_time: string;
-  user_id: string;
-}
-
-export interface JoinATMFormData {
-  projectName: string;
-  projectToken?: string;
-  lucaCommunity: 'YES' | 'NO';
-  lucaCandyValue?: string;
-  projectLink: string;
-  email: string;
-  teamSupport: string;
-  contractPlatform: string;
-  whiteBookLink?: string;
-  projectMedia?: string;
-  projectIntroduction: string;
-  attachment?: File;
-}
-
-export interface GameProposal {
-  id?: string;
-  userId?: string;
-  title: string;
-  description: string;
-  category: string;
-  status?: 'pending' | 'approved' | 'rejected';
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface Game {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  rating?: number;
-  totalRatings?: number;
-  totalInvestment?: number;
-  status: 'active' | 'inactive' | 'development';
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface GameRating {
-  gameId: string;
-  rating: number;
-  userId?: string;
-  comment?: string;
-}
-
-export interface GameInvestment {
-  gameId: string;
-  amount: number;
-  userId: string;
-}
-
-export interface BattleData {
-  gameId: number;
-  userGameInfoList: Array<{
-    agfUserId: number;
-    gameLevel: number;
-    star: number;
-  }>;
-  details?: string;
-}
-
-export interface UpdateBattleData {
-  battleId: number;
-  gameId: number;
-  userGameInfoList: Array<{
-    agfUserId: number;
-    gameLevel: number;
-    star: number;
-  }>;
-}
-
-export interface UserStarsData {
-  agfUserId: number;
-}
-
-export interface NewsItem {
-  id: string;
-  title: string;
-  content: string;
-  coverImg: string;
-  type: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface NewsListResponse {
-  success: boolean;
-  data: {
-    newsList: NewsItem[];
-    totalCount: number;
-  };
-}
-
-export interface OverviewData {
-  price: number;
-  pre: string;
-  issuanceTotal: number;
-  circulationTotal: number;
-  contractTotalAmount: number;
-  liquidityReward: number;
-  communityFundStock: number;
-  treatyTotal: number;
-  contractCount: number;
-  prCount: number;
-}
-
-export interface CoinCurrency {
-  id: number;
-  currencyKey: string;
-  currencyName: string;
-  currencyLogo: string;
-  contractAddress: string;
-  chainId: number;
-  nowPrice: number;
-  baseCurrency: string;
-  tradeCurrency: string;
-  status: number;
-  gateWay: string;
-  weiPlaces: string;
-  aloneCalculateFlag?: number;
-  lockAmount?: number;
-  pricePlaces?: number;
-  [key: string]: any;
-}
-
-export interface PRNodeItem {
-  serverAddress: string;
-  serverUrl: string;
-  serverIp: string;
-  serverNickname: string;
-  ledgeAmount: string;
-  rank?: number;
-}
-
-export interface StakeTransactionItem {
-  hash: string;
-  userAddress: string;
-  serverAddress: string;
-  ledgeAmount: string;
-  createTime: string;
-  chainNetWork: string;
-  ledgeType: number;
-  rank?: number;
-}
-
-export interface ContractInfoItem {
-  name: string;
-  nameEn: string;
-  address: string;
-  transactions: number;
-  balance: string;
-  lastBlock: string;
-  type: number;
-}
-
-export interface RankingItem {
-  rank: number;
-  address: string;
-  totalAmount: number;
-}
-
-export interface NFTProject {
-  id: number;
-  name: string;
-  address: string;
-  webUrl: string;
-  status: number;
-  chainId?: number;
-}
-
-export interface NFTLinkConnection {
-  id: number;
-  createAddress: string;
-  targetAddress: string;
-  linkAddress: string;
-  createLockNft: string;
-  targetLockNft: string;
-  nftAddress: string;
-  nftName: string;
-  lockedDay: number;
-  lockFlag: number;
-  linkStatus: number;
-  redeemStatus?: number;
-  createTime?: number;
-  unlockedTime?: string;
-  chainId?: number;
-  remainDay?: number;
-  createHash?: string;
-  myNft?: string;
-  myNft2?: string;
-  targetNft?: string;
-  targetNft2?: string;
-}
-
-export interface ContactFormData {
-  name: string;
-  email: string;
-  walletAddress?: string;
-  message: string;
-}
-
-export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  message: string;
-  isSuccess?: boolean;
-  errorcode?: string;
-  failed?: boolean;
-  mapData?: any;
-  msg?: string;
-  state?: string;
-  status?: string;
-  total?: number;
-}
-
-export interface AGFGameProposal {
-  id?: string;
-  title: string;
-  overview: string;
-  gameplay: string;
-  notes?: string;
-  connectionDetails: string;
-  funds: number;
-  status: number;
-  typeOfProposal: string;
-  createTime?: number;
-  createdBy?: string;
-  startTime?: number;
-  endTime?: number;
-  redeemFlag?: number;
-  contactDetails: Array<{
-    name: string;
-    description: string;
-    images?: string;
-    link?: string;
-  }>;
-  milestones: Array<{
-    id?: string;
-    title: string;
-    description: string;
-    deadline: string;
-    funds: number;
-  }>;
-  gamesMediaModelList: Array<{
-    type: number;
-    link: string;
-  }>;
-  gameCategoriesModelList: Array<{
-    categoryId: number;
-  }>;
-  creatorUserDetailsModel?: {
-    walletAddress: string;
-  };
-}
-
-export interface AGFProposalResponse {
-  success: boolean;
-  isSuccess: boolean;
-  data: AGFGameProposal[] | string;
-  message?: string;
-}
-
-export interface CrosschainTransferResult {
-  success: boolean;
-  txHash?: string;
-  error?: string;
-  receipt?: any;
-}
-
-/* ============================================================================
-   ENCRYPTION & CACHING
-   ============================================================================ */
-
-class EncryptionService {
+// ─────────────────────────────────────────────────────────────────────────────
+// EncryptionService
+// ─────────────────────────────────────────────────────────────────────────────
+export class EncryptionService {
   private async getOrCreateKey(): Promise<CryptoKey> {
     const stored = localStorage.getItem(ENCRYPTION_KEY_STORAGE);
 
@@ -450,11 +73,10 @@ class EncryptionService {
   }
 }
 
-/* ============================================================================
-   AUTHENTICATION SERVICE - REOWN
-   ============================================================================ */
-
-class AuthenticationService {
+// ─────────────────────────────────────────────────────────────────────────────
+// AuthenticationService
+// ─────────────────────────────────────────────────────────────────────────────
+export class AuthenticationService {
   private userAddress: string | null = null;
   private loginToken: string | null = null;
   private tokenExpiry: number | null = null;
@@ -512,20 +134,6 @@ class AuthenticationService {
     localStorage.removeItem('atm_cookie');
   }
 
-  /**
-   * Clear only the token (not the user address) — used in retry paths
-   * where we need to re-authenticate but still know who the user is.
-   */
-  clearToken() {
-    this.loginToken = null;
-    this.tokenExpiry = null;
-    this.cookie = null;
-    this.authPromise = null;
-    localStorage.removeItem('atm_token');
-    localStorage.removeItem('atm_token_expiry');
-    localStorage.removeItem('atm_cookie');
-  }
-
   isTokenValid(): boolean {
     return !!(this.loginToken && this.tokenExpiry && Date.now() < this.tokenExpiry);
   }
@@ -533,83 +141,126 @@ class AuthenticationService {
   async getSignMessage(): Promise<string> {
     if (!this.userAddress) throw new Error('User address not set');
 
-    console.log('[API] Requesting sign message for address:', this.userAddress);
-
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE,
-    };
-    if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
-
-    console.log('[API] Request headers:', headers);
-
-    const response = await axios.get(`${API_CONFIG.OPENAPI_BASE_URL}/open/getSignMessage`, {
-      headers,
+    const response = await axios.get(urls.open.getSignMessage, {
+      headers: getOpenApiFormHeaders(),
       params: { address: this.userAddress },
     });
 
-    console.log('[API] Sign message response:', response.data);
-    console.log('[API] Response structure:', {
-      hasData: !!response.data,
-      hasDataData: !!response.data?.data,
-      hasSignMessage: !!response.data?.signMessage,
-      dataDataSignMessage: response.data?.data?.signMessage,
-      dataSignMessage: response.data?.signMessage,
-      dataData: response.data?.data
-    });
-
     const signMessage = response.data?.data?.signMessage || response.data?.signMessage || response.data?.data;
-
-    console.log('[API] Extracted sign message:', signMessage);
-    console.log('[API] Sign message type:', typeof signMessage);
-
     if (!signMessage || typeof signMessage !== 'string') {
-      console.error('[API] Invalid sign message response - Full response:', JSON.stringify(response.data, null, 2));
       throw new Error('Invalid sign message response');
     }
-
-    console.log('[API] Sign message retrieved successfully');
     return signMessage;
   }
 
+
   /**
-   * Sign message using Reown EIP-1193 provider
+   * ERC-6492 magic suffix (32 bytes). If a signature ends with this,
+   * it is a smart-account wrapped signature that needs unwrapping
+   * before the ATM server can verify it with standard ecrecover.
    */
-  async signMessage(message: string, walletProvider: any): Promise<string> {
-    if (!this.userAddress) throw new Error('User address not set');
-    if (!walletProvider) throw new Error('Wallet provider not available');
+  private static readonly ERC6492_MAGIC = '6492649264926492649264926492649264926492649264926492649264926492';
+
+  /**
+   * Detect & unwrap an ERC-6492 wrapped signature.
+   * Format: abi.encode(address factory, bytes calldata, bytes innerSig) ++ magicBytes
+   * We extract the inner 65-byte ECDSA signature from the third ABI-encoded field.
+   */
+  private unwrapERC6492(signature: string): string {
+    const raw = signature.startsWith('0x') ? signature.slice(2) : signature;
+
+    // Check for magic suffix (last 64 hex chars = 32 bytes)
+    if (raw.length <= 64 || !raw.endsWith(AuthenticationService.ERC6492_MAGIC)) {
+      return signature; // Not ERC-6492, return as-is
+    }
+
+    console.log('[Auth] Detected ERC-6492 wrapped signature, unwrapping...');
 
     try {
-      // personal_sign requires a hex-encoded message.
-      // If the message is already hex-prefixed, use it as-is; otherwise convert UTF-8 → hex.
-      const hexMessage = message.startsWith('0x')
-        ? message
-        : '0x' + Array.from(new TextEncoder().encode(message))
-            .map(b => b.toString(16).padStart(2, '0'))
-            .join('');
+      // Strip the 32-byte magic suffix
+      const abiEncoded = raw.slice(0, raw.length - 64);
 
-      const signature = await walletProvider.request({
-        method: 'personal_sign',
-        params: [hexMessage, this.userAddress],
-      });
-      return signature;
+      // ABI-encoded (address, bytes, bytes):
+      // - Word 0 (0-64):   address factory (left-padded to 32 bytes)
+      // - Word 1 (64-128):  offset to factoryCalldata bytes
+      // - Word 2 (128-192): offset to inner signature bytes
+      // Read offset to third parameter (inner signature)
+      const sigOffset = parseInt(abiEncoded.slice(128, 192), 16) * 2; // convert byte offset to hex char offset
+
+      // At the offset: first 32 bytes = length of the inner signature
+      const sigLength = parseInt(abiEncoded.slice(sigOffset, sigOffset + 64), 16) * 2; // in hex chars
+
+      // Read the inner signature data
+      const innerSig = abiEncoded.slice(sigOffset + 64, sigOffset + 64 + sigLength);
+
+      // Standard ECDSA signature is 65 bytes = 130 hex chars
+      if (innerSig.length === 130) {
+        const unwrapped = '0x' + innerSig;
+        console.log('[Auth] Successfully unwrapped ERC-6492 → standard 65-byte ECDSA signature');
+        return unwrapped;
+      }
+
+      // If inner sig is not 65 bytes, it might be ERC-1271 or nested —
+      // try using it anyway, log a warning
+      console.warn(`[Auth] Inner signature is ${innerSig.length / 2} bytes (expected 65). Using it as-is.`);
+      return '0x' + innerSig;
+    } catch (error) {
+      console.error('[Auth] Failed to unwrap ERC-6492 signature:', error);
+      return signature; // Return original on error
+    }
+  }
+
+  async signMessage(message: string, walletProvider: any, messageSigner?: (args: { message: string }) => Promise<string>): Promise<string> {
+    if (!this.userAddress) throw new Error('User address not set');
+
+    let signature: string;
+
+    try {
+      // Use wagmi's signMessageAsync when available — it handles encoding
+      // correctly for both injected wallets (MetaMask) and Reown embedded
+      // wallets (Google/social auth via viem). wagmi internally uses
+      // stringToHex which both wallet types interpret identically.
+      if (messageSigner) {
+        signature = await messageSigner({ message });
+      } else {
+        // Fallback: direct provider.request for injected wallets (MetaMask etc.)
+        if (!walletProvider) throw new Error('Wallet provider not available');
+        const hexMessage = message.startsWith('0x')
+          ? message
+          : ('0x' + Array.from(new TextEncoder().encode(message))
+              .map(b => b.toString(16).padStart(2, '0'))
+              .join(''));
+        signature = await walletProvider.request({
+          method: 'personal_sign',
+          params: [hexMessage, this.userAddress],
+        });
+      }
     } catch (error: any) {
       console.error('Error signing message:', error);
       throw new Error(error?.message || 'Failed to sign message');
     }
+
+    // Log signature details for debugging
+    const sigHex = signature.startsWith('0x') ? signature.slice(2) : signature;
+    console.log(`[Auth] Raw signature length: ${sigHex.length / 2} bytes, starts: ${signature.slice(0, 20)}...`);
+
+    // Unwrap ERC-6492 smart-account signatures so the server can verify
+    // with standard ecrecover. This handles the case where Reown's embedded
+    // wallet (Google/social login) produces a smart-account wrapped signature.
+    const finalSig = this.unwrapERC6492(signature);
+
+    const finalHex = finalSig.startsWith('0x') ? finalSig.slice(2) : finalSig;
+    console.log(`[Auth] Final signature length: ${finalHex.length / 2} bytes`);
+
+    return finalSig;
   }
+
 
   async getLoginToken(signature: string): Promise<string> {
     if (!this.userAddress) throw new Error('User address not set');
 
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE,
-    };
-    if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
-
-    const response = await axios.get(`${API_CONFIG.OPENAPI_BASE_URL}/open/getLoginToken`, {
-      headers,
+    const response = await axios.get(urls.open.getLoginToken, {
+      headers: getOpenApiFormHeaders(),
       params: {
         address: this.userAddress,
         sign: signature,
@@ -620,10 +271,14 @@ class AuthenticationService {
       withCredentials: true,
     });
 
-    const token = response.data?.data?.loginToken || response.data?.data?.token || response.data?.loginToken || response.data?.token ||
-      (typeof response.data?.data === 'string' && response.data.data.length > 10 ? response.data.data : null);
+    console.log('[Auth] getLoginToken raw response:', JSON.stringify(response.data));
 
-    if (!token) throw new Error('Invalid login response - no token found');
+    const data = response.data?.data;
+    const token = data?.loginToken || data?.token || data?.accessToken ||
+      response.data?.loginToken || response.data?.token || response.data?.accessToken ||
+      (typeof data === 'string' && data.length > 10 ? data : null);
+
+    if (!token) throw new Error(`Invalid login response - no token found. Response: ${JSON.stringify(response.data)}`);
 
     this.loginToken = token;
     this.tokenExpiry = Date.now() + (24 * 60 * 60 * 1000);
@@ -637,15 +292,14 @@ class AuthenticationService {
     return document.cookie;
   }
 
-  async authenticate(walletProvider: any): Promise<string> {
+  async authenticate(walletProvider: any, messageSigner?: (args: { message: string }) => Promise<string>): Promise<string> {
     if (this.authPromise) return this.authPromise;
     if (this.isTokenValid() && this.loginToken) return this.loginToken;
-    if (!this.userAddress) throw new Error('User address not set. Call setUserAddress() before authenticating.');
 
     this.authPromise = (async () => {
       try {
         const message = await this.getSignMessage();
-        const signature = await this.signMessage(message, walletProvider);
+        const signature = await this.signMessage(message, walletProvider, messageSigner);
         const token = await this.getLoginToken(signature);
         return token;
       } finally {
@@ -670,52 +324,23 @@ class AuthenticationService {
 
     if (!token) throw new Error('Not authenticated. Call authenticate() first.');
 
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE,
-      'token': token,
-    };
+    const headers = getJsonHeaders(token);
     if (cookie) headers['Cookie'] = cookie;
-    if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
 
     return headers;
   }
 }
 
-/* ============================================================================
-   WITHDRAWAL SERVICE 
-   ============================================================================ */
-
-class WithdrawalService {
+// ─────────────────────────────────────────────────────────────────────────────
+// WithdrawalService
+// ─────────────────────────────────────────────────────────────────────────────
+export class WithdrawalService {
   private balanceCache: { amount: number; timestamp: number } | null = null;
   private readonly BALANCE_CACHE_DURATION = 30000;
+  private authService: AuthenticationService;
 
-  // Keep all existing cache and helper methods unchanged
-  private saveSigaturesToCache(signatures: { signs: string[]; expected_expiration: number; code: string }, userAddress: string): void {
-    try {
-      const cache: SignatureCache = { ...signatures, timestamp: Date.now(), userAddress };
-      localStorage.setItem(SIGNATURE_CACHE_KEY, JSON.stringify(cache));
-    } catch (error) { }
-  }
-
-  private loadSignaturesFromCache(userAddress: string): { signs: string[]; expected_expiration: number; code: string } | null {
-    try {
-      const cached = localStorage.getItem(SIGNATURE_CACHE_KEY);
-      if (!cached) return null;
-      const cache: SignatureCache = JSON.parse(cached);
-      if (cache.userAddress !== userAddress) return null;
-      if (Date.now() - cache.timestamp > SIGNATURE_CACHE_DURATION) return null;
-      if (Math.floor(Date.now() / 1000) >= cache.expected_expiration) return null;
-      return { signs: cache.signs, expected_expiration: cache.expected_expiration, code: cache.code };
-    } catch (error) {
-      return null;
-    }
-  }
-
-  private clearSignatureCache(): void {
-    try {
-      localStorage.removeItem(SIGNATURE_CACHE_KEY);
-    } catch (error) { }
+  constructor(authService: AuthenticationService) {
+    this.authService = authService;
   }
 
   clearBalanceCache() {
@@ -728,27 +353,20 @@ class WithdrawalService {
     }
 
     try {
-      const token = await authService.getToken(walletProvider);
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        'token': token,
-        'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE,
-      };
-      if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
+      const token = await this.authService.getToken(walletProvider);
+      const headers = getTokenJsonHeaders(token);
 
-      const response = await axios.get(`${API_CONFIG.OPENAPI_BASE_URL}/open/getCurrentIncome`, {
+      const response = await axios.get(urls.open.getCurrentIncome, {
         headers,
-        ...(shouldUseCredentials() && { withCredentials: true }),
+        withCredentials: true,
       });
 
       if (response.data?.errorcode === 'NOT_LOGGEDIN' || response.data?.failed) {
-        // Clear stale token (preserve address) and force re-authentication
-        authService.clearToken();
-        const newToken = await authService.authenticate(walletProvider);
-        headers['token'] = newToken;
-        const retryResponse = await axios.get(`${API_CONFIG.OPENAPI_BASE_URL}/open/getCurrentIncome`, {
-          headers,
-          ...(shouldUseCredentials() && { withCredentials: true }),
+        const newToken = await this.authService.authenticate(walletProvider);
+        const retryHeaders = getTokenJsonHeaders(newToken);
+        const retryResponse = await axios.get(urls.open.getCurrentIncome, {
+          headers: retryHeaders,
+          withCredentials: true,
         });
         if (retryResponse.data?.errorcode === 'NOT_LOGGEDIN') {
           throw new Error('Authentication required. Please try logging in again.');
@@ -775,13 +393,11 @@ class WithdrawalService {
 
   private async getServerList(): Promise<{ serverList: Array<{ serverUrl: string }> }> {
     const token = localStorage.getItem('atm_token');
-    const config: any = {
-      headers: { 'Content-Type': 'application/json', 'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE, 'token': token },
-    };
-    if (!isDevelopment) config.headers['apiToken'] = API_CONFIG.API_TOKEN;
+    const headers = getJsonHeaders(token);
+    const config: any = { headers };
     if (shouldUseCredentials()) config.withCredentials = true;
 
-    const response = await axios.get(`${API_CONFIG.OPENAPI_BASE_URL}/open/getServerList`, config);
+    const response = await axios.get(urls.open.getServerList, config);
     if (response.data?.errorcode === 'NOT_LOGGEDIN' || response.data?.failed) {
       throw new Error('Authentication required for server list');
     }
@@ -789,37 +405,38 @@ class WithdrawalService {
     return response.data.data;
   }
 
-  private async getPRSignature(serverUrl: string, userAddress: string, amount: number): Promise<{ sign: string; expected_expiration: number; code: string } | null> {
+  private async getPRSignature(serverUrl: string, userAddress: string, amount: number, retryCount: number = 0): Promise<{ sign: string; expected_expiration: number; code: string } | null> {
+    const MAX_RETRIES = 2;
     try {
       const token = localStorage.getItem('atm_token');
-      console.log(`[PR Signature] Requesting from: ${serverUrl}`);
-      console.log(`[PR Signature] Token exists: ${!!token}`);
-      console.log(`[PR Signature] UserAddress: ${userAddress}`);
-      console.log(`[PR Signature] Amount: ${amount}`);
-      
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE,
-        'token': token || '',
+      console.log(`[PR Signature] Requesting from: ${serverUrl}${retryCount > 0 ? ` (retry ${retryCount})` : ''}`);
+
+      const headers = getJsonHeaders(token);
+
+      const obj = {
+        user_address: userAddress,
+        contract_address: '0x51E6Ac1533032E72e92094867fD5921e3ea1bfa0',
+        amount: amount,
+        timestamps: Math.floor(Date.now() / 1000) + 60 * 15,
       };
-      if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
 
-      const endpoint = isDevelopment ? `${API_CONFIG.OPENAPI_BASE_URL}/open/getLucaWithdrawalSign` : `${serverUrl}/open/getLucaWithdrawalSign`;
-      const requestBody = isDevelopment ? { userAddress, amount, targetServerUrl: serverUrl } : { userAddress, amount };
+      const params = new URLSearchParams({
+        url: `${serverUrl}/prod/assets/prefetching`,
+        jsonParam: JSON.stringify(obj),
+      });
 
-      console.log(`[PR Signature] Endpoint: ${endpoint}`);
-      console.log(`[PR Signature] Request body:`, requestBody);
-      console.log(`[PR Signature] Headers:`, headers);
+      // Route through the OpenAPI proxy — backend forwards to EC2 server-side (no CORS)
+      const endpoint = `${API_CONFIG.OPENAPI_BASE_URL}/open/getLucaWithdrawalSign?${params.toString()}`;
 
-      const response = await axios.post(endpoint, requestBody, {
+      console.log(`[PR Signature] Proxy endpoint: ${endpoint}`);
+
+      const response = await axios.get(endpoint, {
         headers,
-        timeout: 5000,
-        ...(shouldUseCredentials() && { withCredentials: true }),
+        timeout: 15000,
       });
 
       console.log(`[PR Signature] Response from ${serverUrl}:`, response.data);
 
-      // Check for various error conditions
       if (response.data?.errorcode === 'NOT_LOGGEDIN') {
         console.warn(`[PR Signature] NOT_LOGGEDIN error from ${serverUrl}`);
         return null;
@@ -827,19 +444,27 @@ class WithdrawalService {
 
       if (response.data?.failed) {
         console.warn(`[PR Signature] Failed response from ${serverUrl}:`, response.data.msg);
+        if (retryCount < MAX_RETRIES && response.data?.msg?.includes('busy')) {
+          const delay = (retryCount + 1) * 2000;
+          console.log(`[PR Signature] Retrying ${serverUrl} in ${delay}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          return this.getPRSignature(serverUrl, userAddress, amount, retryCount + 1);
+        }
         return null;
       }
 
-      if (!response.data?.data?.sign) {
+      // Proxy wraps EC2 response: response.data.data.data contains the actual payload
+      const payload = response.data?.data?.data ?? response.data?.data;
+      if (!payload?.sign) {
         console.warn(`[PR Signature] No signature in response from ${serverUrl}`);
         return null;
       }
 
       console.log(`[PR Signature] ✅ SUCCESS from ${serverUrl}`);
       return {
-        sign: response.data.data.sign,
-        expected_expiration: response.data.data.expected_expiration,
-        code: response.data.data.code,
+        sign: payload.sign,
+        expected_expiration: payload.expected_expiration,
+        code: payload.code,
       };
     } catch (error: any) {
       console.error(`[PR Signature] ❌ ERROR from ${serverUrl}:`, {
@@ -848,24 +473,22 @@ class WithdrawalService {
         response: error.response?.data,
         status: error.response?.status
       });
+      if (retryCount < MAX_RETRIES && (error.code === 'ECONNABORTED' || error.code === 'ERR_NETWORK' || error.response?.status >= 500)) {
+        const delay = (retryCount + 1) * 2000;
+        console.log(`[PR Signature] Retrying ${serverUrl} in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        return this.getPRSignature(serverUrl, userAddress, amount, retryCount + 1);
+      }
       return null;
     }
   }
 
   private async collectPRSignatures(amount: number): Promise<{ signs: string[]; expected_expiration: number; code: string }> {
-    const userAddress = authService.getUserAddress();
+    const userAddress = this.authService.getUserAddress();
     if (!userAddress) throw new Error('User address not set');
 
     console.log(`[Collect Signatures] Starting collection for amount: ${amount}`);
     console.log(`[Collect Signatures] User address: ${userAddress}`);
-
-    if (USE_CACHED_SIGNATURES === 1) {
-      const cached = this.loadSignaturesFromCache(userAddress);
-      if (cached) {
-        console.log('[Collect Signatures] Using cached signatures');
-        return cached;
-      }
-    }
 
     console.log('[Collect Signatures] Fetching server list...');
     const serverList = await this.getServerList();
@@ -882,14 +505,14 @@ class WithdrawalService {
       console.log(`[Collect Signatures] Request ${index + 1}/${serverList.serverList.length}: ${server.serverUrl}`);
       return this.getPRSignature(server.serverUrl, userAddress, amount);
     });
-    
+
     const results = await Promise.allSettled(signaturePromises);
 
     console.log(`[Collect Signatures] All requests completed. Processing results...`);
-    
+
     let successCount = 0;
     let failCount = 0;
-    
+
     for (const result of results) {
       if (result.status === 'fulfilled' && result.value) {
         successCount++;
@@ -916,60 +539,39 @@ class WithdrawalService {
     }
 
     console.log(`[Collect Signatures] ✅ SUCCESS - Collected ${signs.length} signatures`);
-    const signatures = { signs, expected_expiration, code };
-    this.saveSigaturesToCache(signatures, userAddress);
-    return signatures;
+    return { signs, expected_expiration, code };
   }
 
-  /**
-   * Encode dynamic uint8 array
-   */
   private encodeUint8Array(values: number[]): string {
-    // Array length (32 bytes)
     const length = values.length.toString(16).padStart(64, '0');
-    
-    // Pack uint8 values (32 per word)
+
     let packed = '';
     for (let i = 0; i < values.length; i += 32) {
       const chunk = values.slice(i, i + 32);
       const word = chunk.map(v => v.toString(16).padStart(2, '0')).join('').padEnd(64, '0');
       packed += word;
     }
-    
+
     return length + packed;
   }
 
-  /**
-   * Encode dynamic bytes32 array
-   */
   private encodeBytes32Array(values: string[]): string {
-    // Array length (32 bytes)
     const length = values.length.toString(16).padStart(64, '0');
-    
-    // Each bytes32 is already 32 bytes
+
     let data = '';
     for (const value of values) {
       const cleaned = value.startsWith('0x') ? value.slice(2) : value;
       data += cleaned.padStart(64, '0');
     }
-    
+
     return length + data;
   }
 
-  /**
-   * Convert string to bytes32
-   */
   private stringToBytes32(str: string): string {
-    // Convert string to hex
     const hex = str.split('').map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
-    // Pad to 32 bytes (64 hex chars)
     return '0x' + hex.padEnd(64, '0');
   }
 
-  /**
-   * Execute withdrawal using pure Reown EIP-1193
-   * Function: withdrawToken(address[2],uint256[2],bytes32,uint8[],bytes32[])
-   */
   async executeWithdrawal(
     amount: number,
     signatures: string[],
@@ -977,85 +579,67 @@ class WithdrawalService {
     code: string,
     walletProvider: any
   ): Promise<any> {
-    const userAddress = authService.getUserAddress();
+    const userAddress = this.authService.getUserAddress();
     if (!userAddress) throw new Error('User address not set');
 
     try {
-      // Check network
       const chainIdHex = await walletProvider.request({ method: 'eth_chainId' });
       const chainId = parseInt(chainIdHex, 16);
       if (chainId !== 56) {
         throw new Error(`Wrong network! Please switch to BSC Mainnet (chainId: 56). Current: ${chainId}`);
       }
 
-      // Get withdrawal contract address (pledger contract on BSC)
-      const { getChainById } = await import('../config/chains');
+      const { getChainById } = await import('../../config/chains');
       const chain = getChainById(56);
       const withdrawalContract = chain?.contracts.pledger;
-      
+
       if (!withdrawalContract) {
         throw new Error('Withdrawal contract address not found for BSC');
       }
 
-      // Check expiration
       const currentTimestamp = Math.floor(Date.now() / 1000);
       if (currentTimestamp >= expiration) {
         throw new Error('Signatures have expired. Please try again to get fresh signatures.');
       }
 
-      // Get LUCA token address
       const lucaToken = chain?.contracts.luca || chain?.lucaContract;
       if (!lucaToken) {
         throw new Error('LUCA token address not found for BSC');
       }
 
-      // Process signatures into v and rs arrays
       const v: number[] = [];
       const rs: string[] = [];
       for (const sig of signatures) {
-        const r = sig.slice(0, 66); // includes 0x
+        const r = sig.slice(0, 66);
         const s = '0x' + sig.slice(66, 130);
         const vByte = parseInt(sig.slice(130, 132), 16);
         v.push(vByte);
         rs.push(r, s);
       }
 
-      // Convert amount to wei
-      const weiAmount = BigInt(amount) * BigInt(10 ** 18);
+      const amountStr = String(amount);
+      const [intPart, decPart = ''] = amountStr.split('.');
+      const weiAmount = BigInt(intPart + decPart.padEnd(18, '0').slice(0, 18));
 
-      // Encode withdrawToken function call
-      // withdrawToken(address[2] addrs, uint256[2] uints, bytes32 code, uint8[] vs, bytes32[] rssMetadata)
-      // Function selector: keccak256("withdrawToken(address[2],uint256[2],bytes32,uint8[],bytes32[])")
-      const functionSelector = '0x3c423f0c'; // withdrawToken selector
+      const functionSelector = '0x3c423f0c';
 
-      // Encode fixed-size parameters
-      // address[2]: [token, user]
       const addr1 = lucaToken.slice(2).toLowerCase().padStart(64, '0');
       const addr2 = userAddress.slice(2).toLowerCase().padStart(64, '0');
-      
-      // uint256[2]: [amount, expiration]
+
       const uint1 = weiAmount.toString(16).padStart(64, '0');
       const uint2 = expiration.toString(16).padStart(64, '0');
-      
-      // bytes32: code
-      const codeBytes32 = this.stringToBytes32(code).slice(2); // Remove 0x
 
-      // Calculate offsets for dynamic arrays
-      // Static params size: 5 * 32 = 160 bytes (2 addresses + 2 uints + 1 bytes32)
-      // First dynamic array (vs) starts at byte 160 = 0xa0
+      const codeBytes32 = this.stringToBytes32(code).slice(2);
+
       const vsOffset = (5 * 32).toString(16).padStart(64, '0');
-      
-      // Encode vs array
+
       const vsData = this.encodeUint8Array(v);
-      const vsLength = vsData.length / 2; // Length in bytes
-      
-      // Second dynamic array (rssMetadata) starts after vs
+      const vsLength = vsData.length / 2;
+
       const rssOffset = (5 * 32 + vsLength).toString(16).padStart(64, '0');
-      
-      // Encode rss array
+
       const rssData = this.encodeBytes32Array(rs);
 
-      // Combine all parts
       const data = functionSelector +
         addr1 +
         addr2 +
@@ -1072,20 +656,18 @@ class WithdrawalService {
       console.log('Amount:', amount, 'LUCA');
       console.log('Signatures:', signatures.length);
 
-      // Send transaction
       const txHash = await walletProvider.request({
         method: 'eth_sendTransaction',
         params: [{
           from: userAddress,
           to: withdrawalContract,
           data,
-          gas: '0x186a0' // 100000 gas
+          gas: '0x186a0'
         }]
       });
 
       console.log('Transaction sent:', txHash);
 
-      // Wait for confirmation
       for (let i = 0; i < 60; i++) {
         await new Promise(resolve => setTimeout(resolve, 2000));
         const receipt = await walletProvider.request({
@@ -1106,11 +688,11 @@ class WithdrawalService {
 
     } catch (error: any) {
       console.error('Withdrawal execution error:', error);
-      
+
       if (error?.code === 'ACTION_REJECTED' || error?.code === 4001) {
         throw new Error('Transaction rejected by user');
       }
-      
+
       throw new Error(error?.message || 'Failed to execute withdrawal');
     }
   }
@@ -1125,113 +707,83 @@ class WithdrawalService {
         prSignatures.code,
         walletProvider
       );
-      return { 
-        success: true, 
-        transactionHash: receipt.hash || receipt.transactionHash 
+      return {
+        success: true,
+        transactionHash: receipt.hash || receipt.transactionHash
       };
     } catch (error: any) {
-      const shouldClearCache = error?.message?.includes('Signatures have expired');
-      if (shouldClearCache) this.clearSignatureCache();
-      return { 
-        success: false, 
-        error: error?.message || 'Withdrawal failed' 
+      return {
+        success: false,
+        error: error?.message || 'Withdrawal failed'
       };
     }
   }
 }
 
-/* ============================================================================
-   COMMUNITY PROPOSAL SERVICE
-   ============================================================================ */
+// ─────────────────────────────────────────────────────────────────────────────
+// CommunityProposalService
+// ─────────────────────────────────────────────────────────────────────────────
+export class CommunityProposalService {
+  private authService: AuthenticationService;
 
-class CommunityProposalService {
-  private getBaseUrl(): string {
-    return isDevelopment ? '' : API_CONFIG.WEB_API_BASE_URL;
+  constructor(authService: AuthenticationService) {
+    this.authService = authService;
   }
 
   async getMyPartList(status: string | number, searchKeys: string, pageIndex: number = 1, pageSize: number = 20, walletProvider?: any): Promise<ProposalListResponse> {
     try {
-      const token = await authService.getToken(walletProvider);
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE,
-        'token': token,
-      };
+      const token = await this.authService.getToken(walletProvider);
+      const headers: Record<string, string> = { 'Content-Type': 'application/x-www-form-urlencoded', 'token': token };
       if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
 
-      const url = `${this.getBaseUrl()}/community/getMyPartList`;
-      const body = { status: String(status || ''), searchKeys: searchKeys || '', pageIndex, pageSize };
-      console.log('[getMyPartList] Request:', { url, body, headers: { ...headers, token: token ? '***' : 'none' } });
-
-      const response = await axios.post(url, body, { headers, withCredentials: shouldUseCredentials() });
-      console.log('[getMyPartList] Response:', response.data);
+      const params = new URLSearchParams({ status: String(status || ''), searchKeys: searchKeys || '', pageIndex: String(pageIndex), pageSize: String(pageSize) });
+      const response = await axios.post(urls.community.getMyPartList, params, { headers, withCredentials: true });
 
       if (response.data?.errorcode === 'NOT_LOGGEDIN' || !response.data?.success) {
-        console.log('[getMyPartList] Token expired, re-authenticating...');
-        authService.clearToken();
-        const newToken = await authService.authenticate(walletProvider);
+        const newToken = await this.authService.authenticate(walletProvider);
         headers['token'] = newToken;
-        const retryResponse = await axios.post(url, body, { headers, withCredentials: shouldUseCredentials() });
-        console.log('[getMyPartList] Retry Response:', retryResponse.data);
+        const retryResponse = await axios.post(urls.community.getMyPartList, params, { headers, withCredentials: true });
         return retryResponse.data;
       }
       return response.data;
     } catch (error: any) {
-      console.error('[getMyPartList] Error:', error?.response?.data || error?.message);
       throw new Error(error?.response?.data?.message || error?.message || 'Failed to get proposals');
     }
   }
 
   async getMyInitiateList(status: string | number, searchKeys: string, pageIndex: number = 1, pageSize: number = 20, walletProvider?: any): Promise<ProposalListResponse> {
     try {
-      const token = await authService.getToken(walletProvider);
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE,
-        'token': token,
-      };
+      const token = await this.authService.getToken(walletProvider);
+      const headers: Record<string, string> = { 'Content-Type': 'application/x-www-form-urlencoded', 'token': token };
       if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
 
-      const url = `${this.getBaseUrl()}/community/getMyInitiateList`;
-      const body = { status: String(status || ''), searchKeys: searchKeys || '', pageIndex, pageSize };
-      console.log('[getMyInitiateList] Request:', { url, body, headers: { ...headers, token: token ? '***' : 'none' } });
-
-      const response = await axios.post(url, body, { headers, withCredentials: shouldUseCredentials() });
-      console.log('[getMyInitiateList] Response:', response.data);
+      const params = new URLSearchParams({ status: String(status || ''), searchKeys: searchKeys || '', pageIndex: String(pageIndex), pageSize: String(pageSize) });
+      const response = await axios.post(urls.community.getMyInitiateList, params, { headers, withCredentials: true });
 
       if (response.data?.errorcode === 'NOT_LOGGEDIN' || !response.data?.success) {
-        console.log('[getMyInitiateList] Token expired, re-authenticating...');
-        authService.clearToken();
-        const newToken = await authService.authenticate(walletProvider);
+        const newToken = await this.authService.authenticate(walletProvider);
         headers['token'] = newToken;
-        const retryResponse = await axios.post(url, body, { headers, withCredentials: shouldUseCredentials() });
-        console.log('[getMyInitiateList] Retry Response:', retryResponse.data);
+        const retryResponse = await axios.post(urls.community.getMyInitiateList, params, { headers, withCredentials: true });
         return retryResponse.data;
       }
       return response.data;
     } catch (error: any) {
-      console.error('[getMyInitiateList] Error:', error?.response?.data || error?.message);
       throw new Error(error?.response?.data?.message || error?.message || 'Failed to get proposals');
     }
   }
 
   async withdrawAGT(keyIds: string[], walletProvider?: any): Promise<{ success: boolean; message?: string }> {
     try {
-      const token = await authService.getToken(walletProvider);
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE,
-        'token': token,
-      };
+      const token = await this.authService.getToken(walletProvider);
+      const headers: Record<string, string> = { 'Content-Type': 'application/json', 'token': token };
       if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
 
-      const response = await axios.post(`${this.getBaseUrl()}/community/withdrawAGT`, { keyIds }, { headers, withCredentials: shouldUseCredentials() });
+      const response = await axios.post(urls.community.withdrawAGT, { keyIds }, { headers, withCredentials: true });
 
       if (response.data?.errorcode === 'NOT_LOGGEDIN' || !response.data?.success) {
-        authService.clearToken();
-        const newToken = await authService.authenticate(walletProvider);
+        const newToken = await this.authService.authenticate(walletProvider);
         headers['token'] = newToken;
-        const retryResponse = await axios.post(`${this.getBaseUrl()}/community/withdrawAGT`, { keyIds }, { headers, withCredentials: shouldUseCredentials() });
+        const retryResponse = await axios.post(urls.community.withdrawAGT, { keyIds }, { headers, withCredentials: true });
         return { success: retryResponse.data?.success || false, message: retryResponse.data?.message };
       }
       return { success: response.data?.success || false, message: response.data?.message };
@@ -1250,28 +802,23 @@ class CommunityProposalService {
 
   async createCommunityProposal(proposalData: any, walletProvider?: any): Promise<{ success: boolean; message?: string }> {
     try {
-      const token = await authService.getToken(walletProvider);
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE,
-        'token': token,
-      };
+      const token = await this.authService.getToken(walletProvider);
+      const headers: Record<string, string> = { 'Content-Type': 'application/json', 'token': token };
       if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
 
       const response = await axios.post(
-        `${this.getBaseUrl()}/community/createProposal`,
+        urls.community.createProposal,
         proposalData,
-        { headers, withCredentials: shouldUseCredentials() }
+        { headers, withCredentials: true }
       );
 
       if (response.data?.errorcode === 'NOT_LOGGEDIN' || !response.data?.success) {
-        authService.clearToken();
-        const newToken = await authService.authenticate(walletProvider);
+        const newToken = await this.authService.authenticate(walletProvider);
         headers['token'] = newToken;
         const retryResponse = await axios.post(
-          `${this.getBaseUrl()}/community/createProposal`,
+          urls.community.createProposal,
           proposalData,
-          { headers, withCredentials: shouldUseCredentials() }
+          { headers, withCredentials: true }
         );
         return { success: retryResponse.data?.success || false, message: retryResponse.data?.message };
       }
@@ -1282,28 +829,32 @@ class CommunityProposalService {
   }
 }
 
-/* ============================================================================
-   CONSENSUS CONNECTION SERVICE
-   ============================================================================ */
+// ─────────────────────────────────────────────────────────────────────────────
+// ConsensusConnectionService
+// ─────────────────────────────────────────────────────────────────────────────
+export class ConsensusConnectionService {
+  private authService: AuthenticationService;
 
-class ConsensusConnectionService {
+  constructor(authService: AuthenticationService) {
+    this.authService = authService;
+  }
+
   async getLinkList(linkStatus: number, userWalletAddress?: string, chainId?: string, walletProvider?: any) {
     try {
-      const token = await authService.getToken(walletProvider);
+      const token = await this.authService.getToken(walletProvider);
       const headers: Record<string, string> = { 'Content-Type': 'application/json', 'token': token };
       if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
 
-      const response = await axios.get(`${API_CONFIG.OPENAPI_BASE_URL}/open/getUserConnList`, {
+      const response = await axios.get(urls.open.getUserConnList, {
         headers,
         withCredentials: true,
         params: { linkStatus, pageIndex: 1, pageSize: 100, ...(userWalletAddress && { userWalletAddress }), ...(chainId && { chainId }) },
       });
 
       if (response.data?.errorcode === 'NOT_LOGGEDIN' || response.data?.failed) {
-        authService.clearToken();
-        const newToken = await authService.authenticate(walletProvider);
+        const newToken = await this.authService.authenticate(walletProvider);
         headers['token'] = newToken;
-        const retryResponse = await axios.get(`${API_CONFIG.OPENAPI_BASE_URL}/open/getUserConnList`, {
+        const retryResponse = await axios.get(urls.open.getUserConnList, {
           headers,
           withCredentials: true,
           params: { linkStatus, pageIndex: 1, pageSize: 100, ...(userWalletAddress && { userWalletAddress }), ...(chainId && { chainId }) },
@@ -1328,17 +879,16 @@ class ConsensusConnectionService {
 
   async getPledgeableList(walletProvider?: any): Promise<ConsensusConnection[]> {
     try {
-      const token = await authService.getToken(walletProvider);
+      const token = await this.authService.getToken(walletProvider);
       const headers: Record<string, string> = { 'Content-Type': 'application/json', 'token': token };
       if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
 
-      const response = await axios.get(`${API_CONFIG.OPENAPI_BASE_URL}/open/getTreatyList`, { headers, withCredentials: true });
+      const response = await axios.get(urls.open.getTreatyList, { headers, withCredentials: true });
 
       if (response.data?.errorcode === 'NOT_LOGGEDIN' || response.data?.failed) {
-        authService.clearToken();
-        const newToken = await authService.authenticate(walletProvider);
+        const newToken = await this.authService.authenticate(walletProvider);
         headers['token'] = newToken;
-        const retryResponse = await axios.get(`${API_CONFIG.OPENAPI_BASE_URL}/open/getTreatyList`, { headers, withCredentials: true });
+        const retryResponse = await axios.get(urls.open.getTreatyList, { headers, withCredentials: true });
         if (retryResponse.data?.errorcode === 'NOT_LOGGEDIN') throw new Error('Authentication required');
         return this.extractConnectionList(retryResponse.data);
       }
@@ -1358,18 +908,17 @@ class ConsensusConnectionService {
 
   async updatePledgeStatus(connectionId: number, nodeAddress: string, action: 'pledge' | 'depledge', walletProvider?: any) {
     try {
-      const token = await authService.getToken(walletProvider);
+      const token = await this.authService.getToken(walletProvider);
       const headers: Record<string, string> = { 'Content-Type': 'application/json', 'token': token };
       if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
 
       const payload = { treatyId: connectionId, nodeAddress, action };
-      const response = await axios.post(`${API_CONFIG.OPENAPI_BASE_URL}/open/updateLedgeStatus`, payload, { headers, withCredentials: true });
+      const response = await axios.post(urls.open.updateLedgeStatus, payload, { headers, withCredentials: true });
 
       if (response.data?.errorcode === 'NOT_LOGGEDIN' || response.data?.failed) {
-        authService.clearToken();
-        const newToken = await authService.authenticate(walletProvider);
+        const newToken = await this.authService.authenticate(walletProvider);
         headers['token'] = newToken;
-        const retryResponse = await axios.post(`${API_CONFIG.OPENAPI_BASE_URL}/open/updateLedgeStatus`, payload, { headers, withCredentials: true });
+        const retryResponse = await axios.post(urls.open.updateLedgeStatus, payload, { headers, withCredentials: true });
         if (retryResponse.data?.errorcode === 'NOT_LOGGEDIN') throw new Error('Authentication required');
         return { success: retryResponse.data?.success !== false, message: retryResponse.data?.message || 'Pledge status updated' };
       }
@@ -1380,29 +929,29 @@ class ConsensusConnectionService {
   }
 }
 
-/* ============================================================================
-   CONNECTION CREATION SERVICE - REOWN
-   ============================================================================ */
+// ─────────────────────────────────────────────────────────────────────────────
+// ConnectionCreationService
+// ─────────────────────────────────────────────────────────────────────────────
+export class ConnectionCreationService {
+  private authService: AuthenticationService;
 
-class ConnectionCreationService {
+  constructor(authService: AuthenticationService) {
+    this.authService = authService;
+  }
 
   validateAddress(address: string): boolean {
-  if (!address || typeof address !== 'string') return false;
-  if (!/^0x[a-fA-F0-9]{40}$/.test(address)) return false;
-  return true;
-}
+    if (!address || typeof address !== 'string') return false;
+    if (!/^0x[a-fA-F0-9]{40}$/.test(address)) return false;
+    return true;
+  }
 
   private toWei(amount: number, decimals: number): bigint {
-    // Convert to string with full precision
     const amountStr = amount.toFixed(decimals);
-    // Split into integer and decimal parts
     const [intPart, decPart = ''] = amountStr.split('.');
-    // Pad decimal part with zeros to match decimals
     const paddedDec = decPart.padEnd(decimals, '0');
-    // Combine and convert to BigInt
     return BigInt(intPart + paddedDec);
   }
-  // ABI encoding helper for dynamic string
+
   private encodeString(str: string): string {
     const hex = str.split('').map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
     const length = str.length.toString(16).padStart(64, '0');
@@ -1438,7 +987,6 @@ class ConnectionCreationService {
     currencyList: CoinCurrency[],
     walletProvider: any
   ): Promise<boolean> {
-    // Native tokens don't need approval
     if (['BNB', 'ETH', 'MATIC', 'AVAX', 'KUB'].includes(currency)) return true;
 
     const tokenAddress = currency.includes('0x')
@@ -1448,10 +996,9 @@ class ConnectionCreationService {
     if (!tokenAddress) return false;
 
     try {
-      const address = authService.getUserAddress();
+      const address = this.authService.getUserAddress();
       if (!address) throw new Error('User address not set');
 
-      // allowance(address,address) = 0xdd62ed3e
       const data = '0xdd62ed3e' +
         address.slice(2).toLowerCase().padStart(64, '0') +
         approveAddress.slice(2).toLowerCase().padStart(64, '0');
@@ -1473,14 +1020,11 @@ class ConnectionCreationService {
     } catch (error: any) {
       console.warn('Allowance check failed (will attempt approval):', error.message);
 
-      // If RPC error (-32002, -32603, etc), assume no allowance and proceed with approval
-      // The approval transaction will fail gracefully if not needed
       if (error.code && String(error.code).startsWith('-32')) {
         console.log('RPC error detected, skipping allowance check and proceeding to approval');
-        return false; // Trigger approval flow
+        return false;
       }
 
-      // For other errors, also assume needs approval
       return false;
     }
   }
@@ -1504,27 +1048,26 @@ class ConnectionCreationService {
     const weiPlaces = Number(currencyData?.weiPlaces || '18');
 
     try {
-      const address = authService.getUserAddress();
+      const address = this.authService.getUserAddress();
       if (!address) throw new Error('User address not set');
 
-      // FIX: Proper decimal to BigInt conversion
-      // Convert to string with full precision, remove decimal point, pad with zeros
-      const amountStr = amount.toFixed(weiPlaces); // e.g., "0.5000" with 4 decimals
+      const MAX_UINT256 = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+
+      const amountStr = amount.toFixed(weiPlaces);
       const [intPart, decPart = ''] = amountStr.split('.');
-      const paddedDec = decPart.padEnd(weiPlaces, '0');
-      const weiAmount = BigInt(intPart + paddedDec); // Combine and convert to BigInt
+      const paddedDec = decPart.padEnd(weiPlaces, '0').slice(0, weiPlaces);
+      const exactWeiAmount = BigInt(intPart + paddedDec);
 
       console.log('Approval amount:', {
         original: amount,
         weiPlaces,
-        amountStr,
-        weiAmount: weiAmount.toString()
+        exactWei: exactWeiAmount.toString(),
+        approving: 'MaxUint256 (unlimited)',
       });
 
-      // approve(address,uint256) = 0x095ea7b3
       const data = '0x095ea7b3' +
         contractForApproval.slice(2).toLowerCase().padStart(64, '0') +
-        weiAmount.toString(16).padStart(64, '0');
+        MAX_UINT256.toString(16).padStart(64, '0');
 
       const txHash = await walletProvider.request({
         method: 'eth_sendTransaction',
@@ -1532,11 +1075,12 @@ class ConnectionCreationService {
           from: address,
           to: tokenAddress,
           data,
-          gas: '0x15f90' // 90000
+          gas: '0x15f90'
         }]
       });
 
-      // Wait for confirmation
+      console.log('Approval tx sent, waiting for receipt:', txHash);
+
       for (let i = 0; i < 60; i++) {
         await new Promise(resolve => setTimeout(resolve, 2000));
         const receipt = await walletProvider.request({
@@ -1546,14 +1090,18 @@ class ConnectionCreationService {
 
         if (receipt) {
           if (receipt.status === '0x0') {
-            throw new Error('Approval transaction failed');
+            throw new Error('Approval transaction failed on-chain');
           }
-          console.log('Approval successful:', txHash);
+          console.log('Approval confirmed in block:', receipt.blockNumber, 'txHash:', txHash);
           return { status: true };
+        }
+
+        if (i % 5 === 0 && i > 0) {
+          console.log(`Waiting for approval confirmation... (${i * 2}s)`);
         }
       }
 
-      throw new Error('Approval timeout');
+      throw new Error('Approval timeout - transaction may still be pending, please check your wallet');
     } catch (err: any) {
       console.error('Approve error:', err);
       if (err.code === 4001 || err.code === 'ACTION_REJECTED') {
@@ -1565,7 +1113,6 @@ class ConnectionCreationService {
 
   async checkNFTApproval(tokenId: string, nftAddress: string, factoryAddress: string, walletProvider: any): Promise<boolean> {
     try {
-      // getApproved(uint256) = 0x081812fc
       const data = '0x081812fc' + BigInt(tokenId).toString(16).padStart(64, '0');
 
       const result = await walletProvider.request({
@@ -1582,10 +1129,9 @@ class ConnectionCreationService {
   }
 
   async approveNFT(tokenId: string, nftAddress: string, factoryAddress: string, walletProvider: any): Promise<void> {
-    const address = authService.getUserAddress();
+    const address = this.authService.getUserAddress();
     if (!address) throw new Error('User address not set');
 
-    // approve(address,uint256) = 0x095ea7b3
     const data = '0x095ea7b3' +
       factoryAddress.slice(2).toLowerCase().padStart(64, '0') +
       BigInt(tokenId).toString(16).padStart(64, '0');
@@ -1600,7 +1146,6 @@ class ConnectionCreationService {
       }]
     });
 
-    // Wait for confirmation
     for (let i = 0; i < 60; i++) {
       await new Promise(resolve => setTimeout(resolve, 2000));
       const receipt = await walletProvider.request({
@@ -1622,10 +1167,9 @@ class ConnectionCreationService {
 
   async checkNFTOwnership(tokenId: string, nftAddress: string, walletProvider: any): Promise<boolean> {
     try {
-      const address = authService.getUserAddress();
+      const address = this.authService.getUserAddress();
       if (!address) return false;
 
-      // ownerOf(uint256) = 0x6352211e
       const data = '0x6352211e' + BigInt(tokenId).toString(16).padStart(64, '0');
 
       const result = await walletProvider.request({
@@ -1650,7 +1194,7 @@ class ConnectionCreationService {
     factoryAddress: string,
     walletProvider: any
   ): Promise<string> {
-    const address = authService.getUserAddress();
+    const address = this.authService.getUserAddress();
     if (!address) throw new Error('User address not set');
 
     try {
@@ -1663,28 +1207,19 @@ class ConnectionCreationService {
         factoryAddress
       });
 
-      // Function: createLink(address _userB, string _symbol, uint256 _tatalPlan, uint256 _percentA, uint256 _lockDays)
-      // Selector: first 4 bytes of keccak256("createLink(address,string,uint256,uint256,uint256)")
-      // Pre-computed: 0x8b73487e
+      const functionSelector = '4aff6754';
 
-      const functionSelector = '0x8b73487e';
-
-      // Encode parameters according to ABI encoding rules
-      // For dynamic types (string), we need offset pointers
-
-      // Static parameters offsets
       const addressParam = toAddress.slice(2).toLowerCase().padStart(64, '0');
-      const stringOffset = (5 * 32).toString(16).padStart(64, '0'); // Offset to string data (after 5 static params)
+      const stringOffset = (5 * 32).toString(16).padStart(64, '0');
       const totalAmountParam = totalAmount.toString(16).padStart(64, '0');
       const percentAParam = BigInt(percentA).toString(16).padStart(64, '0');
       const lockDaysParam = BigInt(lockupDays).toString(16).padStart(64, '0');
 
-      // Encode string (dynamic type)
       const stringLength = tokenSymbol.length.toString(16).padStart(64, '0');
       const stringBytes = tokenSymbol.split('').map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
       const stringData = stringBytes.padEnd(Math.ceil(stringBytes.length / 64) * 64, '0');
 
-      const data = functionSelector +
+      const data = '0x' + functionSelector +
         addressParam +
         stringOffset +
         totalAmountParam +
@@ -1693,14 +1228,34 @@ class ConnectionCreationService {
         stringLength +
         stringData;
 
-      console.log('Transaction data:', data);
-
-      // Calculate value for native token transfers
       const myAmount = (totalAmount * BigInt(percentA)) / BigInt(100);
       const isNativeToken = ['BNB', 'ETH', 'MATIC', 'AVAX', 'KUB'].includes(tokenSymbol);
       const value = isNativeToken ? '0x' + myAmount.toString(16) : '0x0';
 
-      console.log('Transaction value:', value, 'isNative:', isNativeToken);
+      console.log('createLink tx:', {
+        data,
+        value,
+        isNativeToken,
+        to: factoryAddress,
+        from: address,
+      });
+
+      let gasEstimate: string | undefined;
+      try {
+        gasEstimate = await walletProvider.request({
+          method: 'eth_estimateGas',
+          params: [{
+            from: address,
+            to: factoryAddress,
+            data,
+            value,
+          }]
+        });
+      } catch (estimateError: any) {
+        console.error('Gas estimation failed (contract will likely revert):', estimateError);
+        const errMsg = estimateError?.data?.message || estimateError?.message || 'Unknown revert reason';
+        throw new Error(`Contract call would revert: ${errMsg}. Please check that the token is supported and all parameters are correct.`);
+      }
 
       const txHash = await walletProvider.request({
         method: 'eth_sendTransaction',
@@ -1709,13 +1264,12 @@ class ConnectionCreationService {
           to: factoryAddress,
           data,
           value,
-          gas: '0x7a120' // 500000 gas
+          gas: gasEstimate || '0x7a120'
         }]
       });
 
       console.log('Transaction sent:', txHash);
 
-      // Wait for confirmation
       for (let i = 0; i < 60; i++) {
         await new Promise(resolve => setTimeout(resolve, 2000));
         const receipt = await walletProvider.request({
@@ -1754,7 +1308,7 @@ class ConnectionCreationService {
     factoryAddress: string,
     walletProvider: any
   ): Promise<string> {
-    const address = authService.getUserAddress();
+    const address = this.authService.getUserAddress();
     if (!address) throw new Error('User address not set');
 
     try {
@@ -1777,33 +1331,42 @@ class ConnectionCreationService {
   }
 }
 
-/* ============================================================================
-   INCOME SERVICE
-   ============================================================================ */
-
-class IncomeService {
+// ─────────────────────────────────────────────────────────────────────────────
+// IncomeService
+// ─────────────────────────────────────────────────────────────────────────────
+export class IncomeService {
   private readonly PAGE_SIZE = 20;
+  private authService: AuthenticationService;
+  private encryptionService: EncryptionService;
+
+  constructor(authService: AuthenticationService, encryptionService: EncryptionService) {
+    this.authService = authService;
+    this.encryptionService = encryptionService;
+  }
+
+  private addressCacheKey(prefix: string): string {
+    const address = this.authService.getUserAddress() || 'anon';
+    return `${prefix}_${address}`;
+  }
 
   async getIncomeHistory(startTimestamps?: number, endTimestamps?: number): Promise<IncomeRecord[]> {
-    const cacheKey = `income_${startTimestamps}_${endTimestamps}`;
-    const cached = await encryptionService.getCache(cacheKey);
+    const cacheKey = `${this.addressCacheKey('income')}_${startTimestamps}_${endTimestamps}`;
+    const cached = await this.encryptionService.getCache(cacheKey);
     if (cached) return cached;
 
-    const token = await authService.getToken();
+    const token = await this.authService.getToken();
     let allData: IncomeRecord[] = [];
     let lastEvalKey = '';
 
     while (true) {
-      const headers: Record<string, string> = { 'Content-Type': 'application/json', 'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE, 'token': token };
-      if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
+      const headers = getJsonHeaders(token);
 
-      const config: any = { headers, params: { pageSize: this.PAGE_SIZE } };
-      if (lastEvalKey) config.params.lastEvaluatedKey = lastEvalKey;
+      const config: any = { headers, params: { pageSize: this.PAGE_SIZE, lastEvaluatedKey: lastEvalKey } };
       if (startTimestamps) config.params.startTimestamps = startTimestamps;
       if (endTimestamps) config.params.endTimestamps = endTimestamps;
       if (shouldUseCredentials()) config.withCredentials = true;
 
-      const response = await axios.get(`${API_CONFIG.OPENAPI_BASE_URL}/open/getIncomeHistory`, config);
+      const response = await axios.get(urls.open.getIncomeHistory, config);
       if (response.data?.status === 'failed' || !response.data?.data) break;
 
       allData = [...allData, ...response.data.data];
@@ -1811,7 +1374,7 @@ class IncomeService {
       lastEvalKey = response.data.mapData.last_evaluated_key;
     }
 
-    await encryptionService.setCache(cacheKey, allData, CACHE_TTL);
+    await this.encryptionService.setCache(cacheKey, allData, CACHE_TTL);
     return allData;
   }
 
@@ -1820,25 +1383,23 @@ class IncomeService {
   }
 
   async getWithdrawalHistory(startTimestamps?: number, endTimestamps?: number): Promise<WithdrawalRecord[]> {
-    const cacheKey = `withdrawal_${startTimestamps}_${endTimestamps}`;
-    const cached = await encryptionService.getCache(cacheKey);
+    const cacheKey = `${this.addressCacheKey('withdrawal')}_${startTimestamps}_${endTimestamps}`;
+    const cached = await this.encryptionService.getCache(cacheKey);
     if (cached) return cached;
 
-    const token = await authService.getToken();
+    const token = await this.authService.getToken();
     let allData: WithdrawalRecord[] = [];
     let lastEvalKey = '';
 
     while (true) {
-      const headers: Record<string, string> = { 'Content-Type': 'application/json', 'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE, 'token': token };
-      if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
+      const headers = getJsonHeaders(token);
 
-      const config: any = { headers, params: { pageSize: this.PAGE_SIZE } };
-      if (lastEvalKey) config.params.lastEvaluatedKey = lastEvalKey;
+      const config: any = { headers, params: { pageSize: this.PAGE_SIZE, lastEvaluatedKey: lastEvalKey } };
       if (startTimestamps) config.params.startTimestamps = startTimestamps;
       if (endTimestamps) config.params.endTimestamps = endTimestamps;
       if (shouldUseCredentials()) config.withCredentials = true;
 
-      const response = await axios.get(`${API_CONFIG.OPENAPI_BASE_URL}/open/getWithdrawalHistory`, config);
+      const response = await axios.get(urls.open.getWithdrawalHistory, config);
       if (response.data?.status === 'failed' || !response.data?.data) break;
 
       allData = [...allData, ...response.data.data];
@@ -1846,7 +1407,7 @@ class IncomeService {
       lastEvalKey = response.data.mapData.last_evaluated_key;
     }
 
-    await encryptionService.setCache(cacheKey, allData, CACHE_TTL);
+    await this.encryptionService.setCache(cacheKey, allData, CACHE_TTL);
     return allData;
   }
 
@@ -1862,20 +1423,19 @@ class IncomeService {
   }
 
   async getIncomeHistoryPaginated(offset: number = 0, limit: number = 20): Promise<IncomeRecord[]> {
-    const cacheKey = `income_paginated_${offset}_${limit}`;
-    const cached = await encryptionService.getCache(cacheKey);
+    const cacheKey = `${this.addressCacheKey('income_paginated')}_${offset}_${limit}`;
+    const cached = await this.encryptionService.getCache(cacheKey);
     if (cached) return cached;
 
-    const token = await authService.getToken();
-    const headers: Record<string, string> = { 'Content-Type': 'application/json', 'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE, 'token': token };
-    if (!isDevelopment) headers['apiToken'] = API_CONFIG.API_TOKEN;
+    const token = await this.authService.getToken();
+    const headers = getJsonHeaders(token);
 
     const config: any = { headers, params: { pageSize: limit, offset } };
     if (shouldUseCredentials()) config.withCredentials = true;
 
-    const response = await axios.get(`${API_CONFIG.OPENAPI_BASE_URL}/open/getIncomeHistory`, config);
+    const response = await axios.get(urls.open.getIncomeHistory, config);
     const data = response.data?.data || [];
-    await encryptionService.setCache(cacheKey, data, CACHE_TTL);
+    await this.encryptionService.setCache(cacheKey, data, CACHE_TTL);
     return data;
   }
 
@@ -1887,28 +1447,31 @@ class IncomeService {
   }
 
   clearCache(): void {
-    encryptionService.clearCache();
+    // Clear only this user's income/withdrawal entries so other wallets are unaffected.
+    const address = this.authService.getUserAddress() || 'anon';
+    const prefixes = [`income_${address}`, `withdrawal_${address}`, `income_paginated_${address}`];
+    Object.keys(localStorage)
+      .filter(k => k.startsWith(CACHE_PREFIX) && prefixes.some(p => k.includes(p)))
+      .forEach(k => localStorage.removeItem(k));
   }
 }
 
-/* ============================================================================
-   GAME SERVICE
-   ============================================================================ */
-
-class GameService {
-  private allGamesCache: { data: ApiResponse<Game[]>; timestamp: number } | null = null;
-  private gameByIdCache: Map<string, { data: ApiResponse<Game>; timestamp: number }> = new Map();
-  private readonly GAMES_CACHE_TTL = 5 * 60_000; // 5 minutes
-  private readonly GAME_DETAIL_CACHE_TTL = 2 * 60_000; // 2 minutes
-
+// ─────────────────────────────────────────────────────────────────────────────
+// GameService
+// ─────────────────────────────────────────────────────────────────────────────
+export class GameService {
   private getCommonHeaders(): Record<string, string> {
     const token = localStorage.getItem('atm_token');
-    return { 'Content-Type': 'application/json', ...(token && { token }) };
+    return getJsonHeadersMinimal(token);
   }
 
   private getAuthHeaders(): Record<string, string> {
     const token = localStorage.getItem('atm_token');
-    return { 'Content-Type': 'application/json', 'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE, ...(token && { token }) };
+    return {
+      'Content-Type': 'application/json',
+      'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE,
+      ...(token && { token }),
+    };
   }
 
   private getUserDataFromStorage() {
@@ -1920,14 +1483,9 @@ class GameService {
     }
   }
 
-  clearGamesCache() {
-    this.allGamesCache = null;
-    this.gameByIdCache.clear();
-  }
-
   async createProposal(data: Partial<GameProposal>): Promise<ApiResponse<any>> {
     try {
-      const response = await axios.post(`${API_CONFIG.GAME_API_BASE_URL}/game/createProposal`, data, { headers: this.getCommonHeaders(), withCredentials: true });
+      const response = await axios.post(urls.game.createProposal, data, { headers: this.getCommonHeaders(), withCredentials: true });
       return { message: response.data.message || 'Success', isSuccess: response.data.success || false, success: response.data.success || false, data: response.data.data };
     } catch (error: any) {
       return { message: error.response?.data?.message || 'Something went wrong', isSuccess: false, success: false };
@@ -1936,7 +1494,7 @@ class GameService {
 
   async updateProposal(data: Partial<GameProposal>): Promise<ApiResponse<any>> {
     try {
-      const response = await axios.post(`${API_CONFIG.GAME_API_BASE_URL}/game/updateProposal`, data, { headers: this.getCommonHeaders(), withCredentials: true });
+      const response = await axios.post(urls.game.updateProposal, data, { headers: this.getCommonHeaders(), withCredentials: true });
       return { message: response.data.message || 'Success', isSuccess: response.data.success || false, success: response.data.success || false, data: response.data.data };
     } catch (error: any) {
       return { message: error.response?.data?.message || 'Something went wrong', isSuccess: false, success: false };
@@ -1947,7 +1505,7 @@ class GameService {
     try {
       const userData = this.getUserDataFromStorage();
       if (!userData?.user?.id) throw new Error('User not authenticated');
-      const response = await axios.post(`${API_CONFIG.GAME_API_BASE_URL}/game/getProposalByUserId`, { userId: userData.user.id }, { headers: this.getCommonHeaders(), withCredentials: true });
+      const response = await axios.post(urls.game.getProposalByUserId, { userId: userData.user.id }, { headers: this.getCommonHeaders(), withCredentials: true });
       return { data: response.data.data || [], isSuccess: response.data.success || false, success: response.data.success || false, message: 'Success' };
     } catch (error: any) {
       return { message: error.response?.data?.message || 'Something went wrong', isSuccess: false, success: false };
@@ -1956,7 +1514,7 @@ class GameService {
 
   async getAdminProposal(): Promise<ApiResponse<GameProposal[]>> {
     try {
-      const response = await axios.post(`${API_CONFIG.GAME_API_BASE_URL}/game/getAllProposal`, { blank: 'blank' }, { withCredentials: true, headers: this.getAuthHeaders() });
+      const response = await axios.post(urls.game.getAllProposal, { blank: 'blank' }, { withCredentials: true, headers: this.getAuthHeaders() });
       return { data: response.data.data || [], isSuccess: response.data.success || false, success: response.data.success || false, message: 'Success' };
     } catch (error: any) {
       return { message: error.response?.data?.message || 'Something went wrong', isSuccess: false, success: false };
@@ -1965,7 +1523,7 @@ class GameService {
 
   async updateProposalByAdmin(dataObject: any): Promise<ApiResponse<any>> {
     try {
-      const response = await axios.post(`${API_CONFIG.GAME_API_BASE_URL}/game/updateGameStatus`, dataObject, { withCredentials: true, headers: this.getAuthHeaders() });
+      const response = await axios.post(urls.game.updateGameStatus, dataObject, { withCredentials: true, headers: this.getAuthHeaders() });
       return { data: response.data.data || '', isSuccess: response.data.success || false, success: response.data.success || false, message: 'Success' };
     } catch (error: any) {
       return { message: error.response?.data?.message || 'Something went wrong', isSuccess: false, success: false };
@@ -1973,33 +1531,18 @@ class GameService {
   }
 
   async getAllGame(): Promise<ApiResponse<Game[]>> {
-    if (this.allGamesCache && (Date.now() - this.allGamesCache.timestamp) < this.GAMES_CACHE_TTL) {
-      return this.allGamesCache.data;
-    }
     try {
-      const response = await axios.post(`${API_CONFIG.GAME_API_BASE_URL}/game/getAllGame`, {}, { headers: this.getCommonHeaders(), withCredentials: true });
-      const result: ApiResponse<Game[]> = { data: response.data.data || [], isSuccess: response.data.success || false, success: response.data.success || false, message: 'Success' };
-      if (result.success) {
-        this.allGamesCache = { data: result, timestamp: Date.now() };
-      }
-      return result;
+      const response = await axios.post(urls.game.getAllGame, {}, { headers: this.getCommonHeaders(), withCredentials: true });
+      return { data: response.data.data || [], isSuccess: response.data.success || false, success: response.data.success || false, message: 'Success' };
     } catch (error: any) {
       return { message: error.response?.data?.message || 'Something went wrong', isSuccess: false, success: false };
     }
   }
 
   async getGameById(gameId: string): Promise<ApiResponse<Game>> {
-    const cached = this.gameByIdCache.get(gameId);
-    if (cached && (Date.now() - cached.timestamp) < this.GAME_DETAIL_CACHE_TTL) {
-      return cached.data;
-    }
     try {
-      const response = await axios.post(`${API_CONFIG.GAME_API_BASE_URL}/game/getGameById`, { id: gameId }, { headers: this.getCommonHeaders(), withCredentials: true });
-      const result: ApiResponse<Game> = { data: response.data.data, isSuccess: response.data.success || false, success: response.data.success || false, message: 'Success' };
-      if (result.success) {
-        this.gameByIdCache.set(gameId, { data: result, timestamp: Date.now() });
-      }
-      return result;
+      const response = await axios.post(urls.game.getGameById, { id: gameId }, { headers: this.getCommonHeaders(), withCredentials: true });
+      return { data: response.data.data, isSuccess: response.data.success || false, success: response.data.success || false, message: 'Success' };
     } catch (error: any) {
       return { message: error.response?.data?.message || 'Something went wrong', isSuccess: false, success: false };
     }
@@ -2008,7 +1551,7 @@ class GameService {
   async gameRating(dataObject: GameRating): Promise<ApiResponse<any>> {
     try {
       const token = localStorage.getItem('atm_token');
-      const apiUrl = token ? `${API_CONFIG.GAME_API_BASE_URL}/game/knownRating` : `${API_CONFIG.GAME_API_BASE_URL}/game/anonymousRating`;
+      const apiUrl = token ? urls.game.knownRating : urls.game.anonymousRating;
       const response = await axios.post(apiUrl, dataObject, { ...(token && { withCredentials: true }), headers: token ? this.getAuthHeaders() : this.getCommonHeaders() });
       return { data: response.data.data || '', isSuccess: response.data.success || false, success: response.data.success || false, message: 'Success' };
     } catch (error: any) {
@@ -2018,14 +1561,8 @@ class GameService {
 
   async gameContributed(dataObject: GameInvestment): Promise<ApiResponse<any>> {
     try {
-      const response = await axios.post(`${API_CONFIG.GAME_API_BASE_URL}/game/invest`, dataObject, { withCredentials: true, headers: this.getAuthHeaders() });
-      const result = { data: response.data.data || '', isSuccess: response.data.success || false, success: response.data.success || false, message: 'Success' };
-      if (result.success) {
-        // Invalidate caches after successful contribution
-        this.gameByIdCache.delete(dataObject.gameId);
-        this.allGamesCache = null;
-      }
-      return result;
+      const response = await axios.post(urls.game.invest, dataObject, { withCredentials: true, headers: this.getAuthHeaders() });
+      return { data: response.data.data || '', isSuccess: response.data.success || false, success: response.data.success || false, message: 'Success' };
     } catch (error: any) {
       return { message: error.response?.data?.message || 'Something went wrong', isSuccess: false, success: false };
     }
@@ -2033,7 +1570,7 @@ class GameService {
 
   async createBattle(data: BattleData): Promise<ApiResponse<any>> {
     try {
-      const response = await axios.post(`${API_CONFIG.GAME_API_BASE_URL}/game/createBattle`, data, { headers: this.getCommonHeaders(), withCredentials: true });
+      const response = await axios.post(urls.game.createBattle, data, { headers: this.getCommonHeaders(), withCredentials: true });
       return { data: response.data.data || null, isSuccess: response.data.success || false, success: response.data.success || false, message: response.data.msg || 'Success', errorcode: response.data.errorcode, failed: response.data.failed, mapData: response.data.mapData, state: response.data.state, status: response.data.status, total: response.data.total };
     } catch (error: any) {
       return { message: error.response?.data?.message || 'Something went wrong', isSuccess: false, success: false };
@@ -2042,7 +1579,7 @@ class GameService {
 
   async updateBattle(data: UpdateBattleData): Promise<ApiResponse<any>> {
     try {
-      const response = await axios.post(`${API_CONFIG.GAME_API_BASE_URL}/game/updateBattle`, data, { headers: this.getCommonHeaders(), withCredentials: true });
+      const response = await axios.post(urls.game.updateBattle, data, { headers: this.getCommonHeaders(), withCredentials: true });
       return { data: response.data.data || null, isSuccess: response.data.success || false, success: response.data.success || false, message: response.data.msg || 'Success', errorcode: response.data.errorcode, failed: response.data.failed, mapData: response.data.mapData, state: response.data.state, status: response.data.status, total: response.data.total };
     } catch (error: any) {
       return { message: error.response?.data?.message || 'Something went wrong', isSuccess: false, success: false };
@@ -2051,7 +1588,7 @@ class GameService {
 
   async getStars(data: UserStarsData): Promise<ApiResponse<any>> {
     try {
-      const response = await axios.post(`${API_CONFIG.GAME_API_BASE_URL}/game/getStars`, data, { headers: this.getCommonHeaders(), withCredentials: true });
+      const response = await axios.post(urls.game.getStars, data, { headers: this.getCommonHeaders(), withCredentials: true });
       return { data: response.data.data || null, isSuccess: response.data.success || false, success: response.data.success || false, message: response.data.msg || 'Success', errorcode: response.data.errorcode, failed: response.data.failed, mapData: response.data.mapData, state: response.data.state, status: response.data.status, total: response.data.total };
     } catch (error: any) {
       return { message: error.response?.data?.message || 'Something went wrong', isSuccess: false, success: false };
@@ -2071,7 +1608,7 @@ class GameService {
         milestones: []
       });
 
-      const response = await axios({ method: 'post', maxBodyLength: Infinity, url: `${API_CONFIG.GAME_API_BASE_URL}/game/createProposal`, headers: this.getCommonHeaders(), data });
+      const response = await axios({ method: 'post', maxBodyLength: Infinity, url: urls.game.createProposal, headers: this.getCommonHeaders(), data });
       return { message: response.data.message || response.data.data || 'Application submitted successfully', isSuccess: response.data.success || false };
     } catch (error) {
       return { message: errorText, isSuccess: false };
@@ -2079,366 +1616,11 @@ class GameService {
   }
 }
 
-/* ============================================================================
-   WEB API SERVICE
-   ============================================================================ */
+// ─────────────────────────────────────────────────────────────────────────────
+// AuthorizationService
+// ─────────────────────────────────────────────────────────────────────────────
+export class AuthorizationService {
 
-class WebAPIService {
-  private prNodesCache: { data: PRNodeItem[]; timestamp: number } | null = null;
-  private stakeTransactionsCache: { data: StakeTransactionItem[]; timestamp: number } | null = null;
-  private overviewCache: { data: OverviewData; timestamp: number } | null = null;
-  private readonly LIST_CACHE_TTL = 2 * 60_000; // 2 minutes
-  private readonly OVERVIEW_CACHE_TTL = 5 * 60_000; // 5 minutes
-
-  private getFormHeaders(): Record<string, string> {
-    const token = localStorage.getItem('atm_token');
-    return { 'Content-Type': 'application/x-www-form-urlencoded', 'Cssg-Language': API_CONFIG.DEFAULT_LANGUAGE, ...(token && { token }) };
-  }
-
-  async fetchNewsList(pageIndex: number = 1, pageSize: number = 10, type: string = ''): Promise<NewsListResponse> {
-    const params = new URLSearchParams({ pageIndex: pageIndex.toString(), pageSize: pageSize.toString(), type: type.toString() });
-    const requestOptions: RequestInit = { method: 'POST', headers: this.getFormHeaders(), body: params };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/getNewsList`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    return await response.json();
-  }
-
-  async getNewsDetail(newsId: string): Promise<any> {
-    const params = new URLSearchParams({ newsId });
-    const requestOptions: RequestInit = { method: 'POST', headers: this.getFormHeaders(), body: params };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/getNewsDetail`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    return await response.json();
-  }
-
-  showDefaultImageIfEmpty(news: NewsItem): void {
-    if (!news.coverImg || news.coverImg.trim() === '') news.coverImg = '/images/junkNews.png';
-  }
-
-  async fetchPRNodes(): Promise<PRNodeItem[]> {
-    if (this.prNodesCache && (Date.now() - this.prNodesCache.timestamp) < this.LIST_CACHE_TTL) {
-      return this.prNodesCache.data;
-    }
-    const requestOptions: RequestInit = { method: 'GET', headers: this.getFormHeaders() };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/getPRList`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const result = await response.json();
-    const data = result?.data?.prList || [];
-    this.prNodesCache = { data, timestamp: Date.now() };
-    return data;
-  }
-
-  async fetchStakeTransactions(): Promise<StakeTransactionItem[]> {
-    if (this.stakeTransactionsCache && (Date.now() - this.stakeTransactionsCache.timestamp) < this.LIST_CACHE_TTL) {
-      return this.stakeTransactionsCache.data;
-    }
-    const requestOptions: RequestInit = { method: 'GET', headers: this.getFormHeaders() };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/getLedgeList`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const result = await response.json();
-    const data = result?.data?.ledgeList || [];
-    this.stakeTransactionsCache = { data, timestamp: Date.now() };
-    return data;
-  }
-
-  async fetchStakeTransactionsWithParams(pageIndex: number = 1, pageSize: number = 10, chainId?: string, searchKey?: string, searchType?: string, walletProvider?: any): Promise<any> {
-    const params: any = { pageNo: pageIndex, pageSize };
-    if (chainId) params.chainId = chainId;
-    if (searchKey && searchType) params[searchType] = searchKey;
-    const queryString = new URLSearchParams(params).toString();
-    const token = walletProvider ? await authService.getToken(walletProvider) : '';
-    const requestOptions: RequestInit = { method: 'GET', headers: { ...this.getFormHeaders(), ...(token && { token }) } };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/treatyList?${queryString}`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    return await response.json();
-  }
-
-  async getContractInfo(walletProvider?: any): Promise<any> {
-    const token = walletProvider ? await authService.getToken(walletProvider) : '';
-    const requestOptions: RequestInit = { method: 'GET', headers: { ...this.getFormHeaders(), ...(token && { token }) } };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/contractInfo`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    return await response.json();
-  }
-
-  async fetchPRNodesPaginated(pageNo: number, pageSize: number = 25, searchKey?: string, searchType?: string): Promise<{ success: boolean; data: PRNodeItem[]; total: number }> {
-    const params: any = { pageNo, pageSize };
-    if (searchKey && searchType) params[searchType] = searchKey;
-    const queryString = new URLSearchParams(params).toString();
-    const requestOptions: RequestInit = { method: 'GET', headers: this.getFormHeaders() };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/prList?${queryString}`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const result = await response.json();
-    const nodeList = Array.isArray(result.data) ? result.data : result.data?.prList || [];
-    return { success: result.success || false, data: nodeList, total: result.total || nodeList.length };
-  }
-
-  async fetchStakeTransactionsPaginated(pageNo: number, pageSize: number = 25, chainId: string | null = null, searchKey?: string, searchType?: string): Promise<{ success: boolean; data: StakeTransactionItem[]; total: number }> {
-    const params: any = { pageNo, pageSize };
-    if (chainId) params.chainId = chainId;
-    if (searchKey && searchType) params[searchType] = searchKey;
-    const queryString = new URLSearchParams(params).toString();
-    const requestOptions: RequestInit = { method: 'GET', headers: this.getFormHeaders() };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/treatyList?${queryString}`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const result = await response.json();
-    return { success: result.success || false, data: result.data?.treatyList || [], total: result.data?.totalCount || 0 };
-  }
-
-  async fetchUserTreatyList(params: { ledgeAddress: string; chainId?: string; pageIndex: number; pageSize?: number; type: number }): Promise<{ success: boolean; data: { treatyList: any[]; totalCount: number } }> {
-    const requestOptions: RequestInit = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ledgeAddress: params.ledgeAddress, chainId: params.chainId || '', pageIndex: params.pageIndex, pageSize: params.pageSize || 10, type: params.type }) };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/server/getUserTreatyList`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    return await response.json();
-  }
-
-  async fetchBurnTotal(pageNo: number = 1, pageIndex: number = 1, pageSize: number = 5): Promise<any> {
-    const params = new URLSearchParams({ pageNo: String(pageNo), pageIndex: String(pageIndex), pageSize: String(pageSize) });
-    const requestOptions: RequestInit = { method: 'GET', headers: this.getFormHeaders() };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/burnTotal?${params.toString()}`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    return await response.json();
-  }
-
-  async getOverview(): Promise<OverviewData> {
-    if (this.overviewCache && (Date.now() - this.overviewCache.timestamp) < this.OVERVIEW_CACHE_TTL) {
-      return this.overviewCache.data;
-    }
-    const requestOptions: RequestInit = { method: 'GET', headers: this.getFormHeaders() };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/overview`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const result = await response.json();
-    const data = result?.data || {};
-    this.overviewCache = { data, timestamp: Date.now() };
-    return data;
-  }
-
-  async getCurrencyList(): Promise<CoinCurrency[]> {
-    try {
-      const config: any = { headers: this.getFormHeaders() };
-      if (shouldUseCredentials()) config.withCredentials = true;
-      const response = await axios.post(`${API_CONFIG.WEB_API_BASE_URL}/site/getCoinCurrencyList`, {}, config);
-      const responseData = response.data?.data;
-      if (responseData && Array.isArray(responseData.coinCurrencyPairList)) {
-        return responseData.coinCurrencyPairList.filter((item: any) => item.aloneCalculateFlag === 1);
-      }
-      return this.getDefaultCurrencyList();
-    } catch (error) {
-      return this.getDefaultCurrencyList();
-    }
-  }
-
-  private getDefaultCurrencyList(): CoinCurrency[] {
-    return [{ id: 1, currencyKey: 'LUCA', currencyName: 'LUCA', currencyLogo: '/img/currency/luca.png', contractAddress: '0x51E6Ac1533032E72e92094867fD5921e3ea1bfa0', chainId: 56, nowPrice: 0.01, baseCurrency: 'LUCA', tradeCurrency: 'USDT', status: 1, gateWay: '0x51E6Ac1533032E72e92094867fD5921e3ea1bfa0', weiPlaces: '18', aloneCalculateFlag: 1, lockAmount: 1, pricePlaces: 4 }];
-  }
-
-  async subscribe(email: string): Promise<any> {
-    const config: any = { headers: this.getFormHeaders() };
-    if (shouldUseCredentials()) config.withCredentials = true;
-    const response = await axios.post(`${API_CONFIG.WEB_API_BASE_URL}/atm/emailSubscription`, { email }, config);
-    return response.data;
-  }
-
-  async getInitiateList(): Promise<any> {
-    const params = new URLSearchParams({ pageIndex: '1', pageSize: '1' });
-    const requestOptions: RequestInit = { method: 'POST', headers: this.getFormHeaders(), body: params };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/community/getInitiateList`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    return await response.json();
-  }
-
-  async sendContactMail(formData: ContactFormData, token: string): Promise<{ success: boolean; message: string }> {
-    try {
-      const emailContent = `New Contact Form Submission from ATM Website\n\nName: ${formData.name}\nEmail: ${formData.email}\nWallet Address: ${formData.walletAddress || 'Not provided'}\n\nMessage:\n${formData.message}\n\n---\nSubmitted at: ${new Date().toLocaleString()}`.trim();
-      const requestBody = { personalizations: [{ to: [{ email: 'jainesh@kodelab.io' }], subject: 'New Contact Form Submission' }], from: { email: 'info@kodelab.io', name: 'ATM Website Contact Form' }, content: [{ type: 'text/plain', value: emailContent }] };
-      const response = await fetch('https://svtest-web.kodelab.io/mail', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(requestBody) });
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-      }
-      const result = await response.json();
-      return { success: true, message: result.message || 'Email sent successfully' };
-    } catch (error: any) {
-      return { success: false, message: error.message || 'Failed to send email. Please try again later.' };
-    }
-  }
-
-  async getNFTProjectList(): Promise<{ success: boolean; data: { nftProjectList: NFTProject[] } }> {
-    const requestOptions: RequestInit = { method: 'GET', headers: this.getFormHeaders() };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/nft/projectList`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    return await response.json();
-  }
-
-  async getNFTLinkList(params: { userWalletAddress?: string; linkStatus: number; pageIndex?: number; pageSize?: number; chainId?: string }): Promise<{ success: boolean; data: { linkList: NFTLinkConnection[]; linkCount: number; waitDealCount: number; otherDealCount: number } }> {
-    const formParams = new URLSearchParams();
-    if (params.userWalletAddress) formParams.append('userWalletAddress', params.userWalletAddress);
-    formParams.append('linkStatus', params.linkStatus.toString());
-    formParams.append('pageIndex', (params.pageIndex || 1).toString());
-    formParams.append('pageSize', (params.pageSize || 20).toString());
-    if (params.chainId) formParams.append('chainId', params.chainId);
-    const requestOptions: RequestInit = { method: 'POST', headers: this.getFormHeaders(), body: formParams };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/nft/nftLinkList`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    return await response.json();
-  }
-
-  async getNFTLinkById(id: number): Promise<{ success: boolean; data: { linkRecord: NFTLinkConnection } }> {
-    const formParams = new URLSearchParams();
-    formParams.append('id', id.toString());
-    const requestOptions: RequestInit = { method: 'POST', headers: this.getFormHeaders(), body: formParams };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/nft/nftLinkById`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const result = await response.json();
-    if (result.success && result.data?.linkRecord) {
-      const record = result.data.linkRecord;
-      const userAddress = localStorage.getItem('atm_address');
-      if (userAddress && record.createAddress.toLowerCase() === userAddress.toLowerCase()) {
-        record.myNft = record.createLockNft;
-        if (record.lockFlag === 1) record.myNft2 = record.targetLockNft;
-        else record.targetNft = record.targetLockNft;
-      } else {
-        record.targetNft = record.createLockNft;
-        if (record.lockFlag === 1) record.targetNft2 = record.targetLockNft;
-        else record.myNft = record.targetLockNft;
-      }
-    }
-    return result;
-  }
-
-  async getNFTMetadata(nftAddress: string, tokenId: string): Promise<any> {
-    try {
-      const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/nft/${nftAddress}/${tokenId}`);
-      return await response.json();
-    } catch (error) {
-      return null;
-    }
-  }
-
-  async updateNickname(nickName: string, walletProvider?: any): Promise<any> {
-    const token = walletProvider ? await authService.getToken(walletProvider) : '';
-    const params = new URLSearchParams({ nickName });
-    const requestOptions: RequestInit = { method: 'POST', headers: { ...this.getFormHeaders(), ...(token && { token }) }, body: params };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/updateNickname`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const result = await response.json();
-    if (result?.errorcode === 'NOT_LOGGEDIN' || result?.failed) {
-      authService.clearToken();
-      const newToken = await authService.authenticate(walletProvider);
-      const retryOptions: RequestInit = { method: 'POST', headers: { ...this.getFormHeaders(), token: newToken }, body: params };
-      if (shouldUseCredentials()) retryOptions.credentials = 'include';
-      const retryResponse = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/updateNickname`, retryOptions);
-      if (!retryResponse.ok) throw new Error(`HTTP error! status: ${retryResponse.status}`);
-      return await retryResponse.json();
-    }
-    return result;
-  }
-
-  async getUserPRCoinList(walletProvider?: any): Promise<any> {
-    const token = walletProvider ? await authService.getToken(walletProvider) : '';
-    const requestOptions: RequestInit = { method: 'GET', headers: { ...this.getFormHeaders(), ...(token && { token }) } };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/userPrCoinList`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const result = await response.json();
-    if (result?.errorcode === 'NOT_LOGGEDIN' || result?.failed) {
-      authService.clearToken();
-      const newToken = await authService.authenticate(walletProvider);
-      const retryOptions: RequestInit = { method: 'GET', headers: { ...this.getFormHeaders(), token: newToken } };
-      if (shouldUseCredentials()) retryOptions.credentials = 'include';
-      const retryResponse = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/userPrCoinList`, retryOptions);
-      if (!retryResponse.ok) throw new Error(`HTTP error! status: ${retryResponse.status}`);
-      const retryResult = await retryResponse.json();
-      return retryResult?.data || retryResult;
-    }
-    return result?.data || result;
-  }
-
-  async getUserPRCurve(networkType: string, walletProvider?: any): Promise<{ x: string[]; y: number[]; nowPr: number; pre: string }> {
-    const token = walletProvider ? await authService.getToken(walletProvider) : '';
-    const queryParams = new URLSearchParams({ networkType }).toString();
-    const requestOptions: RequestInit = { method: 'GET', headers: { ...this.getFormHeaders(), ...(token && { token }) } };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/userPrCurve?${queryParams}`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const result = await response.json();
-    if (result?.errorcode === 'NOT_LOGGEDIN' || result?.failed) {
-      authService.clearToken();
-      const newToken = await authService.authenticate(walletProvider);
-      const retryOptions: RequestInit = { method: 'GET', headers: { ...this.getFormHeaders(), token: newToken } };
-      if (shouldUseCredentials()) retryOptions.credentials = 'include';
-      const retryResponse = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/userPrCurve?${queryParams}`, retryOptions);
-      if (!retryResponse.ok) throw new Error(`HTTP error! status: ${retryResponse.status}`);
-      const retryResult = await retryResponse.json();
-      return retryResult?.data || retryResult;
-    }
-    return result?.data || result;
-  }
-
-  async getUserAGTRecord(pageNo: number = 1, pageSize: number = 20, walletProvider?: any): Promise<{ list: any[]; agtTotal: number }> {
-    const token = walletProvider ? await authService.getToken(walletProvider) : '';
-    const queryParams = new URLSearchParams({ pageNo: pageNo.toString(), pageSize: pageSize.toString() }).toString();
-    const requestOptions: RequestInit = { method: 'GET', headers: { ...this.getFormHeaders(), ...(token && { token }) } };
-    if (shouldUseCredentials()) requestOptions.credentials = 'include';
-    const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/userAgtRecord?${queryParams}`, requestOptions);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const result = await response.json();
-    if (result?.errorcode === 'NOT_LOGGEDIN' || result?.failed) {
-      authService.clearToken();
-      const newToken = await authService.authenticate(walletProvider);
-      const retryOptions: RequestInit = { method: 'GET', headers: { ...this.getFormHeaders(), token: newToken } };
-      if (shouldUseCredentials()) retryOptions.credentials = 'include';
-      const retryResponse = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/atm/userAgtRecord?${queryParams}`, retryOptions);
-      if (!retryResponse.ok) throw new Error(`HTTP error! status: ${retryResponse.status}`);
-      const retryResult = await retryResponse.json();
-      return { list: retryResult?.data?.list || [], agtTotal: retryResult?.data?.agtTotal || 0 };
-    }
-    return { list: result?.data?.list || [], agtTotal: result?.data?.agtTotal || 0 };
-  }
-}
-
-
-/* ============================================================================
-   AUTHORIZATION MANAGEMENT SERVICE - PURE REOWN
-   ============================================================================ */
-
-export interface TokenInfo {
-  symbol: string;
-  address: string;
-  decimals: number;
-  logo?: string;
-}
-
-export interface TokenApproval extends TokenInfo {
-  allowance: string;
-  spender: string;
-}
-
-export interface ContractSection {
-  title: string;
-  address?: string;
-  tokens: TokenApproval[];
-  expanded: boolean;
-}
-
-class AuthorizationService {
-  
   getTokenList(chainId: number): TokenInfo[] {
     const tokenLists: Record<number, TokenInfo[]> = {
       56: [
@@ -2465,34 +1647,26 @@ class AuthorizationService {
     return tokenLists[chainId] || [];
   }
 
-  /**
-   * Format wei to decimal string
-   
-   */
   private formatUnits(value: bigint, decimals: number): string {
     const valueStr = value.toString();
     const isNegative = valueStr.startsWith('-');
     const absoluteValue = isNegative ? valueStr.slice(1) : valueStr;
-    
+
     if (decimals === 0) return absoluteValue;
-    
+
     const paddedValue = absoluteValue.padStart(decimals + 1, '0');
     const integerPart = paddedValue.slice(0, -decimals) || '0';
     const decimalPart = paddedValue.slice(-decimals);
-    
-    // Remove trailing zeros from decimal part
+
     const trimmedDecimal = decimalPart.replace(/0+$/, '');
-    
+
     if (trimmedDecimal === '') {
       return (isNegative ? '-' : '') + integerPart;
     }
-    
+
     return (isNegative ? '-' : '') + integerPart + '.' + trimmedDecimal;
   }
 
-  /**
-   * Check token allowance using pure Reown EIP-1193
-   */
   async checkAllowance(
     tokenAddress: string,
     spenderAddress: string,
@@ -2501,9 +1675,8 @@ class AuthorizationService {
     walletProvider: any
   ): Promise<string> {
     if (!address || !walletProvider) return "0";
-    
+
     try {
-      // allowance(address,address) = 0xdd62ed3e
       const data = '0xdd62ed3e' +
         address.slice(2).toLowerCase().padStart(64, '0') +
         spenderAddress.slice(2).toLowerCase().padStart(64, '0');
@@ -2521,9 +1694,6 @@ class AuthorizationService {
     }
   }
 
-  /**
-   * Load all approvals for user's tokens across multiple contracts
-   */
   async loadApprovals(
     address: string,
     contracts: any,
@@ -2555,7 +1725,7 @@ class AuthorizationService {
               address,
               walletProvider
             );
-            
+
             const allowanceNum = parseFloat(allowance);
             if (allowanceNum > 0) {
               tokens.push({ ...token, allowance, spender: contractAddress });
@@ -2577,9 +1747,6 @@ class AuthorizationService {
     return newSections;
   }
 
-  /**
-   * Revoke token approval using pure Reown EIP-1193
-   */
   async revokeApproval(
     tokenAddress: string,
     spenderAddress: string,
@@ -2591,11 +1758,9 @@ class AuthorizationService {
     }
 
     try {
-      // approve(address,uint256) = 0x095ea7b3
-      // Set allowance to 0
       const data = '0x095ea7b3' +
         spenderAddress.slice(2).toLowerCase().padStart(64, '0') +
-        '0'.padStart(64, '0'); // amount = 0
+        '0'.padStart(64, '0');
 
       const txHash = await walletProvider.request({
         method: 'eth_sendTransaction',
@@ -2603,11 +1768,10 @@ class AuthorizationService {
           from: address,
           to: tokenAddress,
           data,
-          gas: '0x15f90' // 90000 gas
+          gas: '0x15f90'
         }]
       });
 
-      // Wait for confirmation
       for (let i = 0; i < 60; i++) {
         await new Promise(resolve => setTimeout(resolve, 2000));
         const receipt = await walletProvider.request({
@@ -2635,37 +1799,164 @@ class AuthorizationService {
   }
 }
 
-/* ============================================================================
-   AGF GAME PROPOSAL SERVICE
-   ============================================================================ */
+// ─────────────────────────────────────────────────────────────────────────────
+// RecoveryPlanService
+// ─────────────────────────────────────────────────────────────────────────────
+export class RecoveryPlanService {
 
-class AGFGameProposalService {
+  private formatEther(value: bigint): string {
+    return this.formatUnits(value, 18);
+  }
 
-  private getAGFHeaders() {
+  private formatUnits(value: bigint, decimals: number): string {
+    const valueStr = value.toString();
+    const isNegative = valueStr.startsWith('-');
+    const absoluteValue = isNegative ? valueStr.slice(1) : valueStr;
+
+    if (decimals === 0) return absoluteValue;
+
+    const paddedValue = absoluteValue.padStart(decimals + 1, '0');
+    const integerPart = paddedValue.slice(0, -decimals) || '0';
+    const decimalPart = paddedValue.slice(-decimals);
+
+    const trimmedDecimal = decimalPart.replace(/0+$/, '');
+
+    if (trimmedDecimal === '') {
+      return (isNegative ? '-' : '') + integerPart;
+    }
+
+    return (isNegative ? '-' : '') + integerPart + '.' + trimmedDecimal;
+  }
+
+  private async rpcCall(rpcUrl: string, method: string, params: any[]): Promise<any> {
+    const response = await fetch(rpcUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method,
+        params,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+      throw new Error(data.error.message || 'RPC call failed');
+    }
+
+    return data.result;
+  }
+
+  private decodeEventData(data: string): { address: string; amount: bigint } {
+    const hexData = data.startsWith('0x') ? data.slice(2) : data;
+
+    const addressHex = hexData.slice(24, 64);
+    const address = '0x' + addressHex;
+
+    const amountHex = hexData.slice(64, 128);
+    const amount = BigInt('0x' + amountHex);
+
+    return { address, amount };
+  }
+
+  async getRecoveryPotBalance(chainId: number): Promise<string> {
+    try {
+      const RECOVER_FUND_ADDRESS = import.meta.env.VITE_POT_WALLET;
+      if (!RECOVER_FUND_ADDRESS) return "0";
+
+      const { getChainById } = await import("../../config/chains");
+      const chain = getChainById(chainId);
+      if (!chain) return "0";
+
+      const data = '0xb69ef8a8';
+
+      const result = await this.rpcCall(
+        chain.rpcUrl,
+        'eth_call',
+        [
+          {
+            to: RECOVER_FUND_ADDRESS,
+            data,
+          },
+          'latest',
+        ]
+      );
+
+      const balance = BigInt(result);
+      return this.formatEther(balance);
+    } catch (error) {
+      console.error("Error fetching balance:", error);
+      return "0";
+    }
+  }
+
+  async getRecoveryTransactions(userAddress: string, chainId: number): Promise<RecoveryTransaction[]> {
+    try {
+      const RECOVER_FUND_ADDRESS = import.meta.env.VITE_POT_WALLET;
+      const BSC_API_URL = import.meta.env.VITE_BSC_API_URL;
+      const BSC_API_KEY = import.meta.env.VITE_BSC_API_KEY;
+      const INVEST_EVENT = import.meta.env.VITE_INVEST_EVENT;
+
+      if (!RECOVER_FUND_ADDRESS || !BSC_API_URL || !BSC_API_KEY || !INVEST_EVENT) return [];
+
+      const url = `${BSC_API_URL}?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=${RECOVER_FUND_ADDRESS}&apikey=${BSC_API_KEY}`;
+      const response = await axios.get(url);
+      const eventLog = response.data.result;
+
+      if (!eventLog || !Array.isArray(eventLog)) return [];
+
+      const array: RecoveryTransaction[] = [];
+
+      for (let i = 0; i < eventLog.length; i++) {
+        const temp = eventLog[i];
+
+        if (temp.topics[0] === INVEST_EVENT) {
+          const decoded = this.decodeEventData(temp.data);
+
+          if (decoded.address.toLowerCase() === userAddress.toLowerCase()) {
+            const date = new Date(parseInt(temp.timeStamp) * 1000);
+            const formattedDate = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+
+            array.push({
+              createTime: formattedDate,
+              lockAmount: this.formatEther(decoded.amount),
+              lockCurrency: "USDC",
+              hash: temp.transactionHash,
+            });
+          }
+        }
+      }
+
+      return array;
+    } catch (error) {
+      console.error("Error fetching event logs:", error);
+      return [];
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// AGFGameProposalService
+// ─────────────────────────────────────────────────────────────────────────────
+export class AGFGameProposalService {
+
+  private getHeaders() {
     const loginToken = localStorage.getItem('atm_token');
-    return {
-      token: loginToken || '',
-      'Content-Type': 'application/json',
-      'cssg-language': 'en',
-    };
+    return getAGFHeaders(loginToken);
   }
 
-  private getAGFBaseURL(): string {
-    const AGF_BASE_URL = import.meta.env.VITE_AGF_PROPOSAL_PATH;
-    return AGF_BASE_URL || '';
-  }
-
-  /**
-   * Get proposals created by current user
-   */
   async getProposalByUserId(): Promise<AGFProposalResponse> {
     try {
-      const apiUrl = `${this.getAGFBaseURL()}/game/v2/getProposal`;
+      const apiUrl = urls.agf.getProposal();
       const data = { userId: 'userId' };
 
       const response = await axios.post(apiUrl, data, {
         withCredentials: true,
-        headers: this.getAGFHeaders(),
+        headers: this.getHeaders(),
       });
 
       return {
@@ -2685,17 +1976,14 @@ class AGFGameProposalService {
     }
   }
 
-  /**
-   * Get all proposals (admin only)
-   */
   async getAdminProposal(): Promise<AGFProposalResponse> {
     try {
-      const apiUrl = `${this.getAGFBaseURL()}/game/getAllProposal`;
+      const apiUrl = urls.agf.getAllProposal();
       const data = { blank: 'blank' };
 
       const response = await axios.post(apiUrl, data, {
         withCredentials: true,
-        headers: this.getAGFHeaders(),
+        headers: this.getHeaders(),
       });
 
       return {
@@ -2715,16 +2003,13 @@ class AGFGameProposalService {
     }
   }
 
-  /**
-   * Update proposal status (admin only)
-   */
   async updateProposalByAdmin(dataObject: any): Promise<{ success: boolean; isSuccess: boolean; data: any; message?: string }> {
     try {
-      const apiUrl = `${this.getAGFBaseURL()}/game/updateGameStatus`;
+      const apiUrl = urls.agf.updateGameStatus();
 
       const response = await axios.post(apiUrl, dataObject, {
         withCredentials: true,
-        headers: this.getAGFHeaders(),
+        headers: this.getHeaders(),
       });
 
       return {
@@ -2744,16 +2029,13 @@ class AGFGameProposalService {
     }
   }
 
-  /**
-   * Create new game proposal
-   */
   async createProposal(data: any): Promise<{ success: boolean; isSuccess: boolean; message: string }> {
     try {
-      const apiUrl = `${this.getAGFBaseURL()}/game/v2/createProposal`;
+      const apiUrl = urls.agf.createProposal();
 
       const response = await axios.post(apiUrl, data, {
         withCredentials: true,
-        headers: this.getAGFHeaders(),
+        headers: this.getHeaders(),
       });
 
       return {
@@ -2771,16 +2053,13 @@ class AGFGameProposalService {
     }
   }
 
-  /**
-   * Update existing game proposal
-   */
   async updateProposal(data: any): Promise<{ success: boolean; isSuccess: boolean; message: string }> {
     try {
-      const apiUrl = `${this.getAGFBaseURL()}/game/updateProposal`;
+      const apiUrl = urls.agf.updateProposal();
 
       const response = await axios.post(apiUrl, data, {
         withCredentials: true,
-        headers: this.getAGFHeaders(),
+        headers: this.getHeaders(),
       });
 
       return {
@@ -2798,17 +2077,12 @@ class AGFGameProposalService {
     }
   }
 
-  /**
-   * Parse AGF proposal data and store in localStorage (like unWrapAGFProposal from Vue)
-   */
   unwrapAGFProposal(data: AGFGameProposal): void {
     try {
-      // Find email from contacts
       const emailDetails = data.contactDetails.find(
         (contact) => contact.name === "email"
       );
 
-      // Map social platform contacts (excluding email)
       const contactDetailsSocialPlatform = data.contactDetails
         .filter((contact) => contact.name !== "email")
         .map((contact) => ({
@@ -2817,7 +2091,6 @@ class AGFGameProposalService {
           images: contact.images || "Not found",
         }));
 
-      // Game concept
       const gameConcept = {
         id: data.id || "",
         title: data.title || "",
@@ -2827,7 +2100,6 @@ class AGFGameProposalService {
         createdBy: data.createdBy || "",
       };
 
-      // Connection details
       let connectionObj;
       try {
         connectionObj = JSON.parse(data.connectionDetails);
@@ -2840,7 +2112,6 @@ class AGFGameProposalService {
         numberOfDays: connectionObj.days || "",
       };
 
-      // Milestones
       const milestones = data.milestones.map((milestone) => ({
         id: milestone.id || "",
         milestoneTitle: milestone.title || "",
@@ -2849,7 +2120,6 @@ class AGFGameProposalService {
         milestoneFundNeeded: milestone.funds.toString() || "0.00",
       }));
 
-      // Media (images and videos)
       const imagesArray: any[] = [];
       const videoArray: any[] = [];
 
@@ -2861,18 +2131,15 @@ class AGFGameProposalService {
         }
       });
 
-      // Categories
       const categories = data.gameCategoriesModelList.map((item) =>
         item.categoryId.toString()
       );
 
-      // Contact data
       const contactData = {
         email: emailDetails?.description || "",
         socialPlatform: contactDetailsSocialPlatform,
       };
 
-      // Save to localStorage
       localStorage.setItem("imagesArray", JSON.stringify(imagesArray));
       localStorage.setItem("videoArray", JSON.stringify(videoArray));
       localStorage.setItem("gameConcept", JSON.stringify(gameConcept));
@@ -2885,9 +2152,6 @@ class AGFGameProposalService {
     }
   }
 
-  /**
-   * Wrap localStorage data into AGF proposal format (reverse of unwrap)
-   */
   wrapAGFProposal(isEdit: boolean = false): any {
     try {
       const imagesArray = JSON.parse(localStorage.getItem('imagesArray') || '[]');
@@ -2898,12 +2162,10 @@ class AGFGameProposalService {
       const milestones = JSON.parse(localStorage.getItem('milestones') || '[]');
       const categories = JSON.parse(localStorage.getItem('selectedCategories') || '[]');
 
-      // Calculate total funds from milestones
       const totalFundsNeeded = milestones.reduce((total: number, milestone: any) => {
         return total + (parseFloat(milestone.milestoneFundNeeded) || 0.00);
       }, 0.00);
 
-      // Filter and combine media
       const filteredImagesArray = imagesArray.filter((image: any) => image.link !== '');
       const combinedArray = [...filteredImagesArray, ...videoArray];
 
@@ -2914,7 +2176,6 @@ class AGFGameProposalService {
           link: this.ensureValidUrl(item.link)
         }));
 
-      // Prepare contact details with email
       const allContactDetails = [...(contactDetails.socialPlatform || [])];
       if (contactDetails.email) {
         allContactDetails.push({
@@ -2924,7 +2185,6 @@ class AGFGameProposalService {
         });
       }
 
-      // Build proposal data
       const data: any = {
         title: gameConcept.title || "Not found",
         overview: gameConcept.overview || "Not found",
@@ -2952,7 +2212,6 @@ class AGFGameProposalService {
         gamesMediaModelList,
       };
 
-      // Add ID and createdBy if editing
       if (isEdit) {
         data.id = gameConcept.id;
         data.createdBy = gameConcept.createdBy;
@@ -2965,9 +2224,6 @@ class AGFGameProposalService {
     }
   }
 
-  /**
-   * Ensure URL is valid
-   */
   private ensureValidUrl(url: string): string {
     try {
       new URL(url);
@@ -2977,9 +2233,6 @@ class AGFGameProposalService {
     }
   }
 
-  /**
-   * Clear all AGF proposal data from localStorage
-   */
   clearProposalData(): void {
     localStorage.removeItem('imagesArray');
     localStorage.removeItem('videoArray');
@@ -2992,192 +2245,16 @@ class AGFGameProposalService {
   }
 }
 
-/* ============================================================================
-   RECOVERY PLAN SERVICE
-   ============================================================================ */
+// ─────────────────────────────────────────────────────────────────────────────
+// LinkConnectionService
+// ─────────────────────────────────────────────────────────────────────────────
+export class LinkConnectionService {
+  private authService: AuthenticationService;
 
-export interface RecoveryTransaction {
-  createTime: string;
-  burnAmount?: string;
-  useAmount?: string;
-  hash: string;
-  lockAmount?: string;
-  lockCurrency?: string;
-}
-
-class RecoveryPlanService {
-  
-  /**
-   * Format wei to ether string (18 decimals)
-   */
-  private formatEther(value: bigint): string {
-    return this.formatUnits(value, 18);
+  constructor(authService: AuthenticationService) {
+    this.authService = authService;
   }
 
-  /**
-   * Format wei to decimal string
-   
-   */
-  private formatUnits(value: bigint, decimals: number): string {
-    const valueStr = value.toString();
-    const isNegative = valueStr.startsWith('-');
-    const absoluteValue = isNegative ? valueStr.slice(1) : valueStr;
-    
-    if (decimals === 0) return absoluteValue;
-    
-    const paddedValue = absoluteValue.padStart(decimals + 1, '0');
-    const integerPart = paddedValue.slice(0, -decimals) || '0';
-    const decimalPart = paddedValue.slice(-decimals);
-    
-    // Remove trailing zeros from decimal part
-    const trimmedDecimal = decimalPart.replace(/0+$/, '');
-    
-    if (trimmedDecimal === '') {
-      return (isNegative ? '-' : '') + integerPart;
-    }
-    
-    return (isNegative ? '-' : '') + integerPart + '.' + trimmedDecimal;
-  }
-
-  /**
-   * Direct RPC call 
-   */
-  private async rpcCall(rpcUrl: string, method: string, params: any[]): Promise<any> {
-    const response = await fetch(rpcUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: 1,
-        method,
-        params,
-      }),
-    });
-
-    const data = await response.json();
-    
-    if (data.error) {
-      throw new Error(data.error.message || 'RPC call failed');
-    }
-
-    return data.result;
-  }
-
-  /**
-   * Decode ABI-encoded data manually
-   * For event: Invest(address indexed user, uint256 amount)
-   * Non-indexed parameters are in data field
-   */
-  private decodeEventData(data: string): { address: string; amount: bigint } {
-    // Remove 0x prefix
-    const hexData = data.startsWith('0x') ? data.slice(2) : data;
-    
-    // Each parameter is 32 bytes (64 hex characters)
-    // First 32 bytes: address (right-aligned, last 20 bytes are the address)
-    const addressHex = hexData.slice(24, 64); // Take last 20 bytes of first 32 bytes
-    const address = '0x' + addressHex;
-    
-    // Second 32 bytes: uint256 amount
-    const amountHex = hexData.slice(64, 128);
-    const amount = BigInt('0x' + amountHex);
-    
-    return { address, amount };
-  }
-
-  /**
-   * Get recovery pot balance using pure RPC call
-   */
-  async getRecoveryPotBalance(chainId: number): Promise<string> {
-    try {
-      const RECOVER_FUND_ADDRESS = import.meta.env.VITE_POT_WALLET;
-      if (!RECOVER_FUND_ADDRESS) return "0";
-
-      const { getChainById } = await import("../config/chains");
-      const chain = getChainById(chainId);
-      if (!chain) return "0";
-
-      // balance() = 0xb69ef8a8
-      const data = '0xb69ef8a8';
-
-      const result = await this.rpcCall(
-        chain.rpcUrl,
-        'eth_call',
-        [
-          {
-            to: RECOVER_FUND_ADDRESS,
-            data,
-          },
-          'latest',
-        ]
-      );
-
-      const balance = BigInt(result);
-      return this.formatEther(balance);
-    } catch (error) {
-      console.error("Error fetching balance:", error);
-      return "0";
-    }
-  }
-
-  /**
-   * Get recovery transactions by decoding event logs manually
-   */
-  async getRecoveryTransactions(userAddress: string, chainId: number): Promise<RecoveryTransaction[]> {
-    try {
-      const RECOVER_FUND_ADDRESS = import.meta.env.VITE_POT_WALLET;
-      const BSC_API_URL = import.meta.env.VITE_BSC_API_URL;
-      const BSC_API_KEY = import.meta.env.VITE_BSC_API_KEY;
-      const INVEST_EVENT = import.meta.env.VITE_INVEST_EVENT;
-
-      if (!RECOVER_FUND_ADDRESS || !BSC_API_URL || !BSC_API_KEY || !INVEST_EVENT) return [];
-
-      const url = `${BSC_API_URL}?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=${RECOVER_FUND_ADDRESS}&apikey=${BSC_API_KEY}`;
-      const response = await axios.get(url);
-      const eventLog = response.data.result;
-
-      if (!eventLog || !Array.isArray(eventLog)) return [];
-
-      const array: RecoveryTransaction[] = [];
-
-      for (let i = 0; i < eventLog.length; i++) {
-        const temp = eventLog[i];
-        
-        // Check if this is the Invest event
-        if (temp.topics[0] === INVEST_EVENT) {
-          // Decode the non-indexed parameters from data field
-          const decoded = this.decodeEventData(temp.data);
-
-          // Check if this event is for the user's address
-          if (decoded.address.toLowerCase() === userAddress.toLowerCase()) {
-            const date = new Date(parseInt(temp.timeStamp) * 1000);
-            const formattedDate = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
-
-            array.push({
-              createTime: formattedDate,
-              lockAmount: this.formatEther(decoded.amount),
-              lockCurrency: "USDC",
-              hash: temp.transactionHash,
-            });
-          }
-        }
-      }
-      
-      return array;
-    } catch (error) {
-      console.error("Error fetching event logs:", error);
-      return [];
-    }
-  }
-}
-
-/* ============================================================================
-   LINK CONNECTION SERVICE
-   ============================================================================ */
-
-class LinkConnectionService {
-  
   async fetchConnectionById(id: string, isNFT: boolean): Promise<any> {
     try {
       const endpoint = isNFT ? '/nft/nftLinkById' : '/site/linkById';
@@ -3191,17 +2268,17 @@ class LinkConnectionService {
       };
 
       const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}${endpoint}`, requestOptions);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const result = await response.json();
-      
+
       if (result.success && result.data?.linkRecord) {
         return result.data.linkRecord;
       }
-      
+
       return null;
     } catch (error) {
       console.error('Error fetching connection:', error);
@@ -3211,7 +2288,7 @@ class LinkConnectionService {
 
   async fetchNFTMetadata(nftAddress: string, tokenId: string): Promise<any> {
     try {
-      const response = await fetch(`${API_CONFIG.WEB_API_BASE_URL}/nft/${nftAddress}/${tokenId}`);
+      const response = await fetch(urls.nft.metadata(nftAddress, tokenId));
       return await response.json();
     } catch (error) {
       console.error(`Failed to fetch metadata for token ${tokenId}:`, error);
@@ -3219,10 +2296,6 @@ class LinkConnectionService {
     }
   }
 
-  /**
-   * Agree to connection (called by target user)
-   * For NFT connections, tokenId is required
-   */
   async agreeConnection(
     linkAddress: string,
     tokenId: string | undefined,
@@ -3233,27 +2306,14 @@ class LinkConnectionService {
     }
 
     try {
-      const address = authService.getUserAddress();
+      const address = this.authService.getUserAddress();
       if (!address) throw new Error('User address not set');
 
-      // Import ABI
-      const LINK_ABI = [
-        "function agree() external",
-        "function agree(uint256 tokenId) external"
-      ];
-
-      // Determine function signature based on whether tokenId is provided
-      const functionSelector = tokenId 
-        ? '0x' + require('crypto').createHash('sha256').update('agree(uint256)').digest('hex').slice(0, 8)
-        : '0x' + require('crypto').createHash('sha256').update('agree()').digest('hex').slice(0, 8);
-
       let data: string;
-      
+
       if (tokenId) {
-        // agree(uint256) = 0xf6cd35ee (first 4 bytes of keccak256)
         data = '0xf6cd35ee' + BigInt(tokenId).toString(16).padStart(64, '0');
       } else {
-        // agree() = 0xc68910eb
         data = '0xc68910eb';
       }
 
@@ -3263,11 +2323,10 @@ class LinkConnectionService {
           from: address,
           to: linkAddress,
           data,
-          gas: '0x15f90' // 90000
+          gas: '0x15f90'
         }]
       });
 
-      // Wait for confirmation
       for (let i = 0; i < 60; i++) {
         await new Promise(resolve => setTimeout(resolve, 2000));
         const receipt = await walletProvider.request({
@@ -3293,9 +2352,6 @@ class LinkConnectionService {
     }
   }
 
-  /**
-   * Cancel connection (called by creator before agreement)
-   */
   async cancelConnection(
     linkAddress: string,
     walletProvider: any
@@ -3305,10 +2361,9 @@ class LinkConnectionService {
     }
 
     try {
-      const address = authService.getUserAddress();
+      const address = this.authService.getUserAddress();
       if (!address) throw new Error('User address not set');
 
-      // cancel() = 0xea8a1af0
       const data = '0xea8a1af0';
 
       const txHash = await walletProvider.request({
@@ -3321,7 +2376,6 @@ class LinkConnectionService {
         }]
       });
 
-      // Wait for confirmation
       for (let i = 0; i < 60; i++) {
         await new Promise(resolve => setTimeout(resolve, 2000));
         const receipt = await walletProvider.request({
@@ -3347,9 +2401,6 @@ class LinkConnectionService {
     }
   }
 
-  /**
-   * Reject connection (called by target user)
-   */
   async rejectConnection(
     linkAddress: string,
     walletProvider: any
@@ -3359,10 +2410,9 @@ class LinkConnectionService {
     }
 
     try {
-      const address = authService.getUserAddress();
+      const address = this.authService.getUserAddress();
       if (!address) throw new Error('User address not set');
 
-      // reject() = 0x97aba7f9
       const data = '0x97aba7f9';
 
       const txHash = await walletProvider.request({
@@ -3375,7 +2425,6 @@ class LinkConnectionService {
         }]
       });
 
-      // Wait for confirmation
       for (let i = 0; i < 60; i++) {
         await new Promise(resolve => setTimeout(resolve, 2000));
         const receipt = await walletProvider.request({
@@ -3401,9 +2450,6 @@ class LinkConnectionService {
     }
   }
 
-  /**
-   * Close/Redeem connection (called when expired)
-   */
   async closeConnection(
     linkAddress: string,
     walletProvider: any
@@ -3413,10 +2459,9 @@ class LinkConnectionService {
     }
 
     try {
-      const address = authService.getUserAddress();
+      const address = this.authService.getUserAddress();
       if (!address) throw new Error('User address not set');
 
-      // close() = 0x43d726d6
       const data = '0x43d726d6';
 
       const txHash = await walletProvider.request({
@@ -3429,7 +2474,6 @@ class LinkConnectionService {
         }]
       });
 
-      // Wait for confirmation
       for (let i = 0; i < 60; i++) {
         await new Promise(resolve => setTimeout(resolve, 2000));
         const receipt = await walletProvider.request({
@@ -3456,46 +2500,30 @@ class LinkConnectionService {
   }
 }
 
-/* ============================================================================
-   CROSSCHAIN SERVICE - PURE REOWN
-   ============================================================================ */
+// ─────────────────────────────────────────────────────────────────────────────
+// CrosschainService
+// ─────────────────────────────────────────────────────────────────────────────
+export class CrosschainService {
 
-class CrosschainService {
-  
-  /**
-   * Convert decimal amount to wei (18 decimals)
-   */
   private parseUnits(amount: string, decimals: number = 18): bigint {
-    // Handle decimal numbers
     const [integerPart, decimalPart = ''] = amount.split('.');
-    
-    // Pad or truncate decimal part to match decimals
+
     const paddedDecimal = decimalPart.padEnd(decimals, '0').slice(0, decimals);
-    
-    // Combine and convert to BigInt
+
     const combined = integerPart + paddedDecimal;
     return BigInt(combined);
   }
 
-  /**
-   * Encode string parameter for ABI
-   */
   private encodeString(str: string): string {
-    // Convert string to hex
     const hex = str.split('').map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
-    
-    // String length in hex (32 bytes)
+
     const length = str.length.toString(16).padStart(64, '0');
-    
-    // Pad hex to 32-byte boundary
+
     const paddedHex = hex.padEnd(Math.ceil(hex.length / 64) * 64, '0');
-    
+
     return length + paddedHex;
   }
 
-  /**
-   * Execute cross-chain token transfer using pure Reown EIP-1193
-   */
   async executeCrosschainTransfer(params: {
     amount: string;
     destinationChain: string;
@@ -3525,11 +2553,8 @@ class CrosschainService {
     }
 
     try {
-      // Convert amount to wei
       const amountWei = this.parseUnits(amount, 18);
 
-      // Step 1: Check allowance
-      // allowance(address,address) = 0xdd62ed3e
       console.log('Checking allowance...');
       const allowanceData = '0xdd62ed3e' +
         userAddress.slice(2).toLowerCase().padStart(64, '0') +
@@ -3542,11 +2567,9 @@ class CrosschainService {
 
       const allowance = BigInt(allowanceResult);
 
-      // Step 2: Approve if needed
       if (allowance < amountWei) {
         console.log('Requesting approval...');
-        
-        // approve(address,uint256) = 0x095ea7b3
+
         const approveData = '0x095ea7b3' +
           crosschainAddress.slice(2).toLowerCase().padStart(64, '0') +
           amountWei.toString(16).padStart(64, '0');
@@ -3557,11 +2580,10 @@ class CrosschainService {
             from: userAddress,
             to: tokenAddress,
             data: approveData,
-            gas: '0x15f90' // 90000
+            gas: '0x15f90'
           }]
         });
 
-        // Wait for approval confirmation
         console.log('Waiting for approval confirmation...');
         for (let i = 0; i < 60; i++) {
           await new Promise(resolve => setTimeout(resolve, 2000));
@@ -3580,7 +2602,6 @@ class CrosschainService {
         }
       }
 
-      // Step 3: Map chain name
       const chainNameMap: { [key: string]: string } = {
         bsc: 'Binance',
         ethereum: 'Ethereum',
@@ -3590,26 +2611,19 @@ class CrosschainService {
       };
       const mappedChain = chainNameMap[destinationChain] || destinationChain;
 
-      // Step 4: Execute cross-chain transfer
-      // stakeToken(string _chain, address _to, address _token, uint256 _amount)
-      // Function selector: first 4 bytes of keccak256("stakeToken(string,address,address,uint256)")
       console.log('Initiating cross-chain transfer...');
-      
-      // Manual ABI encoding for stakeToken
-      const functionSelector = '0x7f8c99b5'; // stakeToken selector
-      
-      // Calculate offsets for dynamic types
-      const staticParamsSize = 4 * 32; // 4 static parameters (string offset, 3 addresses/uints)
+
+      const functionSelector = '0x7f8c99b5';
+
+      const staticParamsSize = 4 * 32;
       const stringOffset = staticParamsSize.toString(16).padStart(64, '0');
-      
-      // Encode parameters
+
       const toAddressParam = receivingAddress.slice(2).toLowerCase().padStart(64, '0');
       const tokenAddressParam = tokenAddress.slice(2).toLowerCase().padStart(64, '0');
       const amountParam = amountWei.toString(16).padStart(64, '0');
-      
-      // Encode string (chain name)
+
       const stringData = this.encodeString(mappedChain);
-      
+
       const data = functionSelector +
         stringOffset +
         toAddressParam +
@@ -3623,13 +2637,12 @@ class CrosschainService {
           from: userAddress,
           to: crosschainAddress,
           data,
-          gas: '0xc3500' // 800000
+          gas: '0xc3500'
         }]
       });
 
       console.log('Transaction hash:', txHash);
-      
-      // Wait for confirmation
+
       console.log('Waiting for confirmation...');
       for (let i = 0; i < 60; i++) {
         await new Promise(resolve => setTimeout(resolve, 2000));
@@ -3655,15 +2668,14 @@ class CrosschainService {
 
     } catch (error: any) {
       console.error('Crosschain transfer error:', error);
-      
-      // Handle specific error codes
+
       if (error.code === 4001 || error.code === 'ACTION_REJECTED') {
         return {
           success: false,
           error: 'Transaction cancelled by user'
         };
       }
-      
+
       if (error.code === -32603) {
         return {
           success: false,
@@ -3678,43 +2690,3 @@ class CrosschainService {
     }
   }
 }
-
-
-
-/* ============================================================================
-   SERVICE INSTANCES & EXPORTS
-   ============================================================================ */
-
-export const encryptionService = new EncryptionService();
-export const authService = new AuthenticationService();
-export const withdrawalService = new WithdrawalService();
-export const proposalService = new CommunityProposalService();
-export const connectionService = new ConsensusConnectionService();
-export const incomeService = new IncomeService();
-export const gameService = new GameService();
-export const webAPIService = new WebAPIService();
-export const connectionCreationService = new ConnectionCreationService();
-export const authorizationService = new AuthorizationService();
-export const recoveryPlanService = new RecoveryPlanService();
-export const agfGameProposalService = new AGFGameProposalService();
-export const linkConnectionService = new LinkConnectionService();
-export const crosschainService = new CrosschainService();
-
-export const WebAppService = {
-  encryption: encryptionService,
-  auth: authService,
-  withdrawal: withdrawalService,
-  proposal: proposalService,
-  connection: connectionService,
-  income: incomeService,
-  game: gameService,
-  webAPI: webAPIService,
-  connectionCreation: connectionCreationService,
-  authorization: authorizationService,
-  recoveryPlan: recoveryPlanService,
-  agfGameProposal: agfGameProposalService,
-  linkConnection: linkConnectionService,
-  crosschain: crosschainService,
-};
-
-export default WebAppService;

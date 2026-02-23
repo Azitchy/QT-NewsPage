@@ -208,7 +208,8 @@ const REVERSE_STATUS_MAP: Record<number, string> = {
 
 // Helper function to get auth token
 const getAuthToken = (): string => {
-  return localStorage.getItem('atm_token') || '';
+  // Get token from localStorage or your auth system
+  return localStorage.getItem('apiToken') || '';
 };
 
 
@@ -1245,7 +1246,7 @@ export const getNFTLinkById = async (id: number): Promise<{
     // Transform data to match UI expectations
     if (result.success && result.data?.linkRecord) {
       const record = result.data.linkRecord;
-      const userAddress = localStorage.getItem('atm_address');
+      const userAddress = localStorage.getItem('walletAddress'); // Get from your auth system
       
       if (userAddress && record.createAddress.toLowerCase() === userAddress.toLowerCase()) {
         record.myNft = record.createLockNft;

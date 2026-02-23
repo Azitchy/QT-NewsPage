@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { Search } from "lucide-react";
-import { useGetAllGames } from "@/hooks/useApi";
+import { useGetAllGames } from "@/hooks/useWebAppService";
 import { Dropdown } from "@/components/ui/atm/dropdown";
 import GameCard from "./components/GameCard";
 

@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import * as webApi from '../lib/webApi';
 import {
   authService,
   withdrawalService,
@@ -50,7 +51,7 @@ import {
   type AGFGameProposal,
   type AGFProposalResponse,
   type CrosschainTransferResult,
-} from '../lib/webAppService';
+} from '../lib/webappservice';
 
 /* ============================================================================
    BASE HOOK TYPES
@@ -1016,9 +1017,10 @@ export const useGetOverview = () => {
  * Hook for getting currency list
  */
 export const useGetCurrencyList = () => {
-  return useApiCall(async () => {
+  const fn = useCallback(async () => {
     return await webAPIService.getCurrencyList();
-  });
+  }, []);
+  return useApiCall(fn);
 };
 
 /**
@@ -1037,6 +1039,36 @@ export const useGetInitiateList = () => {
   return useApiCall(async () => {
     return await webAPIService.getInitiateList();
   });
+};
+
+/**
+ * Hook for fetching ranking list
+ */
+export const useFetchRankList = () => {
+  return useApiCall(
+    async ({
+      pageNo,
+      pageSize = 10,
+      type = 1,
+    }: {
+      pageNo: number;
+      pageSize?: number;
+      type?: number;
+    }) => {
+      return await webAPIService.fetchRankList(pageNo, pageSize, type);
+    }
+  );
+};
+
+/**
+ * Hook for updating user nickname
+ */
+export const useUpdateNickname = () => {
+  return useApiCall(
+    async ({ nickname, walletProvider }: { nickname: string; walletProvider?: any }) => {
+      return await webAPIService.updateNickname(nickname, walletProvider);
+    }
+  );
 };
 
 /**
@@ -1059,17 +1091,6 @@ export const useGetNFTProjectList = () => {
   });
 };
 
-
-/**
- * Hook for updating user nickname
- */
-export const useUpdateNickname = () => {
-  return useApiCall(
-    async ({ nickName, walletProvider }: { nickName: string; walletProvider?: any }) => {
-      return await webAPIService.updateNickname(nickName, walletProvider);
-    }
-  );
-};
 
 /**
  * Hook for getting user PR coin list
@@ -1139,6 +1160,19 @@ export const useGetNFTMetadata = () => {
       return await webAPIService.getNFTMetadata(nftAddress, tokenId);
     }
   );
+};
+
+/**
+ * Hook for fetching coin price trends
+ */
+export const useFetchCoinPriceTrend = () => {
+  const fn = useCallback(
+    async ({ coinCurrency, type }: { coinCurrency: string; type: string }) => {
+      return await webApi.fetchCoinPriceTrend(coinCurrency, type);
+    },
+    []
+  );
+  return useApiCall(fn);
 };
 
 /* ============================================================================
@@ -1696,6 +1730,9 @@ export default {
   useGetNFTLinkList,
   useGetNFTLinkById,
   useGetNFTMetadata,
+  useFetchRankList,
+  useFetchCoinPriceTrend,
+  useUpdateNickname,
 
   // Utilities
   useEncryption,
@@ -1738,4 +1775,4 @@ export type {
   AGFGameProposal,
   AGFProposalResponse,
   CrosschainTransferResult,
-} from '../lib/webAppService';
+} from '../lib/webappservice';

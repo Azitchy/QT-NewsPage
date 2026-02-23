@@ -1,4 +1,4 @@
-import { useApiCall } from "./useApi";
+import { useApiCall } from "./useWebAppService";
 import * as avatarApi from "@/lib/avatarApi";
 
 // ── Profile hooks ────────────────────────────────────────────────────────────
