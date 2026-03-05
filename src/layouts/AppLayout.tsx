@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Outlet } from "react-router-dom";
-import Sidebar, { MobileBottomBar, MobileTopBar }  from "@/components/Sidebar";
+import Sidebar, { MobileBottomBar, MobileTopBar } from "@/components/Sidebar";
+import { MobilePageBreadcrumb } from "@/components/ui/atm/MobilePageBreadcrumb";
 import { useUnified } from "@/context/Context";
 
 function AppLayout() {
@@ -33,7 +34,7 @@ function AppLayout() {
       autoOpenTimer.current = null;
     }
 
-    if (status === 'disconnected' && !hasAutoOpened.current) {
+    if (status === "disconnected" && !hasAutoOpened.current) {
       // Wait 1.5s to confirm this is a real disconnect, not a transient
       // blip during Google session hydration
       autoOpenTimer.current = setTimeout(() => {
@@ -41,7 +42,7 @@ function AppLayout() {
         hasAutoOpened.current = true;
         openModal();
       }, 1500);
-    } else if (status === 'connected') {
+    } else if (status === "connected") {
       // Reset so the next disconnect auto-opens again
       hasAutoOpened.current = false;
     }
@@ -58,16 +59,14 @@ function AppLayout() {
     <>
       {/* Desktop Layout */}
       <div className="hidden md:flex h-screen bg-[#F6F6F6] overflow-hidden relative">
-        <div className="flex flex-1 gap-[20px] overflow-hidden">
-          <Sidebar className="my-[30px] ml-[30px] overflow-y-auto"/>
+        <div className="flex flex-1 gap-[0px] overflow-hidden">
+          <Sidebar className="my-[30px] ml-[30px] overflow-y-auto" />
           <main className="flex-1 py-[30px] pr-[30px] overflow-y-auto">
             <Outlet />
           </main>
         </div>
         {showOverlay && (
-          <div
-            className="absolute inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-white/40 pointer-events-none"
-          />
+          <div className="absolute inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-white/40 pointer-events-none" />
         )}
       </div>
 
@@ -75,16 +74,21 @@ function AppLayout() {
       <div className="md:hidden flex flex-col h-screen bg-[#F6F6F6] relative">
         <MobileTopBar />
         <main className="flex-1 overflow-y-auto px-[16px] pt-[16px] pb-[24px]">
+          <MobilePageBreadcrumb />
           <Outlet />
         </main>
         <MobileBottomBar />
         {showOverlay && (
-          <div
-            className="absolute inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-white/40 pointer-events-none"
-          >
+          <div className="absolute inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-white/40 pointer-events-none">
             <div className="text-center">
-              <img src="/atm-logo.png" alt="ATM" className="w-14 h-14 mx-auto mb-3 opacity-80" />
-              <p className="text-base font-medium text-gray-600">Connecting...</p>
+              <img
+                src="/atm-logo.png"
+                alt="ATM"
+                className="w-14 h-14 mx-auto mb-3 opacity-80"
+              />
+              <p className="text-base font-medium text-gray-600">
+                Connecting...
+              </p>
             </div>
           </div>
         )}

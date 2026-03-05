@@ -34,7 +34,7 @@ import ProposeGame from "@/screens/games/ProposeGame";
 import SettingsIndex from "@/screens/settings/Index";
 import CreateConnection from "@/screens/create-connection/Index";
 import DashboardLayout from "@/layouts/DashboardLayout";
-
+import AvatarSelection from "./screens/avatar/components/AvatarSelection";
 
 function App() {
   return (
@@ -51,7 +51,7 @@ function App() {
 
           {/* Dashboard — wrapped with DashboardLayout for cross-tab data caching */}
           <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route >
+            <Route>
               <Route index element={<Navigate to="portfolio" replace />} />
               <Route path="portfolio" element={<Portfolio />} />
               <Route path="income" element={<Income />} />
@@ -68,8 +68,14 @@ function App() {
 
           {/* Proposals */}
           <Route path="/proposals">
-            <Route index element={<Navigate to="proposal-participate" replace />} />
-            <Route path="proposal-participate" element={<ProposalParticipate />} />
+            <Route
+              index
+              element={<Navigate to="proposal-participate" replace />}
+            />
+            <Route
+              path="proposal-participate"
+              element={<ProposalParticipate />}
+            />
             <Route path="proposal-initiated" element={<ProposalInitiated />} />
             <Route path="recovery-plan" element={<RecoveryPlan />} />
             <Route path="agf-contribution" element={<AgfContribution />} />
@@ -80,17 +86,22 @@ function App() {
 
           {/* Trading */}
           <Route path="/trading">
-            <Route index element={<Navigate to="atm-cross-chain-transfer" replace />} />
-            <Route path="atm-cross-chain-transfer" element={<AtmCrossChainTransfer />} />
+            <Route
+              index
+              element={<Navigate to="atm-cross-chain-transfer" replace />}
+            />
+            <Route
+              path="atm-cross-chain-transfer"
+              element={<AtmCrossChainTransfer />}
+            />
           </Route>
 
           {/* Avatar — Lucy/Alex manage their own sidebar + sub-routes */}
           <Route path="/avatar">
-            <Route index element={<Navigate to="lucy" replace />} />
+            <Route index element={<AvatarSelection />} />
             <Route path="lucy/*" element={<Lucy />} />
             <Route path="alex/*" element={<Alex />} />
           </Route>
-
           {/* Games */}
           <Route path="/games">
             <Route index element={<Navigate to="dashboard" replace />} />
@@ -114,5 +125,4 @@ function App() {
   );
 }
 
-export default App
-
+export default App;

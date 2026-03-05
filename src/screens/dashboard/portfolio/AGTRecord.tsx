@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { useGetUserAGTRecord } from "@/hooks/useWebAppService";
 import { useUnified } from "@/context/Context";
+import Pagination from "@/components/ui/atm/pagination";
 
 type HistoryItem = {
   date: string;
@@ -143,37 +144,12 @@ export default function AGTRecord({
 
         {/* Pagination */}
         {hasData && (
-          <div className="flex flex-col items-center mt-6 gap-2">
-            <div className="flex items-center gap-2 bg-card border border-[#EBEBEB] rounded-full px-2 py-1">
-              {/* Previous */}
-              <button
-                disabled={page === 1}
-                onClick={() => setPage((p) => p - 1)}
-                className="w-8 h-8 flex items-center justify-center rounded-full text-primary hover:bg-muted disabled:text-gray-400 disabled:hover:bg-transparent cursor-pointer"
-              >
-                <ArrowLeft className="w-6 h-6" strokeWidth={1.6} />
-              </button>
-
-              {/* Current page */}
-              <div className="w-8 h-8 flex items-center justify-center text-primary body-text2-500">
-                {page}
-              </div>
-
-              {/* Next */}
-              <button
-                disabled={page * ITEMS_PER_PAGE >= totalItems}
-                onClick={() => setPage((p) => p + 1)}
-                className="w-8 h-8 flex items-center justify-center rounded-full text-primary hover:bg-muted disabled:text-gray-400 disabled:hover:bg-transparent cursor-pointer"
-              >
-                <ArrowRight className="w-6 h-6" strokeWidth={1.6} />
-              </button>
-            </div>
-
-            {/* Range text */}
-            <p className="body-text2-400 text-muted-foreground">
-              {startItem}–{endItem} of {totalItems}
-            </p>
-          </div>
+          <Pagination
+            currentPage={page}
+            totalItems={totalItems}
+            itemsPerPage={ITEMS_PER_PAGE}
+            onPageChange={setPage}
+          />
         )}
       </div>
     </div>

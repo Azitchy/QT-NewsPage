@@ -153,7 +153,7 @@ export default function GameDetail() {
         Go back
       </button>
 
-      <div className="flex gap-[24px]">
+      <div className="flex flex-col-reverse xl:flex-row  gap-[24px]">
         {/* Left side - Game info */}
         <div className="flex-1 min-w-0 space-y-[20px]">
           {/* Category tags */}
@@ -372,21 +372,23 @@ export default function GameDetail() {
                     >
                       {milestone.title}
                     </p>
-                    {milestone.description && (
-                      <ul className="mt-[4px] space-y-[2px]">
-                        {milestone.description
-                          .split(".")
-                          .filter(Boolean)
-                          .map((item, i) => (
-                            <li
-                              key={i}
-                              className="body-label-400 text-[#959595] flex items-start gap-[4px]"
-                            >
-                              <span className="mt-[6px] w-[4px] h-[4px] rounded-full bg-[#959595] flex-shrink-0" />
-                              {item.trim()}.
-                            </li>
-                          ))}
-                      </ul>
+                     {milestone.description && (
+                      <div
+                        className="
+                        body-label-400 text-[#959595] mt-[4px]
+                        [&>p]:mb-[4px]
+                        [&>ul]:mt-[4px] [&>ul]:pl-[14px] [&>ul]:list-none
+                        [&>ul>li]:flex [&>ul>li]:gap-[6px] [&>ul>li]:items-start [&>ul>li]:mb-[2px]
+                        [&>ul>li::before]:content-[''] 
+                        [&>ul>li::before]:w-[4px] 
+                        [&>ul>li::before]:h-[4px] 
+                        [&>ul>li::before]:rounded-full 
+                      [&>ul>li::before]:bg-[#959595] 
+                        [&>ul>li::before]:flex-shrink-0"
+                        dangerouslySetInnerHTML={{
+                          __html: milestone.description,
+                        }}
+                      />
                     )}
                     {milestone.completed && milestone.txHash && (
                       <a

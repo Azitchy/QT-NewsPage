@@ -1,4 +1,4 @@
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useUnified } from "@/context/Context";
 import DashboardIcon from "@/assets/icons/dashboard-btn-icon.svg?react";
 import ConnectionIcon from "@/assets/icons/connections-btn-icon.svg?react";
@@ -13,6 +13,7 @@ import BellIcon from "@/assets/icons/notification-btn-icon.svg?react";
 import LeaveIcon from "@/assets/icons/leave-btn-icon.svg?react";
 import ExploreIcon from "@/assets/icons/explore-btn-icon.svg?react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/atm/tooltip";
+import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "./ui/atm/drawer";
 
 interface SidebarProps {
   className?: string;
@@ -59,7 +60,10 @@ export default function Sidebar({ className = "" }: SidebarProps) {
       label: "Proposals",
       to: "/proposals",
       pages: [
-        { label: "Proposal participate", to: "/proposals/proposal-participate" },
+        {
+          label: "Proposal participate",
+          to: "/proposals/proposal-participate",
+        },
         { label: "Proposal initiated", to: "/proposals/proposal-initiated" },
         { label: "Recovery Plan", to: "/proposals/recovery-plan" },
         { label: "AGF Contribution", to: "/proposals/agf-contribution" },
@@ -71,7 +75,12 @@ export default function Sidebar({ className = "" }: SidebarProps) {
       Icon: TradingIcon,
       label: "Trading tools",
       to: "/trading",
-      pages: [{ label: "ATM cross-chain transfer", to: "/trading/atm-cross-chain-transfer" }],
+      pages: [
+        {
+          label: "ATM cross-chain transfer",
+          to: "/trading/atm-cross-chain-transfer",
+        },
+      ],
     },
     {
       id: "chat",
@@ -110,18 +119,27 @@ export default function Sidebar({ className = "" }: SidebarProps) {
   ];
 
   const isCreateConnection = location.pathname === "/create-connection";
+  const isAvatar = location.pathname.startsWith("/avatar");
 
-  const activeSection =
-    isCreateConnection
-      ? null
-      : navItems.find((i) => location.pathname === i.to || location.pathname.startsWith(`${i.to}/`)) ??
-        navItems[0];
+  const activeSection = isCreateConnection
+    ? null
+    : (navItems.find(
+        (i) =>
+          location.pathname === i.to ||
+          location.pathname.startsWith(`${i.to}/`),
+      ) ?? navItems[0]);
 
   function handleSectionClick(item: NavItem) {
     navigate(item.to);
   }
 
-  function SidebarNavIcon({ Icon, active }: { Icon: NavItem["Icon"]; active: boolean }) {
+  function SidebarNavIcon({
+    Icon,
+    active,
+  }: {
+    Icon: NavItem["Icon"];
+    active: boolean;
+  }) {
     return (
       <Icon
         className={[
@@ -138,7 +156,8 @@ export default function Sidebar({ className = "" }: SidebarProps) {
     <div
       className={[
         "flex gap-[1px]",
-        !isCreateConnection && "w-[285px]",
+        isAvatar ? "mr-0" : "mr-[20px]",
+        !isCreateConnection && !isAvatar && "w-[285px]",
         className,
       ]
         .filter(Boolean)
@@ -151,7 +170,13 @@ export default function Sidebar({ className = "" }: SidebarProps) {
             <stop offset="0%" stopColor="#A5DC53" />
             <stop offset="100%" stopColor="#5DD27A" />
           </linearGradient>
-          <linearGradient id="icon-gradient-hover" x1="0%" y1="0%" x2="0%" y2="100%">
+          <linearGradient
+            id="icon-gradient-hover"
+            x1="0%"
+            y1="0%"
+            x2="0%"
+            y2="100%"
+          >
             <stop offset="0%" stopColor="#A5DC53" stopOpacity="0.7" />
             <stop offset="100%" stopColor="#5DD27A" stopOpacity="0.7" />
           </linearGradient>
@@ -169,16 +194,12 @@ export default function Sidebar({ className = "" }: SidebarProps) {
           type="button"
           className="cursor-pointer"
           onClick={() =>
-            window.open(
-              "https://atm.network",
-              "_blank",
-              "noopener,noreferrer"
-            )
+            window.open("https://atm.network", "_blank", "noopener,noreferrer")
           }
         >
           <img src="/atm.svg" alt="ATM Logo" />
         </button>
-        
+
         {/* Navigation Icons */}
         {navItems.map((item) => (
           <Tooltip key={item.id}>
@@ -190,7 +211,10 @@ export default function Sidebar({ className = "" }: SidebarProps) {
               >
                 <SidebarNavIcon
                   Icon={item.Icon}
-                  active={location.pathname === item.to || location.pathname.startsWith(`${item.to}/`)}
+                  active={
+                    location.pathname === item.to ||
+                    location.pathname.startsWith(`${item.to}/`)
+                  }
                 />
               </button>
             </TooltipTrigger>
@@ -201,7 +225,7 @@ export default function Sidebar({ className = "" }: SidebarProps) {
         ))}
 
         <div className="w-[44px] h-[1px] bg-[#EBEBEB]"></div>
-        
+
         {/* Create Connection Button */}
         <Tooltip>
           <TooltipTrigger asChild>
@@ -221,22 +245,31 @@ export default function Sidebar({ className = "" }: SidebarProps) {
         <div className="mt-auto flex flex-col items-center gap-[20px]">
           {/* Network Badge */}
           <div className="w-[70px] flex gap-[5px] p-[10px] rounded-[30px] bg-[#E9F6F7] transition-all duration-300 cursor-pointer group">
-            <img src="src/assets/tokens/bsc1.svg" alt="BSC Token" className=""/>
-            <span className="font-inter text-[14px] font-medium leading-normal text-primary transition-colors duration-300">BCS</span>
+            <img
+              src="src/assets/tokens/bsc1.svg"
+              alt="BSC Token"
+              className=""
+            />
+            <span className="font-inter text-[14px] font-medium leading-normal text-primary transition-colors duration-300">
+              BCS
+            </span>
           </div>
 
           {/* Notification & Leave Buttons */}
           <Tooltip>
             <TooltipTrigger asChild>
-              <button className="group relative w-[24px] h-[24px] transition-all cursor-pointer" aria-label="Notifications">
-                <BellIcon className="w-[24px] h-auto text-primary group-hover:[&>path]:fill-[url(#icon-gradient)] group-hover:drop-shadow-[0_0_10px_rgba(93,210,122,0.4)] transition-all duration-300"/>
+              <button
+                className="group relative w-[24px] h-[24px] transition-all cursor-pointer"
+                aria-label="Notifications"
+              >
+                <BellIcon className="w-[24px] h-auto text-primary group-hover:[&>path]:fill-[url(#icon-gradient)] group-hover:drop-shadow-[0_0_10px_rgba(93,210,122,0.4)] transition-all duration-300" />
               </button>
             </TooltipTrigger>
             <TooltipContent side="right" sideOffset={20}>
               Notifications
             </TooltipContent>
           </Tooltip>
-          
+
           <Tooltip>
             <TooltipTrigger asChild>
               <button
@@ -244,7 +277,7 @@ export default function Sidebar({ className = "" }: SidebarProps) {
                 aria-label="Log out"
                 onClick={logout}
               >
-                <LeaveIcon className="w-[24px] h-auto text-primary group-hover:[&>path]:fill-[url(#icon-gradient)] group-hover:drop-shadow-[0_0_10px_rgba(93,210,122,0.4)] transition-all duration-300"/>
+                <LeaveIcon className="w-[24px] h-auto text-primary group-hover:[&>path]:fill-[url(#icon-gradient)] group-hover:drop-shadow-[0_0_10px_rgba(93,210,122,0.4)] transition-all duration-300" />
               </button>
             </TooltipTrigger>
             <TooltipContent side="right" sideOffset={20}>
@@ -255,13 +288,11 @@ export default function Sidebar({ className = "" }: SidebarProps) {
       </div>
 
       {/* Sidebar Menu */}
-      {!isCreateConnection && (
+      {!isCreateConnection && !isAvatar && (
         <div className="px-[15px] pt-[30px] pb-[20px] bg-white w-full rounded-r-[15px]">
           {activeSection && (
             <>
-              <div className="font-h4-400">
-                {activeSection.label ?? ""}
-              </div>
+              <div className="font-h4-400">{activeSection.label ?? ""}</div>
 
               {activeSection.pages && activeSection.pages.length > 0 && (
                 <div className="mt-[14px] flex flex-col gap-[10px]">
@@ -299,7 +330,13 @@ export function MobileTopBar() {
       {/* Hidden SVG with gradient definitions */}
       <svg width="0" height="0" className="absolute">
         <defs>
-          <linearGradient id="icon-gradient-mobile" x1="0%" y1="0%" x2="0%" y2="100%">
+          <linearGradient
+            id="icon-gradient-mobile"
+            x1="0%"
+            y1="0%"
+            x2="0%"
+            y2="100%"
+          >
             <stop offset="0%" stopColor="#A5DC53" />
             <stop offset="100%" stopColor="#5DD27A" />
           </linearGradient>
@@ -311,11 +348,7 @@ export function MobileTopBar() {
           type="button"
           className="cursor-pointer"
           onClick={() =>
-            window.open(
-              "https://atm.network",
-              "_blank",
-              "noopener,noreferrer"
-            )
+            window.open("https://atm.network", "_blank", "noopener,noreferrer")
           }
         >
           <img src="/atm.svg" alt="ATM Logo" className="w-[40px]" />
@@ -343,8 +376,14 @@ export function MobileTopBar() {
 
           {/* Network Badge */}
           <div className="flex gap-[5px] px-[20px] py-[10px] rounded-[30px] bg-[#E9F6F7] transition-all duration-300 cursor-pointer group">
-            <img src="src/assets/tokens/bsc1.svg" alt="BSC Token" className="w-[16px] h-[16px]" />
-            <span className="font-inter text-[12px] font-medium text-primary transition-colors duration-300">BCS</span>
+            <img
+              src="src/assets/tokens/bsc1.svg"
+              alt="BSC Token"
+              className="w-[16px] h-[16px]"
+            />
+            <span className="font-inter text-[12px] font-medium text-primary transition-colors duration-300">
+              BCS
+            </span>
           </div>
         </div>
       </div>
@@ -357,13 +396,33 @@ export function MobileBottomBar() {
   const navigate = useNavigate();
   type MobileNavItem =
     | { id: "quickaction"; label: string }
-    | { id: string; label: string; Icon: React.ComponentType<{ className?: string }>; to: string };
+    | {
+        id: string;
+        label: string;
+        Icon: React.ComponentType<{ className?: string }>;
+        to: string;
+      };
 
   const navItems: MobileNavItem[] = [
-    { id: "dashboard", Icon: DashboardIcon, label: "Dashboard", to: "/dashboard" },
-    { id: "connections", Icon: ConnectionIcon, label: "Connection", to: "/connections" },
+    {
+      id: "dashboard",
+      Icon: DashboardIcon,
+      label: "Dashboard",
+      to: "/dashboard",
+    },
+    {
+      id: "connections",
+      Icon: ConnectionIcon,
+      label: "Connection",
+      to: "/connections",
+    },
     { id: "quickaction", label: "Quick Action" },
-    { id: "proposals", Icon: ProposalIcon, label: "Proposals", to: "/proposals" },
+    {
+      id: "proposals",
+      Icon: ProposalIcon,
+      label: "Proposals",
+      to: "/proposals",
+    },
     { id: "explore", Icon: ExploreIcon, label: "Explore", to: "/dashboard" },
   ];
 
@@ -372,11 +431,23 @@ export function MobileBottomBar() {
       {/* Hidden SVG with gradient definitions */}
       <svg width="0" height="0" className="absolute">
         <defs>
-          <linearGradient id="icon-gradient-bottom" x1="0%" y1="0%" x2="0%" y2="100%">
+          <linearGradient
+            id="icon-gradient-bottom"
+            x1="0%"
+            y1="0%"
+            x2="0%"
+            y2="100%"
+          >
             <stop offset="0%" stopColor="#A5DC53" />
             <stop offset="100%" stopColor="#5DD27A" />
           </linearGradient>
-          <linearGradient id="icon-gradient-bottom-hover" x1="0%" y1="0%" x2="0%" y2="100%">
+          <linearGradient
+            id="icon-gradient-bottom-hover"
+            x1="0%"
+            y1="0%"
+            x2="0%"
+            y2="100%"
+          >
             <stop offset="0%" stopColor="#A5DC53" stopOpacity="0.7" />
             <stop offset="100%" stopColor="#5DD27A" stopOpacity="0.7" />
           </linearGradient>
@@ -386,26 +457,92 @@ export function MobileBottomBar() {
       <div className="flex justify-between items-center">
         {navItems.map((item) => {
           // Special handling for quick action button
-          if (item.id === 'quickaction') {
+          if (item.id === "quickaction") {
             return (
-              <button 
-                key={item.id}
-                className="w-[56px] flex flex-col items-center group"
-              >
-                <img 
-                  src="src/assets/icons/quickaction-btn-icon.png" 
-                  className="w-[32px] h-auto group-hover:drop-shadow-[0_0_10px_rgba(93,210,122,0.5)] group-hover:brightness-110 transition-all duration-300" 
-                  alt={item.label}
-                />
-              </button>
+              <Drawer>
+                <DrawerTrigger asChild>
+                  <button 
+                    key={item.id}
+                    className="w-[56px] flex flex-col items-center group"
+                  >
+                    <img 
+                      src="src/assets/icons/quickaction-btn-icon.png" 
+                      className="w-[32px] h-auto group-hover:drop-shadow-[0_0_10px_rgba(93,210,122,0.5)] group-hover:brightness-110 transition-all duration-300" 
+                      alt={item.label}
+                    />
+                  </button>
+                </DrawerTrigger>
+                <DrawerContent className="px-[16px] pb-[18px]">
+                    <div className="flex flex-col gap-[20px]">
+
+                      {/* Create Connection Button*/}
+                      <DrawerClose asChild>
+                        <Link
+                          to="/create-connection"
+                          className="flex items-center gap-[10px] hover:bg-[#F8F8F8] transition-all"
+                        >
+                          {/* Icon */}
+                          <div className="p-[10px] rounded-full bg-[#F3FBE6] flex items-center justify-center">
+                            <CreateConnectionIcon
+                              className="
+                                w-[24px] h-[24px]
+                                [&_*]:fill-[url(#icon-gradient-bottom)]
+                              "
+                            />
+                          </div>
+
+                          {/* Text */}
+                          <div className="flex flex-col">
+                            <span className="body-text1-400 text-foreground">
+                              Connect
+                            </span>
+                            <span className="body-label-400 text-[#878787]">
+                              Create connection with others
+                            </span>
+                          </div>
+                        </Link>
+                      </DrawerClose>
+
+                      {/* Cross-chain transfer Button */}
+                      <DrawerClose asChild>
+                        <Link
+                          to="/trading/atm-cross-chain-transfer"
+                          className="flex items-center gap-[10px] hover:bg-[#F8F8F8] transition-all"
+                        >
+                          {/* Icon */}
+                          <div className="p-[10px] rounded-full bg-[#F3FBE6] flex items-center justify-center">
+                            <TradingIcon
+                              className="
+                                w-[24px] h-[24px]
+                                [&_*]:fill-[url(#icon-gradient-bottom)]
+                              "
+                            />
+                          </div>
+
+                          {/* Text */}
+                          <div className="flex flex-col">
+                            <span className="body-text1-400 text-foreground">
+                              Cross-chain transfer
+                            </span>
+                            <span className="body-label-400 text-[#878787]">
+                              You can transfer assets across chains
+                            </span>
+                          </div>
+                        </Link>
+                      </DrawerClose>
+                    </div>
+                </DrawerContent>
+              </Drawer>
             );
           }
 
           const navItem = item as Extract<MobileNavItem, { to: string }>;
-          const isActive = location.pathname === navItem.to || location.pathname.startsWith(`${navItem.to}/`);
+          const isActive =
+            location.pathname === navItem.to ||
+            location.pathname.startsWith(`${navItem.to}/`);
 
           return (
-            <button 
+            <button
               key={navItem.id}
               onClick={() => navigate(navItem.to)}
               className="w-[56px] flex flex-col items-center group"
@@ -415,11 +552,11 @@ export function MobileBottomBar() {
               ) : (
                 <navItem.Icon className="w-[24px] h-auto text-[#959595] [&_*]:transition-all [&_*]:duration-300 group-hover:[&_*]:fill-[url(#icon-gradient-bottom-hover)] group-hover:[&_*]:stroke-[url(#icon-gradient-bottom-hover)] group-hover:drop-shadow-[0_0_6px_rgba(93,210,122,0.3)]" />
               )}
-              <span 
+              <span
                 className={`text-[10px] transition-all duration-300 ${
                   isActive
-                    ? 'bg-gradient-to-r from-[#A5DC53] to-[#5DD27A] bg-clip-text text-transparent font-medium' 
-                    : 'text-[#959595] group-hover:bg-gradient-to-r group-hover:from-[#A5DC53] group-hover:to-[#5DD27A] group-hover:bg-clip-text group-hover:text-transparent'
+                    ? "bg-gradient-to-r from-[#A5DC53] to-[#5DD27A] bg-clip-text text-transparent font-medium"
+                    : "text-[#959595] group-hover:bg-gradient-to-r group-hover:from-[#A5DC53] group-hover:to-[#5DD27A] group-hover:bg-clip-text group-hover:text-transparent"
                 }`}
               >
                 {navItem.label}

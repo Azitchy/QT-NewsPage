@@ -1,10 +1,10 @@
-import { Crown } from "lucide-react";
-import type { RankingItem } from "@/lib/webappservice";
+import type { RankingItem } from "@/lib/webApi";
 import {
   getVisibleLeaderboardEntries,
   truncateAddress,
   deriveLevelFromAmount,
 } from "../types";
+import GameCrownIcon from "@/assets/icons/game-crown.svg";
 
 interface LeaderboardCardProps {
   title: string;
@@ -26,26 +26,25 @@ export default function LeaderboardCard({
   const visibleEntries = getVisibleLeaderboardEntries(rankings, userAddress);
 
   const isUserRow = (entry: RankingItem) =>
-    userAddress &&
-    entry.address.toLowerCase() === userAddress.toLowerCase();
+    userAddress && entry.address.toLowerCase() === userAddress.toLowerCase();
 
   return (
-    <div className="rounded-[15px] bg-white p-[20px] h-full">
+    <div className="rounded-[15px] bg-white p-[20px] h-full flex flex-col">
       <h3 className="font-h4-400 text-foreground">{title}</h3>
       {subtitle && (
-        <p className="body-label-400 text-[#959595] mt-[2px]">{subtitle}</p>
+        <p className="text-[14px] text-[#999F9F] mt-[2px]">{subtitle}</p>
       )}
 
       {loading ? (
-        <div className="flex items-center justify-center py-[40px]">
+        <div className="flex items-center justify-center py-[40px] flex-1">
           <div className="w-[24px] h-[24px] border-2 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
       ) : rankings.length === 0 ? (
-        <div className="py-[40px] text-center">
+        <div className="py-[40px] text-center flex-1">
           <p className="body-text2-400 text-[#959595]">No rankings available</p>
         </div>
       ) : (
-        <div className="mt-[16px] space-y-[2px]">
+        <div className="mt-[16px] space-y-[2px] flex-1">
           {visibleEntries.map((entry, index) => {
             if (entry === "separator") {
               return (
@@ -67,9 +66,7 @@ export default function LeaderboardCard({
               <div
                 key={`${entry.rank}-${entry.address}`}
                 className={`flex items-center gap-[12px] px-[12px] py-[10px] rounded-[10px] transition-colors ${
-                  highlighted
-                    ? "bg-[#E9F6F7]"
-                    : "hover:bg-[#FAFAFA]"
+                  highlighted ? "bg-[#E9F6F7]" : "hover:bg-[#FAFAFA]"
                 }`}
               >
                 {/* Rank */}
@@ -84,9 +81,7 @@ export default function LeaderboardCard({
                 {/* Address */}
                 <span
                   className={`flex-1 body-text2-400 ${
-                    highlighted
-                      ? "text-primary font-medium"
-                      : "text-foreground"
+                    highlighted ? "text-primary font-medium" : "text-foreground"
                   }`}
                 >
                   {truncateAddress(entry.address)}
@@ -102,9 +97,11 @@ export default function LeaderboardCard({
                 </span>
 
                 {/* Crown for rank 1 */}
-                {entry.rank === 1 && (
-                  <Crown className="w-[18px] h-[18px] text-[#FFD700]" />
-                )}
+                <div className="w-[30px] flex justify-end">
+                  {Number(entry.rank) === 1 && (
+                    <img src={GameCrownIcon} alt="Game Crown" />
+                  )}
+                </div>
               </div>
             );
           })}
@@ -112,7 +109,7 @@ export default function LeaderboardCard({
           {/* See all button */}
           <button
             onClick={onSeeAll}
-            className="mt-[12px] text-primary body-text2-400 hover:underline cursor-pointer"
+            className="mt-auto  pt-[16px] text-primary body-text1-400 hover:underline cursor-pointer"
           >
             See all
           </button>

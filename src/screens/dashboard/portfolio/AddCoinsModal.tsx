@@ -3,7 +3,11 @@ import { Search, Mic, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/atm/button";
 import { ConfirmationModal } from "@/components/ui/atm/confirmationModal";
 import { LoadingAnimation } from "@/components/ui/atm/loadingAnimation";
-import { useGetCurrencyList, useFetchCoinPriceTrend } from "@/hooks/useWebAppService";
+import {
+  useGetCurrencyList,
+  useFetchCoinPriceTrend,
+} from "@/hooks/useWebAppService";
+import RightSideModal from "@/components/ui/atm/rightSideModal";
 
 type WatchlistCoin = {
   symbol: string;
@@ -56,6 +60,7 @@ export default function AddCoinsModal({
     loading: currencyLoading,
     execute: fetchCurrencyList,
   } = useGetCurrencyList();
+
   const { execute: fetchCoinPriceTrend } = useFetchCoinPriceTrend();
 
   useEffect(() => {
@@ -69,6 +74,7 @@ export default function AddCoinsModal({
   const ALL_COINS: CoinOption[] = useMemo(() => {
     if (!currencyListData || !Array.isArray(currencyListData))
       return FALLBACK_COINS;
+
     return currencyListData
       .map((c: any) => ({
         name: c.currencyName || c.baseCurrency || "",
@@ -114,9 +120,7 @@ export default function AddCoinsModal({
       for (const c of ALL_COINS.filter((coin) =>
         tempSelected.includes(coin.symbol),
       )) {
-        const existing = selectedCoins.find(
-          (coin) => coin.symbol === c.symbol,
-        );
+        const existing = selectedCoins.find((coin) => coin.symbol === c.symbol);
 
         if (existing) {
           updated.push(existing);
@@ -136,9 +140,7 @@ export default function AddCoinsModal({
             type: "1",
           });
           if (trendData?.y && Array.isArray(trendData.y)) {
-            sparkData = trendData.y.map(
-              (val: any) => Number(val ?? 0),
-            );
+            sparkData = trendData.y.map((val: any) => Number(val ?? 0));
           }
           // Use trend info for price and change (same as explorer DashboardSection)
           if (trendData?.info?.nowPrice) {
@@ -152,7 +154,8 @@ export default function AddCoinsModal({
           // Lookup price from currency data for btcPrice calculation
           // API returns CoinCurrency with baseCurrency, nowPrice, pricePlaces
           const coinData = currencyListData?.find(
-            (cd: any) => cd.baseCurrency?.toUpperCase() === c.symbol.toUpperCase(),
+            (cd: any) =>
+              cd.baseCurrency?.toUpperCase() === c.symbol.toUpperCase(),
           );
           if (coinData?.nowPrice) {
             const coinPrice = Number(coinData.nowPrice);
@@ -182,7 +185,10 @@ export default function AddCoinsModal({
       }
 
       setSelectedCoins?.(updated);
-      setToast?.({ message: "Watchlist updated successfully", type: "success" });
+      setToast?.({
+        message: "Watchlist updated successfully",
+        type: "success",
+      });
       onSave(updated);
       onClose();
     } catch {
@@ -217,7 +223,10 @@ export default function AddCoinsModal({
   const notInList = filtered.filter((c) => !originalSymbols.includes(c.symbol));
 
   const renderCoin = (coin: CoinOption, index: number) => (
-    <label key={`${coin.symbol}-${index}`} className="flex justify-between py-2">
+    <label
+      key={`${coin.symbol}-${index}`}
+      className="flex justify-between py-2"
+    >
       <div className="flex gap-3 items-center">
         <input
           type="checkbox"
@@ -243,83 +252,69 @@ export default function AddCoinsModal({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex justify-end bg-black/30">
-        <div className="w-105 bg-card p-6 h-full rounded-l-2xl shadow-xl relative overflow-y-auto
-           [&::-webkit-scrollbar]:hidden 
-           [-ms-overflow-style:none] 
-           [scrollbar-width:none]">
-          {/* HEADER */}
-          <div className="flex justify-between mb-4">
-            <h2 className="font-h4-400">Add coins to track prices</h2>
-            <X onClick={onClose} className="cursor-pointer text-primary" />
+      <RightSideModal
+        isOpen={isOpen}
+        onClose={onClose}
+        title="Add coins to track prices"
+        showSearch
+        searchValue={search}
+        onSearchChange={setSearch}
+        primaryButtonText="Save"
+        onPrimaryClick={handleSave}
+        primaryDisabled={!hasChanges}
+        primaryVariant={!hasChanges ? "disabled" : "default"}
+        secondaryButtonText="Cancel"
+        loading={isLoading}
+      >
+        {/* Loading state while fetching currencies */}
+        {currencyLoading && (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="w-6 h-6 animate-spin text-primary" />
+            <span className="ml-2 body-text2-400 text-[#959595]">
+              Loading coins...
+            </span>
           </div>
+        )}
 
-          {/* SEARCH */}
-          <div className="relative mb-4">
-            <Search className="absolute left-3 top-3 text-gray-400" size={16} />
-            <input
-              placeholder="Search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-10 py-2 rounded-xl bg-[#F5F5F5]"
-            />
-            <Mic className="absolute right-3 top-3 text-gray-400" size={16} />
+        {/* SCROLLABLE COINS SECTION */}
+        {!currencyLoading && (
+          <div
+            className="flex-1 overflow-y-auto pr-2
+              [&::-webkit-scrollbar]:hidden
+              [-ms-overflow-style:none]
+              [scrollbar-width:none]"
+          >
+            {inList.length > 0 && (
+              <>
+                <p className="text-foreground body-text1-400 mb-2">
+                  These coins are already in your list
+                </p>
+
+                {inList.map(renderCoin)}
+
+                <Button
+                  onClick={() => setConfirmRemoveAll(true)}
+                  disabled={inListExceptLuca.length === 0}
+                  className="body-text2-500 text-primary px-0"
+                  variant="ghost"
+                >
+                  Remove all
+                </Button>
+              </>
+            )}
+
+            {/* SECTION: OTHER COINS */}
+            {!currencyLoading && notInList.length > 0 && (
+              <>
+                <p className="text-foreground body-text1-400 mt-3 mb-2">
+                  Coins
+                </p>
+                {notInList.map(renderCoin)}
+              </>
+            )}
           </div>
-
-          {/* Loading state while fetching currencies */}
-          {currencyLoading && (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="w-6 h-6 animate-spin text-primary" />
-              <span className="ml-2 body-text2-400 text-[#959595]">
-                Loading coins...
-              </span>
-            </div>
-          )}
-
-          {/* SECTION: IN LIST */}
-          {!currencyLoading && inList.length > 0 && (
-            <>
-              <p className="text-foreground body-text1-400 mb-2">
-                These coins are already in your list
-              </p>
-
-              {inList.map(renderCoin)}
-
-              <Button
-                onClick={() => setConfirmRemoveAll(true)}
-                disabled={inListExceptLuca.length === 0}
-                className="body-text2-500 text-primary px-0"
-                variant="ghost"
-              >
-                Remove all
-              </Button>
-            </>
-          )}
-
-          {/* SECTION: OTHER COINS */}
-          {!currencyLoading && notInList.length > 0 && (
-            <>
-              <p className="text-foreground body-text1-400 mt-3 mb-2">Coins</p>
-              {notInList.map(renderCoin)}
-            </>
-          )}
-
-          {/* FOOTER */}
-          <div className="sticky bottom-0 bg-white pt-4 flex justify-end gap-3">
-            <Button variant="success" onClick={onClose}>
-              Cancel
-            </Button>
-
-            <Button
-              disabled={!hasChanges}
-              onClick={handleSave}
-              variant={!hasChanges ? "disabled" : "default"}
-            >
-              Save
-            </Button>
-          </div>
-        </div>
-      </div>
+        )}
+      </RightSideModal>
 
       {/* CONFIRM REMOVE ALL MODAL */}
       <ConfirmationModal

@@ -10,6 +10,9 @@ import GameCard from "./components/GameCard";
 import LeaderboardCard from "./components/LeaderboardCard";
 import LeaderboardPanel from "./components/LeaderboardPanel";
 import { truncateAddress } from "./types";
+import { Button } from "@/components/ui/atm/button";
+import AtmStarIcon from "@/assets/icons/atm-star.svg";
+import GameXpIcon from "@/assets/icons/game-xp.svg";
 
 export default function GamesDashboard() {
   const { address, isConnected, isAuthenticated, logout } = useUnified();
@@ -68,7 +71,7 @@ export default function GamesDashboard() {
     return [...games]
       .sort(
         (a, b) =>
-          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
       )
       .slice(0, 3);
   }, [games]);
@@ -76,90 +79,89 @@ export default function GamesDashboard() {
   return (
     <div className="space-y-[20px]">
       {/* Main 3-column layout */}
-      <div className="flex gap-[16px]">
+      <div className="flex flex-col 2xl:flex-row gap-[16px]">
         {/* Left Column - Profile */}
-        <div className="w-[320px] flex-shrink-0 space-y-[16px]">
+        <div className=" flex-shrink-0 space-y-[16px]">
           {/* Your ATM Stars card */}
-          <div className="rounded-[15px] bg-[#F6F6F6] p-[20px]">
-            <div className="flex items-center justify-between mb-[16px]">
-              <h3 className="font-h4-400 text-foreground">Your ATM Stars</h3>
-              {isConnected && (
-                <button
-                  onClick={logout}
-                  className="px-[16px] py-[6px] rounded-full border border-primary text-primary body-text2-400 hover:bg-[#E9F6F7] cursor-pointer transition-colors"
-                >
-                  Disconnect
-                </button>
+          <div className="rounded-[15px] ">
+            <div className="bg-card 2xl:w-[500px] p-[20px] rounded-[15px]">
+              <div className="flex items-center justify-between mb-[16px]">
+                <h3 className="font-h4-400 text-foreground">Your ATM Stars</h3>
+                {isConnected && (
+                  <Button onClick={logout} variant="soft">
+                    Disconnect
+                  </Button>
+                )}
+              </div>
+
+              {/* Stars count */}
+              <div className="flex items-center gap-[12px] mb-[12px]">
+                <span className="font-h1 text-foreground leading-none">
+                  {stars}
+                </span>
+                <img
+                  src={AtmStarIcon}
+                  alt="ATM Star"
+                  className="w-[60px] h-[60px]"
+                />
+              </div>
+
+              {/* Wallet address */}
+              {address && (
+                <p className="body-text2-400 text-[#959595] mb-[16px] break-all">
+                  {address}
+                </p>
               )}
             </div>
 
-            {/* Stars count */}
-            <div className="flex items-center gap-[12px] mb-[12px]">
-              <span className="text-[48px] font-bold text-foreground leading-none">
-                {stars}
-              </span>
-              <Star className="w-[40px] h-[40px] text-[#FFB347] fill-[#FFB347]" />
-            </div>
-
-            {/* Wallet address */}
-            {address && (
-              <p className="body-text2-400 text-[#959595] mb-[16px] break-all">
-                {address}
-              </p>
-            )}
-
             {/* Level + XP progress */}
-            <div className="flex items-center gap-[12px] mb-[8px]">
-              <div className="w-[40px] h-[40px] rounded-full bg-gradient-to-br from-[#FFB347] to-[#FF8C00] flex items-center justify-center">
-                <span className="text-white text-[14px] font-bold">
+            <div className="relative bg-white p-[20px] py-[40px] rounded-[15px] my-[10px] flex items-center">
+              {/* XP Badge (Floating / Overlapping) */}
+              <div className="absolute flex items-center justify-center">
+                <img
+                  src={GameXpIcon}
+                  alt="XP Badge"
+                  className="w-full h-full object-contain"
+                />
+
+                {/* Level Number */}
+                <span className="absolute bottom-11 text-white text-[24px] font-semibold">
                   {userLevel}
                 </span>
               </div>
-              <div className="flex-1">
-                <div className="flex items-center justify-between mb-[4px]">
-                  <div className="w-full bg-[#E5E5E5] rounded-full h-[8px] overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-gradient-to-r from-[#A5DC53] to-[#5DD27A] transition-all duration-500"
-                      style={{ width: `${xpPercentage}%` }}
-                    />
-                  </div>
-                </div>
-                <p className="body-label-400 text-[#959595] text-right">
-                  XP {currentXp.toLocaleString()} / {xpForNextLevel.toLocaleString()}
+
+              {/* XP Content Section */}
+              <div className="flex-1 pl-[90px]">
+                <p className="body-label-400 text-[#959595] text-right mb-2">
+                  XP {currentXp.toLocaleString()} /{" "}
+                  {xpForNextLevel.toLocaleString()}
                 </p>
+
+                <div className="w-full bg-[#E5E5E5] rounded-full h-[18px] overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-[#A5DC53] to-[#5DD27A] transition-all duration-500"
+                    style={{ width: `${xpPercentage}%` }}
+                  />
+                </div>
               </div>
             </div>
 
             {/* Stats row */}
-            <div className="grid grid-cols-3 gap-[8px] mt-[16px]">
-              <div className="rounded-[10px] bg-white p-[12px] text-center">
-                <p className="body-label-400 text-[#959595]">Games</p>
-                <p className="font-h4-400 text-foreground">{gamesPlayed}</p>
+            <div className="grid grid-cols-3 gap-[8px] mt-[10px]">
+              <div className="rounded-[10px] bg-white p-[20px] text-left">
+                <p className="text-[16px] text-[#959595] mb-[8px]">Games</p>
+                <p className="font-h4-600 text-foreground">{gamesPlayed}</p>
               </div>
-              <div className="rounded-[10px] bg-white p-[12px] text-center">
-                <p className="body-label-400 text-[#959595]">Wins</p>
-                <p className="font-h4-400 text-foreground">{wins}</p>
+              <div className="rounded-[10px] bg-white p-[20px] text-left">
+                <p className="text-[16px] text-[#959595] mb-[8px]">Wins</p>
+                <p className="font-h4-600 text-foreground">{wins}</p>
               </div>
-              <div className="rounded-[10px] bg-white p-[12px] text-center">
-                <p className="body-label-400 text-[#959595]">Hours</p>
-                <p className="font-h4-400 text-foreground">{daysActive}</p>
+              <div className="rounded-[10px] bg-white p-[20px] text-left">
+                <p className="text-[16px] text-[#959595] mb-[8px]">Hours</p>
+                <p className="font-h4-600 text-foreground">{daysActive}</p>
               </div>
             </div>
           </div>
-
-          {/* Recent Games */}
-          {recentGames.length > 0 && (
-            <div>
-              <h3 className="font-h4-400 text-foreground mb-[12px]">
-                Recent games
-              </h3>
-              <div className="space-y-[12px]">
-                {recentGames.map((game) => (
-                  <GameCard key={`recent-${game.id}`} game={game} />
-                ))}
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Middle Column - ATM Universe Leaderboard */}
@@ -186,6 +188,20 @@ export default function GamesDashboard() {
           />
         </div>
       </div>
+
+      {/* Recent Games */}
+      {recentGames.length > 0 && (
+        <div className="bg-white p-[20px] rounded-[15px]">
+          <h3 className="font-h4-400 text-foreground mb-[12px]">
+            Recent games
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-[16px]">
+            {recentGames.map((game) => (
+              <GameCard key={`recent-${game.id}`} game={game} />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Sliding Panels */}
       <LeaderboardPanel

@@ -44,7 +44,7 @@ export default function Games() {
     return [...games]
       .sort(
         (a, b) =>
-          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
       )
       .slice(0, 3);
   }, [games]);
@@ -53,7 +53,7 @@ export default function Games() {
     <div className="space-y-[20px]">
       {/* Recent Games */}
       {recentGames.length > 0 && (
-        <div>
+        <div className="bg-card p-5 rounded-2xl">
           <h3 className="font-h4-400 text-foreground mb-[16px]">
             Recent games
           </h3>
@@ -66,20 +66,20 @@ export default function Games() {
       )}
 
       {/* All Games */}
-      <div>
-        <div className="flex items-center justify-between mb-[16px]">
+      <div className="bg-card p-5 rounded-2xl">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-[16px]">
           <h3 className="font-h4-400 text-foreground">All games</h3>
           <div className="flex items-center gap-[12px]">
             {/* Search input */}
             <div className="relative">
-              <Search className="absolute left-[12px] top-1/2 -translate-y-1/2 w-[16px] h-[16px] text-[#959595]" />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search..."
-                className="pl-[36px] pr-[16px] py-[10px] rounded-[30px] border border-[#EBEBEB] body-text2-400 text-foreground focus:outline-none focus:border-primary w-[200px]"
+                className="pl-[10px] pr-[16px] py-[10px] rounded-[10px] border border-[#EBEBEB] body-text2-400 text-foreground focus:outline-none focus:border-primary w-[200px]"
               />
+              <Search className="absolute right-[12px] top-1/2 -translate-y-1/2 w-[16px] h-[16px] text-primary" />
             </div>
             {/* Category filter */}
             <Dropdown

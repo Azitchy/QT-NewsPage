@@ -35,6 +35,9 @@ import { Toast } from "@/components/ui/atm/toastMessage";
 import AGTRecord from "./portfolio/AGTRecord";
 import { Button } from "@/components/ui/atm/button";
 import AddCoinsModal from "./portfolio/AddCoinsModal";
+import RightSideModal from "@/components/ui/atm/rightSideModal";
+import GalaxyFilterModal from "./portfolio/GalaxyFilter";
+import AGTBarGraph from "./portfolio/AGTBarGraph";
 
 /* ============================================================================
    DONUT CHART COMPONENT
@@ -368,13 +371,9 @@ export default function Portfolio() {
 
   // API hooks (only for actions, not data fetching)
   const updateNicknameHook = useUpdateNickname();
-  const {
-    data: currencyListData,
-    execute: fetchCurrencyList,
-  } = useGetCurrencyList();
-  const {
-    execute: fetchCoinPriceTrend,
-  } = useFetchCoinPriceTrend();
+  const { data: currencyListData, execute: fetchCurrencyList } =
+    useGetCurrencyList();
+  const { execute: fetchCoinPriceTrend } = useFetchCoinPriceTrend();
 
   // Derive importable tokens from the currency list API
   // API returns CoinCurrency objects with: baseCurrency, currencyName, currencyLogo, nowPrice, pricePlaces
@@ -384,7 +383,9 @@ export default function Portfolio() {
       .filter(
         (c: any) =>
           c.baseCurrency &&
-          !["LUCA", "USDC", "USDT", "BNB"].includes(c.baseCurrency.toUpperCase()),
+          !["LUCA", "USDC", "USDT", "BNB"].includes(
+            c.baseCurrency.toUpperCase(),
+          ),
       )
       .map((c: any) => ({
         symbol: c.baseCurrency || "",
@@ -423,6 +424,14 @@ export default function Portfolio() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedImports, setSelectedImports] = useState<string[]>([]);
   const [isImporting, setIsImporting] = useState(false);
+
+  const [isGalaxyFilterOpen, setIsGalaxyFilterOpen] = useState(false);
+
+  const [galaxyFilters, setGalaxyFilters] = useState({
+    pr: [0, 1700] as [number, number],
+    gameLevel: [1, 15000] as [number, number],
+    leaderboard: [1, 150] as [number, number],
+  });
 
   // Derive data from cache
   const overview = portfolioData?.overview ?? null;
@@ -534,7 +543,7 @@ export default function Portfolio() {
     setIsSavingName(true);
     try {
       await updateNicknameHook.execute({
-        nickName: editNameValue.trim(),
+        nickname: editNameValue.trim(),
         walletProvider,
       });
       updateUserName(editNameValue.trim());
@@ -597,7 +606,8 @@ export default function Portfolio() {
 
     const defaultCoins: WatchlistCoin[] = [];
 
-    if (!currencyListData || !Array.isArray(currencyListData)) return defaultCoins;
+    if (!currencyListData || !Array.isArray(currencyListData))
+      return defaultCoins;
 
     // LUCA — baseCurrency: "LUCA"
     const lucaData = currencyListData.find(
@@ -605,12 +615,18 @@ export default function Portfolio() {
     );
     if (lucaData) {
       // Price: currency list nowPrice is primary; trend nowPrice as fallback
-      const lucaPrice = safeNum(lucaData.nowPrice) || safeNum(watchlistPriceInfo["LUCA"]?.nowPrice) || safeNum(overview?.price);
-      const lucaChange = safeChange(watchlistPriceInfo["LUCA"]?.change ?? overview?.pre);
+      const lucaPrice =
+        safeNum(lucaData.nowPrice) ||
+        safeNum(watchlistPriceInfo["LUCA"]?.nowPrice) ||
+        safeNum(overview?.price);
+      const lucaChange = safeChange(
+        watchlistPriceInfo["LUCA"]?.change ?? overview?.pre,
+      );
       defaultCoins.push({
         symbol: "LUCA",
         name: lucaData.currencyName || "LUCA",
-        price: lucaPrice > 0 ? lucaPrice.toFixed(lucaData.pricePlaces ?? 4) : "0.00",
+        price:
+          lucaPrice > 0 ? lucaPrice.toFixed(lucaData.pricePlaces ?? 4) : "0.00",
         btcPrice: "0.00000000",
         change: lucaChange,
         sparkData: watchlistPriceTrends["LUCA"] || [],
@@ -620,7 +636,9 @@ export default function Portfolio() {
 
     // BTC — baseCurrency: "BTCB" in the API; show as "BTC" in UI
     const btcData = currencyListData.find(
-      (c: any) => c.baseCurrency?.toUpperCase() === "BTCB" || c.baseCurrency?.toUpperCase() === "BTC",
+      (c: any) =>
+        c.baseCurrency?.toUpperCase() === "BTCB" ||
+        c.baseCurrency?.toUpperCase() === "BTC",
     );
     if (btcData) {
       const btcPrice = safeNum(btcData.nowPrice);
@@ -630,7 +648,8 @@ export default function Portfolio() {
       defaultCoins.push({
         symbol: "BTC",
         name: "Bitcoin",
-        price: btcPrice > 0 ? btcPrice.toFixed(btcData.pricePlaces ?? 2) : "0.00",
+        price:
+          btcPrice > 0 ? btcPrice.toFixed(btcData.pricePlaces ?? 2) : "0.00",
         btcPrice: "1.00000000",
         change: btcChange,
         sparkData: watchlistPriceTrends[trendKey] || [],
@@ -649,7 +668,8 @@ export default function Portfolio() {
       defaultCoins.push({
         symbol: "ETH",
         name: ethData.currencyName || "Ethereum",
-        price: ethPrice > 0 ? ethPrice.toFixed(ethData.pricePlaces ?? 4) : "0.00",
+        price:
+          ethPrice > 0 ? ethPrice.toFixed(ethData.pricePlaces ?? 4) : "0.00",
         btcPrice: (ethPrice / btcRef).toFixed(8),
         change: ethChange,
         sparkData: watchlistPriceTrends["ETH"] || [],
@@ -667,7 +687,13 @@ export default function Portfolio() {
     if (!isAuthenticated || !walletProvider) return;
     fetchPortfolioData(walletProvider, getUserBalance);
     fetchCurrencyList();
-  }, [isAuthenticated, walletProvider, fetchPortfolioData, getUserBalance, fetchCurrencyList]);
+  }, [
+    isAuthenticated,
+    walletProvider,
+    fetchPortfolioData,
+    getUserBalance,
+    fetchCurrencyList,
+  ]);
 
   // Fetch price trends for watchlist coins — run once per currency list load
   // Uses actual baseCurrency from API (e.g. "BTCB" not "BTC") as the trend key
@@ -676,7 +702,8 @@ export default function Portfolio() {
     if (!isAuthenticated) priceTrendFetchedRef.current = false;
   }, [isAuthenticated]);
   useEffect(() => {
-    if (!isAuthenticated || !currencyListData || priceTrendFetchedRef.current) return;
+    if (!isAuthenticated || !currencyListData || priceTrendFetchedRef.current)
+      return;
     priceTrendFetchedRef.current = true;
 
     // Resolve actual API symbols from the currency list so the trend key matches
@@ -684,8 +711,9 @@ export default function Portfolio() {
       if (!Array.isArray(currencyListData)) return uiSymbol;
       // For BTC, the API uses "BTCB"
       const match = currencyListData.find(
-        (c: any) => c.baseCurrency?.toUpperCase() === uiSymbol.toUpperCase()
-          || (uiSymbol === "BTC" && c.baseCurrency?.toUpperCase() === "BTCB"),
+        (c: any) =>
+          c.baseCurrency?.toUpperCase() === uiSymbol.toUpperCase() ||
+          (uiSymbol === "BTC" && c.baseCurrency?.toUpperCase() === "BTCB"),
       );
       return (match?.baseCurrency as string) ?? uiSymbol;
     };
@@ -723,7 +751,7 @@ export default function Portfolio() {
         // Silently handle — sparkline will just be empty
       }
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, currencyListData]);
 
   // Sync watchlist coins into coins state whenever data updates (price trends, currency list, overview)
@@ -1023,111 +1051,68 @@ export default function Portfolio() {
           </div>
 
           {/* Import Token Modal */}
-          {isImportModalOpen && (
-            <div className="fixed inset-0 z-50 flex justify-end bg-black/30">
-              <div className="w-105 bg-card p-6 h-full rounded-l-2xl shadow-xl relative flex flex-col">
-                {/* Header */}
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="font-h4-400 text-foreground">Import tokens</h2>
-                  <X
-                    className="text-primary cursor-pointer"
-                    onClick={() => setIsImportModalOpen(false)}
-                  />
-                </div>
-
-                {/* Search */}
-                <div className="relative w-full mb-4">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
-                    <Search size={16} />
-                  </span>
-
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-10 py-2 rounded-[10px] bg-[#F8F8F8] dark:bg-[#383D4C]"
-                  />
-
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2">
-                    <Mic size={16} />
-                  </span>
-                </div>
-
-                <div className="body-text1-400 mb-5">
-                  We find these tokens in your wallet. Choose which one you want
-                  to add
-                </div>
-
-                {/* Token List */}
-                 <div className="flex-1 overflow-y-auto space-y-3 pr-2 
-                   [&::-webkit-scrollbar]:hidden 
-                   [-ms-overflow-style:none] 
-                   [scrollbar-width:none]"
-                 >
-                  {filteredImportTokens.map((token) => (
-                    <label
-                      key={token.symbol}
-                      className="flex items-center justify-between p-2 rounded-md cursor-pointer"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          checked={selectedImports.includes(token.symbol)}
-                          onChange={() =>
-                            setSelectedImports((prev) =>
-                              prev.includes(token.symbol)
-                                ? prev.filter((s) => s !== token.symbol)
-                                : [...prev, token.symbol],
-                            )
-                          }
-                        />
-
-                        <img
-                          src={token.icon}
-                          className="w-10 h-10 rounded-full"
-                        />
-
-                        <div>
-                          <p>{token.name}</p>
-                          <p className="text-[#878787]">{token.symbol}</p>
-                        </div>
-                      </div>
-
-                      <div className="text-right">
-                        <p>{token.balanceUsd}</p>
-                        <span
-                          className={
-                            token.change24h >= 0
-                              ? "text-[#119B56]"
-                              : "text-destructive"
-                          }
-                        >
-                          {token.change24h >= 0
-                            ? `+${token.change24h}%`
-                            : `${token.change24h}%`}
-                        </span>
-                      </div>
-                    </label>
-                  ))}
-                </div>
-
-                {/* Buttons */}
-              {/* <div className="sticky bottom-0 bg-white pt-4  flex justify-end gap-3"> */}
-                <div className="pt-4 flex justify-end gap-3 ">
-                  <Button
-                    variant="success"
-                    onClick={() => setIsImportModalOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-
-                  <Button onClick={handleImportTokens}>Import tokens</Button>
-                </div>
-              </div>
-              <LoadingAnimation isVisible={isImporting} />
+          <RightSideModal
+            isOpen={isImportModalOpen}
+            onClose={() => setIsImportModalOpen(false)}
+            title="Import tokens"
+            showSearch
+            searchValue={searchTerm}
+            onSearchChange={setSearchTerm}
+            primaryButtonText="Import tokens"
+            onPrimaryClick={handleImportTokens}
+            secondaryButtonText="Cancel"
+            loading={isImporting}
+          >
+            <div className="body-text1-400 mb-5">
+              We find these tokens in your wallet. Choose which one you want to
+              add
             </div>
-          )}
+
+            <div className="space-y-3">
+              {filteredImportTokens.map((token) => (
+                <label
+                  key={token.symbol}
+                  className="flex items-center justify-between p-2 rounded-md cursor-pointer"
+                >
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={selectedImports.includes(token.symbol)}
+                      onChange={() =>
+                        setSelectedImports((prev) =>
+                          prev.includes(token.symbol)
+                            ? prev.filter((s) => s !== token.symbol)
+                            : [...prev, token.symbol],
+                        )
+                      }
+                    />
+
+                    <img src={token.icon} className="w-10 h-10 rounded-full" />
+
+                    <div>
+                      <p>{token.name}</p>
+                      <p className="text-[#878787]">{token.symbol}</p>
+                    </div>
+                  </div>
+
+                  <div className="text-right">
+                    <p>{token.balanceUsd}</p>
+                    <span
+                      className={
+                        token.change24h >= 0
+                          ? "text-[#119B56]"
+                          : "text-destructive"
+                      }
+                    >
+                      {token.change24h >= 0
+                        ? `+${token.change24h}%`
+                        : `${token.change24h}%`}
+                    </span>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </RightSideModal>
 
           {/* ============ ATM GALAXY (iframe) ============ */}
           <div className="bg-card rounded-[15px] p-[20px]">
@@ -1142,7 +1127,10 @@ export default function Portfolio() {
                 </span>
               </div>
               <button className="cursor-pointer">
-                <SlidersHorizontal className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors" />
+                <SlidersHorizontal
+                  onClick={() => setIsGalaxyFilterOpen(true)}
+                  className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors"
+                />
               </button>
             </div>
             <div className="w-full h-105 rounded-[10px] overflow-hidden bg-[#0D1117]">
@@ -1174,6 +1162,13 @@ export default function Portfolio() {
             </div>
           </div>
 
+          <GalaxyFilterModal
+            isOpen={isGalaxyFilterOpen}
+            onClose={() => setIsGalaxyFilterOpen(false)}
+            filters={galaxyFilters}
+            setFilters={setGalaxyFilters}
+          />
+
           <AddCoinsModal
             isOpen={isCoinModalOpen}
             onClose={() => setIsCoinModalOpen(false)}
@@ -1192,7 +1187,11 @@ export default function Portfolio() {
           )}
         </div>
       ) : (
-        <AGTRecord
+        // <AGTRecord
+        //   agtBalance={agtBalance}
+        //   onBack={() => setShowAGTHistory(false)}
+        // />
+         <AGTBarGraph
           agtBalance={agtBalance}
           onBack={() => setShowAGTHistory(false)}
         />

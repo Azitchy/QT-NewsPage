@@ -49,7 +49,7 @@ export default function AvatarSidebar({
 
   return (
     <>
-      <div className="lg:w-[222px] mb-5 lg:mb-0 shrink-0 lg:bg-card rounded-[15px] lg:border border-[#EBEBEB] flex flex-col lg:h-full overflow-hidden">
+      <div className="lg:w-[222px] mb-5 lg:mb-0 shrink-0 lg:bg-card rounded-r-[15px] lg:border border-[#EBEBEB] flex flex-col lg:h-full overflow-hidden">
         <span className="text-[20px] hidden lg:flex font-normal text-foreground pt-[16px] px-[20px]">
           {profile?.name ?? "Lucy"}
         </span>
