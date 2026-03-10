@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { Outlet } from "react-router-dom";
 import Sidebar, { MobileBottomBar, MobileTopBar } from "@/components/Sidebar";
 import { MobilePageBreadcrumb } from "@/components/ui/atm/MobilePageBreadcrumb";
 import { useUnified } from "@/context/Context";
 
 function AppLayout() {
+  const { t } = useTranslation();
   const { isAuthenticated, status, openModal } = useUnified();
 
   // Keep the blur overlay until the full auth flow completes (wallet
@@ -87,7 +89,7 @@ function AppLayout() {
                 className="w-14 h-14 mx-auto mb-3 opacity-80"
               />
               <p className="text-base font-medium text-gray-600">
-                Connecting...
+                {t("common.connecting")}
               </p>
             </div>
           </div>

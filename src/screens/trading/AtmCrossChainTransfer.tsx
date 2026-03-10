@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { ChevronDown, Loader2 } from "lucide-react";
 import LucaIcon from "@/assets/tokens/luca.svg?react";
 import PolygonIcon from "@/assets/tokens/polygon.svg?react";
@@ -25,6 +26,7 @@ const CHAIN_ICONS: Record<number, React.FC<{ className?: string }>> = {
 };
 
 export default function AtmCrossChainTransfer() {
+  const { t } = useTranslation();
   const [amount, setAmount] = useState<number>(0);
   const [receivingAddress, setReceivingAddress] = useState("");
   const [selectedChainIdx, setSelectedChainIdx] = useState(0);
@@ -79,15 +81,15 @@ export default function AtmCrossChainTransfer() {
     if (!address || !walletProvider || !selectedChain || !currentChainConfig) return;
 
     if (amount <= 0) {
-      setToast({ message: "Please enter an amount", type: "error" });
+      setToast({ message: t("trading.pleaseEnterAmount"), type: "error" });
       return;
     }
     if (amount > numericBalance) {
-      setToast({ message: "Insufficient balance", type: "error" });
+      setToast({ message: t("trading.insufficientBalance"), type: "error" });
       return;
     }
     if (!receivingAddress || !/^0x[a-fA-F0-9]{40}$/.test(receivingAddress)) {
-      setToast({ message: "Please enter a valid address", type: "error" });
+      setToast({ message: t("trading.pleaseEnterValidAddress"), type: "error" });
       return;
     }
 
@@ -104,15 +106,15 @@ export default function AtmCrossChainTransfer() {
       });
 
       if (result.success) {
-        setToast({ message: "Transfer submitted successfully!", type: "success" });
+        setToast({ message: t("trading.transferSubmitted"), type: "success" });
         setAmount(0);
         setReceivingAddress("");
         setTimeout(() => fetchBalance(), 3000);
       } else {
-        setToast({ message: result.error || "Transfer failed", type: "error" });
+        setToast({ message: result.error || t("trading.transferFailed"), type: "error" });
       }
     } catch (err: any) {
-      setToast({ message: err?.message || "Transfer failed", type: "error" });
+      setToast({ message: err?.message || t("trading.transferFailed"), type: "error" });
     }
   };
 
@@ -123,7 +125,7 @@ export default function AtmCrossChainTransfer() {
     <div className="py-[30px] px-[20px] bg-white rounded-[15px] h-full">
 
       <text className="block body-text1-400 text-foreground mb-[30px]">
-        You can transfer assets to any address on different chains through the ATM cross-chain transfer tool
+        {t("trading.crossChainDescription")}
       </text>
 
       {/* Transfer Form */}
@@ -133,17 +135,17 @@ export default function AtmCrossChainTransfer() {
         <div className="space-y-[5px] mb-[30px]">
 
           <div className='flex justify-between'>
-            <span className="block text-[#8E8E93] body-text1-400">Amount</span>
+            <span className="block text-[#8E8E93] body-text1-400">{t("common.amount")}</span>
 
             <div className='space-x-[5px]'>
               <span className="text-[#868686] body-label-400">
-                Balance: {balanceLoading ? "..." : balance}
+                {t("common.balance")}: {balanceLoading ? "..." : balance}
               </span>
 
               <button
                 onClick={handleMaxClick}
                 className="px-[10px] py-[5px] border border-[#EBEBEB] rounded-[20px] text-foreground body-label-400">
-                MAX
+                {t("common.max")}
               </button>
             </div>
           </div>
@@ -172,7 +174,7 @@ export default function AtmCrossChainTransfer() {
         <div className="space-y-[5px]">
 
           <div className='flex justify-between items-center'>
-            <span className="block text-[#8E8E93] body-text1-400">Receiving address</span>
+            <span className="block text-[#8E8E93] body-text1-400">{t("trading.receivingAddress")}</span>
 
             <div className='relative'>
               <button
@@ -181,7 +183,7 @@ export default function AtmCrossChainTransfer() {
               >
                 <SelectedChainIcon className='w-[30px] h-[30px]' />
                 <span className="text-foreground body-label-400">
-                  {selectedChain?.name || "Select chain"}
+                  {selectedChain?.name || t("trading.selectChain")}
                 </span>
                 <ChevronDown className='w-[14px] h-[14px] text-[#434343]' />
               </button>
@@ -218,12 +220,12 @@ export default function AtmCrossChainTransfer() {
 
         <div className="p-[15px] bg-[#F8F8F8] rounded-[15px] my-[40px] space-y-[20px]">
           <div className="flex justify-between">
-            <span className="text-[#4F5555] body-text2-400">Estimated amount to be received</span>
+            <span className="text-[#4F5555] body-text2-400">{t("trading.estimatedAmount")}</span>
             <span className="text-foreground body-text2-400">{amount > 0 ? amount : 0} LUCA</span>
           </div>
 
           <div className="flex justify-between">
-            <span className="text-[#4F5555] body-text2-400">Cross-chain transfer fee</span>
+            <span className="text-[#4F5555] body-text2-400">{t("trading.crossChainFee")}</span>
             <span className="text-foreground body-text2-400">{0} LUCA</span>
           </div>
         </div>
@@ -238,16 +240,16 @@ export default function AtmCrossChainTransfer() {
           {transferLoading ? (
             <span className="flex items-center justify-center gap-[8px]">
               <Loader2 className="w-[16px] h-[16px] animate-spin" />
-              Processing...
+              {t("common.processing")}
             </span>
           ) : (
-            "Confirm Transfer"
+            t("trading.confirmTransfer")
           )}
         </Button>
 
         {!currentChainConfig && isConnected && (
           <p className="text-[#8E8E93] body-label-400 text-center mt-[10px]">
-            Cross-chain transfer is not available on this network. Please switch to BSC or Polygon.
+            {t("trading.notAvailableOnNetwork")}
           </p>
         )}
 

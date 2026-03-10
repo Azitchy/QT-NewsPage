@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Star, Wallet } from "lucide-react";
 import { useUnified } from "@/context/Context";
 import {
@@ -15,6 +16,7 @@ import AtmStarIcon from "@/assets/icons/atm-star.svg";
 import GameXpIcon from "@/assets/icons/game-xp.svg";
 
 export default function GamesDashboard() {
+  const { t } = useTranslation();
   const { address, isConnected, isAuthenticated, logout } = useUnified();
 
   // API hooks
@@ -86,10 +88,10 @@ export default function GamesDashboard() {
           <div className="rounded-[15px] ">
             <div className="bg-card 2xl:w-[500px] p-[20px] rounded-[15px]">
               <div className="flex items-center justify-between mb-[16px]">
-                <h3 className="font-h4-400 text-foreground">Your ATM Stars</h3>
+                <h3 className="font-h4-400 text-foreground">{t("games.yourAtmStars")}</h3>
                 {isConnected && (
                   <Button onClick={logout} variant="soft">
-                    Disconnect
+                    {t("games.disconnect")}
                   </Button>
                 )}
               </div>
@@ -149,15 +151,15 @@ export default function GamesDashboard() {
             {/* Stats row */}
             <div className="grid grid-cols-3 gap-[8px] mt-[10px]">
               <div className="rounded-[10px] bg-white p-[20px] text-left">
-                <p className="text-[16px] text-[#959595] mb-[8px]">Games</p>
+                <p className="text-[16px] text-[#959595] mb-[8px]">{t("games.gamesLabel")}</p>
                 <p className="font-h4-600 text-foreground">{gamesPlayed}</p>
               </div>
               <div className="rounded-[10px] bg-white p-[20px] text-left">
-                <p className="text-[16px] text-[#959595] mb-[8px]">Wins</p>
+                <p className="text-[16px] text-[#959595] mb-[8px]">{t("games.wins")}</p>
                 <p className="font-h4-600 text-foreground">{wins}</p>
               </div>
               <div className="rounded-[10px] bg-white p-[20px] text-left">
-                <p className="text-[16px] text-[#959595] mb-[8px]">Hours</p>
+                <p className="text-[16px] text-[#959595] mb-[8px]">{t("games.hours")}</p>
                 <p className="font-h4-600 text-foreground">{daysActive}</p>
               </div>
             </div>
@@ -167,8 +169,8 @@ export default function GamesDashboard() {
         {/* Middle Column - ATM Universe Leaderboard */}
         <div className="flex-1 min-w-0">
           <LeaderboardCard
-            title="ATM Universe leaderboard"
-            subtitle="(All ATM users)"
+            title={t("games.atmUniverseLeaderboard")}
+            subtitle={t("games.allAtmUsers")}
             rankings={atmRankings}
             userAddress={address}
             loading={atmRankLoading}
@@ -179,8 +181,8 @@ export default function GamesDashboard() {
         {/* Right Column - Your Universe Leaderboard */}
         <div className="flex-1 min-w-0">
           <LeaderboardCard
-            title="Your Universe leaderboard"
-            subtitle="(ATM users you connected)"
+            title={t("games.yourUniverseLeaderboard")}
+            subtitle={t("games.atmUsersConnected")}
             rankings={yourRankings}
             userAddress={address}
             loading={yourRankLoading}
@@ -193,7 +195,7 @@ export default function GamesDashboard() {
       {recentGames.length > 0 && (
         <div className="bg-white p-[20px] rounded-[15px]">
           <h3 className="font-h4-400 text-foreground mb-[12px]">
-            Recent games
+            {t("games.recentGames")}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-[16px]">
             {recentGames.map((game) => (
@@ -207,7 +209,7 @@ export default function GamesDashboard() {
       <LeaderboardPanel
         isOpen={atmPanelOpen}
         onClose={() => setAtmPanelOpen(false)}
-        title="ATM Universe leaderboard"
+        title={t("games.atmUniverseLeaderboard")}
         rankings={atmRankings}
         userAddress={address}
         loading={atmRankLoading}
@@ -215,7 +217,7 @@ export default function GamesDashboard() {
       <LeaderboardPanel
         isOpen={yourPanelOpen}
         onClose={() => setYourPanelOpen(false)}
-        title="Your Universe leaderboard"
+        title={t("games.yourUniverseLeaderboard")}
         rankings={yourRankings}
         userAddress={address}
         loading={yourRankLoading}

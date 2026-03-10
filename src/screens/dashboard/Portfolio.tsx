@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useUnified } from "@/context/Context";
 import { useDashboardCache } from "@/context/DashboardCacheContext";
 import type { TokenRowData } from "@/context/DashboardCacheContext";
@@ -197,6 +198,7 @@ function TokenRow({
   token: TokenRowData;
   onRemoveClick?: (symbol: string) => void;
 }) {
+  const { t } = useTranslation();
   const isPositive = token.change24h >= 0;
   const DEFAULT_TOKENS = ["LUCA", "USDC", "USDT", "BNB"];
   const canRemove = !DEFAULT_TOKENS.includes(token.symbol) && onRemoveClick;
@@ -244,11 +246,11 @@ function TokenRow({
         {canRemove && (
           <button
             onClick={() => onRemoveClick?.(token.symbol)}
-            className=" flex items-center cursor-pointer p-1 rounded opacity-100 sm:opacity-0 md:group-hover:opacity-100 transition-opacity md:pl-10"
+            className="opacity-0 flex items-center group-hover:opacity-100 transition-opacity cursor-pointer p-1 rounded pl-10"
           >
-            <Trash2 className="text-[#878787] sm:text-[#FE5572]" />
-            <span className="hidden md:inline text-[14px] font-normal text-[#FE5572]">
-              Remove token
+            <Trash2 className=" text-[#FE5572]" />
+            <span className="text-[14px] font-normal text-[#FE5572]">
+              {t("portfolio.removeToken")}
             </span>
           </button>
         )}
@@ -272,6 +274,7 @@ interface WatchlistCoin {
 }
 
 function CoinWatchlistCard({ coin }: { coin: WatchlistCoin }) {
+  const { t } = useTranslation();
   const safeChange = isNaN(coin.change) ? 0 : coin.change;
   const isPositive = safeChange >= 0;
   return (
@@ -332,10 +335,10 @@ function CoinWatchlistCard({ coin }: { coin: WatchlistCoin }) {
             style={{ backgroundColor: isPositive ? "#0DAEB9" : "#FF6B6B" }}
           />
           <span className="body-label-400 text-primary">
-            {coin.symbol} Price Charts
+            {coin.symbol} {t("portfolio.priceCharts")}
           </span>
         </div>
-        <span className="body-label-400 text-[#959595]">This Week</span>
+        <span className="body-label-400 text-[#959595]">{t("portfolio.thisWeek")}</span>
       </div>
     </div>
   );
@@ -346,6 +349,7 @@ function CoinWatchlistCard({ coin }: { coin: WatchlistCoin }) {
    ============================================================================ */
 
 export default function Portfolio() {
+  const { t } = useTranslation();
   const {
     address,
     isConnected,
@@ -483,7 +487,7 @@ export default function Portfolio() {
 
       if (tokensToAdd.length === 0) {
         setToast({
-          message: "Token already exists in your list",
+          message: t("portfolio.tokenAlreadyExists"),
           type: "error",
         });
         return;
@@ -492,7 +496,7 @@ export default function Portfolio() {
       setImportedTokens((prev) => [...prev, ...tokensToAdd]);
 
       setToast({
-        message: "Tokens imported successfully",
+        message: t("portfolio.tokensImportedSuccessfully"),
         type: "success",
       });
 
@@ -501,7 +505,7 @@ export default function Portfolio() {
       setIsImportModalOpen(false);
     } catch {
       setToast({
-        message: "Failed to import tokens",
+        message: t("portfolio.failedToImportTokens"),
         type: "error",
       });
     } finally {
@@ -801,12 +805,12 @@ export default function Portfolio() {
       removeToken(selectedToken);
 
       setToast({
-        message: `Token has been removed`,
+        message: t("portfolio.tokenRemoved"),
         type: "success",
       });
     } catch (err) {
       setToast({
-        message: "Failed to remove token",
+        message: t("portfolio.failedToRemoveToken"),
         type: "error",
       });
     } finally {
@@ -893,7 +897,7 @@ export default function Portfolio() {
                 {/* Balance */}
                 <div className="flex items-center justify-between mt-5">
                   <div>
-                    <p className="text-foreground font-h4-400">LUCA Balance</p>
+                    <p className="text-foreground font-h4-400">{t("portfolio.lucaBalance")}</p>
                     <p className="text-[#119B56] font-h2">{userBalance} LUCA</p>
                   </div>
                   <div>
@@ -906,28 +910,28 @@ export default function Portfolio() {
               <div className="grid grid-cols-3 gap-[10px] mt-4 w-full max-w-xl h-[105px] md:h-35">
                 <div className="bg-card  rounded-2xl p-3 md:p-5">
                   <p className="text-[#878787] text-[12px] md:text-[15px]  font-normal">
-                    PR Value
+                    {t("portfolio.prValue")}
                   </p>
                   <p className="font-h4-600 mt-1">{prValue}</p>
                 </div>
 
                 <div className="bg-card rounded-2xl p-3 md:p-5">
                   <p className="text-[#878787] text-[12px] md:text-[15px]  font-normal">
-                    ATM stars
+                    {t("portfolio.atmStars")}
                   </p>
                   <p className="font-h4-600 mt-1">{atmStars}</p>
                 </div>
 
                 <div className="bg-card rounded-2xl p-3 md:p-5 relative">
                   <p className="text-[#878787] text-[12px] md:text-[15px] font-normal">
-                    AGT Balance
+                    {t("portfolio.agtBalance")}
                   </p>
                   <p className="font-h4-600 mt-1">{agtBalance}</p>
                   <button
                     onClick={() => setShowAGTHistory(true)}
                     className="body-text2-500 text-primary mt-2 cursor-pointer"
                   >
-                    See history
+                    {t("portfolio.seeHistory")}
                   </button>
                 </div>
               </div>
@@ -935,10 +939,10 @@ export default function Portfolio() {
 
             {/* Locked Amount of LUCA */}
             <PieChartCard
-              title="Locked amount of LUCA"
+              title={t("portfolio.lockedAmountOfLuca")}
               data={[
-                { value: lockedMine, color: "#A5DC53", label: "Mine" },
-                { value: lockedOthers, color: "#FFB347", label: "Others" },
+                { value: lockedMine, color: "#A5DC53", label: t("portfolio.mine") },
+                { value: lockedOthers, color: "#FFB347", label: t("portfolio.others") },
               ]}
               innerRadius={95}
               outerRadius={110}
@@ -948,14 +952,14 @@ export default function Portfolio() {
 
             {/* Connections */}
             <PieChartCard
-              title="Connections"
+              title={t("portfolio.connections")}
               data={[
-                { value: activeConns, color: "#0DAEB9", label: "Active" },
-                { value: pendingConns, color: "#FFB347", label: "Pending" },
+                { value: activeConns, color: "#0DAEB9", label: t("common.active") },
+                { value: pendingConns, color: "#FFB347", label: t("common.pending") },
                 {
                   value: inactiveConns,
                   color: "#FF8A80",
-                  label: "Inactive",
+                  label: t("common.inactive"),
                 },
               ]}
               innerRadius={95}
@@ -970,45 +974,37 @@ export default function Portfolio() {
             <div className="flex items-center justify-between mb-[4px]">
               <div>
                 <h3 className="font-h4-400 text-foreground">
-                  Total tokens balance
+                  {t("portfolio.totalTokensBalance")}
                 </h3>
                 <p className="font-h2 text-[#119B56]">
                   ${totalTokensBalance.toFixed(2)}
                 </p>
               </div>
-              <div className="hidden md:flex items-center gap-[12px]">
+              <div className="flex items-center gap-[12px]">
                 <button
                   onClick={() => setIsImportModalOpen(true)}
                   className="text-primary body-text2-400 hover:underline cursor-pointer flex items-center gap-[4px]"
                 >
-                  Import token
+                  {t("portfolio.importToken")}
                 </button>
                 <Dropdown
                   options={[
-                    { label: "Balance: High to low", value: "balance-desc" },
-                    { label: "Balance: Low to high", value: "balance-asc" },
-                    { label: "Name: A to Z", value: "name-asc" },
+                    { label: t("portfolio.balanceHighToLow"), value: "balance-desc" },
+                    { label: t("portfolio.balanceLowToHigh"), value: "balance-asc" },
+                    { label: t("portfolio.nameAToZ"), value: "name-asc" },
                   ]}
                   value={sortOrder}
                   onChange={setSortOrder}
-                  placeholder="Sort by"
-                />
-              </div>
-              <div className="flex md:hidden">
-                <SlidersHorizontal
-                  onClick={() => setIsImportModalOpen(true)}
-                  className="text-[#8E8E93] cursor-pointer"
+                  placeholder={t("portfolio.sortBy")}
                 />
               </div>
             </div>
 
             {/* Table header */}
             <div className="flex items-center py-[12px] border-b border-[#F0F0F0]">
-              <p className="body-text-600 text-foreground w-[35%]">Token</p>
-              <p className="body-text-600 text-foreground w-[35%]">Balance</p>
-              <p className="body-text-600 text-foreground  min-w-fit">
-                Price (24hr)
-              </p>
+              <p className="body-text-600 text-foreground w-[35%]">{t("portfolio.token")}</p>
+              <p className="body-text-600 text-foreground w-[35%]">{t("common.balance")}</p>
+              <p className="body-text-600 text-foreground  ">{t("portfolio.price24hr")}</p>
             </div>
 
             {/* Token rows */}
@@ -1026,7 +1022,7 @@ export default function Portfolio() {
             ) : (
               <div className="py-[40px] text-center">
                 <p className="body-text2-400 text-[#959595]">
-                  No tokens found in your portfolio
+                  {t("portfolio.noTokensFound")}
                 </p>
               </div>
             )}
@@ -1034,15 +1030,15 @@ export default function Portfolio() {
             {/* Confirmation Modal */}
             <ConfirmationModal
               isOpen={isModalOpen}
-              title="Token removal confirmation"
-              description="You can import this token again later from the filter options"
-              message={`Are you sure you want to remove the ${selectedToken} token?`}
+              title={t("portfolio.tokenRemovalConfirmation")}
+              description={t("portfolio.tokenRemovalDescription")}
+              message={t("portfolio.removeTokenConfirm", { token: selectedToken })}
               onConfirm={handleRemoveConfirm}
               onCancel={() => {
                 setIsModalOpen(false);
                 setSelectedToken(null);
               }}
-              confirmText={isRemoving ? "Removing..." : "Remove"}
+              confirmText={isRemoving ? t("portfolio.removing") : t("portfolio.remove")}
             />
 
             {/* Loading Animation */}
@@ -1058,70 +1054,21 @@ export default function Portfolio() {
             )}
           </div>
 
-          {/* ============ ATM GALAXY (iframe) ============ */}
-          <div className="bg-card rounded-[15px] p-[20px]">
-            <div className="flex items-center justify-between mb-[16px]">
-              <div className="flex items-center gap-[12px]">
-                <h3 className="font-h4-400 text-foreground">ATM Galaxy</h3>
-                <span className="body-text-400 text-foreground">
-                  Total connections:{" "}
-                  <span className="body-text-600 text-foreground">
-                    {totalConnections}
-                  </span>
-                </span>
-              </div>
-              <button className="cursor-pointer">
-                <SlidersHorizontal
-                  onClick={() => setIsGalaxyFilterOpen(true)}
-                  className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors"
-                />
-              </button>
-            </div>
-            <div className="w-full h-105 rounded-[10px] overflow-hidden bg-[#0D1117]">
-              <iframe
-                src="https://visual.atm.network/vis3d/false/ALL/conNodes"
-                title="ATM Galaxy"
-                className="w-full h-full border-0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
-                loading="lazy"
-              />
-            </div>
-          </div>
-
-          {/* ============ COIN WATCHLIST ============ */}
-          <div className="bg-card rounded-[15px] p-[20px]">
-            <div className="flex items-center justify-between mb-[16px]">
-              <h3 className="font-h4-400 text-foreground">Coin watchlist</h3>
-              <button className="cursor-pointer">
-                <SlidersHorizontal
-                  className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors"
-                  onClick={() => setIsCoinModalOpen(true)}
-                />
-              </button>
-            </div>
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-[16px]">
-              {coins.map((coin) => (
-                <CoinWatchlistCard key={coin.symbol} coin={coin} />
-              ))}
-            </div>
-          </div>
-
           {/* Import Token Modal */}
           <RightSideModal
             isOpen={isImportModalOpen}
             onClose={() => setIsImportModalOpen(false)}
-            title="Import tokens"
+            title={t("portfolio.importTokens")}
             showSearch
             searchValue={searchTerm}
             onSearchChange={setSearchTerm}
-            primaryButtonText="Import tokens"
+            primaryButtonText={t("portfolio.importTokens")}
             onPrimaryClick={handleImportTokens}
-            secondaryButtonText="Cancel"
+            secondaryButtonText={t("common.cancel")}
             loading={isImporting}
           >
             <div className="body-text1-400 mb-5">
-              We find these tokens in your wallet. Choose which one you want to
-              add
+              {t("portfolio.findTokensInWallet")}
             </div>
 
             <div className="space-y-3">
@@ -1170,6 +1117,54 @@ export default function Portfolio() {
             </div>
           </RightSideModal>
 
+          {/* ============ ATM GALAXY (iframe) ============ */}
+          <div className="bg-card rounded-[15px] p-[20px]">
+            <div className="flex items-center justify-between mb-[16px]">
+              <div className="flex items-center gap-[12px]">
+                <h3 className="font-h4-400 text-foreground">{t("portfolio.atmGalaxy")}</h3>
+                <span className="body-text-400 text-foreground">
+                  {t("portfolio.totalConnections")}{" "}
+                  <span className="body-text-600 text-foreground">
+                    {totalConnections}
+                  </span>
+                </span>
+              </div>
+              <button className="cursor-pointer">
+                <SlidersHorizontal
+                  onClick={() => setIsGalaxyFilterOpen(true)}
+                  className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors"
+                />
+              </button>
+            </div>
+            <div className="w-full h-105 rounded-[10px] overflow-hidden bg-[#0D1117]">
+              <iframe
+                src="https://visual.atm.network/vis3d/false/ALL/conNodes"
+                title="ATM Galaxy"
+                className="w-full h-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
+                loading="lazy"
+              />
+            </div>
+          </div>
+
+          {/* ============ COIN WATCHLIST ============ */}
+          <div className="bg-card rounded-[15px] p-[20px]">
+            <div className="flex items-center justify-between mb-[16px]">
+              <h3 className="font-h4-400 text-foreground">{t("portfolio.coinWatchlist")}</h3>
+              <button className="cursor-pointer">
+                <SlidersHorizontal
+                  className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors"
+                  onClick={() => setIsCoinModalOpen(true)}
+                />
+              </button>
+            </div>
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-[16px]">
+              {coins.map((coin) => (
+                <CoinWatchlistCard key={coin.symbol} coin={coin} />
+              ))}
+            </div>
+          </div>
+
           <GalaxyFilterModal
             isOpen={isGalaxyFilterOpen}
             onClose={() => setIsGalaxyFilterOpen(false)}
@@ -1199,7 +1194,7 @@ export default function Portfolio() {
         //   agtBalance={agtBalance}
         //   onBack={() => setShowAGTHistory(false)}
         // />
-        <AGTBarGraph
+         <AGTBarGraph
           agtBalance={agtBalance}
           onBack={() => setShowAGTHistory(false)}
         />

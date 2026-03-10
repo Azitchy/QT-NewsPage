@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useUnified } from "@/context/Context";
 import {
   useMyParticipatedProposals,
@@ -163,6 +164,7 @@ function ProposalCard({
   getStatusText: (status: number, typeOfProposal?: string) => string;
   onClick: () => void;
 }) {
+  const { t } = useTranslation();
   const daysLeft = getDaysLeft(proposal.endTime);
 
   return (
@@ -185,12 +187,12 @@ function ProposalCard({
             {daysLeft !== null && daysLeft > 0 && (
               <span className="text-xs text-[#959595] flex items-center gap-1">
                 <Clock className="w-3 h-3" />
-                {daysLeft}d left
+                {t("proposals.daysLeft", { days: daysLeft })}
               </span>
             )}
           </div>
           <h4 className="font-semibold text-[14px] text-foreground truncate mb-[4px]">
-            {proposal.title || "Untitled Proposal"}
+            {proposal.title || t("proposals.untitledProposal")}
           </h4>
           <div className="flex items-center gap-3 text-xs text-[#959595]">
             <span className="flex items-center gap-1">
@@ -206,7 +208,7 @@ function ProposalCard({
           </div>
         </div>
         <span className="text-xs font-medium px-[8px] py-[2px] rounded bg-[#F0F0F0] text-[#959595] whitespace-nowrap">
-          {proposal.typeOfProposal === "3" ? "AGF" : "Community"}
+          {proposal.typeOfProposal === "3" ? t("proposals.agf") : t("proposals.community")}
         </span>
       </div>
     </div>
@@ -230,6 +232,7 @@ function ProposalDetailPanel({
   isWithdrawing: boolean;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const daysLeft = getDaysLeft(proposal.endTime);
   const canRedeem = proposal.redeemFlag === 1 && (proposal.status === 5 || proposal.status === 3);
 
@@ -247,17 +250,17 @@ function ProposalDetailPanel({
             {daysLeft !== null && daysLeft > 0 && (
               <span className="inline-flex items-center gap-1 px-[8px] py-[2px] rounded-full bg-[#E8F0FE] text-[#2D9CDB] text-xs font-medium">
                 <Clock className="w-3 h-3" />
-                {daysLeft} days left
+                {t("proposals.daysLeftFull", { days: daysLeft })}
               </span>
             )}
             {daysLeft === 0 && (
               <span className="inline-flex items-center gap-1 px-[8px] py-[2px] rounded-full bg-[#FEECEC] text-[#EB5757] text-xs font-medium">
-                Ended
+                {t("proposals.ended")}
               </span>
             )}
           </div>
           <h3 className="font-h4-600 text-foreground mb-[4px]">
-            {proposal.title || "Untitled Proposal"}
+            {proposal.title || t("proposals.untitledProposal")}
           </h3>
         </div>
         <button
@@ -272,20 +275,20 @@ function ProposalDetailPanel({
       <div className="space-y-[12px] flex-1">
         <div className="grid grid-cols-2 gap-[12px]">
           <div className="rounded-[10px] bg-[#F8F9FA] p-[12px]">
-            <p className="text-xs text-[#959595] mb-[4px]">Type</p>
+            <p className="text-xs text-[#959595] mb-[4px]">{t("common.type")}</p>
             <p className="text-sm font-medium text-foreground">
-              {proposal.typeOfProposal === "3" ? "AGF Game" : "Community"}
+              {proposal.typeOfProposal === "3" ? t("proposals.agfGame") : t("proposals.community")}
             </p>
           </div>
           <div className="rounded-[10px] bg-[#F8F9FA] p-[12px]">
-            <p className="text-xs text-[#959595] mb-[4px]">Created</p>
+            <p className="text-xs text-[#959595] mb-[4px]">{t("common.created")}</p>
             <p className="text-sm font-medium text-foreground">
               {formatDate(proposal.createTime)}
             </p>
           </div>
           {proposal.startTime && (
             <div className="rounded-[10px] bg-[#F8F9FA] p-[12px]">
-              <p className="text-xs text-[#959595] mb-[4px]">Start</p>
+              <p className="text-xs text-[#959595] mb-[4px]">{t("common.start")}</p>
               <p className="text-sm font-medium text-foreground">
                 {formatDate(proposal.startTime)}
               </p>
@@ -293,7 +296,7 @@ function ProposalDetailPanel({
           )}
           {proposal.endTime && (
             <div className="rounded-[10px] bg-[#F8F9FA] p-[12px]">
-              <p className="text-xs text-[#959595] mb-[4px]">End</p>
+              <p className="text-xs text-[#959595] mb-[4px]">{t("common.end")}</p>
               <p className="text-sm font-medium text-foreground">
                 {formatDate(proposal.endTime)}
               </p>
@@ -303,7 +306,7 @@ function ProposalDetailPanel({
 
         {proposal.creatorUserDetailsModel?.walletAddress && (
           <div className="rounded-[10px] bg-[#F8F9FA] p-[12px]">
-            <p className="text-xs text-[#959595] mb-[4px]">Creator</p>
+            <p className="text-xs text-[#959595] mb-[4px]">{t("common.creator")}</p>
             <p className="text-sm font-medium text-foreground font-mono">
               {proposal.creatorUserDetailsModel.walletAddress}
             </p>
@@ -312,7 +315,7 @@ function ProposalDetailPanel({
 
         {/* Proposal ID */}
         <div className="rounded-[10px] bg-[#F8F9FA] p-[12px]">
-          <p className="text-xs text-[#959595] mb-[4px]">Proposal ID</p>
+          <p className="text-xs text-[#959595] mb-[4px]">{t("proposals.proposalId")}</p>
           <p className="text-sm font-medium text-foreground font-mono">{proposal.id}</p>
         </div>
       </div>
@@ -329,10 +332,10 @@ function ProposalDetailPanel({
             {isWithdrawing ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Withdrawing...
+                {t("proposals.withdrawingAGT")}
               </>
             ) : (
-              "Withdraw AGT"
+              t("proposals.withdrawAGT")
             )}
           </Button>
         </div>
@@ -346,6 +349,7 @@ function ProposalDetailPanel({
    ============================================================================ */
 
 function NewProposalModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   const modalRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -363,7 +367,7 @@ function NewProposalModal({ onClose }: { onClose: () => void }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div ref={modalRef} className="rounded-[15px] bg-white p-[24px] w-[420px] max-w-[90vw] shadow-lg">
         <div className="flex items-center justify-between mb-[20px]">
-          <h3 className="font-h4-600 text-foreground">What proposal do you want to initiate?</h3>
+          <h3 className="font-h4-600 text-foreground">{t("proposals.whatProposalInitiate")}</h3>
           <button
             onClick={onClose}
             className="p-1 rounded-full hover:bg-[#F0F0F0] transition-colors cursor-pointer"
@@ -384,8 +388,8 @@ function NewProposalModal({ onClose }: { onClose: () => void }) {
                 <Users className="w-5 h-5 text-[#27AE60]" />
               </div>
               <div>
-                <h4 className="font-semibold text-[14px] text-foreground group-hover:text-primary transition-colors">Community proposal</h4>
-                <p className="text-xs text-[#959595]">Create a community governance proposal</p>
+                <h4 className="font-semibold text-[14px] text-foreground group-hover:text-primary transition-colors">{t("proposals.communityProposal")}</h4>
+                <p className="text-xs text-[#959595]">{t("proposals.createCommunityProposal")}</p>
               </div>
             </div>
           </button>
@@ -401,8 +405,8 @@ function NewProposalModal({ onClose }: { onClose: () => void }) {
                 <Vote className="w-5 h-5 text-[#9B51E0]" />
               </div>
               <div>
-                <h4 className="font-semibold text-[14px] text-foreground group-hover:text-primary transition-colors">Game proposal</h4>
-                <p className="text-xs text-[#959595]">Create an AGF game proposal</p>
+                <h4 className="font-semibold text-[14px] text-foreground group-hover:text-primary transition-colors">{t("proposals.gameProposal")}</h4>
+                <p className="text-xs text-[#959595]">{t("proposals.createGameProposal")}</p>
               </div>
             </div>
           </button>
@@ -444,6 +448,7 @@ function Toast({ message, type, onClose }: { message: string; type: "success" | 
    ============================================================================ */
 
 export default function ProposalParticipate() {
+  const { t } = useTranslation();
   const {
     address,
     isConnected,
@@ -597,15 +602,15 @@ export default function ProposalParticipate() {
         walletProvider,
       });
       if (result?.success) {
-        setToast({ message: "AGT withdrawn successfully", type: "success" });
+        setToast({ message: t("proposals.agtWithdrawnSuccessfully"), type: "success" });
         // Invalidate cache and reload
         proposalCache.clear();
         loadProposals();
       } else {
-        setToast({ message: result?.message || "Failed to withdraw AGT", type: "error" });
+        setToast({ message: result?.message || t("proposals.failedToWithdrawAGT"), type: "error" });
       }
     } catch (err: any) {
-      setToast({ message: err?.message || "Failed to withdraw AGT", type: "error" });
+      setToast({ message: err?.message || t("proposals.failedToWithdrawAGT"), type: "error" });
     }
   };
 
@@ -631,14 +636,14 @@ export default function ProposalParticipate() {
       {/* Header */}
       <div className="rounded-[15px] bg-white p-[20px]">
         <div className="flex items-center justify-between mb-[16px]">
-          <h2 className="text-[20px] font-semibold text-foreground">Proposal Participate</h2>
+          <h2 className="text-[20px] font-semibold text-foreground">{t("proposals.proposalParticipate")}</h2>
           <Button
             variant="default"
             size="default"
             onClick={() => setShowNewProposalModal(true)}
           >
             <Plus className="w-4 h-4" />
-            Proposal
+            {t("proposals.proposal")}
           </Button>
         </div>
 
@@ -654,7 +659,7 @@ export default function ProposalParticipate() {
                   : "bg-[#F0F0F0] text-[#959595] hover:bg-[#E5E5E5]"
               }`}
             >
-              {tab.label}
+              {tab.key === "all" ? t("common.all") : t(`proposals.${tab.key}`)}
             </button>
           ))}
         </div>
@@ -668,7 +673,7 @@ export default function ProposalParticipate() {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyDown={handleSearchKeyDown}
-              placeholder="Search proposals..."
+              placeholder={t("proposals.searchProposals")}
               className="w-full pl-[36px] pr-[12px] py-[10px] rounded-[10px] bg-[#F8F9FA] border border-[#E5E5E5] text-sm text-foreground placeholder:text-[#959595] focus:outline-none focus:border-primary transition-colors"
             />
           </div>
@@ -677,17 +682,28 @@ export default function ProposalParticipate() {
             onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
             className="px-[12px] py-[10px] rounded-[10px] bg-[#F8F9FA] border border-[#E5E5E5] text-sm text-foreground focus:outline-none focus:border-primary transition-colors cursor-pointer min-w-[140px]"
           >
-            {STATUS_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
+            {STATUS_OPTIONS.map((opt) => {
+              const statusLabels: Record<string, string> = {
+                "": t("common.all"),
+                "4": t("proposals.inProgress"),
+                "1": t("proposals.underReview"),
+                "2": t("proposals.approved"),
+                "3": t("proposals.rejected"),
+                "5": t("proposals.ended"),
+                "6": t("proposals.invalid"),
+              };
+              return (
+                <option key={opt.value} value={opt.value}>
+                  {statusLabels[opt.value] || opt.label}
+                </option>
+              );
+            })}
           </select>
           <button
             onClick={handleSearch}
             className="px-[16px] py-[10px] rounded-[10px] bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors cursor-pointer"
           >
-            Search
+            {t("common.search")}
           </button>
         </div>
       </div>
@@ -701,7 +717,7 @@ export default function ProposalParticipate() {
               <div className="flex items-center justify-center py-[60px]">
                 <div className="text-center space-y-3">
                   <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto" />
-                  <p className="text-sm text-[#959595]">Loading proposals...</p>
+                  <p className="text-sm text-[#959595]">{t("proposals.loadingProposals")}</p>
                 </div>
               </div>
             ) : error ? (
@@ -715,7 +731,7 @@ export default function ProposalParticipate() {
                     onClick={handleRetry}
                     className="px-4 py-2 bg-primary text-white rounded-lg text-sm hover:bg-primary/90 transition-colors cursor-pointer"
                   >
-                    Retry
+                    {t("common.retry")}
                   </button>
                 </div>
               </div>
@@ -725,11 +741,11 @@ export default function ProposalParticipate() {
                   <div className="w-12 h-12 bg-[#F0F0F0] rounded-full flex items-center justify-center mx-auto">
                     <Vote className="w-6 h-6 text-[#959595]" />
                   </div>
-                  <p className="text-sm text-[#959595]">No proposals found</p>
+                  <p className="text-sm text-[#959595]">{t("proposals.noProposalsFound")}</p>
                   <p className="text-xs text-[#BDBDBD]">
                     {searchQuery || statusFilter
-                      ? "Try adjusting your filters"
-                      : "Proposals you participate in will appear here"}
+                      ? t("proposals.tryAdjustingFilters")
+                      : t("proposals.proposalsAppearHere")}
                   </p>
                 </div>
               </div>
@@ -752,7 +768,7 @@ export default function ProposalParticipate() {
                 {totalPages > 1 && (
                   <div className="flex items-center justify-between mt-[16px] pt-[16px] border-t border-[#E5E5E5]">
                     <p className="text-xs text-[#959595]">
-                      Page {currentPage} of {totalPages} ({totalCount} proposals)
+                      {t("proposals.pageOf", { current: currentPage, total: totalPages, count: totalCount })}
                     </p>
                     <div className="flex items-center gap-[8px]">
                       <button

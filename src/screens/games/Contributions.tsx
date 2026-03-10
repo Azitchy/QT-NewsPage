@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Wallet, ExternalLink } from "lucide-react";
 import { useUnified } from "@/context/Context";
@@ -9,6 +10,7 @@ import { mapGameStatus, getStatusBadgeClasses } from "./types";
 import type { GameMilestone } from "./types";
 
 export default function Contributions() {
+  const { t } = useTranslation();
   const { address, isConnected, isAuthenticated, openModal } = useUnified();
   const { data: gamesResponse, loading, execute: fetchGames } = useGetAllGames();
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
@@ -45,10 +47,9 @@ export default function Contributions() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center space-y-4 max-w-md">
-          <h3 className="font-h4-600 text-foreground">No contributions yet</h3>
+          <h3 className="font-h4-600 text-foreground">{t("games.noContributionsYet")}</h3>
           <p className="body-text2-400 text-[#959595]">
-            You haven't contributed to any games yet. Browse games to find ones
-            you'd like to support.
+            {t("games.noContributionsDescription")}
           </p>
         </div>
       </div>
@@ -115,7 +116,7 @@ export default function Contributions() {
                     {(game.totalInvestment || 0).toLocaleString()} USDC
                   </p>
                   <p className="body-label-400 text-[#959595]">
-                    Total contributed
+                    {t("games.totalContributed")}
                   </p>
                 </div>
               </div>
@@ -149,7 +150,7 @@ export default function Contributions() {
             <div className="space-y-[8px]">
               <div className="flex justify-between">
                 <span className="body-text2-400 text-[#959595]">
-                  Total contribution
+                  {t("games.totalContribution")}
                 </span>
                 <span className="body-text2-400 text-foreground font-medium">
                   {(selectedGame.totalInvestment || 0).toLocaleString()} USDC
@@ -157,14 +158,14 @@ export default function Contributions() {
               </div>
               <div className="flex justify-between">
                 <span className="body-text2-400 text-[#959595]">
-                  Your contribution
+                  {t("games.yourContribution")}
                 </span>
                 <span className="body-text2-400 text-foreground font-medium">
                   0 USDC
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="body-text2-400 text-[#959595]">Goal</span>
+                <span className="body-text2-400 text-[#959595]">{t("games.goal")}</span>
                 <span className="body-text2-400 text-foreground font-medium">
                   {((selectedGame as any).funds || 2000).toLocaleString()} USDC
                 </span>
@@ -175,7 +176,7 @@ export default function Contributions() {
           {/* Milestones */}
           <div className="rounded-[15px] bg-[#F6F6F6] p-[20px]">
             <h4 className="font-h4-400 text-foreground mb-[16px]">
-              Milestones
+              {t("games.milestones")}
             </h4>
             <div className="space-y-[12px]">
               {(
@@ -232,7 +233,7 @@ export default function Contributions() {
             }
             className="w-full py-[12px] rounded-[30px] border-2 border-primary text-primary body-text2-400 hover:bg-[#E9F6F7] cursor-pointer transition-colors text-center"
           >
-            View full game details
+            {t("games.viewFullGameDetails")}
           </button>
         </div>
       )}

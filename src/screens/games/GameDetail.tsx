@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   ChevronLeft,
@@ -16,6 +17,7 @@ import type { GameMilestone } from "./types";
 
 
 export default function GameDetail() {
+  const { t } = useTranslation();
   const { gameId } = useParams<{ gameId: string }>();
   const navigate = useNavigate();
   const { address, isAuthenticated, getUserBalance } = useUnified();
@@ -83,11 +85,11 @@ export default function GameDetail() {
 
     const amt = parseFloat(amount);
     if (!amount || isNaN(amt) || amt <= 0) {
-      setValidationError("Please enter a valid amount");
+      setValidationError(t("games.pleaseEnterValidAmount"));
       return;
     }
     if (amt > parseFloat(balance)) {
-      setValidationError("Insufficient balance");
+      setValidationError(t("income.insufficientBalance"));
       return;
     }
     if (!address || !gameId) return;
@@ -99,19 +101,19 @@ export default function GameDetail() {
         userId: address,
       });
       if (result?.success || result?.isSuccess) {
-        setToast({ message: "Contribution successful!", type: "success" });
+        setToast({ message: t("games.contributionSuccessful"), type: "success" });
         setAmount("");
         // Refresh game data
         fetchGame(gameId);
         getUserBalance().then(setBalance);
       } else {
         setToast({
-          message: result?.message || "Contribution failed",
+          message: result?.message || t("games.contributionFailed"),
           type: "error",
         });
       }
     } catch {
-      setToast({ message: "Contribution failed", type: "error" });
+      setToast({ message: t("games.contributionFailed"), type: "error" });
     }
   };
 
@@ -126,12 +128,12 @@ export default function GameDetail() {
   if (!game) {
     return (
       <div className="py-[60px] text-center">
-        <p className="body-text2-400 text-[#959595]">Game not found</p>
+        <p className="body-text2-400 text-[#959595]">{t("games.gameNotFound")}</p>
         <button
           onClick={() => navigate("/games/games")}
           className="mt-[12px] text-primary body-text2-400 hover:underline cursor-pointer"
         >
-          Back to games
+          {t("games.backToGames")}
         </button>
       </div>
     );
@@ -150,7 +152,7 @@ export default function GameDetail() {
         className="flex items-center gap-[6px] text-foreground body-text1-400 hover:text-primary cursor-pointer transition-colors"
       >
         <ChevronLeft className="w-[18px] h-[18px]" />
-        Go back
+        {t("games.goBack")}
       </button>
 
       <div className="flex flex-col-reverse xl:flex-row  gap-[24px]">
@@ -194,7 +196,7 @@ export default function GameDetail() {
           {/* Overview */}
           <div>
             <h2 className="text-[24px] font-bold text-primary uppercase mb-[16px]">
-              Overview
+              {t("games.overview")}
             </h2>
             <div
               className="body-text1-400 text-[#4A4A4A] space-y-[12px]"
@@ -202,7 +204,7 @@ export default function GameDetail() {
                 __html:
                   (game as any).overview ||
                   game.description ||
-                  "No description available.",
+                  t("games.noDescription"),
               }}
             />
           </div>
@@ -210,7 +212,7 @@ export default function GameDetail() {
           {/* Contact Details */}
           <div>
             <h2 className="text-[24px] font-bold text-primary uppercase mb-[16px]">
-              Contact Details
+              {t("games.contactDetails")}
             </h2>
             <div className="flex items-center gap-[16px]">
               {((game as any).contactDetails || []).map(
@@ -229,7 +231,7 @@ export default function GameDetail() {
               {(!((game as any).contactDetails) ||
                 (game as any).contactDetails.length === 0) && (
                 <p className="body-text2-400 text-[#959595]">
-                  No contact details available
+                  {t("games.noContactDetails")}
                 </p>
               )}
             </div>
@@ -243,7 +245,7 @@ export default function GameDetail() {
             <div className="flex items-center justify-between mb-[8px]">
               <div className="flex items-center gap-[8px]">
                 <span className="px-[12px] py-[4px] rounded-full bg-[#E9F6F7] text-primary body-text2-400">
-                  {daysLeft} days left
+                  {t("proposals.daysLeftFull", { days: daysLeft })}
                 </span>
               </div>
               <div className="flex items-center gap-[4px]">
@@ -271,7 +273,7 @@ export default function GameDetail() {
                 {totalContributed} USDC
               </p>
               <p className="body-label-400 text-[#959595]">
-                Total contribution
+                {t("games.totalContribution")}
               </p>
             </div>
 
@@ -290,13 +292,13 @@ export default function GameDetail() {
                 <p className="text-foreground font-medium">
                   {userContribution} USDC
                 </p>
-                <p className="text-[#959595]">Your contribution</p>
+                <p className="text-[#959595]">{t("games.yourContribution")}</p>
               </div>
               <div className="text-right">
                 <p className="text-foreground font-medium">
                   {goalAmount} USDC
                 </p>
-                <p className="text-[#959595]">Goal</p>
+                <p className="text-[#959595]">{t("games.goal")}</p>
               </div>
             </div>
           </div>
@@ -304,10 +306,10 @@ export default function GameDetail() {
           {/* Contribute form */}
           <div className="rounded-[15px] bg-[#F6F6F6] p-[20px]">
             <h4 className="font-h4-400 text-foreground mb-[4px]">
-              Contribute to {game.title}
+              {t("games.contributeTo", { title: game.title })}
             </h4>
             <p className="body-label-400 text-[#959595] mb-[12px]">
-              Amount of USDC
+              {t("games.amountOfUsdc")}
             </p>
             <input
               type="number"
@@ -316,7 +318,7 @@ export default function GameDetail() {
                 setAmount(e.target.value);
                 setValidationError(null);
               }}
-              placeholder="Enter the amount"
+              placeholder={t("games.enterTheAmount")}
               min="0"
               className="w-full px-[16px] py-[12px] rounded-[10px] border border-[#E0E0E0] body-text2-400 text-foreground focus:outline-none focus:border-primary bg-white"
             />
@@ -326,7 +328,7 @@ export default function GameDetail() {
               </p>
             )}
             <p className="body-label-400 text-[#959595] mt-[8px]">
-              Your balance: {balance} USDC
+              {t("games.yourBalance", { balance })}
             </p>
             <Button
               variant="gradient"
@@ -334,18 +336,18 @@ export default function GameDetail() {
               onClick={handleContribute}
               disabled={contributing || !isAuthenticated}
             >
-              {contributing ? "Contributing..." : "Contribute"}
+              {contributing ? t("games.contributing") : t("games.contribute")}
             </Button>
           </div>
 
           {/* Milestones */}
           <div className="rounded-[15px] bg-[#F6F6F6] p-[20px]">
             <h4 className="font-h4-400 text-foreground mb-[16px]">
-              Milestones
+              {t("games.milestones")}
             </h4>
             {milestones.length === 0 ? (
               <p className="body-text2-400 text-[#959595] text-center py-[16px]">
-                No milestones available yet
+                {t("games.noMilestonesAvailable")}
               </p>
             ) : (
             <div className="space-y-[16px]">
@@ -398,7 +400,7 @@ export default function GameDetail() {
                         className="flex items-center gap-[4px] mt-[4px] text-primary body-label-400 hover:underline"
                       >
                         <ExternalLink className="w-[12px] h-[12px]" />
-                        Transaction details
+                        {t("games.transactionDetails")}
                       </a>
                     )}
                   </div>

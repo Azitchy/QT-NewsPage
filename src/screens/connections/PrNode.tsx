@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useUnified } from "@/context/Context";
 import { useAppKit } from "@/context/AppKitProvider";
 import { fetchPRNodes, fetchStakeTransactions, fetchUserTreatyList } from "@/lib/webApi";
@@ -223,6 +224,7 @@ async function sendCancleStakeLuca(
    ============================================================================ */
 
 export default function PrNode() {
+  const { t } = useTranslation();
   const { isAuthenticated } = useUnified();
   const {
     isConnected,
@@ -346,23 +348,23 @@ export default function PrNode() {
 
   const handleStake = async () => {
     if (!isAuthenticated || !selectedNode || !walletProvider || !address) {
-      setError("Please connect your wallet first");
+      setError(t("prNode.connectWalletFirst"));
       return;
     }
 
     if (!checkLUCASupport()) {
       await switchToSupportedChain();
-      setError("Please switch to Binance Smart Chain to stake LUCA tokens");
+      setError(t("prNode.switchToBscToStake"));
       return;
     }
 
     if (!stakeAmount || parseFloat(stakeAmount) < 0.0001) {
-      setError("Please enter a valid stake amount (minimum 0.0001 LUCA)");
+      setError(t("prNode.enterValidStakeAmount"));
       return;
     }
 
     if (parseFloat(stakeAmount) > parseFloat(userBalance)) {
-      setError("Insufficient LUCA balance");
+      setError(t("prNode.insufficientLucaBalance"));
       return;
     }
 
@@ -371,7 +373,7 @@ export default function PrNode() {
     const lucaAddress = contracts?.luca;
 
     if (!pledgeAddress || !lucaAddress) {
-      setError("Contract not found for this network. Please switch to BSC.");
+      setError(t("prNode.contractNotFound"));
       return;
     }
 
@@ -423,13 +425,13 @@ export default function PrNode() {
       console.error("Staking failed:", err);
       const msg = err.message || "";
       if (msg.includes("rejected") || err.code === 4001) {
-        setError("Transaction cancelled by user.");
+        setError(t("prNode.transactionCancelled"));
       } else if (msg.includes("insufficient funds") || err.code === -32603) {
-        setError("Insufficient funds for gas fees.");
+        setError(t("prNode.insufficientGasFunds"));
       } else if (msg.includes("balance")) {
-        setError("Insufficient LUCA balance.");
+        setError(t("prNode.insufficientBalance"));
       } else {
-        setError(`Staking failed: ${msg || "Please try again."}`);
+        setError(t("prNode.stakingFailed", { message: msg || "Please try again." }));
       }
     } finally {
       setIsStaking(false);
@@ -443,7 +445,7 @@ export default function PrNode() {
     const contracts = getChainContracts(chainId);
     const pledgeAddress = contracts?.prNodeStake || contracts?.pledger;
     if (!pledgeAddress) {
-      setError("Pledge contract not found for this network");
+      setError(t("prNode.pledgeContractNotFound"));
       return;
     }
 
@@ -471,11 +473,11 @@ export default function PrNode() {
       console.error("Redemption failed:", err);
       const msg = err.message || "";
       if (msg.includes("rejected") || err.code === 4001) {
-        setError("Transaction cancelled by user.");
+        setError(t("prNode.transactionCancelled"));
       } else if (err.code === -32603) {
-        setError("Insufficient funds for gas fees.");
+        setError(t("prNode.insufficientGasFunds"));
       } else {
-        setError(`Redemption failed: ${msg || "Please try again."}`);
+        setError(t("prNode.redemptionFailed", { message: msg || "Please try again." }));
       }
     } finally {
       setIsRedeeming(false);
@@ -498,10 +500,10 @@ export default function PrNode() {
         <div className="text-center py-[48px]">
           <AlertCircle className="w-[48px] h-[48px] text-[#959595] mx-auto mb-[16px]" />
           <h2 className="body-text1-400 text-foreground mb-[8px]">
-            Authentication Required
+            {t("prNode.authenticationRequired")}
           </h2>
           <p className="body-text2-400 text-[#959595]">
-            Please connect your wallet to access PR Nodes.
+            {t("prNode.connectWalletToAccessPrNodes")}
           </p>
         </div>
       </div>
@@ -523,7 +525,7 @@ export default function PrNode() {
         className="flex items-center gap-[8px] text-foreground body-text-400 hover:text-primary transition-colors cursor-pointer"
       >
         <ChevronLeft className="w-[18px] h-[18px] text-foreground" />
-        Back
+        {t("prNode.back")}
       </button>
     </div>
   );
@@ -537,14 +539,14 @@ export default function PrNode() {
 
         <div className="bg-white rounded-[15px] p-[24px] space-y-[20px]">
           <h3 className="body-text1-500 text-foreground">
-            PR node stake Details
+            {t("prNode.prNodeStakeDetails")}
           </h3>
 
           {/* Node info */}
           <div className="space-y-[16px]">
             <div className="flex gap-[36px] items-center">
               <label className="body-text2-400 text-[#959595] min-w-[120px]">
-                Stake node
+                {t("prNode.stakeNode")}
               </label>
               <div className="flex items-center gap-[8px] flex-1">
                 <span className="body-text2-400 text-foreground break-all">
@@ -561,7 +563,7 @@ export default function PrNode() {
 
             <div className="flex gap-[36px] items-center">
               <label className="body-text2-400 text-[#959595] min-w-[120px]">
-                Network
+                {t("prNode.network")}
               </label>
               <select
                 value={chainFilter || ""}
@@ -571,7 +573,7 @@ export default function PrNode() {
                 }}
                 className="px-[12px] py-[8px] rounded-[8px] border border-[#EBEBEB] bg-white body-text2-400 text-foreground focus:outline-none focus:border-primary"
               >
-                <option value="">All Network</option>
+                <option value="">{t("prNode.allNetwork")}</option>
                 <option value="1">BSC</option>
                 <option value="2">Polygon</option>
               </select>
@@ -579,7 +581,7 @@ export default function PrNode() {
 
             <div className="flex gap-[36px] items-center">
               <label className="body-text2-400 text-[#959595] min-w-[120px]">
-                Rankings
+                {t("prNode.rankings")}
               </label>
               <div className="flex items-center gap-[6px]">
                 <Award className="w-[14px] h-[14px] text-primary" />
@@ -591,7 +593,7 @@ export default function PrNode() {
 
             <div className="flex gap-[36px] items-center">
               <label className="body-text2-400 text-[#959595] min-w-[120px]">
-                Stake amount
+                {t("prNode.stakeAmount")}
               </label>
               <span className="body-text2-400 text-foreground">
                 {parseFloat(selectedNode.ledgeAmount || "0").toFixed(4)} LUCA
@@ -615,7 +617,7 @@ export default function PrNode() {
                       : "text-[#959595] border-transparent hover:text-foreground"
                   }`}
                 >
-                  {tab === 1 ? "LUCA" : "Consensus contract"}
+                  {tab === 1 ? t("prNode.luca") : t("prNode.consensusContract")}
                 </button>
               ))}
             </div>
@@ -630,7 +632,7 @@ export default function PrNode() {
                 className="flex items-center justify-center gap-[6px] px-[16px] py-[10px] bg-primary text-white rounded-full body-text2-400 transition-colors disabled:opacity-50 hover:bg-primary/90 cursor-pointer"
               >
                 <Zap className="w-[14px] h-[14px]" />
-                Stake mining
+                {t("prNode.stakeMining")}
               </button>
               <button
                 onClick={() => {
@@ -640,7 +642,7 @@ export default function PrNode() {
                 disabled={!isAuthenticated || !isNetworkSupported}
                 className="flex items-center justify-center gap-[6px] px-[16px] py-[10px] text-primary border border-primary rounded-full body-text2-400 transition-colors disabled:opacity-50 hover:bg-primary/5 cursor-pointer"
               >
-                Batch redemption
+                {t("prNode.batchRedemption")}
               </button>
             </div>
           </div>
@@ -650,13 +652,13 @@ export default function PrNode() {
             <div className="flex flex-col items-center justify-center py-[60px] gap-[12px]">
               <RefreshCw className="w-8 h-8 animate-spin text-primary" />
               <p className="body-text2-400 text-[#959595]">
-                Loading stake records...
+                {t("prNode.loadingStakeRecords")}
               </p>
             </div>
           ) : stakeRecords.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-[60px] gap-[12px]">
               <Server className="w-10 h-10 text-[#959595]" />
-              <p className="body-text2-400 text-[#959595]">No data</p>
+              <p className="body-text2-400 text-[#959595]">{t("prNode.noData")}</p>
             </div>
           ) : (
             <>
@@ -665,21 +667,21 @@ export default function PrNode() {
                   <thead className="bg-[#fcfcfc]">
                     <tr>
                       <th className="px-[16px] py-[12px] text-left body-text2-400 text-[#959595] font-normal">
-                        Stake amount
+                        {t("prNode.stakeAmount")}
                       </th>
                       <th className="px-[16px] py-[12px] text-left body-text2-400 text-[#959595] font-normal">
-                        Stake time
+                        {t("prNode.stakeTime")}
                       </th>
                       {stakeTab === 2 && (
                         <th className="px-[16px] py-[12px] text-left body-text2-400 text-[#959595] font-normal">
-                          Consensus Link
+                          {t("prNode.consensusLink")}
                         </th>
                       )}
                       <th className="px-[16px] py-[12px] text-left body-text2-400 text-[#959595] font-normal">
-                        Network
+                        {t("prNode.network")}
                       </th>
                       <th className="px-[16px] py-[12px] text-left body-text2-400 text-[#959595] font-normal">
-                        Action
+                        {t("prNode.action")}
                       </th>
                     </tr>
                   </thead>
@@ -719,7 +721,7 @@ export default function PrNode() {
                             }}
                             className="body-text2-400 text-primary border-b border-primary hover:text-primary/80 cursor-pointer transition-colors"
                           >
-                            View details
+                            {t("prNode.viewDetails")}
                           </button>
                         </td>
                       </tr>
@@ -731,13 +733,13 @@ export default function PrNode() {
               {stakeRecordsTotalPages > 1 && (
                 <div className="px-[16px] py-[12px] flex items-center justify-between mt-[16px]">
                   <p className="body-text2-400 text-[#959595]">
-                    Showing{" "}
-                    {(stakeRecordsPage - 1) * stakeRecordsPerPage + 1} to{" "}
+                    {t("prNode.showing")}{" "}
+                    {(stakeRecordsPage - 1) * stakeRecordsPerPage + 1} {t("prNode.to")}{" "}
                     {Math.min(
                       stakeRecordsPage * stakeRecordsPerPage,
                       stakeRecordsTotalCount
                     )}{" "}
-                    of {stakeRecordsTotalCount} records
+                    {t("prNode.of")} {stakeRecordsTotalCount} {t("prNode.records")}
                   </p>
                   <div className="flex gap-[8px]">
                     <button
@@ -747,7 +749,7 @@ export default function PrNode() {
                       disabled={stakeRecordsPage === 1}
                       className="px-[12px] py-[4px] border border-[#EBEBEB] rounded body-text2-400 text-foreground disabled:opacity-40 hover:bg-[#F0F0F0] transition-colors"
                     >
-                      Previous
+                      {t("prNode.previous")}
                     </button>
                     <span className="px-[12px] py-[4px] bg-primary/10 text-primary rounded body-text2-400 font-medium">
                       {stakeRecordsPage}
@@ -764,7 +766,7 @@ export default function PrNode() {
                       }
                       className="px-[12px] py-[4px] border border-[#EBEBEB] rounded body-text2-400 text-foreground disabled:opacity-40 hover:bg-[#F0F0F0] transition-colors"
                     >
-                      Next
+                      {t("prNode.next")}
                     </button>
                   </div>
                 </div>
@@ -779,7 +781,7 @@ export default function PrNode() {
             <div className="bg-white rounded-[10px] max-w-md w-full">
               <div className="p-[24px] border-b border-[#F0F0F0] flex items-center justify-between">
                 <h3 className="body-text1-500 text-foreground">
-                  Confirm Redemption
+                  {t("prNode.confirmRedemption")}
                 </h3>
                 <button
                   onClick={() => {
@@ -807,18 +809,17 @@ export default function PrNode() {
                   <div className="flex items-center gap-[8px] p-[12px] bg-primary/5 border border-primary/20 rounded-[8px]">
                     <RefreshCw className="w-[16px] h-[16px] text-primary animate-spin" />
                     <p className="body-text2-400 text-primary">
-                      Processing redemption...
+                      {t("prNode.processingRedemption")}
                     </p>
                   </div>
                 )}
 
                 <p className="body-text2-400 text-foreground">
-                  Are you sure you want to redeem{" "}
+                  {t("prNode.redeemConfirmMessage")}{" "}
                   <span className="font-medium">
                     {parseFloat(selectedStakeRecord.ledgeAmount).toFixed(4)} LUCA
                   </span>{" "}
-                  from this stake? The corresponding stake income cannot be
-                  obtained after redemption.
+                  {t("prNode.redeemConfirmWarning")}
                 </p>
 
                 <div className="flex gap-[12px] pt-[8px]">
@@ -832,7 +833,7 @@ export default function PrNode() {
                     disabled={isRedeeming}
                     className="flex-1 px-[16px] py-[10px] bg-[#F0F0F0] text-foreground rounded-[8px] body-text-400 hover:bg-[#E0E0E0] disabled:opacity-50 transition-colors"
                   >
-                    Cancel
+                    {t("common.cancel")}
                   </button>
                   <button
                     onClick={handleRedeem}
@@ -842,10 +843,10 @@ export default function PrNode() {
                     {isRedeeming ? (
                       <>
                         <RefreshCw className="w-[14px] h-[14px] animate-spin" />
-                        Redeeming...
+                        {t("prNode.redeeming")}
                       </>
                     ) : (
-                      "Confirm Redeem"
+                      t("prNode.confirmRedeem")
                     )}
                   </button>
                 </div>
@@ -865,12 +866,12 @@ export default function PrNode() {
         <BackButton />
 
         <div className="bg-white rounded-[15px] p-[24px] space-y-[24px]">
-          <h3 className="body-text1-500 text-foreground">PR node Stake</h3>
+          <h3 className="body-text1-500 text-foreground">{t("prNode.prNodeStake")}</h3>
 
           <div className="space-y-[8px]">
             <div className="flex items-center gap-[80px] pb-[24px]">
               <label className="body-text2-400 text-[#959595] min-w-[120px]">
-                Stake node
+                {t("prNode.stakeNode")}
               </label>
               <div className="flex items-center gap-[8px]">
                 <span className="body-text2-400 text-foreground font-mono">
@@ -887,7 +888,7 @@ export default function PrNode() {
 
             <div className="flex items-center gap-[48px] pb-[24px]">
               <label className="body-text2-400 text-[#959595] min-w-[120px]">
-                Server nickname
+                {t("prNode.serverNickname")}
               </label>
               <span className="body-text2-400 text-foreground">
                 {selectedNode.serverNickname || "—"}
@@ -896,7 +897,7 @@ export default function PrNode() {
 
             <div className="flex items-center gap-[96px] pb-[24px]">
               <label className="body-text2-400 text-[#959595] min-w-[120px]">
-                Rankings
+                {t("prNode.rankings")}
               </label>
               <div className="flex items-center gap-[6px]">
                 <Award className="w-[14px] h-[14px] text-primary" />
@@ -908,7 +909,7 @@ export default function PrNode() {
 
             <div className="flex gap-[64px]">
               <label className="body-text2-400 text-[#959595] min-w-[120px]">
-                Stake amount
+                {t("prNode.stakeAmount")}
               </label>
               <div className="flex-1">
                 <div className="relative w-full max-w-[500px]">
@@ -931,8 +932,7 @@ export default function PrNode() {
                   </span>
                 </div>
                 <p className="mt-[20px] body-text2-400 text-orange-400">
-                  Tips: The stake deposit amount needs to be greater than 0.0001
-                  LUCA to get rewards
+                  {t("prNode.tipStakeMinimum")}
                 </p>
               </div>
             </div>
@@ -952,8 +952,8 @@ export default function PrNode() {
                   <RefreshCw className="w-[14px] h-[14px] animate-spin" />
                   <span className="body-text2-400">
                     {isApproving
-                      ? "Approving LUCA... Please confirm in your wallet"
-                      : "Staking in progress... Please confirm the transaction"}
+                      ? t("prNode.approvingLuca")
+                      : t("prNode.stakingInProgress")}
                   </span>
                 </div>
               </div>
@@ -964,7 +964,7 @@ export default function PrNode() {
                 <div className="flex items-center gap-[8px] text-orange-700">
                   <AlertTriangle className="w-[14px] h-[14px]" />
                   <span className="body-text2-400">
-                    Please switch to Binance Smart Chain
+                    {t("prNode.switchToBsc")}
                   </span>
                 </div>
               </div>
@@ -987,15 +987,15 @@ export default function PrNode() {
               {isApproving ? (
                 <>
                   <RefreshCw className="w-[14px] h-[14px] animate-spin" />
-                  Approving...
+                  {t("prNode.approving")}
                 </>
               ) : isStaking ? (
                 <>
                   <RefreshCw className="w-[14px] h-[14px] animate-spin" />
-                  Staking...
+                  {t("prNode.staking")}
                 </>
               ) : (
-                "Confirm"
+                t("common.confirm")
               )}
             </button>
           </div>
@@ -1013,13 +1013,13 @@ export default function PrNode() {
 
         <div className="bg-white rounded-[15px] p-[24px] space-y-[24px]">
           <h3 className="body-text1-500 text-foreground">
-            Batch PR node redemption
+            {t("prNode.batchPrNodeRedemption")}
           </h3>
 
           <div className="space-y-[8px]">
             <div className="flex items-center gap-[40px] pb-[24px]">
               <label className="body-text2-400 text-[#959595] min-w-[120px]">
-                Stake node
+                {t("prNode.stakeNode")}
               </label>
               <div className="flex items-center gap-[8px]">
                 <span className="body-text2-400 text-foreground font-mono">
@@ -1036,14 +1036,14 @@ export default function PrNode() {
 
             <div className="flex items-center gap-[48px] pb-[24px]">
               <label className="body-text2-400 text-[#959595] min-w-[120px]">
-                Stake method
+                {t("prNode.stakeMethod")}
               </label>
               <span className="body-text2-400 text-foreground">LUCA</span>
             </div>
 
             <div className="flex items-center gap-[20px] pb-[24px]">
               <label className="body-text2-400 text-[#959595] min-w-[120px]">
-                Redemption amount
+                {t("prNode.redemptionAmount")}
               </label>
               <span className="body-text2-400 text-foreground">
                 0 LUCA
@@ -1051,9 +1051,7 @@ export default function PrNode() {
             </div>
 
             <p className="body-text2-400 text-destructive">
-              Batch redemption only supports one-time redemption of all Tokens
-              directly staked through LUCA, and the corresponding stake income
-              cannot be obtained after redemption.
+              {t("prNode.batchRedemptionWarning")}
             </p>
 
             {error && (
@@ -1070,7 +1068,7 @@ export default function PrNode() {
             <button
               onClick={async () => {
                 if (!walletProvider || !address || !chainId) {
-                  setError("Please connect your wallet first");
+                  setError(t("prNode.connectWalletFirst"));
                   return;
                 }
                 const contracts = getChainContracts(chainId);
@@ -1078,7 +1076,7 @@ export default function PrNode() {
                   contracts?.prNodeStake || contracts?.pledger;
                 if (!pledgeAddress) {
                   setError(
-                    "Pledge contract not found for this network"
+                    t("prNode.pledgeContractNotFound")
                   );
                   return;
                 }
@@ -1096,8 +1094,8 @@ export default function PrNode() {
                   const msg = err.message || "";
                   setError(
                     msg.includes("rejected") || err.code === 4001
-                      ? "Transaction cancelled by user."
-                      : `Batch redemption failed: ${msg}`
+                      ? t("prNode.transactionCancelled")
+                      : t("prNode.batchRedemptionFailed", { message: msg })
                   );
                 } finally {
                   setIsStaking(false);
@@ -1109,10 +1107,10 @@ export default function PrNode() {
               {isStaking ? (
                 <>
                   <RefreshCw className="w-[14px] h-[14px] animate-spin" />
-                  Redeeming...
+                  {t("prNode.redeeming")}
                 </>
               ) : (
-                "Confirm"
+                t("common.confirm")
               )}
             </button>
           </div>
@@ -1129,7 +1127,7 @@ export default function PrNode() {
         <BackButton />
         <div className="bg-white rounded-[15px] p-[24px]">
           <h3 className="body-text1-500 text-foreground mb-[40px]">
-            Recovery staking
+            {t("prNode.recoveryStaking")}
           </h3>
         </div>
       </div>
@@ -1142,7 +1140,7 @@ export default function PrNode() {
         <BackButton />
         <div className="bg-white rounded-[15px] p-[24px]">
           <h3 className="body-text1-500 text-foreground mb-[32px]">
-            Recovery staking details
+            {t("prNode.recoveryStakingDetails")}
           </h3>
         </div>
       </div>
@@ -1156,23 +1154,18 @@ export default function PrNode() {
       {/* Recovery Staking Section */}
       <div className="bg-white rounded-[15px] overflow-hidden pb-[40px]">
         <div className="px-[24px] py-[20px]">
-          <h2 className="body-text1-400 text-foreground">Recovery staking</h2>
+          <h2 className="body-text1-400 text-foreground">{t("prNode.recoveryStaking")}</h2>
           <div className="mt-[4px] body-text2-400 text-foreground">
-            Investors can buy LUCA tokens, stake them in the recovery plan, and
-            receive additional rewards.{" "}
+            {t("prNode.recoveryStakingDescription")}{" "}
             <span className="relative group inline-block">
               <a
                 href="#"
                 className="text-primary body-text2-400 border-b border-primary"
               >
-                Learn more
+                {t("prNode.learnMore")}
               </a>
               <div className="pointer-events-none absolute left-1/2 top-full z-50 mt-2 w-[320px] -translate-x-1/2 rounded-[5px] bg-background px-[16px] py-[12px] body-text2-400 text-foreground opacity-0 shadow-lg border border-foreground transition-opacity duration-200 group-hover:opacity-100">
-                Starting today, as a token of appreciation for their support,
-                they can also purchase LUCA tokens at a 30% discount through
-                90-day options, with this benefit spread over the next eight
-                years and an annual limit of 1 million tokens. Recovery Staking
-                is only supported on the BSC chain.
+                {t("prNode.recoveryStakingTooltip")}
               </div>
             </span>
           </div>
@@ -1183,12 +1176,12 @@ export default function PrNode() {
             <thead className="bg-[#fcfcfc]">
               <tr>
                 {[
-                  "Staking contract",
-                  "Server",
-                  "Total amount staked (LUCA)",
-                  "Stake amount (LUCA)",
-                  "Staking limit (LUCA)",
-                  "Action",
+                  t("prNode.stakingContract"),
+                  t("prNode.server"),
+                  t("prNode.totalAmountStakedLuca"),
+                  t("prNode.stakeAmountLuca"),
+                  t("prNode.stakingLimitLuca"),
+                  t("prNode.action"),
                 ].map((h) => (
                   <th
                     key={h}
@@ -1232,7 +1225,7 @@ export default function PrNode() {
                       }}
                       className="body-text2-400 text-primary border-b border-primary hover:text-primary/80 cursor-pointer transition-colors"
                     >
-                      Stake
+                      {t("prNode.stake")}
                     </button>
                     <button
                       onClick={() => {
@@ -1248,7 +1241,7 @@ export default function PrNode() {
                       }}
                       className="body-text2-400 text-primary border-b border-primary hover:text-primary/80 cursor-pointer transition-colors"
                     >
-                      View details
+                      {t("prNode.viewDetails")}
                     </button>
                   </div>
                 </td>
@@ -1264,23 +1257,19 @@ export default function PrNode() {
           <div className="flex justify-between items-start">
             <div>
               <h2 className="body-text1-400 text-foreground">
-                PR node staking
+                {t("prNode.prNodeStaking")}
               </h2>
               <div className="mt-[4px] body-text2-400 text-foreground">
-                Staking PR nodes can get staking rewards.{" "}
+                {t("prNode.prNodeStakingDescription")}{" "}
                 <span className="relative group inline-block">
                   <a
                     href="#"
                     className="text-primary body-text2-400 border-b border-primary"
                   >
-                    Learn more
+                    {t("prNode.learnMore")}
                   </a>
                   <div className="pointer-events-none absolute left-1/2 top-full z-50 mt-2 w-[325px] -translate-x-1/2 rounded-[5px] bg-background px-[16px] py-[12px] body-text2-400 text-foreground opacity-0 shadow-lg border border-foreground transition-opacity duration-200 group-hover:opacity-100">
-                    The top 11 servers with the largest stake amount are
-                    selected to jointly execute PageRank algorithm and calculate
-                    the PR value of all users in the ATM network. Users and
-                    server operators who participate in the PageRank computing
-                    server stake will receive corresponding stake rewards.
+                    {t("prNode.prNodeStakingTooltip")}
                   </div>
                 </span>
               </div>
@@ -1294,7 +1283,7 @@ export default function PrNode() {
                 }}
                 className="px-[12px] py-[10px] rounded-[5px] border border-[#EBEBEB] bg-white body-text2-400 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
               >
-                <option value="">All Network</option>
+                <option value="">{t("prNode.allNetwork")}</option>
                 <option value="1">BSC</option>
                 <option value="2">Polygon</option>
               </select>
@@ -1305,16 +1294,16 @@ export default function PrNode() {
         {nodesLoading ? (
           <div className="flex flex-col items-center justify-center py-[80px] gap-[12px]">
             <RefreshCw className="w-8 h-8 animate-spin text-primary" />
-            <p className="body-text2-400 text-[#959595]">Loading PR nodes...</p>
+            <p className="body-text2-400 text-[#959595]">{t("prNode.loadingPrNodes")}</p>
           </div>
         ) : nodes.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-[80px] gap-[12px]">
             <Server className="w-12 h-12 text-[#959595]" />
-            <h3 className="body-text1-400 text-foreground">No PR Nodes Found</h3>
+            <h3 className="body-text1-400 text-foreground">{t("prNode.noPrNodesFoundTitle")}</h3>
             <p className="body-text2-400 text-[#959595]">
               {searchKey
-                ? "Try adjusting your search criteria"
-                : "No PR nodes available at the moment"}
+                ? t("prNode.tryAdjustingSearch")
+                : t("prNode.noPrNodesAvailable")}
             </p>
           </div>
         ) : (
@@ -1324,12 +1313,12 @@ export default function PrNode() {
                 <thead className="bg-[#fcfcfc]">
                   <tr>
                     {[
-                      "Rank",
-                      "PR node",
-                      "Server",
-                      "Server IP",
-                      "Stake Amount",
-                      "Action",
+                      t("prNode.rank"),
+                      t("prNode.prNode"),
+                      t("prNode.server"),
+                      t("prNode.serverIp"),
+                      t("prNode.stakeAmount"),
+                      t("prNode.action"),
                     ].map((h) => (
                       <th
                         key={h}
@@ -1377,7 +1366,7 @@ export default function PrNode() {
                             }}
                             className="body-text2-400 text-primary border-b border-primary hover:text-primary/80 cursor-pointer transition-colors"
                           >
-                            Stake
+                            {t("prNode.stake")}
                           </button>
                           <button
                             onClick={() => {
@@ -1388,7 +1377,7 @@ export default function PrNode() {
                             }}
                             className="body-text2-400 text-primary border-b border-primary hover:text-primary/80 cursor-pointer transition-colors"
                           >
-                            View details
+                            {t("prNode.viewDetails")}
                           </button>
                         </div>
                       </td>
@@ -1404,9 +1393,9 @@ export default function PrNode() {
         {totalPages > 1 && (
           <div className="px-[16px] py-[12px] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-[12px]">
             <p className="body-text2-400 text-[#959595] text-center sm:text-left">
-              Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
-              {Math.min(currentPage * itemsPerPage, totalCount)} of{" "}
-              {totalCount} results
+              {t("prNode.showing")} {(currentPage - 1) * itemsPerPage + 1} {t("prNode.to")}{" "}
+              {Math.min(currentPage * itemsPerPage, totalCount)} {t("prNode.of")}{" "}
+              {totalCount} {t("prNode.results")}
             </p>
             <div className="flex justify-center gap-[8px]">
               <button
@@ -1414,7 +1403,7 @@ export default function PrNode() {
                 disabled={currentPage === 1}
                 className="px-[12px] py-[4px] border border-[#EBEBEB] rounded body-text2-400 text-foreground disabled:opacity-40 hover:bg-[#F0F0F0] transition-colors"
               >
-                Previous
+                {t("prNode.previous")}
               </button>
               <span className="px-[12px] py-[4px] bg-primary/10 text-primary rounded body-text2-400 font-medium">
                 {currentPage}
@@ -1424,7 +1413,7 @@ export default function PrNode() {
                 disabled={currentPage * itemsPerPage >= totalCount}
                 className="px-[12px] py-[4px] border border-[#EBEBEB] rounded body-text2-400 text-foreground disabled:opacity-40 hover:bg-[#F0F0F0] transition-colors"
               >
-                Next
+                {t("prNode.next")}
               </button>
             </div>
           </div>

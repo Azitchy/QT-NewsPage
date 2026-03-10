@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { useUnified } from "@/context/Context";
 import { useGetNFTLinkList } from "@/hooks/useWebAppService";
 import type { NFTLinkConnection } from "@/hooks/useWebAppService";
@@ -76,6 +77,7 @@ function getStatusLabel(status: number): string {
    ============================================================================ */
 
 export default function NftConnection() {
+  const { t } = useTranslation();
   const {
     address,
     isConnected,
@@ -87,6 +89,18 @@ export default function NftConnection() {
   } = useUnified();
 
   const nftLinkListHook = useGetNFTLinkList();
+
+  const getTranslatedStatus = (status: number) => {
+    const map: Record<number, string> = {
+      1: t("common.connected"),
+      2: t("common.pending"),
+      3: t("common.waiting"),
+      4: t("common.canceled"),
+      5: t("common.disconnected"),
+      6: t("common.redeemable"),
+    };
+    return map[status] || t("common.unknown");
+  };
 
   // State
   const [activeTab, setActiveTab] = useState<TabKey>("active");
@@ -277,7 +291,7 @@ export default function NftConnection() {
                 }`}
               >
                 <div className="flex items-center">
-                  <span>{tab.label}</span>
+                  <span>{t(`common.${tab.key}`)}</span>
                 </div>
               </button>
             );
@@ -292,7 +306,7 @@ export default function NftConnection() {
             onKeyDown={handleSearchKeyDown}
             onSearch={handleSearch}
             onClear={handleClearSearch}
-            placeholder="Search user address"
+            placeholder={t("tokenConnection.searchUserAddress")}
             containerClassName="flex-1 max-w-[400px]"
           />
           {searchQuery && (
@@ -300,7 +314,7 @@ export default function NftConnection() {
               onClick={handleClearSearch}
               className="body-text2-400 text-[#959595] hover:text-foreground cursor-pointer"
             >
-              Clear
+              {t("common.clear")}
             </button>
           )}
         </div>
@@ -313,7 +327,7 @@ export default function NftConnection() {
             <div className="text-center space-y-3">
               <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto" />
               <p className="body-text2-400 text-[#959595]">
-                Loading NFT connections...
+                {t("nftConnection.loadingNftConnections")}
               </p>
             </div>
           </div>
@@ -322,7 +336,7 @@ export default function NftConnection() {
             <AlertCircle className="w-12 h-12 text-[#FF6B6B]" />
             <p className="body-text2-400 text-[#FF6B6B]">{error}</p>
             <Button variant="soft" size="sm" onClick={handleRetry}>
-              Retry
+              {t("common.retry")}
             </Button>
           </div>
         ) : connections.length === 0 ? (
@@ -330,8 +344,8 @@ export default function NftConnection() {
             <AlertCircle className="w-12 h-12 text-[#959595]" />
             <p className="body-text2-400 text-[#959595]">
               {searchQuery
-                ? `No NFT connections found for "${searchQuery}"`
-                : "No NFT connections found"}
+                ? t("nftConnection.noNftConnectionsFoundFor", { search: searchQuery })
+                : t("nftConnection.noNftConnectionsFound")}
             </p>
           </div>
         ) : (
@@ -342,22 +356,22 @@ export default function NftConnection() {
                 <thead>
                   <tr className="border-b border-[#F0F0F0]">
                     <th className="px-[15px] py-[20px] text-left body-text1-400 text-foreground font-medium">
-                      User address
+                      {t("nftConnection.userAddress")}
                     </th>
                     <th className="px-[15px] py-[20px] text-left body-text1-400 text-foreground font-medium">
-                      NFT name
+                      {t("nftConnection.nftName")}
                     </th>
                     <th className="px-[15px] py-[20px] text-left body-text1-400 text-foreground font-medium">
-                      NFT address
+                      {t("nftConnection.nftAddress")}
                     </th>
                     <th className="px-[15px] py-[20px] text-left body-text1-400 text-foreground font-medium">
-                      Lockup time{" "}
+                      {t("tokenConnection.lockupTime")}{" "}
                       <span className="text-[#878787] body-label-400">
-                        (day(s))
+                        ({t("tokenConnection.days")})
                       </span>
                     </th>
                     <th className="px-[15px] py-[20px] text-left body-text1-400 text-foreground font-medium">
-                      Status
+                      {t("common.status")}
                     </th>
                   </tr>
                 </thead>
@@ -391,7 +405,7 @@ export default function NftConnection() {
                         </td>
                         <td className="px-[15px] py-[20px]">
                           <span className="body-text2-400 text-foreground">
-                            {getStatusLabel(conn.linkStatus)}
+                            {getTranslatedStatus(conn.linkStatus)}
                           </span>
                         </td>
                       </tr>

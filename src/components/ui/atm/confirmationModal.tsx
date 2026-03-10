@@ -32,25 +32,12 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-end md:items-center justify-center z-[1000]">
-      {/* Modal */}
-      <div
-        className="
-        bg-modal
-        w-full
-        md:w-[90%]
-        md:max-w-lg
-        p-6
-        rounded-t-2xl
-        md:rounded-2xl
-        shadow-lg
-        relative
-      "
-      >
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 ">
+      <div className="bg-modal rounded-2xl p-6 w-[90%] max-w-lg shadow-lg relative">
         {/* Close Icon */}
         <button
           onClick={onCancel}
-          className="absolute top-4 right-4 cursor-pointer "
+          className="absolute top-4 right-4 cursor-pointer"
         >
           <X size={20} className="text-primary" />
         </button>
@@ -70,10 +57,10 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
           {message}
         </p>
 
-        {/* Buttons */}
-        <div className="flex gap-3">
+        {/* Actions */}
+        <div className="flex justify-start space-x-3">
           <Button
-            className="flex-1"
+            className="px-9"
             onClick={onCancel}
             disabled={loading}
             variant="success"
@@ -82,7 +69,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
           </Button>
 
           <Button
-            className="flex-1"
+            className="px-9"
             onClick={onConfirm}
             disabled={loading}
             variant={confirmVariant}

@@ -31,43 +31,29 @@ export default function RightSideModal({
   isOpen,
   onClose,
   title,
+
   showSearch = false,
   searchValue = "",
   onSearchChange,
   searchPlaceholder = "Search",
+
   primaryButtonText,
   onPrimaryClick,
   primaryDisabled,
   primaryVariant = "default",
+
   secondaryButtonText,
   onSecondaryClick,
   secondaryVariant = "success",
+
   loading = false,
   children,
 }: RightSideModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div
-      className="
-      fixed inset-0 z-[1000] flex 
-      items-end md:items-stretch
-      justify-center md:justify-end
-      bg-black/30
-    "
-    >
-      <div
-        className="
-        bg-card
-        w-full md:w-105
-        h-[90vh] md:h-full
-        p-6
-        rounded-t-2xl md:rounded-l-2xl md:rounded-t-none
-        shadow-xl
-        relative
-        flex flex-col
-      "
-      >
+    <div className="fixed inset-0 z-50 flex justify-end bg-black/30">
+      <div className="w-105 bg-card p-6 h-full rounded-l-2xl shadow-xl relative flex flex-col">
         {/* HEADER */}
         <div className="flex justify-between items-center mb-4">
           <h2 className="font-h4-400 text-foreground">{title}</h2>
@@ -95,7 +81,7 @@ export default function RightSideModal({
           </div>
         )}
 
-        {/* CONTENT */}
+        {/* SCROLLABLE CONTENT */}
         <div
           className="flex-1 overflow-y-auto pr-2
           [&::-webkit-scrollbar]:hidden
@@ -131,7 +117,7 @@ export default function RightSideModal({
 
         {/* LOADING OVERLAY */}
         {loading && (
-          <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-t-2xl md:rounded-l-2xl">
+          <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-l-2xl">
             <div className="animate-spin w-6 h-6 border-2 border-primary border-t-transparent rounded-full" />
           </div>
         )}

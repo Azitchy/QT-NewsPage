@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useUnified } from "@/context/Context";
 import { useDashboardCache } from "@/context/DashboardCacheContext";
 import type { IncomeRecord, WithdrawalRecord } from "@/hooks/useWebAppService";
@@ -57,6 +58,7 @@ function IncomeTable({
   error?: string | null;
   onRetry?: () => void;
 }) {
+  const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(records.length / ITEMS_PER_PAGE);
   const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -71,11 +73,11 @@ function IncomeTable({
     return (
       <div className="flex flex-col items-center justify-center py-[60px] gap-[12px]">
         <p className="body-text2-400 text-destructive">
-          Failed to load income records
+          {t("income.failedToLoadIncomeRecords")}
         </p>
         {onRetry && (
           <Button variant="soft" size="sm" onClick={onRetry}>
-            Retry
+            {t("common.retry")}
           </Button>
         )}
       </div>
@@ -88,7 +90,7 @@ function IncomeTable({
         <LoadingAnimation isVisible={loading} />
         <div className="flex items-center justify-center py-[60px]">
           <p className="body-text2-400 text-[#959595]">
-            No income records found
+            {t("income.noIncomeRecordsFound")}
           </p>
         </div>
       </>
@@ -101,24 +103,24 @@ function IncomeTable({
       <div>
       {/* Header */}
       <div className="grid grid-cols-5 py-[14px] border-b border-[#F0F0F0]">
-        <p className="body-text2-500 text-[#959595]">Date</p>
+        <p className="body-text2-500 text-[#959595]">{t("common.date")}</p>
         <p className="body-text2-500 text-[#959595]">
-          PR value income
+          {t("income.prValueIncome")}
           <br />
           <span className="body-label-400">(LUCA)</span>
         </p>
         <p className="body-text2-500 text-[#959595]">
-          Server operation income
+          {t("income.serverOperationIncome")}
           <br />
           <span className="body-label-400">(LUCA)</span>
         </p>
         <p className="body-text2-500 text-[#959595]">
-          Server stake income
+          {t("income.serverStakeIncome")}
           <br />
           <span className="body-label-400">(LUCA)</span>
         </p>
         <p className="body-text2-500 text-[#959595] text-right">
-          Total <span className="body-label-400">(LUCA)</span>
+          {t("income.total")} <span className="body-label-400">(LUCA)</span>
         </p>
       </div>
 
@@ -218,6 +220,7 @@ function WithdrawalTable({
   error?: string | null;
   onRetry?: () => void;
 }) {
+  const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(records.length / ITEMS_PER_PAGE);
   const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -232,11 +235,11 @@ function WithdrawalTable({
     return (
       <div className="flex flex-col items-center justify-center py-[60px] gap-[12px]">
         <p className="body-text2-400 text-destructive">
-          Failed to load withdrawal records
+          {t("income.failedToLoadWithdrawalRecords")}
         </p>
         {onRetry && (
           <Button variant="soft" size="sm" onClick={onRetry}>
-            Retry
+            {t("common.retry")}
           </Button>
         )}
       </div>
@@ -249,7 +252,7 @@ function WithdrawalTable({
         <LoadingAnimation isVisible={loading} />
         <div className="flex items-center justify-center py-[60px]">
           <p className="body-text2-400 text-[#959595]">
-            No withdrawal records found
+            {t("income.noWithdrawalRecordsFound")}
           </p>
         </div>
       </>
@@ -262,11 +265,11 @@ function WithdrawalTable({
       <div>
       {/* Header */}
       <div className="grid grid-cols-4 py-[14px] border-b border-[#F0F0F0]">
-        <p className="body-text2-500 text-[#959595]">Date</p>
-        <p className="body-text2-500 text-[#959595]">Amount (LUCA)</p>
-        <p className="body-text2-500 text-[#959595]">Coin Type</p>
+        <p className="body-text2-500 text-[#959595]">{t("common.date")}</p>
+        <p className="body-text2-500 text-[#959595]">{t("income.amountLuca")}</p>
+        <p className="body-text2-500 text-[#959595]">{t("income.coinType")}</p>
         <p className="body-text2-500 text-[#959595] text-right">
-          Transaction Hash
+          {t("income.transactionHash")}
         </p>
       </div>
 
@@ -348,6 +351,7 @@ function WithdrawalTable({
    ============================================================================ */
 
 const Income = () => {
+  const { t } = useTranslation();
   const {
     address,
     isConnected,
@@ -397,7 +401,7 @@ const Income = () => {
   const copyAddress = () => {
     if (address) {
       navigator.clipboard.writeText(address);
-      setToast({ message: "Address copied to clipboard", type: "success" });
+      setToast({ message: t("income.addressCopied"), type: "success" });
     }
   };
 
@@ -435,11 +439,11 @@ const Income = () => {
   const handleWithdraw = () => {
     const amount = parseFloat(withdrawAmount);
     if (isNaN(amount) || amount <= 0) {
-      setToast({ message: "Please enter a valid amount", type: "error" });
+      setToast({ message: t("income.pleaseEnterValidAmount"), type: "error" });
       return;
     }
     if (withdrawalBalance !== null && amount > withdrawalBalance) {
-      setToast({ message: "Insufficient balance", type: "error" });
+      setToast({ message: t("income.insufficientBalance"), type: "error" });
       return;
     }
     setShowConfirmModal(true);
@@ -453,7 +457,7 @@ const Income = () => {
 
     if (result.success) {
       setToast({
-        message: `Withdrawal successful! TX: ${result.transactionHash?.slice(0, 10)}...`,
+        message: t("income.withdrawalSuccessful", { tx: result.transactionHash?.slice(0, 10) }),
         type: "success",
       });
       setWithdrawAmount("");
@@ -461,7 +465,7 @@ const Income = () => {
       invalidateIncome();
     } else {
       setToast({
-        message: result.error || "Withdrawal failed",
+        message: result.error || t("income.withdrawalFailed"),
         type: "error",
       });
     }
@@ -486,11 +490,11 @@ const Income = () => {
       {/* Confirmation modal */}
       <ConfirmationModal
         isOpen={showConfirmModal}
-        title="Confirm Withdrawal"
-        description={`You are about to withdraw ${withdrawAmount} LUCA to your wallet.`}
-        message="Gas fees will be deducted from the withdrawal amount. This action cannot be undone."
-        confirmText="Confirm"
-        cancelText="Cancel"
+        title={t("income.confirmWithdrawal")}
+        description={t("income.withdrawConfirmDescription", { amount: withdrawAmount })}
+        message={t("income.withdrawConfirmMessage")}
+        confirmText={t("common.confirm")}
+        cancelText={t("common.cancel")}
         confirmVariant="default"
         onConfirm={confirmWithdrawal}
         onCancel={() => setShowConfirmModal(false)}
@@ -501,7 +505,7 @@ const Income = () => {
         {/* Available Income Card */}
         <div className="lg:col-span-3 bg-primary rounded-[15px] p-[24px] text-white">
           <p className="body-text2-400 text-white/80 mb-[8px]">
-            Available income
+            {t("income.availableIncome")}
           </p>
 
           {isLoadingBalance ? (
@@ -509,13 +513,13 @@ const Income = () => {
           ) : balanceError ? (
             <div className="mb-[16px]">
               <p className="body-text2-400 text-red-200 mb-[8px]">
-                Error loading balance
+                {t("income.errorLoadingBalance")}
               </p>
               <button
                 onClick={refreshBalance}
                 className="body-text2-400 text-white underline cursor-pointer"
               >
-                Retry
+                {t("common.retry")}
               </button>
             </div>
           ) : (
@@ -528,24 +532,19 @@ const Income = () => {
           )}
 
           <p className="body-label-400 text-white/80 leading-relaxed">
-            The total available revenue can be withdrawn directly to your
-            Ethereum wallet, and the corresponding gas fee will be deducted from
-            the withdrawal revenue. Every time you withdraw, all proceeds will
-            be withdrawn to the wallet address, and you must wait for the
-            withdrawn funds to arrive in your account before a new withdrawal
-            operation can be performed.
+            {t("income.availableIncomeDescription")}
           </p>
         </div>
 
         {/* Withdraw Card */}
         <div className="lg:col-span-2 bg-white rounded-[15px] p-[24px]">
           <h3 className="body-text1-500 text-foreground mb-[12px]">
-            Withdraw
+            {t("income.withdraw")}
           </h3>
 
           <div className="flex items-center gap-[6px] mb-[12px]">
             <p className="body-text2-400 text-[#959595]">
-              Binance Smart Chain is the only way to withdraw income.
+              {t("income.bscOnlyWithdraw")}
             </p>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -555,8 +554,7 @@ const Income = () => {
               </TooltipTrigger>
               <TooltipContent>
                 <p>
-                  Withdrawals are processed on BSC. Gas fees are deducted
-                  automatically.
+                  {t("income.bscTooltip")}
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -599,7 +597,7 @@ const Income = () => {
               parseFloat(withdrawAmount) <= 0
             }
           >
-            {isWithdrawing ? "Withdrawing..." : "Withdraw"}
+            {isWithdrawing ? t("income.withdrawing") : t("income.withdraw")}
           </Button>
 
           {/* Error / Success */}
@@ -628,7 +626,7 @@ const Income = () => {
                 : "text-[#959595] hover:text-foreground"
             }`}
           >
-            Income records
+            {t("income.incomeRecords")}
             {activeTab === "income" && (
               <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary rounded-full" />
             )}
@@ -641,7 +639,7 @@ const Income = () => {
                 : "text-[#959595] hover:text-foreground"
             }`}
           >
-            Withdrawal records
+            {t("income.withdrawalRecords")}
             {activeTab === "withdrawal" && (
               <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary rounded-full" />
             )}

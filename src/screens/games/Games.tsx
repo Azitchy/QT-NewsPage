@@ -1,10 +1,12 @@
 import { useEffect, useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Search } from "lucide-react";
 import { useGetAllGames } from "@/hooks/useWebAppService";
 import { Dropdown } from "@/components/ui/atm/dropdown";
 import GameCard from "./components/GameCard";
 
 export default function Games() {
+  const { t } = useTranslation();
   const { data: gamesResponse, loading, execute } = useGetAllGames();
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -55,7 +57,7 @@ export default function Games() {
       {recentGames.length > 0 && (
         <div className="bg-card p-5 rounded-2xl">
           <h3 className="font-h4-400 text-foreground mb-[16px]">
-            Recent games
+            {t("games.recentGames")}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-[16px]">
             {recentGames.map((game) => (
@@ -68,7 +70,7 @@ export default function Games() {
       {/* All Games */}
       <div className="bg-card p-5 rounded-2xl">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-[16px]">
-          <h3 className="font-h4-400 text-foreground">All games</h3>
+          <h3 className="font-h4-400 text-foreground">{t("games.allGames")}</h3>
           <div className="flex items-center gap-[12px]">
             {/* Search input */}
             <div className="relative">
@@ -76,7 +78,7 @@ export default function Games() {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search..."
+                placeholder={t("games.searchPlaceholder")}
                 className="pl-[10px] pr-[16px] py-[10px] rounded-[10px] border border-[#EBEBEB] body-text2-400 text-foreground focus:outline-none focus:border-primary w-[200px]"
               />
               <Search className="absolute right-[12px] top-1/2 -translate-y-1/2 w-[16px] h-[16px] text-primary" />
@@ -86,7 +88,7 @@ export default function Games() {
               options={categoryOptions}
               value={selectedCategory}
               onChange={setSelectedCategory}
-              placeholder="Category"
+              placeholder={t("games.category")}
             />
           </div>
         </div>
@@ -99,8 +101,8 @@ export default function Games() {
           <div className="py-[60px] text-center">
             <p className="body-text2-400 text-[#959595]">
               {search || selectedCategory !== "all"
-                ? "No games match your filters"
-                : "No games available"}
+                ? t("games.noGamesMatchFilters")
+                : t("games.noGamesAvailable")}
             </p>
           </div>
         ) : (

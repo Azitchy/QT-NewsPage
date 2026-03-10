@@ -1,4 +1,5 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useUnified } from "@/context/Context";
 import DashboardIcon from "@/assets/icons/dashboard-btn-icon.svg?react";
 import ConnectionIcon from "@/assets/icons/connections-btn-icon.svg?react";
@@ -31,53 +32,54 @@ export default function Sidebar({ className = "" }: SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const { logout } = useUnified();
+  const { t } = useTranslation();
 
   const navItems: NavItem[] = [
     {
       id: "dashboard",
       Icon: DashboardIcon,
-      label: "Dashboard",
+      label: t("sidebar.dashboard"),
       to: "/dashboard",
       pages: [
-        { label: "Portfolio", to: "/dashboard/portfolio" },
-        { label: "Income", to: "/dashboard/income" },
+        { label: t("sidebar.portfolio"), to: "/dashboard/portfolio" },
+        { label: t("sidebar.income"), to: "/dashboard/income" },
       ],
     },
     {
       id: "connections",
       Icon: ConnectionIcon,
-      label: "Connections",
+      label: t("sidebar.connections"),
       to: "/connections",
       pages: [
-        { label: "Token connection", to: "/connections/token-connection" },
-        { label: "NFT connection", to: "/connections/nft-connection" },
-        { label: "PR node", to: "/connections/pr-node" },
+        { label: t("sidebar.tokenConnection"), to: "/connections/token-connection" },
+        { label: t("sidebar.nftConnection"), to: "/connections/nft-connection" },
+        { label: t("sidebar.prNode"), to: "/connections/pr-node" },
       ],
     },
     {
       id: "proposals",
       Icon: ProposalIcon,
-      label: "Proposals",
+      label: t("sidebar.proposals"),
       to: "/proposals",
       pages: [
         {
-          label: "Proposal participate",
+          label: t("sidebar.proposalParticipate"),
           to: "/proposals/proposal-participate",
         },
-        { label: "Proposal initiated", to: "/proposals/proposal-initiated" },
-        { label: "Recovery Plan", to: "/proposals/recovery-plan" },
-        { label: "AGF Contribution", to: "/proposals/agf-contribution" },
-        { label: "Your Contribution", to: "/proposals/your-contribution" },
+        { label: t("sidebar.proposalInitiated"), to: "/proposals/proposal-initiated" },
+        { label: t("sidebar.recoveryPlan"), to: "/proposals/recovery-plan" },
+        { label: t("sidebar.agfContribution"), to: "/proposals/agf-contribution" },
+        { label: t("sidebar.yourContribution"), to: "/proposals/your-contribution" },
       ],
     },
     {
       id: "trading",
       Icon: TradingIcon,
-      label: "Trading tools",
+      label: t("sidebar.trading"),
       to: "/trading",
       pages: [
         {
-          label: "ATM cross-chain transfer",
+          label: t("sidebar.atmCrossChainTransfer"),
           to: "/trading/atm-cross-chain-transfer",
         },
       ],
@@ -85,13 +87,13 @@ export default function Sidebar({ className = "" }: SidebarProps) {
     {
       id: "chat",
       Icon: ChatIcon,
-      label: "Chat",
+      label: t("sidebar.chat"),
       to: "/chat",
     },
     {
       id: "avatar",
       Icon: AvatarIcon,
-      label: "Avatar",
+      label: t("sidebar.avatar"),
       to: "/avatar",
       pages: [
         { label: "Lucy", to: "/avatar/lucy" },
@@ -101,19 +103,19 @@ export default function Sidebar({ className = "" }: SidebarProps) {
     {
       id: "games",
       Icon: GamesIcon,
-      label: "Games",
+      label: t("sidebar.games"),
       to: "/games",
       pages: [
-        { label: "Dashboard", to: "/games/dashboard" },
-        { label: "Games", to: "/games/games" },
-        { label: "Contributions", to: "/games/contributions" },
-        { label: "Propose game", to: "/games/propose-game" },
+        { label: t("sidebar.dashboard"), to: "/games/dashboard" },
+        { label: t("sidebar.games"), to: "/games/games" },
+        { label: t("sidebar.contributions"), to: "/games/contributions" },
+        { label: t("sidebar.proposeGame"), to: "/games/propose-game" },
       ],
     },
     {
       id: "settings",
       Icon: SettingsIcon,
-      label: "Settings",
+      label: t("sidebar.settings"),
       to: "/settings",
     },
   ];
@@ -231,14 +233,14 @@ export default function Sidebar({ className = "" }: SidebarProps) {
           <TooltipTrigger asChild>
             <button
               className="group relative w-[24px] h-[24px] transition-all hover:cursor-pointer"
-              aria-label="Create connection"
+              aria-label={t("sidebar.createConnection")}
               onClick={() => navigate("/create-connection")}
             >
               <CreateConnectionIcon className="w-[24px] h-auto text-primary transition-all duration-300" />
             </button>
           </TooltipTrigger>
           <TooltipContent side="right" sideOffset={20}>
-            Create connection
+            {t("sidebar.createConnection")}
           </TooltipContent>
         </Tooltip>
 
@@ -260,13 +262,13 @@ export default function Sidebar({ className = "" }: SidebarProps) {
             <TooltipTrigger asChild>
               <button
                 className="group relative w-[24px] h-[24px] transition-all cursor-pointer"
-                aria-label="Notifications"
+                aria-label={t("sidebar.notifications")}
               >
                 <BellIcon className="w-[24px] h-auto text-primary group-hover:[&>path]:fill-[url(#icon-gradient)] group-hover:drop-shadow-[0_0_10px_rgba(93,210,122,0.4)] transition-all duration-300" />
               </button>
             </TooltipTrigger>
             <TooltipContent side="right" sideOffset={20}>
-              Notifications
+              {t("sidebar.notifications")}
             </TooltipContent>
           </Tooltip>
 
@@ -274,14 +276,14 @@ export default function Sidebar({ className = "" }: SidebarProps) {
             <TooltipTrigger asChild>
               <button
                 className="group relative w-[24px] h-[24px] transition-all cursor-pointer"
-                aria-label="Log out"
+                aria-label={t("sidebar.logOut")}
                 onClick={logout}
               >
                 <LeaveIcon className="w-[24px] h-auto text-primary group-hover:[&>path]:fill-[url(#icon-gradient)] group-hover:drop-shadow-[0_0_10px_rgba(93,210,122,0.4)] transition-all duration-300" />
               </button>
             </TooltipTrigger>
             <TooltipContent side="right" sideOffset={20}>
-              Log out
+              {t("sidebar.logOut")}
             </TooltipContent>
           </Tooltip>
         </div>
@@ -394,6 +396,7 @@ export function MobileTopBar() {
 export function MobileBottomBar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   type MobileNavItem =
     | { id: "quickaction"; label: string }
     | {
@@ -407,23 +410,23 @@ export function MobileBottomBar() {
     {
       id: "dashboard",
       Icon: DashboardIcon,
-      label: "Dashboard",
+      label: t("sidebar.dashboard"),
       to: "/dashboard",
     },
     {
       id: "connections",
       Icon: ConnectionIcon,
-      label: "Connection",
+      label: t("sidebar.connection"),
       to: "/connections",
     },
-    { id: "quickaction", label: "Quick Action" },
+    { id: "quickaction", label: t("sidebar.quickAction") },
     {
       id: "proposals",
       Icon: ProposalIcon,
-      label: "Proposals",
+      label: t("sidebar.proposals"),
       to: "/proposals",
     },
-    { id: "explore", Icon: ExploreIcon, label: "Explore", to: "/dashboard" },
+    { id: "explore", Icon: ExploreIcon, label: t("sidebar.explore"), to: "/dashboard" },
   ];
 
   return (
@@ -494,10 +497,10 @@ export function MobileBottomBar() {
                           {/* Text */}
                           <div className="flex flex-col">
                             <span className="body-text1-400 text-foreground">
-                              Connect
+                              {t("sidebar.connect")}
                             </span>
                             <span className="body-label-400 text-[#878787]">
-                              Create connection with others
+                              {t("sidebar.createConnectionWith")}
                             </span>
                           </div>
                         </Link>
@@ -522,10 +525,10 @@ export function MobileBottomBar() {
                           {/* Text */}
                           <div className="flex flex-col">
                             <span className="body-text1-400 text-foreground">
-                              Cross-chain transfer
+                              {t("sidebar.crossChainTransfer")}
                             </span>
                             <span className="body-label-400 text-[#878787]">
-                              You can transfer assets across chains
+                              {t("sidebar.crossChainTransferDesc")}
                             </span>
                           </div>
                         </Link>
