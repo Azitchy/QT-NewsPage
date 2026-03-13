@@ -7,6 +7,7 @@ import {
 } from "@/hooks/useAvatar";
 import { useEffect } from "react";
 import AlexDashboard from "./components/AlexDashboard";
+import AlexProfile from "./components/AlexProfile";
 
 export default function Alex() {
   // ── API hooks ──────────────────────────────────────────────────────────────
@@ -23,14 +24,22 @@ export default function Alex() {
   }, []);
 
   return (
-    <div className=" flex-col lg:flex lg:flex-row  gap-[20px] h-full">
-      {/* ── Sidebar ──────────────────────────────────────── */}
-      <AlexSidebar profile={profile.data} />
+    <div className="flex-col lg:flex lg:flex-row  gap-[20px] h-full">
+      {/* Sidebar (Fixed) */}
+      <div className=" flex-shrink-0">
+        <div className=" h-full">
+          <AlexSidebar profile={profile.data} />
+        </div>
+      </div>
 
-      <Routes>
-        <Route index element={<Navigate to="dashboard" replace />} />
-        <Route path="dashboard" element={<AlexDashboard />} />
-      </Routes>
+      {/* Content (Scrollable) */}
+      <div className="flex-1 overflow-y-auto">
+        <Routes>
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<AlexDashboard />} />
+          <Route path="profile" element={<AlexProfile />} />
+        </Routes>
+      </div>
     </div>
   );
 }

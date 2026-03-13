@@ -45,14 +45,15 @@ export default function AlexSidebar({ profile }: AlexSidebarProps) {
         <div className="px-[20px] pt-[20px]">
           <button
             onClick={() => navigate("/avatar")}
-            className="cursor-pointer hover:opacity-70"
+            className="cursor-pointer hover:opacity-70 flex items-center gap-2"
           >
             <ArrowLeft size={20} className="text-[#1C1C1C]" />
+            <div className="flex lg:hidden">Go back</div>
           </button>
         </div>
 
         {/* Avatar Image */}
-        <div className="flex flex-col items-center gap-[10px] pt-[16px] px-[20px]">
+        <div className="hidden lg:flex flex-col items-center gap-[10px] pt-[16px] px-[20px]">
           <div className="w-[80px] h-[80px] rounded-full bg-gradient-to-b from-[#8E1BF4] to-[#100CD8] flex items-center justify-center">
             {profile?.image ? (
               <img
@@ -69,17 +70,17 @@ export default function AlexSidebar({ profile }: AlexSidebarProps) {
         </div>
 
         {/* Navigation */}
-        <div className="flex flex-col gap-[4px] px-[12px] pt-[20px]">
+        <div className="flex lg:flex-col flex-row gap-[4px] px-[12px] pt-[20px] overflow-x-auto lg:overflow-visible">
           {navItems.map((item) => {
             const isActive = activeTab === item.key;
 
             return (
               <div
                 key={item.key}
-                className={`rounded-[40px] ${
+                className={`rounded-[40px] shrink-0 ${
                   isActive
-                    ? "p-[1px] bg-gradient-to-b from-[#8E1BF4] to-[#100CD8]"
-                    : ""
+                    ? "p-[1px] lg:bg-gradient-to-b from-[#8E1BF4] to-[#100CD8]"
+                    : "text-[#B5B5B5] lg:text-foreground"
                 }`}
               >
                 <button
@@ -87,7 +88,9 @@ export default function AlexSidebar({ profile }: AlexSidebarProps) {
                     navigate(item.path);
                   }}
                   className={`flex items-center gap-[10px] px-[12px] py-[10px] rounded-[40px] w-full cursor-pointer ${
-                    isActive ? "bg-white font-semibold" : "hover:bg-[#F6F6F6]"
+                    isActive
+                      ? "lg:bg-white font-semibold"
+                      : "hover:bg-[#F6F6F6]"
                   }`}
                 >
                   {item.label}

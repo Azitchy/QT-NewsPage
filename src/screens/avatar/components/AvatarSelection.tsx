@@ -49,7 +49,7 @@ export default function AvatarSelection() {
                     <img
                       src={page.profile.data.image}
                       alt={page.profile.data.name}
-                      className="w-[30px] h-[30px] rounded-full object-cover"
+                      className="w-[30px] h-[30px]  rounded-full object-cover"
                     />
                   ) : (
                     <span className="text-white text-[28px] font-semibold">
@@ -60,7 +60,7 @@ export default function AvatarSelection() {
                 </div>
               </div>
 
-              <button className="flex items-center justify-center text-[20px] gap-[10px] px-[12px] py-[10px] rounded-[40px] w-full cursor-pointer transition">
+              <button className=" flex items-center text-[20px] gap-[10px] px-[12px] py-[10px] rounded-[40px] w-full cursor-pointer transition">
                 {page.label}
               </button>
             </div>

@@ -59,14 +59,15 @@ export default function AvatarSidebar({
         <div className="px-[20px] pt-[20px]">
           <button
             onClick={() => navigate("/avatar")}
-            className="cursor-pointer hover:opacity-70"
+            className="cursor-pointer hover:opacity-70 flex items-center gap-2"
           >
             <ArrowLeft size={20} className="text-[#1C1C1C]" />
+            <div className="flex lg:hidden">Go back</div>
           </button>
         </div>
 
         {/* ── Avatar image + name ────────────────────────── */}
-        <div className="flex flex-col items-center gap-[10px] pt-[16px] px-[20px]">
+        <div className="hidden lg:flex flex-col items-center gap-[10px] pt-[16px] px-[20px]">
           <div className="w-[80px] h-[80px] rounded-full bg-gradient-to-b from-[#8E1BF4] to-[#100CD8] flex items-center justify-center">
             {profile?.image ? (
               <img
@@ -83,16 +84,16 @@ export default function AvatarSidebar({
         </div>
 
         {/* ── Nav items (Dashboard / Chat) ───────────────── */}
-        <div className="flex flex-col gap-[4px] px-[12px] pt-[20px] ">
+        <div className="flex lg:flex-col flex-row gap-[4px] px-[12px] pt-[20px] ">
           <div
-            className={`rounded-[40px] ${activeTab === "dashboard" ? "p-[1px] bg-gradient-to-b from-[#8E1BF4] to-[#100CD8]" : ""}`}
+            className={`rounded-[40px] ${activeTab === "dashboard" ? "p-[1px] lg:bg-gradient-to-b from-[#8E1BF4] to-[#100CD8]" : ""}`}
           >
             <button
               onClick={() => navigate(`${basePath}/dashboard`)}
               className={`flex items-center gap-[10px] px-[12px] py-[10px] rounded-[40px] w-full cursor-pointer ${
                 activeTab === "dashboard"
-                  ? "bg-white font-semibold"
-                  : "hover:bg-[#F6F6F6]"
+                  ? "lg:bg-white font-semibold"
+                  : "hover:bg-[#F6F6F6] text-[#B5B5B5] lg:text-foreground"
               }`}
             >
               Dashboard
@@ -100,7 +101,7 @@ export default function AvatarSidebar({
           </div>
 
           <div
-            className={`rounded-[40px] ${activeTab === "chat" ? "p-[1px] bg-gradient-to-b from-[#8E1BF4] to-[#100CD8]" : ""}`}
+            className={`rounded-[40px] ${activeTab === "chat" ? "p-[1px] lg:bg-gradient-to-b from-[#8E1BF4] to-[#100CD8]" : ""}`}
           >
             <button
               onClick={() => {
@@ -109,8 +110,8 @@ export default function AvatarSidebar({
               }}
               className={`flex items-center gap-[10px] px-[12px] py-[10px] rounded-[40px] w-full cursor-pointer ${
                 activeTab === "chat"
-                  ? "bg-white font-semibold"
-                  : "hover:bg-[#F6F6F6]"
+                  ? "lg:bg-white font-semibold"
+                  : "hover:bg-[#F6F6F6] text-[#B5B5B5] lg:text-foreground"
               }`}
             >
               Chat
