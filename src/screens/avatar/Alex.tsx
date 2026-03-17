@@ -8,6 +8,7 @@ import {
 import { useEffect } from "react";
 import AlexDashboard from "./components/AlexDashboard";
 import AlexProfile from "./components/AlexProfile";
+import AvatarTrain from "./components/AvatarTrain";
 
 export default function Alex() {
   // ── API hooks ──────────────────────────────────────────────────────────────
@@ -38,6 +39,7 @@ export default function Alex() {
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<AlexDashboard />} />
           <Route path="profile" element={<AlexProfile />} />
+          <Route path="train" element={<AvatarTrain />} />
         </Routes>
       </div>
     </div>
