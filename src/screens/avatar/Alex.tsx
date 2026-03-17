@@ -39,7 +39,7 @@ export default function Alex() {
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<AlexDashboard />} />
           <Route path="profile" element={<AlexProfile />} />
-          <Route path="train" element={<AvatarTrain />} />
+           <Route path="train" element={<AvatarTrain />} />
         </Routes>
       </div>
     </div>
