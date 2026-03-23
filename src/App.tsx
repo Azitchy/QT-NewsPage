@@ -35,6 +35,8 @@ import SettingsIndex from "@/screens/settings/Index";
 import CreateConnection from "@/screens/create-connection/Index";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import AvatarSelection from "./screens/avatar/components/AvatarSelection";
+import Explore from "@/screens/explore/Explore";
+import Travel from "@/screens/travel/Travel";
 
 function App() {
   return (
@@ -48,6 +50,9 @@ function App() {
 
           {/* Create Connection */}
           <Route path="/create-connection" element={<CreateConnection />} />
+
+          {/* Explore */}
+          <Route path="/explore" element={<Explore />} />
 
           {/* Dashboard — wrapped with DashboardLayout for cross-tab data caching */}
           <Route path="/dashboard" element={<DashboardLayout />}>
@@ -114,6 +119,9 @@ function App() {
 
           {/* Settings */}
           <Route path="/settings" element={<SettingsIndex />} />
+
+          {/* Travel */}
+          <Route path="/travel" element={<Travel />} />
         </Route>
 
         {/* Chat — uses its own layout (no Page wrapper, full‑height) */}

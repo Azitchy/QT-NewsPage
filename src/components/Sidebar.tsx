@@ -13,17 +13,8 @@ import CreateConnectionIcon from "@/assets/icons/create-connection-btn-icon.svg?
 import BellIcon from "@/assets/icons/notification-btn-icon.svg?react";
 import LeaveIcon from "@/assets/icons/leave-btn-icon.svg?react";
 import ExploreIcon from "@/assets/icons/explore-btn-icon.svg?react";
-import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from "@/components/ui/atm/tooltip";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerTrigger,
-} from "./ui/atm/drawer";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/atm/tooltip";
+import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "./ui/atm/drawer";
 
 interface SidebarProps {
   className?: string;
@@ -60,14 +51,8 @@ export default function Sidebar({ className = "" }: SidebarProps) {
       label: t("sidebar.connections"),
       to: "/connections",
       pages: [
-        {
-          label: t("sidebar.tokenConnection"),
-          to: "/connections/token-connection",
-        },
-        {
-          label: t("sidebar.nftConnection"),
-          to: "/connections/nft-connection",
-        },
+        { label: t("sidebar.tokenConnection"), to: "/connections/token-connection" },
+        { label: t("sidebar.nftConnection"), to: "/connections/nft-connection" },
         { label: t("sidebar.prNode"), to: "/connections/pr-node" },
       ],
     },
@@ -81,19 +66,10 @@ export default function Sidebar({ className = "" }: SidebarProps) {
           label: t("sidebar.proposalParticipate"),
           to: "/proposals/proposal-participate",
         },
-        {
-          label: t("sidebar.proposalInitiated"),
-          to: "/proposals/proposal-initiated",
-        },
+        { label: t("sidebar.proposalInitiated"), to: "/proposals/proposal-initiated" },
         { label: t("sidebar.recoveryPlan"), to: "/proposals/recovery-plan" },
-        {
-          label: t("sidebar.agfContribution"),
-          to: "/proposals/agf-contribution",
-        },
-        {
-          label: t("sidebar.yourContribution"),
-          to: "/proposals/your-contribution",
-        },
+        { label: t("sidebar.agfContribution"), to: "/proposals/agf-contribution" },
+        { label: t("sidebar.yourContribution"), to: "/proposals/your-contribution" },
       ],
     },
     {
@@ -452,12 +428,7 @@ export function MobileBottomBar() {
       label: t("sidebar.proposals"),
       to: "/proposals",
     },
-    {
-      id: "explore",
-      Icon: ExploreIcon,
-      label: t("sidebar.explore"),
-      to: "/dashboard",
-    },
+    { id: "explore", Icon: ExploreIcon, label: t("sidebar.explore"), to: "/explore" },
   ];
 
   return (
@@ -495,75 +466,76 @@ export function MobileBottomBar() {
             return (
               <Drawer>
                 <DrawerTrigger asChild>
-                  <button
+                  <button 
                     key={item.id}
                     className="w-[56px] flex flex-col items-center group"
                   >
-                    <img
-                      src="src/assets/icons/quickaction-btn-icon.png"
-                      className="w-[32px] h-auto group-hover:drop-shadow-[0_0_10px_rgba(93,210,122,0.5)] group-hover:brightness-110 transition-all duration-300"
+                    <img 
+                      src="src/assets/icons/quickaction-btn-icon.png" 
+                      className="w-[32px] h-auto group-hover:drop-shadow-[0_0_10px_rgba(93,210,122,0.5)] group-hover:brightness-110 transition-all duration-300" 
                       alt={item.label}
                     />
                   </button>
                 </DrawerTrigger>
                 <DrawerContent className="px-[16px] pb-[18px]">
-                  <div className="flex flex-col gap-[20px]">
-                    {/* Create Connection Button*/}
-                    <DrawerClose asChild>
-                      <Link
-                        to="/create-connection"
-                        className="flex items-center gap-[10px] hover:bg-[#F8F8F8] transition-all"
-                      >
-                        {/* Icon */}
-                        <div className="p-[10px] rounded-full bg-[#F3FBE6] flex items-center justify-center">
-                          <CreateConnectionIcon
-                            className="
+                    <div className="flex flex-col gap-[20px]">
+
+                      {/* Create Connection Button*/}
+                      <DrawerClose asChild>
+                        <Link
+                          to="/create-connection"
+                          className="flex items-center gap-[10px] hover:bg-[#F8F8F8] transition-all"
+                        >
+                          {/* Icon */}
+                          <div className="p-[10px] rounded-full bg-[#F3FBE6] flex items-center justify-center">
+                            <CreateConnectionIcon
+                              className="
                                 w-[24px] h-[24px]
                                 [&_*]:fill-[url(#icon-gradient-bottom)]
                               "
-                          />
-                        </div>
+                            />
+                          </div>
 
-                        {/* Text */}
-                        <div className="flex flex-col">
-                          <span className="body-text1-400 text-foreground">
-                            {t("sidebar.connect")}
-                          </span>
-                          <span className="body-label-400 text-[#878787]">
-                            {t("sidebar.createConnectionWith")}
-                          </span>
-                        </div>
-                      </Link>
-                    </DrawerClose>
+                          {/* Text */}
+                          <div className="flex flex-col">
+                            <span className="body-text1-400 text-foreground">
+                              {t("sidebar.connect")}
+                            </span>
+                            <span className="body-label-400 text-[#878787]">
+                              {t("sidebar.createConnectionWith")}
+                            </span>
+                          </div>
+                        </Link>
+                      </DrawerClose>
 
-                    {/* Cross-chain transfer Button */}
-                    <DrawerClose asChild>
-                      <Link
-                        to="/trading/atm-cross-chain-transfer"
-                        className="flex items-center gap-[10px] hover:bg-[#F8F8F8] transition-all"
-                      >
-                        {/* Icon */}
-                        <div className="p-[10px] rounded-full bg-[#F3FBE6] flex items-center justify-center">
-                          <TradingIcon
-                            className="
+                      {/* Cross-chain transfer Button */}
+                      <DrawerClose asChild>
+                        <Link
+                          to="/trading/atm-cross-chain-transfer"
+                          className="flex items-center gap-[10px] hover:bg-[#F8F8F8] transition-all"
+                        >
+                          {/* Icon */}
+                          <div className="p-[10px] rounded-full bg-[#F3FBE6] flex items-center justify-center">
+                            <TradingIcon
+                              className="
                                 w-[24px] h-[24px]
                                 [&_*]:fill-[url(#icon-gradient-bottom)]
                               "
-                          />
-                        </div>
+                            />
+                          </div>
 
-                        {/* Text */}
-                        <div className="flex flex-col">
-                          <span className="body-text1-400 text-foreground">
-                            {t("sidebar.crossChainTransfer")}
-                          </span>
-                          <span className="body-label-400 text-[#878787]">
-                            {t("sidebar.crossChainTransferDesc")}
-                          </span>
-                        </div>
-                      </Link>
-                    </DrawerClose>
-                  </div>
+                          {/* Text */}
+                          <div className="flex flex-col">
+                            <span className="body-text1-400 text-foreground">
+                              {t("sidebar.crossChainTransfer")}
+                            </span>
+                            <span className="body-label-400 text-[#878787]">
+                              {t("sidebar.crossChainTransferDesc")}
+                            </span>
+                          </div>
+                        </Link>
+                      </DrawerClose>
+                    </div>
                 </DrawerContent>
               </Drawer>
             );

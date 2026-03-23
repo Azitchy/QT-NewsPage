@@ -110,7 +110,7 @@
     "withdraw": "Withdraw",
     "withdrawing": "Withdrawing...",
     "bscOnlyWithdraw": "Binance Smart Chain is the only way to withdraw income.",
-    "bscTooltip": "Withdrawals are processed on BSC. Gas fees are deducted automatically.",
+    "bscTooltip": "The withdrawn LUCA income can be transferred to other chains through cross-chain transfer in the trading tool, or it can be exchanged through Swap.",
     "incomeRecords": "Income records",
     "withdrawalRecords": "Withdrawal records",
     "prValueIncome": "PR value income",
@@ -129,8 +129,8 @@
     "withdrawConfirmMessage": "Gas fees will be deducted from the withdrawal amount. This action cannot be undone.",
     "pleaseEnterValidAmount": "Please enter a valid amount",
     "insufficientBalance": "Insufficient balance",
-    "withdrawalSuccessful": "Withdrawal successful! TX: {{tx}}...",
-    "withdrawalFailed": "Withdrawal failed",
+    "withdrawalSuccessful": "LUCA withdrawn successfully",
+    "withdrawalFailed": "Failed to withdraw LUCA. Please try again",
     "addressCopied": "Address copied to clipboard"
   },
   "tokenConnection": {

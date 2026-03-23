@@ -3,7 +3,8 @@ import { useTranslation } from "react-i18next";
 import { useUnified } from "@/context/Context";
 import { useDashboardCache } from "@/context/DashboardCacheContext";
 import type { IncomeRecord, WithdrawalRecord } from "@/hooks/useWebAppService";
-import { Copy, ChevronLeft, ChevronRight, Info } from "lucide-react";
+import { Copy, Info } from "lucide-react";
+import Pagination from "@/components/ui/atm/pagination";
 import { Button } from "@/components/ui/atm/button";
 import { Toast } from "@/components/ui/atm/toastMessage";
 import { LoadingAnimation } from "@/components/ui/atm/loadingAnimation";
@@ -13,6 +14,7 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/atm/tooltip";
+import WalletIcon from "@/assets/icons/wallet-icon.svg?react";
 
 /* ============================================================================
    CONSTANTS
@@ -61,13 +63,10 @@ function IncomeTable({
   const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(records.length / ITEMS_PER_PAGE);
-  const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
+  const clampedPage = Math.min(currentPage, Math.max(1, totalPages));
+  const startIdx = (clampedPage - 1) * ITEMS_PER_PAGE;
   const endIdx = startIdx + ITEMS_PER_PAGE;
   const pageRecords = records.slice(startIdx, endIdx);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [records.length]);
 
   if (error) {
     return (
@@ -89,7 +88,7 @@ function IncomeTable({
       <>
         <LoadingAnimation isVisible={loading} />
         <div className="flex items-center justify-center py-[60px]">
-          <p className="body-text2-400 text-[#959595]">
+          <p className="body-text2-400 text-[#878787]">
             {t("income.noIncomeRecordsFound")}
           </p>
         </div>
@@ -100,107 +99,68 @@ function IncomeTable({
   return (
     <>
       <LoadingAnimation isVisible={loading} />
-      <div>
-      {/* Header */}
-      <div className="grid grid-cols-5 py-[14px] border-b border-[#F0F0F0]">
-        <p className="body-text2-500 text-[#959595]">{t("common.date")}</p>
-        <p className="body-text2-500 text-[#959595]">
-          {t("income.prValueIncome")}
-          <br />
-          <span className="body-label-400">(LUCA)</span>
-        </p>
-        <p className="body-text2-500 text-[#959595]">
-          {t("income.serverOperationIncome")}
-          <br />
-          <span className="body-label-400">(LUCA)</span>
-        </p>
-        <p className="body-text2-500 text-[#959595]">
-          {t("income.serverStakeIncome")}
-          <br />
-          <span className="body-label-400">(LUCA)</span>
-        </p>
-        <p className="body-text2-500 text-[#959595] text-right">
-          {t("income.total")} <span className="body-label-400">(LUCA)</span>
-        </p>
-      </div>
-
-      {/* Rows */}
-      {pageRecords.map((record, i) => {
-        const total =
-          (record.pr || 0) +
-          (record.topNodes || 0) +
-          (record.pledge || 0) +
-          (record.liquidity || 0);
-        return (
-          <div
-            key={`${record.date}-${i}`}
-            className="grid grid-cols-5 py-[14px] border-b border-[#F0F0F0] last:border-b-0"
-          >
-            <p className="body-text2-400 text-foreground">
-              {formatDate(record.date)}
-            </p>
-            <p className="body-text2-400 text-foreground">
-              {formatNumber(record.pr)}
-            </p>
-            <p className="body-text2-400 text-foreground">
-              {formatNumber(record.topNodes)}
-            </p>
-            <p className="body-text2-400 text-foreground">
-              {formatNumber(record.pledge)}
-            </p>
-            <p className="body-text2-400 text-foreground text-right">
-              {formatNumber(total)}
-            </p>
-          </div>
-        );
-      })}
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex flex-col items-center gap-[4px] pt-[20px] pb-[8px]">
-          <div className="flex items-center gap-[8px]">
-            <button
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="p-[6px] rounded-full hover:bg-[#F0F0F0] disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronLeft className="w-[18px] h-[18px] text-[#959595]" />
-            </button>
-
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-              (page) => (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  className={`w-[28px] h-[28px] rounded-full body-text2-500 cursor-pointer transition-colors ${
-                    page === currentPage
-                      ? "bg-primary text-white"
-                      : "text-[#959595] hover:bg-[#F0F0F0]"
-                  }`}
-                >
-                  {page}
-                </button>
-              )
-            )}
-
-            <button
-              onClick={() =>
-                setCurrentPage((p) => Math.min(totalPages, p + 1))
-              }
-              disabled={currentPage === totalPages}
-              className="p-[6px] rounded-full hover:bg-[#F0F0F0] disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronRight className="w-[18px] h-[18px] text-[#959595]" />
-            </button>
-          </div>
-
-          <p className="body-label-400 text-[#959595]">
-            {startIdx + 1}-{Math.min(endIdx, records.length)} of{" "}
-            {records.length}
-          </p>
+      <div className="bg-white rounded-[15px] p-[20px]">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-[#F0F0F0]">
+                <th className="px-[15px] py-[20px] text-left body-text1-400 text-foreground font-medium">
+                  {t("common.date")}
+                </th>
+                <th className="px-[15px] py-[20px] text-left body-text1-400 text-foreground font-medium">
+                  {t("income.prValueIncome")} <span className="text-[#878787] body-label-400">(LUCA)</span>
+                </th>
+                <th className="px-[15px] py-[20px] text-left body-text1-400 text-foreground font-medium">
+                  {t("income.serverOperationIncome")} <span className="text-[#878787] body-label-400">(LUCA)</span>
+                </th>
+                <th className="px-[15px] py-[20px] text-left body-text1-400 text-foreground font-medium">
+                  {t("income.serverStakeIncome")} <span className="text-[#878787] body-label-400">(LUCA)</span>
+                </th>
+                <th className="px-[15px] py-[20px] text-right body-text1-400 text-foreground font-medium">
+                  {t("income.total")} <span className="text-[#878787] body-label-400">(LUCA)</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {pageRecords.map((record, i) => {
+                const total =
+                  (record.pr || 0) +
+                  (record.topNodes || 0) +
+                  (record.pledge || 0) +
+                  (record.liquidity || 0);
+                return (
+                  <tr
+                    key={`${record.date}-${i}`}
+                  >
+                    <td className="px-[15px] py-[20px]">
+                      <span className="body-text2-400 text-foreground">{formatDate(record.date)}</span>
+                    </td>
+                    <td className="px-[15px] py-[20px]">
+                      <span className="body-text2-400 text-foreground">{formatNumber(record.pr)}</span>
+                    </td>
+                    <td className="px-[15px] py-[20px]">
+                      <span className="body-text2-400 text-foreground">{formatNumber(record.topNodes)}</span>
+                    </td>
+                    <td className="px-[15px] py-[20px]">
+                      <span className="body-text2-400 text-foreground">{formatNumber(record.pledge)}</span>
+                    </td>
+                    <td className="px-[15px] py-[20px] text-right">
+                      <span className="body-text2-400 text-foreground">{formatNumber(total)}</span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-      )}
-    </div>
+
+        <Pagination
+          currentPage={clampedPage}
+          totalItems={records.length}
+          itemsPerPage={ITEMS_PER_PAGE}
+          onPageChange={setCurrentPage}
+        />
+      </div>
     </>
   );
 }
@@ -223,13 +183,10 @@ function WithdrawalTable({
   const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(records.length / ITEMS_PER_PAGE);
-  const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
+  const clampedPage = Math.min(currentPage, Math.max(1, totalPages));
+  const startIdx = (clampedPage - 1) * ITEMS_PER_PAGE;
   const endIdx = startIdx + ITEMS_PER_PAGE;
   const pageRecords = records.slice(startIdx, endIdx);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [records.length]);
 
   if (error) {
     return (
@@ -251,7 +208,7 @@ function WithdrawalTable({
       <>
         <LoadingAnimation isVisible={loading} />
         <div className="flex items-center justify-center py-[60px]">
-          <p className="body-text2-400 text-[#959595]">
+          <p className="body-text2-400 text-[#878787]">
             {t("income.noWithdrawalRecordsFound")}
           </p>
         </div>
@@ -262,86 +219,59 @@ function WithdrawalTable({
   return (
     <>
       <LoadingAnimation isVisible={loading} />
-      <div>
-      {/* Header */}
-      <div className="grid grid-cols-4 py-[14px] border-b border-[#F0F0F0]">
-        <p className="body-text2-500 text-[#959595]">{t("common.date")}</p>
-        <p className="body-text2-500 text-[#959595]">{t("income.amountLuca")}</p>
-        <p className="body-text2-500 text-[#959595]">{t("income.coinType")}</p>
-        <p className="body-text2-500 text-[#959595] text-right">
-          {t("income.transactionHash")}
-        </p>
-      </div>
-
-      {/* Rows */}
-      {pageRecords.map((record, i) => (
-        <div
-          key={`${record.transaction_hash}-${i}`}
-          className="grid grid-cols-4 py-[14px] border-b border-[#F0F0F0] last:border-b-0"
-        >
-          <p className="body-text2-400 text-foreground">
-            {formatDate(record.get_time || record.in_time)}
-          </p>
-          <p className="body-text2-400 text-foreground">
-            {formatNumber(record.total_amount)}
-          </p>
-          <p className="body-text2-400 text-foreground">
-            {record.coin_type || "LUCA"}
-          </p>
-          <p className="body-text2-400 text-primary text-right truncate">
-            {record.transaction_hash
-              ? `${record.transaction_hash.slice(0, 10)}...${record.transaction_hash.slice(-6)}`
-              : "-"}
-          </p>
-        </div>
-      ))}
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex flex-col items-center gap-[4px] pt-[20px] pb-[8px]">
-          <div className="flex items-center gap-[8px]">
-            <button
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="p-[6px] rounded-full hover:bg-[#F0F0F0] disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronLeft className="w-[18px] h-[18px] text-[#959595]" />
-            </button>
-
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-              (page) => (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  className={`w-[28px] h-[28px] rounded-full body-text2-500 cursor-pointer transition-colors ${
-                    page === currentPage
-                      ? "bg-primary text-white"
-                      : "text-[#959595] hover:bg-[#F0F0F0]"
-                  }`}
+      <div className="bg-white rounded-[15px] p-[20px]">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-[#F0F0F0]">
+                <th className="px-[15px] py-[20px] text-left body-text1-400 text-foreground font-medium">
+                  {t("common.date")}
+                </th>
+                <th className="px-[15px] py-[20px] text-left body-text1-400 text-foreground font-medium">
+                  {t("income.amountLuca")}
+                </th>
+                <th className="px-[15px] py-[20px] text-left body-text1-400 text-foreground font-medium">
+                  {t("income.coinType")}
+                </th>
+                <th className="px-[15px] py-[20px] text-right body-text1-400 text-foreground font-medium">
+                  {t("income.transactionHash")}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {pageRecords.map((record, i) => (
+                <tr
+                  key={`${record.transaction_hash}-${i}`}
                 >
-                  {page}
-                </button>
-              )
-            )}
-
-            <button
-              onClick={() =>
-                setCurrentPage((p) => Math.min(totalPages, p + 1))
-              }
-              disabled={currentPage === totalPages}
-              className="p-[6px] rounded-full hover:bg-[#F0F0F0] disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronRight className="w-[18px] h-[18px] text-[#959595]" />
-            </button>
-          </div>
-
-          <p className="body-label-400 text-[#959595]">
-            {startIdx + 1}-{Math.min(endIdx, records.length)} of{" "}
-            {records.length}
-          </p>
+                  <td className="px-[15px] py-[20px]">
+                    <span className="body-text2-400 text-foreground">{formatDate(record.get_time || record.in_time)}</span>
+                  </td>
+                  <td className="px-[15px] py-[20px]">
+                    <span className="body-text2-400 text-foreground">{formatNumber(record.total_amount)}</span>
+                  </td>
+                  <td className="px-[15px] py-[20px]">
+                    <span className="body-text2-400 text-foreground">{record.coin_type || "LUCA"}</span>
+                  </td>
+                  <td className="px-[15px] py-[20px] text-right">
+                    <span className="body-text2-400 text-primary">
+                      {record.transaction_hash
+                        ? `${record.transaction_hash.slice(0, 10)}...${record.transaction_hash.slice(-6)}`
+                        : "-"}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      )}
-    </div>
+
+        <Pagination
+          currentPage={clampedPage}
+          totalItems={records.length}
+          itemsPerPage={ITEMS_PER_PAGE}
+          onPageChange={setCurrentPage}
+        />
+      </div>
     </>
   );
 }
@@ -457,7 +387,7 @@ const Income = () => {
 
     if (result.success) {
       setToast({
-        message: t("income.withdrawalSuccessful", { tx: result.transactionHash?.slice(0, 10) }),
+        message: t("income.withdrawalSuccessful"),
         type: "success",
       });
       setWithdrawAmount("");
@@ -474,7 +404,7 @@ const Income = () => {
   if (!isConnected || !isAuthenticated) return null;
 
   return (
-    <div className="space-y-[20px]">
+    <div className="space-y-[16px] md:space-y-[20px]">
       {/* Toast */}
       {toast && (
         <Toast
@@ -501,17 +431,30 @@ const Income = () => {
       />
 
       {/* ============ TOP ROW: Available Income + Withdraw ============ */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-[20px]">
+      <div className="flex flex-col md:flex-row rounded-[15px] overflow-hidden">
         {/* Available Income Card */}
-        <div className="lg:col-span-3 bg-primary rounded-[15px] p-[24px] text-white">
-          <p className="body-text2-400 text-white/80 mb-[8px]">
-            {t("income.availableIncome")}
-          </p>
+        <div className="w-full md:w-1/2 bg-primary p-[15px] md:p-[30px] text-white">
+          <div className="flex items-center justify-between mb-[30px] md:mb-[40px]">
+            <p className="font-h4-400 text-white">
+              {t("income.availableIncome")}
+            </p>
+            {/* Info icon — mobile only */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button className="cursor-pointer md:hidden">
+                  <Info className="w-[18px] h-[18px]" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent showArrow={true} collisionPadding={32}>
+                <p className="max-w-[330px] body-label-400">{t("income.availableIncomeDescription")}</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
 
           {isLoadingBalance ? (
-            <div className="mb-[16px] h-10" />
+            <div className="h-10" />
           ) : balanceError ? (
-            <div className="mb-[16px]">
+            <div className="">
               <p className="body-text2-400 text-red-200 mb-[8px]">
                 {t("income.errorLoadingBalance")}
               </p>
@@ -523,7 +466,7 @@ const Income = () => {
               </button>
             </div>
           ) : (
-            <h1 className="font-h2 text-white mb-[16px]">
+            <h1 className="text-[28px] md:text-[40px] font-medium text-white mb-0 md:mb-[40px]">
               {withdrawalBalance !== null
                 ? formatNumber(withdrawalBalance, 8)
                 : "0.00000000"}{" "}
@@ -531,29 +474,30 @@ const Income = () => {
             </h1>
           )}
 
-          <p className="body-label-400 text-white/80 leading-relaxed">
+          {/* Description — desktop only */}
+          <p className="hidden md:block body-text2-400 leading-[19px]">
             {t("income.availableIncomeDescription")}
           </p>
         </div>
 
         {/* Withdraw Card */}
-        <div className="lg:col-span-2 bg-white rounded-[15px] p-[24px]">
-          <h3 className="body-text1-500 text-foreground mb-[12px]">
+        <div className="w-full md:w-1/2 bg-white p-[15px] md:p-[30px]">
+          <h3 className="font-h4-400 text-foreground mb-[5px] md:mb-[10px]">
             {t("income.withdraw")}
           </h3>
 
-          <div className="flex items-center gap-[6px] mb-[12px]">
-            <p className="body-text2-400 text-[#959595]">
+          <div className="flex items-center gap-[6px] mb-[16px] md:mb-[30px]">
+            <p className="body-text2-400 text-[#878787]">
               {t("income.bscOnlyWithdraw")}
             </p>
             <Tooltip>
               <TooltipTrigger asChild>
                 <button className="cursor-pointer">
-                  <Info className="w-[14px] h-[14px] text-[#959595]" />
+                  <Info className="w-[15px] h-[15px] text-[#878787]" />
                 </button>
               </TooltipTrigger>
-              <TooltipContent>
-                <p>
+              <TooltipContent showArrow={true} side="bottom" collisionPadding={32} align="end" alignOffset={-60}>
+                <p className="body-label-400">
                   {t("income.bscTooltip")}
                 </p>
               </TooltipContent>
@@ -561,34 +505,53 @@ const Income = () => {
           </div>
 
           {/* Wallet address */}
-          <div className="flex items-center gap-[8px] mb-[16px]">
+          <div className="flex items-center gap-[5px] mb-[5px]">
             <button
               onClick={copyAddress}
               className="cursor-pointer hover:opacity-70 transition-opacity"
             >
-              <Copy className="w-[14px] h-[14px] text-[#959595]" />
+              <WalletIcon className="w-[19px] h-[16px] text-[#878787]" />
             </button>
-            <p className="body-text2-400 text-foreground truncate">
-              {displayAddress}
+            <p className="body-text1-400 truncate">
+              <span className="text-foreground">{displayAddress.slice(0, 6)}</span>
+              <span className="text-[#878787]">{displayAddress.slice(6, -6)}</span>
+              <span className="text-foreground">{displayAddress.slice(-6)}</span>
             </p>
           </div>
 
           {/* Amount input */}
-          <input
-            type="number"
-            value={withdrawAmount}
-            onChange={(e) => setWithdrawAmount(e.target.value)}
-            placeholder="0"
-            min="0"
-            step="any"
-            className="w-full px-[16px] py-[14px] mb-[16px] rounded-[10px] border border-[#E0E0E0] bg-white text-foreground body-text1-400 outline-none focus:border-primary transition-colors placeholder:text-[#C0C0C0]"
-          />
+          {(() => {
+            const exceedsBalance =
+              withdrawalBalance !== null &&
+              withdrawAmount !== "" &&
+              parseFloat(withdrawAmount) > withdrawalBalance;
+            return (
+              <div className="mb-[16px] md:mb-[30px]">
+                <div className="flex p-[10px] rounded-[12px] bg-[#F8F8F8] mb-[5px]">
+                  <input
+                    type="number"
+                    value={withdrawAmount}
+                    onChange={(e) => setWithdrawAmount(e.target.value)}
+                    placeholder="0"
+                    min="0"
+                    step="any"
+                    className={`placeholder:text-[#B5B5B5] font-h1 focus:outline-none w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${exceedsBalance ? "text-[#FE5572]" : "text-foreground"}`}
+                  />
+                </div>
+                {exceedsBalance && (
+                  <p className="body-label-400 text-[#FE5572]">
+                    Exceed balance
+                  </p>
+                )}
+              </div>
+            );
+          })()}
 
           {/* Withdraw button */}
           <Button
             variant="success"
             size="lg"
-            className="w-full"
+            className="px-15px py-[15px] md:py-[15px] md:px-[20px] w-full"
             onClick={handleWithdraw}
             disabled={
               isWithdrawing ||
@@ -597,7 +560,7 @@ const Income = () => {
               parseFloat(withdrawAmount) <= 0
             }
           >
-            {isWithdrawing ? t("income.withdrawing") : t("income.withdraw")}
+            <span className="body-text1-400"> {isWithdrawing ? t("income.withdrawing") : t("income.withdraw")} </span>
           </Button>
 
           {/* Error / Success */}
@@ -615,34 +578,30 @@ const Income = () => {
       </div>
 
       {/* ============ TAB SECTION ============ */}
-      <div className="bg-white rounded-[15px] p-[24px]">
+      <div className="rounded-[15px]">
         {/* Tabs */}
-        <div className="flex items-center gap-[24px] mb-[20px] border-b border-[#F0F0F0]">
+        <div className="flex items-center gap-[24px] mb-[20px]">
           <button
             onClick={() => setActiveTab("income")}
-            className={`pb-[12px] body-text1-500 cursor-pointer transition-colors relative ${
+            className={`flex flex-col items-start cursor-pointer transition-colors ${
               activeTab === "income"
                 ? "text-foreground"
-                : "text-[#959595] hover:text-foreground"
+                : "text-[#878787] hover:text-foreground"
             }`}
           >
-            {t("income.incomeRecords")}
-            {activeTab === "income" && (
-              <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary rounded-full" />
-            )}
+            <span className="body-text1-400">{t("income.incomeRecords")}</span>
+            <div className={`mt-[5px] h-[2px] w-full rounded-full ${activeTab === "income" ? "bg-[#CBE45F]" : "bg-transparent"}`} />
           </button>
           <button
             onClick={() => setActiveTab("withdrawal")}
-            className={`pb-[12px] body-text1-500 cursor-pointer transition-colors relative ${
+            className={`flex flex-col items-start cursor-pointer transition-colors ${
               activeTab === "withdrawal"
                 ? "text-foreground"
-                : "text-[#959595] hover:text-foreground"
+                : "text-[#878787] hover:text-foreground"
             }`}
           >
-            {t("income.withdrawalRecords")}
-            {activeTab === "withdrawal" && (
-              <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary rounded-full" />
-            )}
+            <span className="body-text1-400">{t("income.withdrawalRecords")}</span>
+            <div className={`mt-[5px] h-[2px] w-full rounded-full ${activeTab === "withdrawal" ? "bg-[#CBE45F]" : "bg-transparent"}`} />
           </button>
         </div>
 
