@@ -15,7 +15,12 @@ const SUPPORTED_CHAINS = activeChains
   .map((c) => ({
     id: c.chain.id,
     name: c.chain.name || "Unknown",
-    key: c.chain.id === 56 ? "bsc" : c.chain.id === 137 ? "polygon" : (c.chain.name?.toLowerCase() || ""),
+    key:
+      c.chain.id === 56
+        ? "bsc"
+        : c.chain.id === 137
+          ? "polygon"
+          : c.chain.name?.toLowerCase() || "",
     crosschainAddress: c.contracts.crosschain!,
     tokenAddress: c.lucaContract!,
   }));
@@ -31,17 +36,29 @@ export default function AtmCrossChainTransfer() {
   const [receivingAddress, setReceivingAddress] = useState("");
   const [selectedChainIdx, setSelectedChainIdx] = useState(0);
   const [showChainDropdown, setShowChainDropdown] = useState(false);
-  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
 
-  const { address, isConnected, isAuthenticated, chainId, getUserBalance, walletProvider } = useUnified();
-  const { execute: executeCrosschain, loading: transferLoading } = useExecuteCrosschainTransfer();
+  const {
+    address,
+    isConnected,
+    isAuthenticated,
+    chainId,
+    getUserBalance,
+    walletProvider,
+  } = useUnified();
+  const { execute: executeCrosschain, loading: transferLoading } =
+    useExecuteCrosschainTransfer();
 
   const [balance, setBalance] = useState("0.0000");
   const [balanceLoading, setBalanceLoading] = useState(false);
 
   // Determine destination chains (exclude current chain)
   const destinationChains = SUPPORTED_CHAINS.filter((c) => c.id !== chainId);
-  const selectedChain = destinationChains[selectedChainIdx] || destinationChains[0];
+  const selectedChain =
+    destinationChains[selectedChainIdx] || destinationChains[0];
 
   // Get the current chain's crosschain contract + LUCA token
   const currentChainConfig = SUPPORTED_CHAINS.find((c) => c.id === chainId);
@@ -78,7 +95,8 @@ export default function AtmCrossChainTransfer() {
   };
 
   const handleTransfer = async () => {
-    if (!address || !walletProvider || !selectedChain || !currentChainConfig) return;
+    if (!address || !walletProvider || !selectedChain || !currentChainConfig)
+      return;
 
     if (amount <= 0) {
       setToast({ message: t("trading.pleaseEnterAmount"), type: "error" });
@@ -89,7 +107,10 @@ export default function AtmCrossChainTransfer() {
       return;
     }
     if (!receivingAddress || !/^0x[a-fA-F0-9]{40}$/.test(receivingAddress)) {
-      setToast({ message: t("trading.pleaseEnterValidAddress"), type: "error" });
+      setToast({
+        message: t("trading.pleaseEnterValidAddress"),
+        type: "error",
+      });
       return;
     }
 
@@ -111,81 +132,93 @@ export default function AtmCrossChainTransfer() {
         setReceivingAddress("");
         setTimeout(() => fetchBalance(), 3000);
       } else {
-        setToast({ message: result.error || t("trading.transferFailed"), type: "error" });
+        setToast({
+          message: result.error || t("trading.transferFailed"),
+          type: "error",
+        });
       }
     } catch (err: any) {
-      setToast({ message: err?.message || t("trading.transferFailed"), type: "error" });
+      setToast({
+        message: err?.message || t("trading.transferFailed"),
+        type: "error",
+      });
     }
   };
 
-  const isFormValid = amount > 0 && receivingAddress !== "" && !transferLoading && !!currentChainConfig;
-  const SelectedChainIcon = selectedChain ? (CHAIN_ICONS[selectedChain.id] || PolygonIcon) : PolygonIcon;
+  const isFormValid =
+    amount > 0 &&
+    receivingAddress !== "" &&
+    !transferLoading &&
+    !!currentChainConfig;
+  const SelectedChainIcon = selectedChain
+    ? CHAIN_ICONS[selectedChain.id] || PolygonIcon
+    : PolygonIcon;
 
   return (
-    <div className="py-[30px] px-[20px] bg-white rounded-[15px] h-full">
-
-      <text className="block body-text1-400 text-foreground mb-[30px]">
+    <div className="md:py-[30px] px-[5px] md:px-[20px] md:bg-white rounded-[15px] h-full">
+      <text className="block body-text1-400 text-foreground mb-[15px] md:mb-[30px]">
         {t("trading.crossChainDescription")}
       </text>
 
       {/* Transfer Form */}
-      <div className="max-w-[500px] p-[30px] rounded-[15px] bg-white border border-[#EBEBEB]">
-
+      <div className="max-w-[500px] p-[15px] md:p-[30px] rounded-[15px] bg-white md:border border-[#EBEBEB]">
         {/* Amount */}
         <div className="space-y-[5px] mb-[30px]">
+          <div className="flex justify-between">
+            <span className="block text-[#8E8E93] body-text1-400">
+              {t("common.amount")}
+            </span>
 
-          <div className='flex justify-between'>
-            <span className="block text-[#8E8E93] body-text1-400">{t("common.amount")}</span>
-
-            <div className='space-x-[5px]'>
+            <div className="space-x-[5px]">
               <span className="text-[#868686] body-label-400">
                 {t("common.balance")}: {balanceLoading ? "..." : balance}
               </span>
 
               <button
                 onClick={handleMaxClick}
-                className="px-[10px] py-[5px] border border-[#EBEBEB] rounded-[20px] text-foreground body-label-400">
+                className="px-[10px] py-[5px] border border-[#EBEBEB] rounded-[20px] text-foreground body-label-400"
+              >
                 {t("common.max")}
               </button>
             </div>
           </div>
 
           {/* Amount Input */}
-          <div className='flex justify-between py-[12px] px-[15px] rounded-[12px] bg-[#F8F8F8]'>
+          <div className="flex justify-between py-[12px] px-[15px] rounded-[12px] bg-[#F8F8F8]">
             <input
               type="number"
-              value={amount || ''}
+              value={amount || ""}
               onChange={(e) => handleAmountChange(e.target.value)}
               placeholder="0"
-              className='placeholder:text-[#B5B5B5] font-h1 focus:outline-none w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
+              className="placeholder:text-[#B5B5B5] font-h1 focus:outline-none w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               min="0"
             />
 
             {/* Currency Dropdown */}
-            <div className='flex items-center'>
-              <LucaIcon className='w-[62px] h-[62px]' />
-              <ChevronDown className='w-[14px] h-[14px] text-[#434343]' />
+            <div className="flex items-center">
+              <LucaIcon className="w-[62px] h-[62px]" />
+              <ChevronDown className="w-[14px] h-[14px] text-[#434343]" />
             </div>
-
           </div>
         </div>
 
         {/* Receiving Address */}
         <div className="space-y-[5px]">
+          <div className="flex justify-between items-center">
+            <span className="block text-[#8E8E93] body-text1-400">
+              {t("trading.receivingAddress")}
+            </span>
 
-          <div className='flex justify-between items-center'>
-            <span className="block text-[#8E8E93] body-text1-400">{t("trading.receivingAddress")}</span>
-
-            <div className='relative'>
+            <div className="relative">
               <button
                 onClick={() => setShowChainDropdown(!showChainDropdown)}
-                className='flex items-center space-x-[5px]'
+                className="flex items-center space-x-[5px]"
               >
-                <SelectedChainIcon className='w-[30px] h-[30px]' />
+                <SelectedChainIcon className="w-[30px] h-[30px]" />
                 <span className="text-foreground body-label-400">
                   {selectedChain?.name || t("trading.selectChain")}
                 </span>
-                <ChevronDown className='w-[14px] h-[14px] text-[#434343]' />
+                <ChevronDown className="w-[14px] h-[14px] text-[#434343]" />
               </button>
 
               {showChainDropdown && destinationChains.length > 0 && (
@@ -195,11 +228,16 @@ export default function AtmCrossChainTransfer() {
                     return (
                       <button
                         key={chain.id}
-                        onClick={() => { setSelectedChainIdx(idx); setShowChainDropdown(false); }}
+                        onClick={() => {
+                          setSelectedChainIdx(idx);
+                          setShowChainDropdown(false);
+                        }}
                         className="flex items-center space-x-[8px] px-[12px] py-[10px] w-full hover:bg-[#F8F8F8] first:rounded-t-[12px] last:rounded-b-[12px]"
                       >
                         <Icon className="w-[24px] h-[24px]" />
-                        <span className="text-foreground body-label-400">{chain.name}</span>
+                        <span className="text-foreground body-label-400">
+                          {chain.name}
+                        </span>
                       </button>
                     );
                   })}
@@ -219,13 +257,19 @@ export default function AtmCrossChainTransfer() {
         </div>
 
         <div className="p-[15px] bg-[#F8F8F8] rounded-[15px] my-[40px] space-y-[20px]">
-          <div className="flex justify-between">
-            <span className="text-[#4F5555] body-text2-400">{t("trading.estimatedAmount")}</span>
-            <span className="text-foreground body-text2-400">{amount > 0 ? amount : 0} LUCA</span>
+          <div className="flex flex-col md:flex-row justify-between">
+            <span className="text-[#4F5555] body-text2-400">
+              {t("trading.estimatedAmount")}
+            </span>
+            <span className="text-foreground body-text2-400">
+              {amount > 0 ? amount : 0} LUCA
+            </span>
           </div>
 
-          <div className="flex justify-between">
-            <span className="text-[#4F5555] body-text2-400">{t("trading.crossChainFee")}</span>
+          <div className="flex flex-col md:flex-row justify-between">
+            <span className="text-[#4F5555] body-text2-400">
+              {t("trading.crossChainFee")}
+            </span>
             <span className="text-foreground body-text2-400">{0} LUCA</span>
           </div>
         </div>
@@ -234,7 +278,7 @@ export default function AtmCrossChainTransfer() {
         <Button
           className="w-full"
           disabled={!isFormValid}
-          variant={!isFormValid ? 'disabled' : 'default'}
+          variant={!isFormValid ? "disabled" : "default"}
           onClick={handleTransfer}
         >
           {transferLoading ? (
@@ -252,7 +296,6 @@ export default function AtmCrossChainTransfer() {
             {t("trading.notAvailableOnNetwork")}
           </p>
         )}
-
       </div>
 
       {toast && (

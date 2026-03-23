@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { ChevronDown, User, X, Loader2, CheckCircle, AlertCircle, Info } from "lucide-react";
+import {
+  ChevronDown,
+  User,
+  X,
+  Loader2,
+  CheckCircle,
+  AlertCircle,
+  Info,
+} from "lucide-react";
 import LucaIcon from "@/assets/tokens/luca.svg?react";
 import { Slider } from "./Slider";
 import { Switch } from "@/components/ui/atm/switch";
@@ -32,7 +40,8 @@ import {
 
 export default function CreateConnection() {
   const { isAuthenticated } = useUnified();
-  const { address, isConnected, getUserBalance, walletProvider, chainId } = useAppKit();
+  const { address, isConnected, getUserBalance, walletProvider, chainId } =
+    useAppKit();
 
   // Hooks
   const currencyList = useGetCurrencyList();
@@ -48,7 +57,9 @@ export default function CreateConnection() {
   const validateAddress = useValidateAddress();
 
   // Connection type
-  const [connectionType, setConnectionType] = useState<"token" | "nft">("token");
+  const [connectionType, setConnectionType] = useState<"token" | "nft">(
+    "token",
+  );
 
   // Network
   const [selectedChain, setSelectedChain] = useState<ChainConfig | null>(null);
@@ -76,12 +87,15 @@ export default function CreateConnection() {
 
   // NFT state
   const [nftProjects, setNftProjects] = useState<NFTProject[]>([]);
-  const [selectedNFTProject, setSelectedNFTProject] = useState<NFTProject | null>(null);
+  const [selectedNFTProject, setSelectedNFTProject] =
+    useState<NFTProject | null>(null);
   const [showNFTSelect, setShowNFTSelect] = useState(false);
   const [firstTokenId, setFirstTokenId] = useState("");
   const [secondTokenId, setSecondTokenId] = useState("");
   const [isTogether, setIsTogether] = useState(true);
-  const [nftApprovals, setNftApprovals] = useState<{ [key: string]: boolean }>({});
+  const [nftApprovals, setNftApprovals] = useState<{ [key: string]: boolean }>(
+    {},
+  );
   const [showNFTDialog, setShowNFTDialog] = useState(false);
 
   // Submission state
@@ -95,11 +109,14 @@ export default function CreateConnection() {
     type: "success" | "error";
   } | null>(null);
 
+  const [showInstructions, setShowInstructions] = useState(false);
+
   // ─── Derived values ────────────────────────────────────────────────────────
   const mineNum = Number(mine) || 0;
   const othersNum = Number(others) || 0;
   const totalLuca = mineNum + othersNum;
-  const sliderPercentage = totalLuca > 0 ? Math.round((mineNum / totalLuca) * 100) : 0;
+  const sliderPercentage =
+    totalLuca > 0 ? Math.round((mineNum / totalLuca) * 100) : 0;
 
   // lockedPortion = sliderPercentage (my %)
   const lockedPortion = String(sliderPercentage);
@@ -117,7 +134,9 @@ export default function CreateConnection() {
 
   // Lockup days
   const finalPeriodDays =
-    selectedPeriod === "custom" ? Number(customPeriod) || 0 : Number(selectedPeriod);
+    selectedPeriod === "custom"
+      ? Number(customPeriod) || 0
+      : Number(selectedPeriod);
   const lockupDays = String(finalPeriodDays);
 
   // Expected AGT
@@ -139,7 +158,9 @@ export default function CreateConnection() {
   const isLockupValid =
     !lockupDays ||
     lockupDays === "0" ||
-    (!isNaN(lockupValue) && lockupValue >= lockupMin && lockupValue <= lockupMax);
+    (!isNaN(lockupValue) &&
+      lockupValue >= lockupMin &&
+      lockupValue <= lockupMax);
 
   const isCustomValid =
     selectedPeriod !== "custom" ||
@@ -184,10 +205,13 @@ export default function CreateConnection() {
       }
       if (currencyList.data && Array.isArray(currencyList.data)) {
         const chainTokens = (currencyList.data as any[]).filter(
-          (coin: any) => !coin.chainId || coin.chainId === selectedChain.atmId
+          (coin: any) => !coin.chainId || coin.chainId === selectedChain.atmId,
         );
         setAvailableTokens(chainTokens);
-        if (chainTokens.length > 0 && !chainTokens.find((t: any) => t.baseCurrency === selectedToken)) {
+        if (
+          chainTokens.length > 0 &&
+          !chainTokens.find((t: any) => t.baseCurrency === selectedToken)
+        ) {
           setSelectedToken(chainTokens[0].baseCurrency);
         }
       }
@@ -199,15 +223,27 @@ export default function CreateConnection() {
   useEffect(() => {
     const loadNFTProjects = async () => {
       if (!selectedChain || connectionType !== "nft") return;
-      if (!nftProjectList.data && !nftProjectList.loading && !nftProjectList.error) {
+      if (
+        !nftProjectList.data &&
+        !nftProjectList.loading &&
+        !nftProjectList.error
+      ) {
         await nftProjectList.execute();
       }
-      if ((nftProjectList.data as any)?.success && (nftProjectList.data as any)?.data?.nftProjectList) {
-        const chainProjects = (nftProjectList.data as any).data.nftProjectList.filter(
-          (project: any) => !project.chainId || project.chainId === selectedChain.atmId
+      if (
+        (nftProjectList.data as any)?.success &&
+        (nftProjectList.data as any)?.data?.nftProjectList
+      ) {
+        const chainProjects = (
+          nftProjectList.data as any
+        ).data.nftProjectList.filter(
+          (project: any) =>
+            !project.chainId || project.chainId === selectedChain.atmId,
         );
         setNftProjects(chainProjects);
-        setSelectedNFTProject(chainProjects.length > 0 ? chainProjects[0] : null);
+        setSelectedNFTProject(
+          chainProjects.length > 0 ? chainProjects[0] : null,
+        );
       }
     };
     loadNFTProjects();
@@ -262,7 +298,10 @@ export default function CreateConnection() {
     if (!selectedNFTProject || !walletProvider || !selectedChain) return;
     const factoryAddress = getChainContracts(selectedChain.chain.id)?.factory;
     if (!factoryAddress) {
-      setToast({ message: "Factory contract not found for this network", type: "error" });
+      setToast({
+        message: "Factory contract not found for this network",
+        type: "error",
+      });
       return;
     }
     try {
@@ -275,7 +314,10 @@ export default function CreateConnection() {
       setNftApprovals((prev) => ({ ...prev, [tokenId]: true }));
       setToast({ message: "NFT approved successfully", type: "success" });
     } catch (error: any) {
-      setToast({ message: `Approval failed: ${error.message || "Unknown error"}`, type: "error" });
+      setToast({
+        message: `Approval failed: ${error.message || "Unknown error"}`,
+        type: "error",
+      });
     }
   };
 
@@ -283,7 +325,10 @@ export default function CreateConnection() {
 
   const handleTokenConnection = async () => {
     if (!walletProvider || !address || !selectedChain) {
-      setToast({ message: "Please connect your wallet and select a network", type: "error" });
+      setToast({
+        message: "Please connect your wallet and select a network",
+        type: "error",
+      });
       return;
     }
 
@@ -292,16 +337,25 @@ export default function CreateConnection() {
       walletProvider,
     });
     if (!networkMatches) {
-      setToast({ message: `Please switch to ${selectedChain.chain.name} network in your wallet`, type: "error" });
+      setToast({
+        message: `Please switch to ${selectedChain.chain.name} network in your wallet`,
+        type: "error",
+      });
       return;
     }
 
     if (!connectionWith || !validateAddress.execute(connectionWith)) {
-      setToast({ message: "Please enter a valid connection address", type: "error" });
+      setToast({
+        message: "Please enter a valid connection address",
+        type: "error",
+      });
       return;
     }
     if (connectionWith.toLowerCase() === address.toLowerCase()) {
-      setToast({ message: "Connection address cannot be your own address", type: "error" });
+      setToast({
+        message: "Connection address cannot be your own address",
+        type: "error",
+      });
       return;
     }
 
@@ -309,16 +363,26 @@ export default function CreateConnection() {
     const portionVal = parseFloat(lockedPortion);
     const daysVal = parseInt(lockupDays);
 
-    if (isNaN(totalVal) || totalVal < 1 || (portionVal === 100 && totalVal <= 31)) {
+    if (
+      isNaN(totalVal) ||
+      totalVal < 1 ||
+      (portionVal === 100 && totalVal <= 31)
+    ) {
       setToast({ message: "Invalid total locked amount", type: "error" });
       return;
     }
     if (isNaN(portionVal) || portionVal < 1 || portionVal > 100) {
-      setToast({ message: "Locked portion must be between 1% and 100%", type: "error" });
+      setToast({
+        message: "Locked portion must be between 1% and 100%",
+        type: "error",
+      });
       return;
     }
     if (isNaN(daysVal) || daysVal < 30 || daysVal > 1825) {
-      setToast({ message: "Lockup days must be between 30 and 1825", type: "error" });
+      setToast({
+        message: "Lockup days must be between 30 and 1825",
+        type: "error",
+      });
       return;
     }
 
@@ -326,15 +390,19 @@ export default function CreateConnection() {
     setApprovalSuccess(false);
 
     try {
-      const currencyData = availableTokens.find((t) => t.baseCurrency === selectedToken);
+      const currencyData = availableTokens.find(
+        (t) => t.baseCurrency === selectedToken,
+      );
       if (!currencyData) throw new Error("Currency data not found");
 
       const contracts = getChainContracts(selectedChain.chain.id);
       const factoryAddress = contracts?.factory;
       const traderAddress = contracts?.trader;
 
-      if (!factoryAddress) throw new Error("Factory contract not found for this network");
-      if (!traderAddress) throw new Error("Trader contract not found for this network");
+      if (!factoryAddress)
+        throw new Error("Factory contract not found for this network");
+      if (!traderAddress)
+        throw new Error("Trader contract not found for this network");
 
       const weiPlaces = Number((currencyData as any).weiPlaces || "18");
       const myAmountInWei = toWeiBigInt(myLocked, weiPlaces);
@@ -391,7 +459,10 @@ export default function CreateConnection() {
         walletProvider,
       });
 
-      setToast({ message: "Connection created successfully!", type: "success" });
+      setToast({
+        message: "Connection created successfully!",
+        type: "success",
+      });
       setApprovalSuccess(false);
       setApprovalMessage("");
       resetForm();
@@ -410,7 +481,10 @@ export default function CreateConnection() {
 
   const handleNFTConnection = async () => {
     if (!walletProvider || !address || !selectedChain) {
-      setToast({ message: "Please connect your wallet and select a network", type: "error" });
+      setToast({
+        message: "Please connect your wallet and select a network",
+        type: "error",
+      });
       return;
     }
 
@@ -419,16 +493,25 @@ export default function CreateConnection() {
       walletProvider,
     });
     if (!networkMatches) {
-      setToast({ message: `Please switch to ${selectedChain.chain.name} network in your wallet`, type: "error" });
+      setToast({
+        message: `Please switch to ${selectedChain.chain.name} network in your wallet`,
+        type: "error",
+      });
       return;
     }
 
     if (!connectionWith || !validateAddress.execute(connectionWith)) {
-      setToast({ message: "Please enter a valid connection address", type: "error" });
+      setToast({
+        message: "Please enter a valid connection address",
+        type: "error",
+      });
       return;
     }
     if (connectionWith.toLowerCase() === address.toLowerCase()) {
-      setToast({ message: "Connection address cannot be your own address", type: "error" });
+      setToast({
+        message: "Connection address cannot be your own address",
+        type: "error",
+      });
       return;
     }
     if (!selectedNFTProject) {
@@ -436,11 +519,21 @@ export default function CreateConnection() {
       return;
     }
     if (!firstTokenId) {
-      setToast({ message: "Please enter the first NFT Token ID", type: "error" });
+      setToast({
+        message: "Please enter the first NFT Token ID",
+        type: "error",
+      });
       return;
     }
-    if (!lockupDays || parseInt(lockupDays) < 2 || parseInt(lockupDays) > 1825) {
-      setToast({ message: "Lockup days must be between 2 and 1825", type: "error" });
+    if (
+      !lockupDays ||
+      parseInt(lockupDays) < 2 ||
+      parseInt(lockupDays) > 1825
+    ) {
+      setToast({
+        message: "Lockup days must be between 2 and 1825",
+        type: "error",
+      });
       return;
     }
 
@@ -456,7 +549,10 @@ export default function CreateConnection() {
 
     if (!isTogether) {
       if (!secondTokenId) {
-        setToast({ message: "Please enter the second NFT Token ID for separate pledging", type: "error" });
+        setToast({
+          message: "Please enter the second NFT Token ID for separate pledging",
+          type: "error",
+        });
         return;
       }
       if (firstTokenId === secondTokenId) {
@@ -486,14 +582,18 @@ export default function CreateConnection() {
   };
 
   const confirmNFTConnection = async () => {
-    if (!walletProvider || !address || !selectedNFTProject || !selectedChain) return;
+    if (!walletProvider || !address || !selectedNFTProject || !selectedChain)
+      return;
 
     const tokenList = [firstTokenId];
     if (!isTogether && secondTokenId) tokenList.push(secondTokenId);
 
     const allApproved = tokenList.every((tokenId) => nftApprovals[tokenId]);
     if (!allApproved) {
-      setToast({ message: "Please approve all NFTs before creating the connection", type: "error" });
+      setToast({
+        message: "Please approve all NFTs before creating the connection",
+        type: "error",
+      });
       return;
     }
 
@@ -502,7 +602,8 @@ export default function CreateConnection() {
 
     try {
       const factoryAddress = getChainContracts(selectedChain.chain.id)?.factory;
-      if (!factoryAddress) throw new Error("Factory contract not found for this network");
+      if (!factoryAddress)
+        throw new Error("Factory contract not found for this network");
 
       await createNFTConn.execute({
         nftAddress: selectedNFTProject.address,
@@ -513,7 +614,10 @@ export default function CreateConnection() {
         walletProvider,
       });
 
-      setToast({ message: "NFT Connection created successfully!", type: "success" });
+      setToast({
+        message: "NFT Connection created successfully!",
+        type: "success",
+      });
       resetForm();
     } catch (error: any) {
       const errorMsg = error.message || error.reason || "Unknown error";
@@ -576,62 +680,113 @@ export default function CreateConnection() {
   // ─── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="flex flex-col md:flex-row gap-[16px] md:gap-[10px]">
+    <div className="flex flex-col lg:flex-row gap-[16px] md:gap-[10px]">
       {/* Connection Instructions */}
-      <div className="p-[12px] md:p-[20px] rounded-[15px] bg-card md:w-1/2 md:order-2">
-        <h4 className="font-h4-400 mb-[30px] md:mb-[20px] text-foreground">
-          Connection instructions
-        </h4>
+      <div className="p-[12px] md:p-[20px] rounded-[15px] bg-card lg:w-1/2 lg:order-2">
+        {/* Header (clickable only on mobile) */}
+        <div
+          className="flex items-center justify-between cursor-pointer md:cursor-default"
+          onClick={() => {
+            if (window.innerWidth < 768) {
+              setShowInstructions((prev) => !prev);
+            }
+          }}
+        >
+          <h4 className="text-[16px] md:text-[20px] md:font-h4-400 text-foreground">
+            Connection instructions
+          </h4>
 
-        <ol className="body-text-400 list-decimal list-outside space-y-4 ml-[20px] text-foreground">
-          {connectionType === "token" ? (
-            <>
-              <li>The connection is successfully created only if the other party agrees.</li>
-              <li>Both parties shall deduct a certain amount of liquidated damages for early redemption.</li>
-              <li>In the process of establishing a connection, the Gas Price fee will be borne by the user.</li>
-              <li>The funds will be returned to the original payment account if the connection creation fails.</li>
-            </>
-          ) : (
-            <>
-              <li>If you choose to require the other party to pledge NFT at the same time, you need to achieve a mutual agreement to complete the connection.</li>
-              <li>NFT connection only supports NFT hedging of the same project.</li>
-              <li>After being created, the connection cannot be redeemed in advance.</li>
-            </>
-          )}
-        </ol>
+          {/* Chevron (only mobile) */}
+          <ChevronDown
+            className={`w-5 h-5 text-[#8E8E93] transition-transform md:hidden ${
+              showInstructions ? "rotate-180" : ""
+            }`}
+          />
+        </div>
 
-        {/* Expected AGT (token only) */}
-        {connectionType === "token" && (
-          <div className="mt-[20px] text-center">
-            <span className="block text-[#999999] body-text2-400">
-              Expected {expectedAGT} AGT.
-            </span>
-          </div>
-        )}
+        {/* Content */}
+        <div
+          className={`transition-all duration-300 overflow-hidden ${
+            showInstructions ? "max-h-[500px] mt-[20px]" : "max-h-0"
+          } md:max-h-none md:mt-[20px]`}
+        >
+          <ol className="body-text-400 list-decimal list-outside space-y-4 ml-[20px] text-foreground">
+            {connectionType === "token" ? (
+              <>
+                <li>
+                  The connection is successfully created only if the other party
+                  agrees.
+                </li>
+                <li>
+                  Both parties shall deduct a certain amount of liquidated
+                  damages for early redemption.
+                </li>
+                <li>
+                  In the process of establishing a connection, the Gas Price fee
+                  will be borne by the user.
+                </li>
+                <li>
+                  The funds will be returned to the original payment account if
+                  the connection creation fails.
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  If you choose to require the other party to pledge NFT at the
+                  same time, you need to achieve a mutual agreement to complete
+                  the connection.
+                </li>
+                <li>
+                  NFT connection only supports NFT hedging of the same project.
+                </li>
+                <li>
+                  After being created, the connection cannot be redeemed in
+                  advance.
+                </li>
+              </>
+            )}
+          </ol>
 
-        {/* Approval status */}
-        {(isApproving || approvalSuccess) && connectionType === "token" && (
-          <div className="mt-[16px] p-[12px] rounded-[10px] bg-[#F0F9FF] border border-[#BAE6FD]">
-            <div className="flex items-center gap-2">
-              {isApproving ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin text-primary" />
-                  <span className="body-text2-400 text-primary">{approvalMessage}</span>
-                </>
-              ) : approvalSuccess ? (
-                <>
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                  <span className="body-text2-400 text-green-700">{approvalMessage}</span>
-                </>
-              ) : null}
+          {/* Expected AGT (token only) */}
+          {connectionType === "token" && (
+            <div className="mt-[20px] text-center">
+              <span className="block text-[#999999] body-text2-400">
+                Expected {expectedAGT} AGT.
+              </span>
             </div>
-          </div>
-        )}
+          )}
+
+          {/* Approval status */}
+          {(isApproving || approvalSuccess) && connectionType === "token" && (
+            <div className="mt-[16px] p-[12px] rounded-[10px] bg-[#F0F9FF] border border-[#BAE6FD]">
+              <div className="flex items-center gap-2">
+                {isApproving ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                    <span className="body-text2-400 text-primary">
+                      {approvalMessage}
+                    </span>
+                  </>
+                ) : approvalSuccess ? (
+                  <>
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    <span className="body-text2-400 text-green-700">
+                      {approvalMessage}
+                    </span>
+                  </>
+                ) : null}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Create Connection Form */}
-      <div className="p-[30px] rounded-[15px] bg-card md:w-1/2 md:order-1">
-        <h4 className="font-h4-400 mb-[20px] text-foreground">Create Connection</h4>
+      <div className="p-[12px] md:p-[30px] rounded-[15px] bg-card lg:w-1/2 md:order-1">
+        <h4 className="text-[16px] md:text-[18px] md:font-h4-400 mb-[20px] text-foreground">
+          Create Connection
+        </h4>
 
         <div className="space-y-[24px]">
           {/* Connection Type Toggle */}
@@ -668,7 +823,9 @@ export default function CreateConnection() {
 
           {/* Network Selector */}
           <div className="space-y-[8px]">
-            <span className="block text-[#8E8E93] body-text-400">Select network</span>
+            <span className="block text-[#8E8E93] body-text-400">
+              Select network
+            </span>
             <div className="relative">
               <div
                 onClick={() => setShowNetworkDropdown(!showNetworkDropdown)}
@@ -688,15 +845,21 @@ export default function CreateConnection() {
                           setShowNetworkDropdown(false);
                         }}
                         className={`px-[16px] py-[12px] cursor-pointer body-text1-400 text-foreground hover:bg-[#F8F8F8] dark:hover:bg-[#2A2E3D] border-b border-[#F0F0F0] last:border-0 ${
-                          selectedChain?.chain.id === chain.chain.id ? "text-primary" : ""
+                          selectedChain?.chain.id === chain.chain.id
+                            ? "text-primary"
+                            : ""
                         }`}
                       >
                         {chain.chain.name}
-                        <span className="block text-xs text-[#8E8E93]">Chain ID: {chain.chain.id}</span>
+                        <span className="block text-xs text-[#8E8E93]">
+                          Chain ID: {chain.chain.id}
+                        </span>
                       </div>
                     ))
                   ) : (
-                    <div className="px-[16px] py-[12px] text-[#8E8E93] body-text1-400">No networks available</div>
+                    <div className="px-[16px] py-[12px] text-[#8E8E93] body-text1-400">
+                      No networks available
+                    </div>
                   )}
                 </div>
               )}
@@ -709,7 +872,9 @@ export default function CreateConnection() {
             <div className="relative">
               <div
                 className={`absolute left-[16px] top-1/2 -translate-y-1/2 transition-all duration-300 ${
-                  connectionWith ? "opacity-0 scale-75" : "opacity-100 scale-100"
+                  connectionWith
+                    ? "opacity-0 scale-75"
+                    : "opacity-100 scale-100"
                 }`}
               >
                 <User className="w-[24px] h-[24px] text-primary" />
@@ -726,7 +891,9 @@ export default function CreateConnection() {
               <button
                 onClick={handleClear}
                 className={`absolute right-[16px] top-1/2 -translate-y-1/2 transition-all duration-300 bg-[#F2F2F2] rounded-full p-1 ${
-                  connectionWith ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-75 pointer-events-none"
+                  connectionWith
+                    ? "opacity-100 scale-100 pointer-events-auto"
+                    : "opacity-0 scale-75 pointer-events-none"
                 }`}
               >
                 <X className="w-5 h-5 text-black" />
@@ -739,7 +906,9 @@ export default function CreateConnection() {
             <>
               {/* Token Selector */}
               <div className="space-y-[8px]">
-                <span className="block text-[#8E8E93] body-text-400">Connection token</span>
+                <span className="block text-[#8E8E93] body-text-400">
+                  Connection token
+                </span>
                 <div className="relative">
                   <div
                     onClick={() => setShowTokenSelect(!showTokenSelect)}
@@ -768,7 +937,9 @@ export default function CreateConnection() {
                           </div>
                         ))
                       ) : (
-                        <div className="px-[16px] py-[12px] text-[#8E8E93] body-text1-400">No tokens available</div>
+                        <div className="px-[16px] py-[12px] text-[#8E8E93] body-text1-400">
+                          No tokens available
+                        </div>
                       )}
                     </div>
                   )}
@@ -779,11 +950,18 @@ export default function CreateConnection() {
                     {isLoadingBalance ? (
                       <Loader2 className="inline w-3 h-3 animate-spin ml-1" />
                     ) : (
-                      <span className="font-semibold text-foreground">{tokenBalance} {selectedToken}</span>
+                      <span className="font-semibold text-foreground">
+                        {tokenBalance} {selectedToken}
+                      </span>
                     )}
-                    {parseFloat(tokenBalance) === 0 && selectedToken === "LUCA" && !isLoadingBalance && (
-                      <Info className="w-3 h-3 text-red-500 ml-1" title="Selected chain has 0 LUCA for you. Please change your network." />
-                    )}
+                    {parseFloat(tokenBalance) === 0 &&
+                      selectedToken === "LUCA" &&
+                      !isLoadingBalance && (
+                        <Info
+                          className="w-3 h-3 text-red-500 ml-1"
+                          title="Selected chain has 0 LUCA for you. Please change your network."
+                        />
+                      )}
                   </span>
                 </div>
               </div>
@@ -791,7 +969,9 @@ export default function CreateConnection() {
               {/* Amount Section */}
               <div className="space-y-[5px]">
                 <div className="flex justify-between">
-                  <span className="block text-[#8E8E93] body-text-400">Amount</span>
+                  <span className="block text-[#8E8E93] body-text-400">
+                    Amount
+                  </span>
                   <button
                     onClick={handleMaxClick}
                     className="px-[10px] py-[5px] border border-[#EBEBEB] rounded-[20px] text-foreground body-label-400 cursor-pointer"
@@ -824,7 +1004,10 @@ export default function CreateConnection() {
                   </div>
 
                   {/* Slider */}
-                  <Slider value={sliderPercentage} onChange={handleSliderChange} />
+                  <Slider
+                    value={sliderPercentage}
+                    onChange={handleSliderChange}
+                  />
                   <div className="pr-[12px] text-end body-label-400 text-[#878787]">
                     {totalLuca} LUCA
                   </div>
@@ -844,7 +1027,9 @@ export default function CreateConnection() {
                         min="0"
                       />
                     </div>
-                    <span className="text-[#8E8E93] body-label-400">Others</span>
+                    <span className="text-[#8E8E93] body-label-400">
+                      Others
+                    </span>
                   </div>
                 </div>
               </div>
@@ -856,13 +1041,17 @@ export default function CreateConnection() {
             <>
               {/* NFT Project */}
               <div className="space-y-[8px]">
-                <span className="block text-[#8E8E93] body-text-400">NFT project</span>
+                <span className="block text-[#8E8E93] body-text-400">
+                  NFT project
+                </span>
                 <div className="relative">
                   <div
                     onClick={() => setShowNFTSelect(!showNFTSelect)}
                     className="w-full px-[16px] py-[14px] rounded-[12px] bg-[#F8F8F8] dark:bg-[#383D4C] text-foreground body-text1-400 flex justify-between items-center cursor-pointer"
                   >
-                    <span>{selectedNFTProject?.name || "Select NFT Project"}</span>
+                    <span>
+                      {selectedNFTProject?.name || "Select NFT Project"}
+                    </span>
                     <ChevronDown className="w-[16px] h-[16px] text-[#8E8E93]" />
                   </div>
                   {showNFTSelect && (
@@ -881,7 +1070,9 @@ export default function CreateConnection() {
                           </div>
                         ))
                       ) : (
-                        <div className="px-[16px] py-[12px] text-[#8E8E93] body-text1-400">No NFT projects available</div>
+                        <div className="px-[16px] py-[12px] text-[#8E8E93] body-text1-400">
+                          No NFT projects available
+                        </div>
                       )}
                     </div>
                   )}
@@ -903,7 +1094,9 @@ export default function CreateConnection() {
 
               {/* First Token ID */}
               <div className="space-y-[8px]">
-                <span className="block text-[#8E8E93] body-text-400">Lock NFT (Token ID)</span>
+                <span className="block text-[#8E8E93] body-text-400">
+                  Lock NFT (Token ID)
+                </span>
                 <input
                   type="number"
                   value={firstTokenId}
@@ -916,7 +1109,9 @@ export default function CreateConnection() {
               {/* Separate pledging toggle */}
               <div className="border border-[#EBEBEB] rounded-[12px] p-[16px] space-y-[10px]">
                 <div className="flex items-center justify-between">
-                  <span className="body-text-400 text-foreground">Separate pledging</span>
+                  <span className="body-text-400 text-foreground">
+                    Separate pledging
+                  </span>
                   <Switch
                     checked={!isTogether}
                     onCheckedChange={(checked) => setIsTogether(!checked)}
@@ -928,9 +1123,12 @@ export default function CreateConnection() {
                 {!isTogether && (
                   <div className="space-y-[8px]">
                     <p className="text-xs text-[#8E8E93]">
-                      If the other party does not need to pledge NFT, you need to pledge one more NFT to complete the connection.
+                      If the other party does not need to pledge NFT, you need
+                      to pledge one more NFT to complete the connection.
                     </p>
-                    <span className="block text-[#8E8E93] body-text-400">Please select the other NFT to pledge</span>
+                    <span className="block text-[#8E8E93] body-text-400">
+                      Please select the other NFT to pledge
+                    </span>
                     <input
                       type="number"
                       value={secondTokenId}
@@ -946,14 +1144,18 @@ export default function CreateConnection() {
 
           {/* Period (days) Section */}
           <div className="space-y-[5px]">
-            <span className="block text-[#8E8E93] body-text-400">Period (days)</span>
+            <span className="block text-[#8E8E93] body-text-400">
+              Period (days)
+            </span>
 
             <div className="flex gap-[5px]">
               {["180", "365", "1825"].map((p) => (
                 <div
                   key={p}
-                  className={`w-[15%] rounded-[12px] p-[2px] transition-all ${
-                    selectedPeriod === p ? "bg-gradient-to-r from-[#A5DC53] to-[#5DD27A]" : "bg-[#EBEBEB]"
+                  className={`w-[15%] rounded-[12px] p-[2px] transition-all min-w-fit ${
+                    selectedPeriod === p
+                      ? "bg-gradient-to-r from-[#A5DC53] to-[#5DD27A]"
+                      : "bg-[#EBEBEB]"
                   }`}
                 >
                   <button
@@ -967,7 +1169,9 @@ export default function CreateConnection() {
 
               <div
                 className={`w-[55%] rounded-[12px] p-[2px] transition-all ${
-                  selectedPeriod === "custom" ? "bg-gradient-to-r from-[#A5DC53] to-[#5DD27A]" : "bg-[#EBEBEB]"
+                  selectedPeriod === "custom"
+                    ? "bg-gradient-to-r from-[#A5DC53] to-[#5DD27A]"
+                    : "bg-[#EBEBEB]"
                 }`}
               >
                 <input
@@ -1001,11 +1205,18 @@ export default function CreateConnection() {
               className="w-full h-[80px] p-[16px] rounded-[12px] bg-[#F8F8F8] placeholder:text-[#878787] text-foreground body-text1-400 focus:outline-none resize-none"
             />
             <div className="flex justify-between items-center">
-              <div className="flex items-center gap-0.5">
-                <span className="body-text1-400 text-foreground">Private message</span>
-                <span className="body-text2-400 text-[#4F5555]">(only visible for you and connected user)</span>
+              <div className="flex flex-col md:flex-row md:items-center gap-0.5">
+                <span className="body-text1-400 text-foreground">
+                  Private message
+                </span>
+                <span className="body-text2-400 text-[#4F5555]">
+                  (only visible for you and connected user)
+                </span>
               </div>
-              <Switch checked={isPrivateMessage} onCheckedChange={setIsPrivateMessage} />
+              <Switch
+                checked={isPrivateMessage}
+                onCheckedChange={setIsPrivateMessage}
+              />
             </div>
           </div>
 
@@ -1041,14 +1252,20 @@ export default function CreateConnection() {
 
       {/* Toast Message */}
       {toast && (
-        <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
       )}
 
       {/* NFT Approval Dialog */}
       {showNFTDialog && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-card rounded-[15px] max-w-md w-full p-[24px]">
-            <h4 className="font-h4-400 mb-[8px] text-foreground">Complete the NFT connection</h4>
+            <h4 className="font-h4-400 mb-[8px] text-foreground">
+              Complete the NFT connection
+            </h4>
             <p className="body-text2-400 text-[#8E8E93] mb-[16px]">
               Please authorize the NFTs to pledge on {selectedChain?.chain.name}
             </p>
@@ -1058,7 +1275,9 @@ export default function CreateConnection() {
                   key={tokenId}
                   className="flex items-center justify-between p-[12px] bg-[#F8F8F8] rounded-[10px]"
                 >
-                  <span className="body-text1-400 text-foreground">Token ID: {tokenId}</span>
+                  <span className="body-text1-400 text-foreground">
+                    Token ID: {tokenId}
+                  </span>
                   {nftApprovals[tokenId] ? (
                     <span className="text-green-500 body-text2-400 flex items-center gap-1">
                       <CheckCircle className="w-4 h-4" /> Authorized
@@ -1086,7 +1305,11 @@ export default function CreateConnection() {
                 onClick={confirmNFTConnection}
                 disabled={!Object.values(nftApprovals).every((v) => v)}
                 className="flex-1"
-                variant={!Object.values(nftApprovals).every((v) => v) ? "disabled" : "default"}
+                variant={
+                  !Object.values(nftApprovals).every((v) => v)
+                    ? "disabled"
+                    : "default"
+                }
               >
                 Create Connection
               </Button>

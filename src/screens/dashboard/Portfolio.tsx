@@ -246,10 +246,10 @@ function TokenRow({
         {canRemove && (
           <button
             onClick={() => onRemoveClick?.(token.symbol)}
-            className="opacity-0 flex items-center group-hover:opacity-100 transition-opacity cursor-pointer p-1 rounded pl-10"
+            className=" flex items-center cursor-pointer p-1 rounded opacity-100 sm:opacity-0 md:group-hover:opacity-100 transition-opacity md:pl-10"
           >
-            <Trash2 className=" text-[#FE5572]" />
-            <span className="text-[14px] font-normal text-[#FE5572]">
+            <Trash2 className="text-[#878787] sm:text-[#FE5572]" />
+            <span className="hidden md:inline text-[14px] font-normal text-[#FE5572]">
               {t("portfolio.removeToken")}
             </span>
           </button>
@@ -338,7 +338,9 @@ function CoinWatchlistCard({ coin }: { coin: WatchlistCoin }) {
             {coin.symbol} {t("portfolio.priceCharts")}
           </span>
         </div>
-        <span className="body-label-400 text-[#959595]">{t("portfolio.thisWeek")}</span>
+        <span className="body-label-400 text-[#959595]">
+          {t("portfolio.thisWeek")}
+        </span>
       </div>
     </div>
   );
@@ -897,7 +899,9 @@ export default function Portfolio() {
                 {/* Balance */}
                 <div className="flex items-center justify-between mt-5">
                   <div>
-                    <p className="text-foreground font-h4-400">{t("portfolio.lucaBalance")}</p>
+                    <p className="text-foreground font-h4-400">
+                      {t("portfolio.lucaBalance")}
+                    </p>
                     <p className="text-[#119B56] font-h2">{userBalance} LUCA</p>
                   </div>
                   <div>
@@ -941,8 +945,16 @@ export default function Portfolio() {
             <PieChartCard
               title={t("portfolio.lockedAmountOfLuca")}
               data={[
-                { value: lockedMine, color: "#A5DC53", label: t("portfolio.mine") },
-                { value: lockedOthers, color: "#FFB347", label: t("portfolio.others") },
+                {
+                  value: lockedMine,
+                  color: "#A5DC53",
+                  label: t("portfolio.mine"),
+                },
+                {
+                  value: lockedOthers,
+                  color: "#FFB347",
+                  label: t("portfolio.others"),
+                },
               ]}
               innerRadius={95}
               outerRadius={110}
@@ -954,8 +966,16 @@ export default function Portfolio() {
             <PieChartCard
               title={t("portfolio.connections")}
               data={[
-                { value: activeConns, color: "#0DAEB9", label: t("common.active") },
-                { value: pendingConns, color: "#FFB347", label: t("common.pending") },
+                {
+                  value: activeConns,
+                  color: "#0DAEB9",
+                  label: t("common.active"),
+                },
+                {
+                  value: pendingConns,
+                  color: "#FFB347",
+                  label: t("common.pending"),
+                },
                 {
                   value: inactiveConns,
                   color: "#FF8A80",
@@ -980,7 +1000,7 @@ export default function Portfolio() {
                   ${totalTokensBalance.toFixed(2)}
                 </p>
               </div>
-              <div className="flex items-center gap-[12px]">
+              <div className="hidden md:flex items-center gap-[12px]">
                 <button
                   onClick={() => setIsImportModalOpen(true)}
                   className="text-primary body-text2-400 hover:underline cursor-pointer flex items-center gap-[4px]"
@@ -989,8 +1009,14 @@ export default function Portfolio() {
                 </button>
                 <Dropdown
                   options={[
-                    { label: t("portfolio.balanceHighToLow"), value: "balance-desc" },
-                    { label: t("portfolio.balanceLowToHigh"), value: "balance-asc" },
+                    {
+                      label: t("portfolio.balanceHighToLow"),
+                      value: "balance-desc",
+                    },
+                    {
+                      label: t("portfolio.balanceLowToHigh"),
+                      value: "balance-asc",
+                    },
                     { label: t("portfolio.nameAToZ"), value: "name-asc" },
                   ]}
                   value={sortOrder}
@@ -998,13 +1024,25 @@ export default function Portfolio() {
                   placeholder={t("portfolio.sortBy")}
                 />
               </div>
+              <div className="flex md:hidden">
+                <SlidersHorizontal
+                  onClick={() => setIsImportModalOpen(true)}
+                  className="text-[#8E8E93] cursor-pointer"
+                />
+              </div>
             </div>
 
             {/* Table header */}
             <div className="flex items-center py-[12px] border-b border-[#F0F0F0]">
-              <p className="body-text-600 text-foreground w-[35%]">{t("portfolio.token")}</p>
-              <p className="body-text-600 text-foreground w-[35%]">{t("common.balance")}</p>
-              <p className="body-text-600 text-foreground  ">{t("portfolio.price24hr")}</p>
+              <p className="body-text-600 text-foreground w-[35%]">
+                {t("portfolio.token")}
+              </p>
+              <p className="body-text-600 text-foreground w-[35%]">
+                {t("common.balance")}
+              </p>
+              <p className="body-text-600 text-foreground  ">
+                {t("portfolio.price24hr")}
+              </p>
             </div>
 
             {/* Token rows */}
@@ -1032,13 +1070,17 @@ export default function Portfolio() {
               isOpen={isModalOpen}
               title={t("portfolio.tokenRemovalConfirmation")}
               description={t("portfolio.tokenRemovalDescription")}
-              message={t("portfolio.removeTokenConfirm", { token: selectedToken })}
+              message={t("portfolio.removeTokenConfirm", {
+                token: selectedToken,
+              })}
               onConfirm={handleRemoveConfirm}
               onCancel={() => {
                 setIsModalOpen(false);
                 setSelectedToken(null);
               }}
-              confirmText={isRemoving ? t("portfolio.removing") : t("portfolio.remove")}
+              confirmText={
+                isRemoving ? t("portfolio.removing") : t("portfolio.remove")
+              }
             />
 
             {/* Loading Animation */}
@@ -1052,6 +1094,58 @@ export default function Portfolio() {
                 onClose={() => setToast(null)}
               />
             )}
+          </div>
+
+          {/* ============ ATM GALAXY (iframe) ============ */}
+          <div className="bg-card rounded-[15px] p-[20px]">
+            <div className="flex items-center justify-between mb-[16px]">
+              <div className="flex items-center gap-[12px]">
+                <h3 className="font-h4-400 text-foreground">
+                  {t("portfolio.atmGalaxy")}
+                </h3>
+                <span className="body-text-400 text-foreground">
+                  {t("portfolio.totalConnections")}{" "}
+                  <span className="body-text-600 text-foreground">
+                    {totalConnections}
+                  </span>
+                </span>
+              </div>
+              <button className="cursor-pointer">
+                <SlidersHorizontal
+                  onClick={() => setIsGalaxyFilterOpen(true)}
+                  className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors"
+                />
+              </button>
+            </div>
+            <div className="w-full h-105 rounded-[10px] overflow-hidden bg-[#0D1117]">
+              <iframe
+                src="https://visual.atm.network/vis3d/false/ALL/conNodes"
+                title="ATM Galaxy"
+                className="w-full h-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
+                loading="lazy"
+              />
+            </div>
+          </div>
+
+          {/* ============ COIN WATCHLIST ============ */}
+          <div className="bg-card rounded-[15px] p-[20px]">
+            <div className="flex items-center justify-between mb-[16px]">
+              <h3 className="font-h4-400 text-foreground">
+                {t("portfolio.coinWatchlist")}
+              </h3>
+              <button className="cursor-pointer">
+                <SlidersHorizontal
+                  className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors"
+                  onClick={() => setIsCoinModalOpen(true)}
+                />
+              </button>
+            </div>
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-[16px]">
+              {coins.map((coin) => (
+                <CoinWatchlistCard key={coin.symbol} coin={coin} />
+              ))}
+            </div>
           </div>
 
           {/* Import Token Modal */}
@@ -1117,54 +1211,6 @@ export default function Portfolio() {
             </div>
           </RightSideModal>
 
-          {/* ============ ATM GALAXY (iframe) ============ */}
-          <div className="bg-card rounded-[15px] p-[20px]">
-            <div className="flex items-center justify-between mb-[16px]">
-              <div className="flex items-center gap-[12px]">
-                <h3 className="font-h4-400 text-foreground">{t("portfolio.atmGalaxy")}</h3>
-                <span className="body-text-400 text-foreground">
-                  {t("portfolio.totalConnections")}{" "}
-                  <span className="body-text-600 text-foreground">
-                    {totalConnections}
-                  </span>
-                </span>
-              </div>
-              <button className="cursor-pointer">
-                <SlidersHorizontal
-                  onClick={() => setIsGalaxyFilterOpen(true)}
-                  className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors"
-                />
-              </button>
-            </div>
-            <div className="w-full h-105 rounded-[10px] overflow-hidden bg-[#0D1117]">
-              <iframe
-                src="https://visual.atm.network/vis3d/false/ALL/conNodes"
-                title="ATM Galaxy"
-                className="w-full h-full border-0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
-                loading="lazy"
-              />
-            </div>
-          </div>
-
-          {/* ============ COIN WATCHLIST ============ */}
-          <div className="bg-card rounded-[15px] p-[20px]">
-            <div className="flex items-center justify-between mb-[16px]">
-              <h3 className="font-h4-400 text-foreground">{t("portfolio.coinWatchlist")}</h3>
-              <button className="cursor-pointer">
-                <SlidersHorizontal
-                  className="w-[18px] h-[18px] text-[#959595] hover:text-primary transition-colors"
-                  onClick={() => setIsCoinModalOpen(true)}
-                />
-              </button>
-            </div>
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-[16px]">
-              {coins.map((coin) => (
-                <CoinWatchlistCard key={coin.symbol} coin={coin} />
-              ))}
-            </div>
-          </div>
-
           <GalaxyFilterModal
             isOpen={isGalaxyFilterOpen}
             onClose={() => setIsGalaxyFilterOpen(false)}
@@ -1194,7 +1240,7 @@ export default function Portfolio() {
         //   agtBalance={agtBalance}
         //   onBack={() => setShowAGTHistory(false)}
         // />
-         <AGTBarGraph
+        <AGTBarGraph
           agtBalance={agtBalance}
           onBack={() => setShowAGTHistory(false)}
         />
