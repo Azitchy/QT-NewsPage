@@ -75,7 +75,7 @@ export default function AvatarTrain() {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex-1">
+    <div className="bg-gray-100 min-h-screen">
       <h1 className="font-h2 mb-6">Train avatar</h1>
 
       {/* Dialogue Section */}
